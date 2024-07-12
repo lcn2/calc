@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,16 +17,16 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1990/02/15 01:50:33
- * File existed as early as:	before 1990
+ * Under source code control:   1990/02/15 01:50:33
+ * File existed as early as:    before 1990
  *
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 /*
  * Attempt to factor numbers using elliptic functions:
  *
- *	y^2 = x^3 + a*x + b   (mod ellip_N).
+ *      y^2 = x^3 + a*x + b   (mod ellip_N).
  *
  * Many points (x,y) (mod ellip_N) are found that solve the above equation,
  * starting from a trivial solution and 'multiplying' that point together
@@ -47,13 +47,13 @@
  * Theory and Cryptography" by Neal Koblitz for a good explanation.
  *
  * efactor(iN, ia, B, force)
- *	iN is the number to be factored.
- *	ia is the initial value of a in the equation, and each successive
- *	value of a is an independent attempt at factoring (default 1).
- *	B is the limit of the primes that make up the high power that the
- *	point is raised to for each factoring attempt (default 100).
- *	force is a flag to attempt to factor numbers even if they are
- *	thought to already be prime (default false).
+ *      iN is the number to be factored.
+ *      ia is the initial value of a in the equation, and each successive
+ *      value of a is an independent attempt at factoring (default 1).
+ *      B is the limit of the primes that make up the high power that the
+ *      point is raised to for each factoring attempt (default 100).
+ *      force is a flag to attempt to factor numbers even if they are
+ *      thought to already be prime (default false).
  *
  * Making B larger makes the power the point being raised to contain more
  * prime factors, thus increasing the chance that the order of the point
@@ -77,114 +77,114 @@
  * of the powers so far.
  *
  * If a factor is found, it is returned and is also saved in the global
- * variable f.	The number being factored is also saved in the global
+ * variable f.  The number being factored is also saved in the global
  * variable ellip_N.
  */
 
 
 obj point {x, y};
-global	ellip_N;		/* number to factor */
-global	ellip_a;		/* first coefficient */
-global	ellip_b;		/* second coefficient */
-global	ellip_f;		/* found factor */
+global  ellip_N;                /* number to factor */
+global  ellip_a;                /* first coefficient */
+global  ellip_b;                /* second coefficient */
+global  ellip_f;                /* found factor */
 
 
 define efactor(iN, ia, B, force)
 {
-	local	C, x, p;
+        local   C, x, p;
 
-	if (!force && ptest(iN, 50))
-		return 1;
-	if (isnull(B))
-		B = 100;
-	if (isnull(ia))
-		ia = 1;
-	obj point x;
-	ellip_a = ia;
-	ellip_b = -ia;
-	ellip_N = iN;
-	C = isqrt(ellip_N);
-	C = 2 * C + 2 * isqrt(C) + 1;
-	ellip_f = 0;
-	while (ellip_f == 0) {
-		print "A =", ellip_a;
-		x.x = 1;
-		x.y = 1;
-		print 2, x;
-		x = x ^ (2 ^ (highbit(C) + 1));
-		for (p = 3; ((p < B) && (ellip_f == 0)); p += 2) {
-			if (!ptest(p, 1))
-				continue;
-			print p, x;
-			x = x ^ (p ^ ((highbit(C) // highbit(p)) + 1));
-		}
-		ellip_a++;
-		ellip_b--;
-	}
-	return ellip_f;
+        if (!force && ptest(iN, 50))
+                return 1;
+        if (isnull(B))
+                B = 100;
+        if (isnull(ia))
+                ia = 1;
+        obj point x;
+        ellip_a = ia;
+        ellip_b = -ia;
+        ellip_N = iN;
+        C = isqrt(ellip_N);
+        C = 2 * C + 2 * isqrt(C) + 1;
+        ellip_f = 0;
+        while (ellip_f == 0) {
+                print "A =", ellip_a;
+                x.x = 1;
+                x.y = 1;
+                print 2, x;
+                x = x ^ (2 ^ (highbit(C) + 1));
+                for (p = 3; ((p < B) && (ellip_f == 0)); p += 2) {
+                        if (!ptest(p, 1))
+                                continue;
+                        print p, x;
+                        x = x ^ (p ^ ((highbit(C) // highbit(p)) + 1));
+                }
+                ellip_a++;
+                ellip_b--;
+        }
+        return ellip_f;
 }
 
 
 define point_print(p)
 {
-	print "(" : p.x : "," : p.y : ")" :;
+        print "(" : p.x : "," : p.y : ")" :;
 }
 
 
 define point_mul(p1, p2)
 {
-	local	r, m;
+        local   r, m;
 
-	if (p2 == 1)
-		return p1;
-	if (p1 == p2)
-		return point_square(`p1);
-	obj point r;
-	m = (minv(p2.x - p1.x, ellip_N) * (p2.y - p1.y)) % ellip_N;
-	if (m == 0) {
-		if (ellip_f == 0)
-			ellip_f = gcd(p2.x - p1.x, ellip_N);
-		r.x = 1;
-		r.y = 1;
-		return r;
-	}
-	r.x = (m^2 - p1.x - p2.x) % ellip_N;
-	r.y = ((m * (p1.x - r.x)) - p1.y) % ellip_N;
-	return r;
+        if (p2 == 1)
+                return p1;
+        if (p1 == p2)
+                return point_square(`p1);
+        obj point r;
+        m = (minv(p2.x - p1.x, ellip_N) * (p2.y - p1.y)) % ellip_N;
+        if (m == 0) {
+                if (ellip_f == 0)
+                        ellip_f = gcd(p2.x - p1.x, ellip_N);
+                r.x = 1;
+                r.y = 1;
+                return r;
+        }
+        r.x = (m^2 - p1.x - p2.x) % ellip_N;
+        r.y = ((m * (p1.x - r.x)) - p1.y) % ellip_N;
+        return r;
 }
 
 
 define point_square(p)
 {
-	local	r, m;
+        local   r, m;
 
-	obj point r;
-	m = ((3 * p.x^2 + ellip_a) * minv(p.y << 1, ellip_N)) % ellip_N;
-	if (m == 0) {
-		if (ellip_f == 0)
-			ellip_f = gcd(p.y << 1, ellip_N);
-		r.x = 1;
-		r.y = 1;
-		return r;
-	}
-	r.x = (m^2 - p.x - p.x) % ellip_N;
-	r.y = ((m * (p.x - r.x)) - p.y) % ellip_N;
-	return r;
+        obj point r;
+        m = ((3 * p.x^2 + ellip_a) * minv(p.y << 1, ellip_N)) % ellip_N;
+        if (m == 0) {
+                if (ellip_f == 0)
+                        ellip_f = gcd(p.y << 1, ellip_N);
+                r.x = 1;
+                r.y = 1;
+                return r;
+        }
+        r.x = (m^2 - p.x - p.x) % ellip_N;
+        r.y = ((m * (p.x - r.x)) - p.y) % ellip_N;
+        return r;
 }
 
 
 define point_pow(p, pow)
 {
-	local bit, r, t;
+        local bit, r, t;
 
-	r = 1;
-	if (isodd(pow))
-		r = p;
-	t = p;
-	for (bit = 2; ((bit <= pow) && (ellip_f == 0)); bit <<= 1) {
-		t = point_square(`t);
-		if (bit & pow)
-			r = point_mul(`t, `r);
-	}
-	return r;
+        r = 1;
+        if (isodd(pow))
+                r = p;
+        t = p;
+        for (bit = 2; ((bit <= pow) && (ellip_f == 0)); bit <<= 1) {
+                t = point_square(`t);
+                if (bit & pow)
+                        r = point_mul(`t, `r);
+        }
+        return r;
 }

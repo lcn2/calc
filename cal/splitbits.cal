@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,11 +17,11 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	2006/06/07 14:10:11
- * File existed as early as:	2006
+ * Under source code control:   2006/06/07 14:10:11
+ * File existed as early as:    2006
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -39,43 +39,43 @@ if (! iserror(E_SPLITBITS_3)) E_SPLITBITS_3 = newerror("2nd argument must be an 
  */
 define splitbits(x, b)
 {
-    local ret;		/* list to return */
-    local mask;		/* 2^b-1 */
-    local x_is_reg = 0;	/* true if x < 0 */
+    local ret;          /* list to return */
+    local mask;         /* 2^b-1 */
+    local x_is_reg = 0; /* true if x < 0 */
 
     /* firewall */
     if (! isint(x)) {
-	return error(E_SPLITBITS_1);
+        return error(E_SPLITBITS_1);
     }
     if (! isint(b)) {
-	return error(E_SPLITBITS_2);
+        return error(E_SPLITBITS_2);
     }
     if (b <= 0) {
-	return error(E_SPLITBITS_3);
+        return error(E_SPLITBITS_3);
     }
 
     /* special case: x == 0 */
     if (x == 0) {
-	return list(0);
+        return list(0);
     }
 
     /* setup for splitting x */
     ret = list();
     mask = 2^b-1;
     if (x < 0) {
-	x_is_reg = 1;
-	x = abs(x);
+        x_is_reg = 1;
+        x = abs(x);
     }
 
     /* split x */
     while (x > 0) {
-	printf("%d %x\n", size(ret), x);
-	if (x_is_reg) {
-	    append(ret, xor(x & mask, mask));
-	} else {
-	    append(ret, x & mask);
-	}
-	x >>= b;
+        printf("%d %x\n", size(ret), x);
+        if (x_is_reg) {
+            append(ret, xor(x & mask, mask));
+        } else {
+            append(ret, x & mask);
+        }
+        x >>= b;
     }
 
     /* return list */

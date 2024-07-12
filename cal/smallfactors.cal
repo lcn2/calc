@@ -28,7 +28,7 @@ define smallfactors(x0)
     local d q x flist tuple w;
 
     if (x >= (2 ^ 32) - 1)
-	return newerror("smallfactors: number must be < 2^32 -1");
+        return newerror("smallfactors: number must be < 2^32 -1");
 
     tuple = mat[2];
     flist = list();
@@ -37,19 +37,19 @@ define smallfactors(x0)
     q = 0;
     tuple[0] = d;
     if (x < 2)
-	return 0;
+        return 0;
     do {
-	q = x // d;
-	    while (x == (q * d)) {
-	    tuple[0] = d;
-	    tuple[1]++;
-	    x = floor(q);
-	    q = x // d;
-	}
-	d = nextprime(d);
-	if (tuple[1] > 0)
-	    append(flist, tuple);
-	tuple = mat[2];
+        q = x // d;
+            while (x == (q * d)) {
+            tuple[0] = d;
+            tuple[1]++;
+            x = floor(q);
+            q = x // d;
+        }
+        d = nextprime(d);
+        if (tuple[1] > 0)
+            append(flist, tuple);
+        tuple = mat[2];
     } while (d <= x);
     return flist;
 }
@@ -58,7 +58,7 @@ define printsmallfactors(flist)
 {
     local k;
     for (k = 0; k < size(flist); k++) {
-	print flist[k][0]:"^":flist[k][1];
+        print flist[k][0]:"^":flist[k][1];
     }
 }
 

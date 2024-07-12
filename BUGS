@@ -66,13 +66,13 @@ Please include the following information in the new issue:
 
     * Version of calc you are using
 
-	If you cannot compile calc, then look at version.c
-	and report the #define that start with:
+        If you cannot compile calc, then look at version.c
+        and report the #define that start with:
 
-	    #define MAJOR_VER
-	    #define MINOR_VER
-	    #define MAJOR_PATCH
-	    #define MINOR_PATCH
+            #define MAJOR_VER
+            #define MINOR_VER
+            #define MAJOR_PATCH
+            #define MINOR_PATCH
 
     * If you modified calc from an official patch,
       send us the mods you made
@@ -88,7 +88,7 @@ Please include the following information in the new issue:
     * cd to the calc source directory, and send the contents
       of debug.out.txt produced by this command:
 
-	make debug
+        make debug
 
 PLEASE attach the debug.out.txt file to your GitHub issue (bug report)!!
 
@@ -122,16 +122,16 @@ mis-features in calc:
 
       This works as expected:
 
-	if (expr) {
-	    ...
-	}
+        if (expr) {
+            ...
+        }
 
       However this WILL NOT WORK AS EXPECTED:
 
-	if (expr)
-	{
-	    ...
-	}
+        if (expr)
+        {
+            ...
+        }
 
       This needs to be changed.  See also "help statement", "help unexpected",
       and "help todo".
@@ -143,28 +143,28 @@ mis-features in calc:
       integers to/from files the hard way.  It does NOT use blkcpy.  The
       following code:
 
-	i = (ord("\n") << 16) | (ord("i") << 8) | ord("H")
-	b = blk()
-	copy(i, b)
-	fd = fopen("file", "w")
-	copy(b, fd);
-	fclose(fd)
+        i = (ord("\n") << 16) | (ord("i") << 8) | ord("H")
+        b = blk()
+        copy(i, b)
+        fd = fopen("file", "w")
+        copy(b, fd);
+        fclose(fd)
 
       will write an extra NUL octet to the file.  Where as:
 
-	read intfile
-	i = (ord("\n") << 16) | (ord("i") << 8) | ord("H")
-	be2file(i, "file2")
+        read intfile
+        i = (ord("\n") << 16) | (ord("i") << 8) | ord("H")
+        be2file(i, "file2")
 
       will not.
 
     * The numerator is assumed
 
-	The numerator value of 1 appears to be assumed.  In calc:
+        The numerator value of 1 appears to be assumed.  In calc:
 
-	     / 2
+             / 2
 
-	will produce a value of 0.5 as if the numerator 1 was given.
+        will produce a value of 0.5 as if the numerator 1 was given.
 
 
 =-=
@@ -177,7 +177,7 @@ mis-features in calc:
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -185,8 +185,8 @@ mis-features in calc:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1994/03/18 14:06:13
-## File existed as early as:	1994
+## Under source code control:   1994/03/18 14:06:13
+## File existed as early as:    1994
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

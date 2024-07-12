@@ -10,18 +10,18 @@ resource files are shipped with calc to provide you with examples.
 By default, the custom builtin returns an error.  Calc have been
 built with:
 
-	ALLOW_CUSTOM= -DCUSTOM
+        ALLOW_CUSTOM= -DCUSTOM
 
 in the top level Makefile (this is the shipped default) and calc
 must be invoked with a -C argument:
 
-	calc -C
+        calc -C
 
 when it is run.
 
 To disable custom even if -C is given, calc must be built with:
 
-	ALLOW_CUSTOM="-UCUSTOM"
+        ALLOW_CUSTOM="-UCUSTOM"
 
 See the ../cal/README or "help resource" for information about
 calc resource standards and guidelines.
@@ -53,7 +53,7 @@ pzasusb8.cal
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -61,8 +61,8 @@ pzasusb8.cal
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1997/03/08 20:51:32
-## File existed as early as:	1997
+## Under source code control:   1997/03/08 20:51:32
+## File existed as early as:    1997
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

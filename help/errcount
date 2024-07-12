@@ -5,9 +5,9 @@ SYNOPSIS
     errcount([num])
 
 TYPES
-    num		integer
+    num         integer
 
-    return	integer
+    return      integer
 
 DESCRIPTION
     An internal variable keeps count of the number of functions
@@ -22,7 +22,7 @@ DESCRIPTION
 
     If an error value is assigned to a variable as in:
 
-			infty = 1/0;
+                        infty = 1/0;
 
     then a function returning that variable does not contribute to
     errcount.
@@ -31,9 +31,9 @@ EXAMPLE
     ; ## NOTE: Your output may vary:
 
     ; errmax(10)
-	    0
+            0
     ; errcount()
-	    0
+            0
     ; a = 1/0; b = 2 + ""; c = error(27); d = newerror("a");
     ; print errcount(), a, errcount(), errmax();
     4 Error E_DIVBYZERO 4 10
@@ -55,7 +55,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -63,8 +63,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1997/03/08 08:51:14
-## File existed as early as:	1997
+## Under source code control:   1997/03/08 08:51:14
+## File existed as early as:    1997
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

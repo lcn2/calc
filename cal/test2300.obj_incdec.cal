@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,11 +17,11 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1995/07/09 06:12:13
- * File existed as early as:	1995
+ * Under source code control:   1995/07/09 06:12:13
+ * File existed as early as:    1995
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -33,12 +33,12 @@ obj matrix {m}
  */
 define matrix_inc(a)
 {
-	local i;
+        local i;
 
-	/* increment each matrix member */
-	for (i= 0; i < size(a.m); i++)
-		++a.m[[i]];
-	return a;
+        /* increment each matrix member */
+        for (i= 0; i < size(a.m); i++)
+                ++a.m[[i]];
+        return a;
 }
 
 /*
@@ -46,12 +46,12 @@ define matrix_inc(a)
  */
 define matrix_dec(a)
 {
-	local i;
+        local i;
 
-	/* decrement each matrix member */
-	for (i= 0; i < size(a.m); i++)
-		--a.m[[i]];
-	return a;
+        /* decrement each matrix member */
+        for (i= 0; i < size(a.m); i++)
+                --a.m[[i]];
+        return a;
 }
 
 /*
@@ -59,24 +59,24 @@ define matrix_dec(a)
  */
 define mkmat()
 {
-	local s, M, i, v;
+        local s, M, i, v;
 
-	/* firewall */
-	s = param(0);
-	if (s == 0)
-		quit "Need at least one argument";
+        /* firewall */
+        s = param(0);
+        if (s == 0)
+                quit "Need at least one argument";
 
-	/* create the matrix */
-	mat M[s];
+        /* create the matrix */
+        mat M[s];
 
-	/* load the matrix with the args */
-	for (i = 0; i < s; i++)
-		M[i] = param(i + 1);
+        /* load the matrix with the args */
+        for (i = 0; i < s; i++)
+                M[i] = param(i + 1);
 
-	/* create the object with the matrix */
-	obj matrix v;
-	v.m = M;
-	return v;
+        /* create the object with the matrix */
+        obj matrix v;
+        v.m = M;
+        return v;
 }
 
 /*
@@ -84,29 +84,29 @@ define mkmat()
  */
 define ckmat()
 {
-	local s, a, i;
+        local s, a, i;
 
-	/* firewall */
-	s = param(0);
-	if (s < 2)
-		quit "Need at least two arguments";
+        /* firewall */
+        s = param(0);
+        if (s < 2)
+                quit "Need at least two arguments";
 
-	/* get the object to test */
-	a = param(1);
+        /* get the object to test */
+        a = param(1);
 
-	/* verify the matrix in the object is the right size */
-	if (size(a.m) != s-1) {
-		return 0;
-	}
+        /* verify the matrix in the object is the right size */
+        if (size(a.m) != s-1) {
+                return 0;
+        }
 
-	/* check each matrix element with the args passed */
-	for (i = 2; i <= s; i++) {
-		if (a.m[i-2] != param(i)) {
-			/* args do not match */
-			return 0;
-		}
-	}
+        /* check each matrix element with the args passed */
+        for (i = 2; i <= s; i++) {
+                if (a.m[i-2] != param(i)) {
+                        /* args do not match */
+                        return 0;
+                }
+        }
 
-	/* args match the matrix in the object */
-	return 1;
+        /* args match the matrix in the object */
+        return 1;
 }

@@ -15,17 +15,17 @@ TYPES
 
     If neither x nor y is an object, and x is not a matrix or list:
 
-    x		number (real or complex)
-    y		real
-    rnd		integer, defaults to config("quo")
+    x           number (real or complex)
+    y           real
+    rnd         integer, defaults to config("quo")
 
-    return	number
+    return      number
 
 DESCRIPTION
     If x is real or complex and y is zero, quo(x, y, rnd) returns zero.
 
     If x is complex, quo(x, y, rnd) returns
-		 quo(re(x), y, rnd) + quo(im(x), y, rnd) * 1i.
+                 quo(re(x), y, rnd) + quo(im(x), y, rnd) * 1i.
 
     In the following it is assumed that x is real and y is nonzero.
 
@@ -35,40 +35,40 @@ DESCRIPTION
    one of the two integers v for which abs(x/y - v) < 1.  Which
    integer is returned is controlled by rnd as follows:
 
-		rnd	sign of x/y - v		Description of rounding
+                rnd     sign of x/y - v         Description of rounding
 
-		0	      +			down, towards minus infinity
-		1	      -			up, towards infinity
-		2	    sgn(x/y)		towards zero
-		3	   -sgn(x/y)		from zero
-		4	    sgn(y)
-		5	   -sgn(y)
-		6	    sgn(x)
-		7	   -sgn(x)
-		8				to nearest even integer
-		9				to nearest odd integer
-	       10				even if x/y > 0, otherwise odd
-	       11				odd if x/y > 0, otherwise even
-	       12				even if y > 0, otherwise odd
-	       13				odd if y > 0, otherwise even
-	       14				even if x > 0, otherwise odd
-	       15				odd if x > 0, otherwise even
+                0             +                 down, towards minus infinity
+                1             -                 up, towards infinity
+                2           sgn(x/y)            towards zero
+                3          -sgn(x/y)            from zero
+                4           sgn(y)
+                5          -sgn(y)
+                6           sgn(x)
+                7          -sgn(x)
+                8                               to nearest even integer
+                9                               to nearest odd integer
+               10                               even if x/y > 0, otherwise odd
+               11                               odd if x/y > 0, otherwise even
+               12                               even if y > 0, otherwise odd
+               13                               odd if y > 0, otherwise even
+               14                               even if x > 0, otherwise odd
+               15                               odd if x > 0, otherwise even
 
-	     16-31				to nearest integer when this
-						is uniquely determined;
-						otherwise, when x/y is a
-						half-integer, as if
-						rnd replaced by rnd & 15
+             16-31                              to nearest integer when this
+                                                is uniquely determined;
+                                                otherwise, when x/y is a
+                                                half-integer, as if
+                                                rnd replaced by rnd & 15
 
-		NOTE: Blank entries in the table above indicate that the
-		     description would be complicated and probably not of
-		     much interest.
+                NOTE: Blank entries in the table above indicate that the
+                     description would be complicated and probably not of
+                     much interest.
 
     The C language method of modulus and integer division is:
 
-	    config("quomod", 2)
-	    config("quo", 2)
-	    config("mod", 2)
+            config("quomod", 2)
+            config("quo", 2)
+            config("mod", 2)
 
 EXAMPLE
     print quo(11,5,0), quo(11,5,1), quo(-11,5,2), quo(-11,-5,3)
@@ -95,7 +95,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -103,8 +103,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/09/18 04:01:44
-## File existed as early as:	1995
+## Under source code control:   1995/09/18 04:01:44
+## File existed as early as:    1995
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

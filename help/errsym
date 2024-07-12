@@ -5,96 +5,96 @@ SYNOPSIS
     errsym(errnum | "E_STRING")
 
 TYPES
-    errnum	integer
-    E_STRING	string
+    errnum      integer
+    E_STRING    string
 
-    return	integer or string or error value
+    return      integer or string or error value
 
 DESCRIPTION
     When called with in integer errnum argument:
 
-	When E__BASE < errnum <= E__HIGHEST, the corresponding errsym E_STRING
-	from the error_table[] array is returned.
+        When E__BASE < errnum <= E__HIGHEST, the corresponding errsym E_STRING
+        from the error_table[] array is returned.
 
-	For example:
+        For example:
 
-	    ; print errsym(10003)
-	    E_ADD
+            ; print errsym(10003)
+            E_ADD
 
-	When an errnum that matches one of the following errtbl.h #define,
-	then the #define string is returned:
+        When an errnum that matches one of the following errtbl.h #define,
+        then the #define string is returned:
 
-	    E__NONE
-	    E__BASE
-	    E__USERDEF
-	    E__USERMAX
+            E__NONE
+            E__BASE
+            E__USERDEF
+            E__USERMAX
 
-	    NOTE: For errnum == E__HIGHEST, the corresponding E_STRING that
-	    is returned is NOT "E__HIGHEST".  Instead the E_STRING corresponding
-	    to the highest errnum number from the error_table[] array is returned.
+            NOTE: For errnum == E__HIGHEST, the corresponding E_STRING that
+            is returned is NOT "E__HIGHEST".  Instead the E_STRING corresponding
+            to the highest errnum number from the error_table[] array is returned.
 
-	For example:
+        For example:
 
-	    ; print errsym(0)
-	    E_NONE
+            ; print errsym(0)
+            E_NONE
 
-	When E__NONE <= errnum < E__BASE, or when E__USERDEF <= errnum <= E__USERMAX,
-	an "E_STRING" errsym of the form "E_digits" is returned where "digits"
-	are the ASCII digits of the decimal value of errnum.
+        When E__NONE <= errnum < E__BASE, or when E__USERDEF <= errnum <= E__USERMAX,
+        an "E_STRING" errsym of the form "E_digits" is returned where "digits"
+        are the ASCII digits of the decimal value of errnum.
 
-	For example:
+        For example:
 
-	    ; print errsym(123)
-	    E_123
+            ; print errsym(123)
+            E_123
 
-	For all other errnum values, an error is returned.
+        For all other errnum values, an error is returned.
 
     When called with E_STRING string argument:
 
        When the E_STRING starts with "E_" followed by only decimal digits:
 
-	    If E_STRING is "E_0", 0 is returned.
+            If E_STRING is "E_0", 0 is returned.
 
-	    If E_STRING matches the regular expression:
+            If E_STRING matches the regular expression:
 
-		^E_[1-9][0-9]+$
+                ^E_[1-9][0-9]+$
 
-	    where digits 0 < errnum <= 32767, the errnum value is returned.
+            where digits 0 < errnum <= 32767, the errnum value is returned.
 
-	    For all other cases of "E_" by only decimal digits, an error is returned.
+            For all other cases of "E_" by only decimal digits, an error is returned.
 
-	When the E_STRING matches one of the following special
-	symbols, the symbol's numeric value as #define-d in errsym.h
-	or errtbl.h is returned:
+        When the E_STRING matches one of the following special
+        symbols, the symbol's numeric value as #define-d in errsym.h
+        or errtbl.h is returned:
 
-	    E__NONE
-	    E__BASE
-	    E__HIGHEST
-	    E__USERDEF
-	    E__USERMAX
+            E__NONE
+            E__BASE
+            E__HIGHEST
+            E__USERDEF
+            E__USERMAX
 
-	For example:
+        For example:
 
-	    ; print errsym("E_NONE")
-	    0
+            ; print errsym("E_NONE")
+            0
 
-	For all other E_STRING strings that start with "E__", an error is returned.
+        For all other E_STRING strings that start with "E__", an error is returned.
 
-	When the E_STRING starts with "E_" followed by an UPPER CASE LETTER that
-	also matches the regular expression:
+        When the E_STRING starts with "E_" followed by an UPPER CASE LETTER that
+        also matches the regular expression:
 
-	    ^E_[A-Z][A-Z0-9_]+$
+            ^E_[A-Z][A-Z0-9_]+$
 
-	The error_table[] is searched for an errsym that exactly matches
-	the E_STRING.  If a match is found, the corresponding errnum number
-	is returned.  If no match is found, an error is returned.
+        The error_table[] is searched for an errsym that exactly matches
+        the E_STRING.  If a match is found, the corresponding errnum number
+        is returned.  If no match is found, an error is returned.
 
-	For example:
+        For example:
 
-	    ; print errsym("E_ADD")
-	    10003
+            ; print errsym("E_ADD")
+            10003
 
-	For all other string arguments, an error is returned.
+        For all other string arguments, an error is returned.
 
     When errsym returns an integer, the global calc error count (see help errcount)
     is NOT changed.  And of course, when errsym("E_STRING") returns an error, the
@@ -102,30 +102,30 @@ DESCRIPTION
 
     Consider the E_MUL calc error condition:
 
-	Given a E_STRING errsym, errsym("E_STRING") will return the errnum integer
-	error code that is associated with the E_STRING errsym.
+        Given a E_STRING errsym, errsym("E_STRING") will return the errnum integer
+        error code that is associated with the E_STRING errsym.
 
-	The 4th entry of struct errtbl error_table is:
+        The 4th entry of struct errtbl error_table is:
 
-	    { 10005,        "E_MUL",                "Bad arguments for +" },
+            { 10005,        "E_MUL",                "Bad arguments for +" },
 
-	And errcode -d produces a errsym.h with the following #define:
+        And errcode -d produces a errsym.h with the following #define:
 
-	    #define E_MUL           10005   /* Bad arguments for * */
+            #define E_MUL           10005   /* Bad arguments for * */
 
-	Thus 10005 is the errnum, "E_MUL" is the E_STRING errsym that is
-	associated with the errmsg error message: "Bad arguments for +".
+        Thus 10005 is the errnum, "E_MUL" is the E_STRING errsym that is
+        associated with the errmsg error message: "Bad arguments for +".
 
-	In the above example, errsym("E_MUL") will return 10005.
-	Also errsym("E_10005") will also return 10005.
+        In the above example, errsym("E_MUL") will return 10005.
+        Also errsym("E_10005") will also return 10005.
 
-	To complete the E_STRING use in the above example:
+        To complete the E_STRING use in the above example:
 
-	    Both error(10005) and error("E_MUL") both raise the E_MUL calc error condition
+            Both error(10005) and error("E_MUL") both raise the E_MUL calc error condition
 
-	    Both errno(10005) and errno("E_MUL") both return 10005
+            Both errno(10005) and errno("E_MUL") both return 10005
 
-	    Both strerror(10005) and strerror("E_MUL") both return "Bad arguments for *"
+            Both strerror(10005) and strerror("E_MUL") both return "Bad arguments for *"
 
 EXAMPLE
     ; print errsym("E_ADD"), errsym("E_SUB"), errsym("E_MUL"), errsym("E_DIV")
@@ -146,9 +146,9 @@ LIMITS
     E_STRING is string that must match the regular expression: ^E_[A-Z0-9_]+$
 
 LINK LIBRARY
-    int calc_errno;				/* global calc_errno value */
+    int calc_errno;                             /* global calc_errno value */
 
-    CONST struct errtbl error_table[ECOUNT+2];	/* calc error codes, error symbols and error messages */
+    CONST struct errtbl error_table[ECOUNT+2];  /* calc error codes, error symbols and error messages */
 
     bool is_e_digits(CONST char *errsym);
     bool is_valid_errnum(int errnum);
@@ -174,7 +174,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -182,8 +182,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/12/18 03:30:59
-## File existed as early as:	1995
+## Under source code control:   1995/12/18 03:30:59
+## File existed as early as:    1995
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

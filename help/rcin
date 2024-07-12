@@ -5,15 +5,15 @@ SYNOPSIS
     rcin(x, m)
 
 TYPES
-    x		integer
-    m		odd positive integer
+    x           integer
+    m           odd positive integer
 
-    return	integer v, 0 <= v < m.
+    return      integer v, 0 <= v < m.
 
 DESCRIPTION
     Let B be the base calc uses for representing integers internally
     (B = 2^16 for 32-bit machines, 2^32 for 64-bit machines) and N the
-    number of words (base-B digits) in the representation of m.	 Then
+    number of words (base-B digits) in the representation of m.  Then
     rcin(x,m) returns the value of B^N * x % m, where the modulus
     operator % here gives the least nonnegative residue.
 
@@ -23,17 +23,17 @@ DESCRIPTION
     evaluating products, squares and powers modulo m correspond to the
     formulae:
 
-	    rcin(x * y, m) = rcmul(rcin(x,m), rcin(y,m), m);
+            rcin(x * y, m) = rcmul(rcin(x,m), rcin(y,m), m);
 
-	    rcin(x^2, m) = rcsq(rcin(x,m), m);
+            rcin(x^2, m) = rcsq(rcin(x,m), m);
 
-	    rcin(x^k, m) = rcpow(rcin(x,m), k, m).
+            rcin(x^k, m) = rcpow(rcin(x,m), k, m).
 
-    Here k is any nonnegative integer.	Using these formulae may be
+    Here k is any nonnegative integer.  Using these formulae may be
     faster than direct evaluation of x * y % m, x^2 % m, x^k % m.
     Some encoding and decoding may be bypassed by formulae like:
 
-	    x * y % m = rcin(rcmul(x, y, m), m).
+            x * y % m = rcin(rcmul(x, y, m), m).
 
     If m is a divisor of B^N - h for some integer h, rcin(x,m) may be
     computed by using rcin(x,m) = h * x % m.  In particular, if
@@ -80,7 +80,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -88,8 +88,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1996/02/25 02:22:21
-## File existed as early as:	1996
+## Under source code control:   1996/02/25 02:22:21
+## File existed as early as:    1996
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

@@ -5,9 +5,9 @@ SYNOPSIS
     name(val)
 
 TYPES
-    val		any
+    val         any
 
-    return	string or null value
+    return      string or null value
 
 DESCRIPTION
     If val is a named block or open file stream, name(val) returns the
@@ -20,14 +20,14 @@ DESCRIPTION
 EXAMPLE
     ; A = blk("alpha");
     ; name(A)
-	"alpha"
+        "alpha"
 
     ; f = fopen("/tmp/beta", "w")
     ; name(f)
-	"/tmp/beta"
+        "/tmp/beta"
 
     ; name(files(0))
-	"(stdin)"
+        "(stdin)"
 
 LIMITS
     none
@@ -46,7 +46,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -54,8 +54,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1997/04/05 14:12:44
-## File existed as early as:	1997
+## Under source code control:   1997/04/05 14:12:44
+## File existed as early as:    1997
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

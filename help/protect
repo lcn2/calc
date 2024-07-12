@@ -6,12 +6,12 @@ SYNOPSIS
     protect(nblk [, N [, depth]])
 
 TYPES
-    var		lvalue
-    nblk	named block
-    N		integer, abs(N) < 65536
-    depth	nonnegative integer
+    var         lvalue
+    nblk        named block
+    N           integer, abs(N) < 65536
+    depth       nonnegative integer
 
-    return	null value
+    return      null value
 
 DESCRIPTION
     The protection status of the association of an lvalue A with
@@ -20,16 +20,16 @@ DESCRIPTION
     Each nonzero bit of the low eight bits of sts corresponds to a
     builtin kind of protection as follows:
 
-	bit value 	protection
+        bit value       protection
 
-	      1	no assign to A
-	      2	no change of A by assignment
-	      4	no change of type value of A
-	      8	no error value for A
-	     16	no copy to A
-	     32	no relocation for A or its elements
-	     64	no assign from A
-	    128	no copy from A
+              1 no assign to A
+              2 no change of A by assignment
+              4 no change of type value of A
+              8 no error value for A
+             16 no copy to A
+             32 no relocation for A or its elements
+             64 no assign from A
+            128 no copy from A
 
     For example, A having protection status 65 = 1 + 64 prevents
     execution of assignments of the forms A = expression and V = A
@@ -57,8 +57,8 @@ DESCRIPTION
     matrix, object or association, its elements have depth d + 1.
     For example, after:
 
-	; obj point {x,y}
-	; X = mat[3] = {1, list(2,3), mat[2] = {obj point, obj point} }
+        ; obj point {x,y}
+        ; X = mat[3] = {1, list(2,3), mat[2] = {obj point, obj point} }
 
     X has depth 0; X[0], X[1] and X[2] have depth 1; X[1][0], X[1][1],
     X[2][0] and X[2][1] have depth 2; X[2][0].x, X[2][0].y, X[2][1].x
@@ -85,14 +85,14 @@ DESCRIPTION
 
     Users may define functions that return values with positive status, e.g.
 
-	; define noassigntovalue(x) {protect(x,1); return x};
-	; S = noassigntovalue(42);
+        ; define noassigntovalue(x) {protect(x,1); return x};
+        ; S = noassigntovalue(42);
 
     will result in S having the value 42 and no-assign-to protection.
     By using a backquote with a variable as argument, an even simpler
     function:
 
-	; define noassignto(x) = protect(x, 1);
+        ; define noassignto(x) = protect(x, 1);
 
     gives no-assign-to protection to the variable; i.e. noassignto(`A)
     achieves the same as protect(A,1).
@@ -130,7 +130,7 @@ DESCRIPTION
     memory used by a block and the freeing of a named block, For example,
     if a block B has maxsize 256, then after:
 
-	; protect(B, 32);
+        ; protect(B, 32);
 
     copy(A, B) will fail if the copying would cause size(B) to equal or
     exceed 256; if B is a named block, blkfree(B) will not be permitted.
@@ -175,10 +175,10 @@ DESCRIPTION
     to have positive value.  Then code for evaluating a function might
     include lines like
 
-	; if (protect(A) & 1024 && B <= 0) {
-	;; return newerror("Prohibited assignment");
-	;; }
-	; A = B;
+        ; if (protect(A) & 1024 && B <= 0) {
+        ;; return newerror("Prohibited assignment");
+        ;; }
+        ; A = B;
 
     When an operation forbidden by a particular bit in the protection
     status of A is attempted, an error value is created but unless this
@@ -204,71 +204,71 @@ EXAMPLE
     ; protect(A,1)
     ; A = 45
     ; A
-	    27
+            27
     ; strerror()
-	    "No-assign-to destination for assign"
+            "No-assign-to destination for assign"
     ; protect(A,64)
     ; protect(A)
-	    65
+            65
     ; X = A
     ; X
-	    0
+            0
     ; strerror()
-	    "No-assign-from source for assign"
+            "No-assign-from source for assign"
     ; protect(A,-1)
     ; protect(A)
-	    64
+            64
     ; protect(A,4)
     ; protect(A)
-	    68
+            68
     ; A = "abc"
     ; A
-	    27
+            27
     ; strerror()
-	    "No-type-change destination for assign"
+            "No-type-change destination for assign"
     ; B = 45
     ; swap(A,B)
-	    Error E_SWAP_2
+            Error E_SWAP_2
     ; strerror()
-	    "No-assign-to-or-from argument for swap"
+            "No-assign-to-or-from argument for swap"
     ; protect(A,-64)
     ; protect(A)
-	    4
+            4
     ; swap(A,B)
     ; A
-	    45
+            45
     ; B
-	    27
+            27
 
     ; A = mat[4] = {1,2,3,4}
     ; B = list(5,6,7,8)
     ; protect(A,16)
     ; copy(B,A)
-	    Error E_COPY_14
+            Error E_COPY_14
     ; strerror()
-	    "No-copy-to destination variable"
+            "No-copy-to destination variable"
 
     ; A = list(1,2,3)
     ; protect(A,32)
     ; append(A,4)
-	    Error E_LIST_4
+            Error E_LIST_4
     ; strerror()
-	    "No-relocate for list append"
+            "No-relocate for list append"
 
     ; A = blk(0,5)
     ; copy("abc", A)
     ; copy("de",A)
-	    Error E_COPY_17
+            Error E_COPY_17
     ; strerror()
-	    "No-relocate destination variable"
+            "No-relocate destination variable"
 
     ; A = blk("alpha") = {1,2,3,4,5}
     ; protect(A,0)
     ; protect(*A, 16)
     ; copy("abc", A)
-	    Error E_COPY_16
+            Error E_COPY_16
     ; strerror()
-	    "No-copy-to destination named block"
+            "No-copy-to destination named block"
 
 LIMITS
     none
@@ -287,7 +287,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -295,8 +295,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1997/07/10 22:38:44
-## File existed as early as:	1997
+## Under source code control:   1997/07/10 22:38:44
+## File existed as early as:    1997
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

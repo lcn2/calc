@@ -5,16 +5,16 @@ SYNOPSIS
     version()
 
 TYPES
-    return	string
+    return      string
 
 DESCRIPTION
     Returns the calc version string.
 
     Calc version strings can be of the form:
 
-	x.y.z.w
-	x.y.z
-	x.y
+        x.y.z.w
+        x.y.z
+        x.y
 
     where x, y, z, w, v are integers (without leading 0's) and,
     t is the literal character 't'.
@@ -42,7 +42,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -50,8 +50,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	2001/05/28 17:38:01
-## File existed as early as:	2001
+## Under source code control:   2001/05/28 17:38:01
+## File existed as early as:    2001
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

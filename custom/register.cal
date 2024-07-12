@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,50 +17,50 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	2007/07/05 11:11:11
- * File existed as early as:	2007
+ * Under source code control:   2007/07/05 11:11:11
+ * File existed as early as:    2007
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 /*
  * This file is part of the custom sample calc files.
  *
  * NOTE: You must use a calc that was compiled with ALLOW_CUSTOM= -DCUSTOM
- *	 and run with a -C arg.
+ *       and run with a -C arg.
  */
 if (config("compile_custom") == 0) {
-	quit "calc compiled without -DCUSTOM";
+        quit "calc compiled without -DCUSTOM";
 } else if (config("allow_custom") == 0) {
-	quit "calc was run without the -D command line option";
+        quit "calc was run without the -D command line option";
 }
 
 
 define register(num)
 {
-	local reg_max;	    /* number of registers */
+        local reg_max;      /* number of registers */
 
-	/*
-	 * firewall
-	 */
-	if (!isnum(num)) {
-		return newerror("register only works on numeric values");
-	}
+        /*
+         * firewall
+         */
+        if (!isnum(num)) {
+                return newerror("register only works on numeric values");
+        }
 
-	/*
-	 * determine register count
-	 */
-	reg_max = custom("sysinfo", "REGNUM_MAX");
+        /*
+         * determine register count
+         */
+        reg_max = custom("sysinfo", "REGNUM_MAX");
 
-	/*
-	 * determine the HALF length of a numeric value
-	 */
-	if (num < 0) {
-		return newerror("register number must be >= 0");
-	} else if (num > reg_max) {
-		return newerror("register number must be < REGNUM_MAX");
-	} else {
-		return custom("register", num);
-	}
+        /*
+         * determine the HALF length of a numeric value
+         */
+        if (num < 0) {
+                return newerror("register number must be >= 0");
+        } else if (num > reg_max) {
+                return newerror("register number must be < REGNUM_MAX");
+        } else {
+                return custom("register", num);
+        }
 }

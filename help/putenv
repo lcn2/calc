@@ -5,10 +5,10 @@ SYNOPSIS
     putenv(env [,val])
 
 TYPES
-    env		str
-    val		str
+    env         str
+    val         str
 
-    return	int
+    return      int
 
 DESCRIPTION
      This function will set or change the value of an environment variable.
@@ -17,25 +17,25 @@ DESCRIPTION
 
      When called with 1 arg, env must be a string of the form:
 
-	    "envname=envval"
+            "envname=envval"
 
      This sets the environment variable "envname" to the value "envval".
 
      The 2 arg form is equivalent to:
 
-	    putenv(strcat(env, "=", val))
+            putenv(strcat(env, "=", val))
 
 EXAMPLE
     ; putenv("name", "value")
-	    0
+            0
     ; getenv("name")
-	    "value"
+            "value"
     ; putenv("name=val2")
-	    0
+            0
     ; getenv("name")
-	    "val2"
+            "val2"
     ; isnull(getenv("unknown"))
-	    1
+            1
 
 LIMITS
     With 1 arg, env must contain at least 1 '=' character.
@@ -54,7 +54,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -62,8 +62,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/07/09 03:48:57
-## File existed as early as:	1995
+## Under source code control:   1995/07/09 03:48:57
+## File existed as early as:    1995
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

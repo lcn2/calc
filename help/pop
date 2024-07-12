@@ -5,9 +5,9 @@ SYNOPSIS
     pop(lst)
 
 TYPES
-    lst		list, &list
+    lst         list, &list
 
-    return	any
+    return      any
 
 DESCRIPTION
      This function removes index 0 and returns it.
@@ -22,14 +22,14 @@ EXAMPLE
       [[1]] = "three"
 
     ; pop(lst)
-	    2
+            2
     ; print lst
 
     list (1 elements, 1 nonzero):
       [[0]] = "three"
 
     ; pop(lst)
-	    "three"
+            "three"
     ; print lst
     list (0 elements, 0 nonzero)
     ; pop(lst)
@@ -54,7 +54,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -62,8 +62,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1994/03/19 03:13:20
-## File existed as early as:	1994
+## Under source code control:   1994/03/19 03:13:20
+## File existed as early as:    1994
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

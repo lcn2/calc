@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,10 +17,10 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	2021/03/08 21;58:10
- * File existed as early as:	2021
+ * Under source code control:   2021/03/08 21;58:10
+ * File existed as early as:    2021
  *
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -28,7 +28,7 @@
 #define INCLUDE_STRL_H
 
 
-#if defined(CALC_SRC)	/* if we are building from the calc source tree */
+#if defined(CALC_SRC)   /* if we are building from the calc source tree */
 #include "have_string.h"
 #else
 #include <calc/have_string.h>
@@ -37,7 +37,7 @@
 # include <string.h>
 #endif
 
-#if defined(CALC_SRC)	/* if we are building from the calc source tree */
+#if defined(CALC_SRC)   /* if we are building from the calc source tree */
 # include "have_strlcpy.h"
 # include "have_strlcat.h"
 # include "decl.h"

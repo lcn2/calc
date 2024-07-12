@@ -5,9 +5,9 @@ SYNOPSIS
     getenv(env)
 
 TYPES
-    env		str
+    env         str
 
-    return	str or nil
+    return      str or nil
 
 DESCRIPTION
     This function returns the value of the environment variable named by
@@ -15,15 +15,15 @@ DESCRIPTION
 
 EXAMPLE
     ; putenv("name", "value")
-	    0
+            0
     ; getenv("name")
-	    "value"
+            "value"
     ; putenv("name=val2")
-	    0
+            0
     ; getenv("name")
-	    "val2"
+            "val2"
     ; isnull(getenv("unknown"))
-	    1
+            1
 
 LIMITS
     none
@@ -42,7 +42,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -50,8 +50,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/07/09 03:48:57
-## File existed as early as:	1995
+## Under source code control:   1995/07/09 03:48:57
+## File existed as early as:    1995
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

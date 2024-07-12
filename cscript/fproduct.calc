@@ -5,10 +5,10 @@
  * Copyright (C) 2001,2014,2019,2021  Landon Curt Noll
  *
  * usage:
- *	fproduct filename term [term ...]
+ *      fproduct filename term [term ...]
  *
- *	filename	where to write the product, use - for stdout
- *	term ...	terms to multiply
+ *      filename        where to write the product, use - for stdout
+ *      term ...        terms to multiply
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -73,7 +73,7 @@ if (filename == "-") {
 if (product > 0) {
     octlen = int((highbit(product)+8) / 8);
     for (i=octlen-1; i >= 0; --i) {
-	fputc(fd, char(product >> (i*8)));
+        fputc(fd, char(product >> (i*8)));
     }
 }
 

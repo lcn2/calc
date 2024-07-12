@@ -1,5 +1,5 @@
 .\"
-.\" Copyright (C) 1999-2007,2014,2018,2021	Landon Curt Noll
+.\" Copyright (C) 1999-2007,2014,2018,2021      Landon Curt Noll
 .\"
 .\" Calc is open software; you can redistribute it and/or modify it under
 .\" the terms of the version 2.1 of the GNU Lesser General Public License
@@ -15,11 +15,11 @@
 .\" received a copy with calc; if not, write to Free Software Foundation, Inc.
 .\" 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 .\"
-.\" Under source code control:	    1991/07/23 05:48:26
-.\" File existed as early as:	    1991
+.\" Under source code control:      1991/07/23 05:48:26
+.\" File existed as early as:       1991
 .\"
-.\" chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-.\" Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+.\" chongo <was here> /\oo/\    http://www.isthe.com/chongo/
+.\" Share and enjoy!  :-)       http://www.isthe.com/chongo/tech/comp/calc/
 .\"
 .\" calculator by David I. Bell
 .\" man page by Landon Noll
@@ -636,7 +636,7 @@ may have to be replaced by:
 .sp 1
 .in +5n
 .nf
-print 27! ^2	or	print 27\\!^2
+print 27! ^2    or      print 27\\!^2
 .fi
 .in -5n
 

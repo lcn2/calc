@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,11 +17,11 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1997/03/03 04:53:08
- * File existed as early as:	1997
+ * Under source code control:   1997/03/03 04:53:08
+ * File existed as early as:    1997
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 /*
@@ -30,8 +30,8 @@
  *
  * Don't include anything, let the including .c file bring in:
  *
- *	have_const.h
- *	value.h
+ *      have_const.h
+ *      value.h
  *
  * before they include this file.
  *
@@ -47,24 +47,24 @@
 /*
  * arg count definitions
  */
-#define MAX_CUSTOM_ARGS 100	/* maximum number of custom arguments */
+#define MAX_CUSTOM_ARGS 100     /* maximum number of custom arguments */
 
 
 /*
  * register count
  */
-#define CUSTOM_REG_MAX 31	/* maximum custom register number */
+#define CUSTOM_REG_MAX 31       /* maximum custom register number */
 
 
 /*
  * custom function interface
  */
 struct custom {
-	char *name;		/* name of the custom builtin */
-	char *desc;		/* very brief description of custom builtin */
-	short minargs;		/* minimum number of arguments */
-	short maxargs;		/* maximum number of arguments */
-	VALUE (*func)(char *name, int argc, VALUE **argv);  /* custom func */
+        char *name;             /* name of the custom builtin */
+        char *desc;             /* very brief description of custom builtin */
+        short minargs;          /* minimum number of arguments */
+        short maxargs;          /* maximum number of arguments */
+        VALUE (*func)(char *name, int argc, VALUE **argv);  /* custom func */
 };
 
 
@@ -73,11 +73,11 @@ struct custom {
  *
  * These are the required interfaces.  The dummy.c stubs these interfaces too.
  */
-E_FUNC bool custom_compiled(void);	/* return true if libcustcalc compiled CUSTOM defined, false otherwise */
-E_FUNC VALUE custom(char*, int, VALUE**);	/* master custom interface */
-EXTERN bool allow_custom;		/* true => custom builtins allowed */
-E_FUNC void showcustom(void);		/* print custom functions */
-E_FUNC void customhelp(char *);		/* direct custom help */
-E_FUNC void init_custreg(void);		/* initialize custom registers */
+E_FUNC bool custom_compiled(void);      /* return true if libcustcalc compiled CUSTOM defined, false otherwise */
+E_FUNC VALUE custom(char*, int, VALUE**);       /* master custom interface */
+EXTERN bool allow_custom;               /* true => custom builtins allowed */
+E_FUNC void showcustom(void);           /* print custom functions */
+E_FUNC void customhelp(char *);         /* direct custom help */
+E_FUNC void init_custreg(void);         /* initialize custom registers */
 
 #endif /* !CUSTOM_H */

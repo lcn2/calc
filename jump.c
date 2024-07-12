@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,17 +17,17 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1994/06/29 04:03:54
- * File existed as early as:	1994
+ * Under source code control:   1994/06/29 04:03:54
+ * File existed as early as:    1994
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 /*
  * If x is divisible by a trivial prime (2,3,5,7,11), then:
  *
- *		x + jmpindx[ (x>>1)%JMPMOD ]
+ *              x + jmpindx[ (x>>1)%JMPMOD ]
  *
  * is the value of the smallest value > x that is not divisible by a
  * trivial prime.  JMPMOD is the product of the odd trivial primes.
@@ -37,13 +37,13 @@
  *
  * If x is not divisible by a trivial prime, then:
  *
- *		x + jmp[ -jmpindx[(x>>1)%JMPMOD] ]
+ *              x + jmp[ -jmpindx[(x>>1)%JMPMOD] ]
  *
  * is the value of the smallest value > x that is not divisible by a
  * trivial prime.
  *
  * Instead of testing successive odd values, this system allows us to
- * skip odd values divisible by trivial primes.	 This is process on the
+ * skip odd values divisible by trivial primes.  This is process on the
  * average reduces the values we need to test by a factor of at least 2.4.
  */
 
@@ -51,7 +51,7 @@
 #include "jump.h"
 
 
-#include "banned.h"	/* include after system header <> includes */
+#include "banned.h"     /* include after system header <> includes */
 
 
 /*

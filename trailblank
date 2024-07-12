@@ -23,11 +23,11 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# Under source code control:	2017/05/22 03:28:20
-# File existed as early as:	2017
+# Under source code control:    2017/05/22 03:28:20
+# File existed as early as:     2017
 #
-# chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-# Share and enjoy!  :-)		http://www.isthe.com/chongo/tech/comp/calc/
+# chongo <was here> /\oo/\      http://www.isthe.com/chongo/
+# Share and enjoy!  :-)         http://www.isthe.com/chongo/tech/comp/calc/
 
 # exit code
 #
@@ -42,7 +42,7 @@ export EXIT_CODE=0
 # that end in .out, and files  containing the any of the following
 # in any letter case:
 #
-#	foo bar baz curds whey rmme
+#       foo bar baz curds whey rmme
 #
 # Such files are temporary/test files and are not part of calc.
 #
@@ -51,21 +51,21 @@ export EXIT_CODE=0
 #
 LEADING_SPACES_BEFORE_TAB=$(
     find . \( -path './NOTES' -o -path './calc' -o -path './ver_calc' -o \
-	      -name '*.o' -o -name '*.a' -o -name '*ptch*' -o -name 'core*' -o \
-	      -name '*.orig' -o -name '*.rej' -o -name '*.bak' -o \
-	      -name '*.ptch' -o -name 'core.*' -o \
-	      -name '*.so*' -o -name 'calc-static' -o -name 'libcalc.*' -o \
-	      -name 'sample_many' -o -name 'sample_rand' -o -name 'errcode' -o \
-	      -path './help/funclist' -o -path './have_stdvs' -o \
-	      -path './endian' -o -path './no_implicit' -o -name 'chk_c' -o \
-	      -path './longbits' -o -name '.*.swp' -o -name 'conf.h' -o \
-	      -name '.git' -o -path './custom/libcustcalc*' -o -path './libcustcalc*' -o \
-	      -name 'sample_many-static' -o -name 'sample_rand-static' -o \
-	      -name 'codeql-analysis.yml' -o -name tags -o -name '*.out' -o \
-	      -name '?' -o -iname '*foo*' -o -iname '*bar*' -o -iname '*baz*' -o \
-	      -iname '*curds*' -o -iname '*whey*' -o -iname '*rmme*' \
-	   \) -prune -o -type f -print0 | \
-    xargs -0 egrep -l '^	*  *	'
+              -name '*.o' -o -name '*.a' -o -name '*ptch*' -o -name 'core*' -o \
+              -name '*.orig' -o -name '*.rej' -o -name '*.bak' -o \
+              -name '*.ptch' -o -name 'core.*' -o \
+              -name '*.so*' -o -name 'calc-static' -o -name 'libcalc.*' -o \
+              -name 'sample_many' -o -name 'sample_rand' -o -name 'errcode' -o \
+              -path './help/funclist' -o -path './have_stdvs' -o \
+              -path './endian' -o -path './no_implicit' -o -name 'chk_c' -o \
+              -path './longbits' -o -name '.*.swp' -o -name 'conf.h' -o \
+              -name '.git' -o -path './custom/libcustcalc*' -o -path './libcustcalc*' -o \
+              -name 'sample_many-static' -o -name 'sample_rand-static' -o \
+              -name 'codeql-analysis.yml' -o -name tags -o -name '*.out' -o \
+              -name '?' -o -iname '*foo*' -o -iname '*bar*' -o -iname '*baz*' -o \
+              -iname '*curds*' -o -iname '*whey*' -o -iname '*rmme*' \
+           \) -prune -o -type f -print0 | \
+    xargs -0 egrep -l '^        *  *    '
 )
 if [[ -n $LEADING_SPACES_BEFORE_TAB ]]; then
     echo
@@ -83,7 +83,7 @@ fi
 # that end in .out, and files  containing the any of the following
 # in any letter case:
 #
-#	foo bar baz curds whey rmme
+#       foo bar baz curds whey rmme
 #
 # Such files are temporary/test files and are not part of calc.
 #
@@ -92,20 +92,20 @@ fi
 #
 TRAILING_WHITESPACE=$(
     find . \( -path './NOTES' -o -path './calc' -o -path './ver_calc' -o \
-	      -name '*.o' -o -name '*.a' -o -name '*ptch*' -o -name 'core*' -o \
-	      -name '*.orig' -o -name '*.rej' -o -name '*.bak' -o \
-	      -name '*.ptch' -o -name 'core.*' -o \
-	      -name '*.so*' -o -name 'calc-static' -o -name 'libcalc.*' -o \
-	      -name 'sample_many' -o -name 'sample_rand' -o -name 'errcode' -o \
-	      -path './help/funclist' -o -path './have_stdvs' -o \
-	      -path './endian' -o -path './no_implicit' -o -name 'chk_c' -o \
-	      -path './longbits' -o -name '.*.swp' -o -name 'conf.h' -o \
-	      -name '.git' -o -path './custom/libcustcalc*' -o -path './libcustcalc*' -o \
-	      -name 'sample_many-static' -o -name 'sample_rand-static' -o \
-	      -name '?' -o -iname '*foo*' -o -iname '*bar*' -o -iname '*baz*' -o \
-	      -iname '*curds*' -o -iname '*whey*' -o -iname '*rmme*' \
-	   \) -prune -o -type f -print0 | \
-    xargs -0 egrep -l '[	 ]$'
+              -name '*.o' -o -name '*.a' -o -name '*ptch*' -o -name 'core*' -o \
+              -name '*.orig' -o -name '*.rej' -o -name '*.bak' -o \
+              -name '*.ptch' -o -name 'core.*' -o \
+              -name '*.so*' -o -name 'calc-static' -o -name 'libcalc.*' -o \
+              -name 'sample_many' -o -name 'sample_rand' -o -name 'errcode' -o \
+              -path './help/funclist' -o -path './have_stdvs' -o \
+              -path './endian' -o -path './no_implicit' -o -name 'chk_c' -o \
+              -path './longbits' -o -name '.*.swp' -o -name 'conf.h' -o \
+              -name '.git' -o -path './custom/libcustcalc*' -o -path './libcustcalc*' -o \
+              -name 'sample_many-static' -o -name 'sample_rand-static' -o \
+              -name '?' -o -iname '*foo*' -o -iname '*bar*' -o -iname '*baz*' -o \
+              -iname '*curds*' -o -iname '*whey*' -o -iname '*rmme*' \
+           \) -prune -o -type f -print0 | \
+    xargs -0 egrep -l '[         ]$'
 )
 if [[ -n $TRAILING_WHITESPACE ]]; then
     echo
@@ -120,33 +120,33 @@ fi
 #
 if [[ -x /usr/local/bin/picky ]]; then
     PICKY_PHASE_0A=$(/usr/local/bin/picky -w -s -v ./cal/set8700.line \
-						   .gitignore README.md .lldbinit 2>&1)
+                                                   .gitignore README.md .lldbinit 2>&1)
     status="$?"
     if [[ $status -ne 0 ]]; then
-	echo
-	echo '# picky failed on one of the files with long lines'
-	echo "$PICKY_PHASE_0A" | sed -e 's/\.\///'
-	EXIT_CODE=3
+        echo
+        echo '# picky failed on one of the files with long lines'
+        echo "$PICKY_PHASE_0A" | sed -e 's/\.\///'
+        EXIT_CODE=3
     fi
     if [[ -e conf.h ]]; then
-	PICKY_PHASE_0B=$(/usr/local/bin/picky -w -s -v conf.h 2>&1)
-	status="$?"
-	if [[ $status -ne 0 ]]; then
-	    echo
-	    echo '# picky failed on conf.h'
-	    echo "$PICKY_PHASE_0B" | sed -e 's/\.\///'
-	    EXIT_CODE=4
-	fi
+        PICKY_PHASE_0B=$(/usr/local/bin/picky -w -s -v conf.h 2>&1)
+        status="$?"
+        if [[ $status -ne 0 ]]; then
+            echo
+            echo '# picky failed on conf.h'
+            echo "$PICKY_PHASE_0B" | sed -e 's/\.\///'
+            EXIT_CODE=4
+        fi
     fi
     if [[ -e errsym.h ]]; then
-	PICKY_PHASE_0C=$(/usr/local/bin/picky -w -s -v errsym.h 2>&1)
-	status="$?"
-	if [[ $status -ne 0 ]]; then
-	    echo
-	    echo '# picky failed on errsym.h'
-	    echo "$PICKY_PHASE_0C" | sed -e 's/\.\///'
-	    EXIT_CODE=5
-	fi
+        PICKY_PHASE_0C=$(/usr/local/bin/picky -w -s -v errsym.h 2>&1)
+        status="$?"
+        if [[ $status -ne 0 ]]; then
+            echo
+            echo '# picky failed on errsym.h'
+            echo "$PICKY_PHASE_0C" | sed -e 's/\.\///'
+            EXIT_CODE=5
+        fi
     fi
 else
     echo "# $0: WARNING: /usr/local/bin/picky not found: skipping picky phase 0 checks!" 1>&2
@@ -162,7 +162,7 @@ fi
 # that end in .out, and files  containing the any of the following
 # in any letter case:
 #
-#	foo bar baz curds whey rmme
+#       foo bar baz curds whey rmme
 #
 # Such files are temporary/test files and are not part of calc.
 #
@@ -171,29 +171,29 @@ fi
 #
 PICKY_PHASE_1=$(
     find . \( -path './NOTES' -o -path './calc' -o -path './ver_calc' -o \
-	      -name '*.o' -o -name '*.a' -o -name '*ptch*' -o -name 'core*' -o \
-	      -name '*.orig' -o -name '*.rej' -o -name '*.bak' -o \
-	      -name '*.ptch' -o -name 'core.*' -o \
-	      -name '*.so*' -o -name 'calc-static' -o -name 'libcalc.*' -o \
-	      -name 'sample_many' -o -name 'sample_rand' -o -name 'errcode' -o \
-	      -path './help/funclist' -o -path './have_stdvs' -o \
-	      -path './endian' -o -path './no_implicit' -o -name 'chk_c' -o \
-	      -path './longbits' -o -name '.*.swp' -o -name 'conf.h' -o \
-	      -name '.git' -o -path './custom/libcustcalc*' -o -path './libcustcalc*' -o \
-	      -name 'sample_many-static' -o -name 'sample_rand-static' -o \
-	      -name 'codeql-analysis.yml' -o -name tags -o -name '*.out' -o \
-	      -name '?' -o -iname '*foo*' -o -iname '*bar*' -o -iname '*baz*' -o \
-	      -iname '*curds*' -o -iname '*whey*' -o -iname '*rmme*' \
-	   \) -prune -o -type f -print0 | \
+              -name '*.o' -o -name '*.a' -o -name '*ptch*' -o -name 'core*' -o \
+              -name '*.orig' -o -name '*.rej' -o -name '*.bak' -o \
+              -name '*.ptch' -o -name 'core.*' -o \
+              -name '*.so*' -o -name 'calc-static' -o -name 'libcalc.*' -o \
+              -name 'sample_many' -o -name 'sample_rand' -o -name 'errcode' -o \
+              -path './help/funclist' -o -path './have_stdvs' -o \
+              -path './endian' -o -path './no_implicit' -o -name 'chk_c' -o \
+              -path './longbits' -o -name '.*.swp' -o -name 'conf.h' -o \
+              -name '.git' -o -path './custom/libcustcalc*' -o -path './libcustcalc*' -o \
+              -name 'sample_many-static' -o -name 'sample_rand-static' -o \
+              -name 'codeql-analysis.yml' -o -name tags -o -name '*.out' -o \
+              -name '?' -o -iname '*foo*' -o -iname '*bar*' -o -iname '*baz*' -o \
+              -iname '*curds*' -o -iname '*whey*' -o -iname '*rmme*' \
+           \) -prune -o -type f -print0 | \
     if [[ -x /usr/local/bin/picky ]]; then
-	xargs -0 /usr/local/bin/picky -s -v -w132
+        xargs -0 /usr/local/bin/picky -s -v -w132
     else
-	echo "# $0: WARNING: /usr/local/bin/picky not found: skipping picky phase 1 check!" 1>&2
-	echo "#" 1>&2
-	echo "# $0: NOTICE: The picky tool used is from the following GitHub repo:" 1>&2
-	echo "#" 1>&2
-	echo "#		https://github.com/lcn2/picky for the picky tool GitHub repo." 1>&2
-	echo "#" 1>&2
+        echo "# $0: WARNING: /usr/local/bin/picky not found: skipping picky phase 1 check!" 1>&2
+        echo "#" 1>&2
+        echo "# $0: NOTICE: The picky tool used is from the following GitHub repo:" 1>&2
+        echo "#" 1>&2
+        echo "#         https://github.com/lcn2/picky for the picky tool GitHub repo." 1>&2
+        echo "#" 1>&2
     fi
 )
 if [[ -n $PICKY_PHASE_1 ]]; then
@@ -213,7 +213,7 @@ if [[ -n $BACKUP_MAKEILES ]]; then
     echo "# You need execute the following to remove backup Makefiles:"
     echo
     echo "$BACKUP_MAKEILES" | while read -r file; do
-	echo "rm -f $file"
+        echo "rm -f $file"
     done
     EXIT_CODE=7
 fi

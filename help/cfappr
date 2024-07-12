@@ -5,12 +5,12 @@ SYNOPSIS
     cfappr(x [,eps [,rnd]]) or cfappr(x, n [,rnd])
 
 TYPES
-    x		real
-    eps		real with abs(eps) < 1, defaults to epsilon()
-    n		real with n >= 1
-    rnd		integer, defaults to config("cfappr")
+    x           real
+    eps         real with abs(eps) < 1, defaults to epsilon()
+    n           real with n >= 1
+    rnd         integer, defaults to config("cfappr")
 
-    return	real
+    return      real
 
 DESCRIPTION
     If x is an integer or eps is zero, either form returns x.
@@ -21,23 +21,23 @@ DESCRIPTION
 
     If n >= 1 and den(x) > n, cfappr(x, n) returns the nearest above,
     nearest below, or nearest, approximation to x with denominator less
-    than or equal to n.	 If den(x) <= n, cfappr(x,n) returns x.
+    than or equal to n.  If den(x) <= n, cfappr(x,n) returns x.
 
     In either case when the result v is not x, how v relates to x is
     determined by bits 0, 1, 2 and 4 of the argument rnd in the same way as
     these bits are used in the functions round() and appr().  In the
     following y is either eps or n.
 
-		rnd	sign of remainder x - v
+                rnd     sign of remainder x - v
 
-		0		sgn(y)
-		1		-sgn(y
-		2		sgn(x), "rounding to zero"
-		3		-sgn(x), "rounding from zero"
-		4		+, "rounding down"
-		5		-, "rounding up"
-		6		sgn(x/y)
-		7		-sgn(x/y)
+                0               sgn(y)
+                1               -sgn(y
+                2               sgn(x), "rounding to zero"
+                3               -sgn(x), "rounding from zero"
+                4               +, "rounding down"
+                5               -, "rounding up"
+                6               sgn(x/y)
+                7               -sgn(x/y)
 
     If bit 4 of rnd is set, the other bits are irrelevant for the eps case;
     thus for 16 <= rnd < 24, cfappr(x, eps, rnd) is the smallest-denominator
@@ -96,7 +96,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -104,8 +104,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1994/09/30 01:23:59
-## File existed as early as:	1994
+## Under source code control:   1994/09/30 01:23:59
+## File existed as early as:    1994
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

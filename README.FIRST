@@ -4,7 +4,7 @@ See the HOWTO.INSTALL file for information on how to build and install calc.
 
 To be sure that your version of calc is up to date, check out:
 
-	http://www.isthe.com/chongo/tech/comp/calc/calc-download.html
+        http://www.isthe.com/chongo/tech/comp/calc/calc-download.html
 
 We are interested in any/all feedback on recent versions of calc.
 In particular we would like to hear about:
@@ -27,7 +27,7 @@ If you run into problems, see the BUGS file.
 Calc is distributed with an extensive collection of help files that
 are accessible from the command line.  The following assume that you
 are running calc from the distribution directory or that you have
-installed calc.	 In these examples, the "; " is the calc prompt, not
+installed calc.  In these examples, the "; " is the calc prompt, not
 something that you type in.
 
 For list of help topics:
@@ -105,7 +105,7 @@ for information about how to ask a question.
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -113,8 +113,8 @@ for information about how to ask a question.
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/10/25 05:27:59
-## File existed as early as:	1995
+## Under source code control:   1995/10/25 05:27:59
+## File existed as early as:    1995
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

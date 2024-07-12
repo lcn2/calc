@@ -5,9 +5,9 @@ SYNOPSIS
     fgetfile(fs)
 
 TYPES
-    fs		file stream open for reading
+    fs          file stream open for reading
 
-    return	string or null value
+    return      string or null value
 
 DESCRIPTION
 
@@ -20,19 +20,19 @@ DESCRIPTION
     If the content of the file "newfile" is a sequence of statements that
     could form the body of function definition, the statement sequence
 
-		fs = fopen("newfile", "r");
-		eval(fgetfile(fs));
+                fs = fopen("newfile", "r");
+                eval(fgetfile(fs));
 
     achieves the same as the command
 
-		read newfile;
+                read newfile;
 
 EXAMPLE
     ; f = fopen("/tmp/newfile", "w")
     ; fputs(f, "abc\0xyz\n\t\xb0\0\r\v123"
     ; freopen(f, "r")
     ; estr(fgetfile(f))
-	""abc\0xyz\n\t\xb0\0\r\v123""
+        ""abc\0xyz\n\t\xb0\0\r\v123""
 
 LIMITS
     none
@@ -51,7 +51,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -59,8 +59,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1996/04/30 03:05:17
-## File existed as early as:	1996
+## Under source code control:   1996/04/30 03:05:17
+## File existed as early as:    1996
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

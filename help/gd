@@ -5,10 +5,10 @@ SYNOPSIS
     gd(z [,eps])
 
 TYPES
-    z		number (real or complex)
-    eps		0 < real < 1, defaults to epsilon()
+    z           number (real or complex)
+    eps         0 < real < 1, defaults to epsilon()
 
-    return	number or "Log of zero or infinity" error value
+    return      number or "Log of zero or infinity" error value
 
 DESCRIPTION
     Calculate the Gudermannian of z to a multiple of eps with errors in
@@ -18,11 +18,11 @@ DESCRIPTION
 
     gd(z) is usually defined initially for real z by one of the formulae
 
-		gd(z) = 2 * atan(exp(z)) - pi/2
+                gd(z) = 2 * atan(exp(z)) - pi/2
 
-		      = 2 * atan(tanh(z/2))
+                      = 2 * atan(tanh(z/2))
 
-		      = atan(sinh(z)),
+                      = atan(sinh(z)),
 
     or as the integral from 0 to z of (1/cosh(t))dt.  For complex z, the
     principal branch, approximated by gd(z, eps), has the cut:
@@ -32,7 +32,7 @@ DESCRIPTION
 
     If z = x + y*i and abs(y) < pi/2, gd(z) is given by
 
-	gd(z) = atan(sinh(x)/cos(y)) + i * atanh(sin(y)/cosh(x)).
+        gd(z) = atan(sinh(x)/cos(y)) + i * atanh(sin(y)/cosh(x)).
 
 EXAMPLE
     ; print gd(1, 1e-5), gd(1, 1e-10), gd(1, 1e-15)
@@ -58,7 +58,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -66,8 +66,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1997/09/06 20:03:35
-## File existed as early as:	1997
+## Under source code control:   1997/09/06 20:03:35
+## File existed as early as:    1997
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

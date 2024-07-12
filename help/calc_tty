@@ -5,7 +5,7 @@ SYNOPSIS
     calc_tty()
 
 TYPES
-    return	none if appears to be successful, error-value otherwise
+    return      none if appears to be successful, error-value otherwise
 
 DESCRIPTION
     This may enable a return to normal operation if abnormal activity
@@ -13,9 +13,9 @@ DESCRIPTION
     may occur when activity is resumed by an fg command after a ctrl-Z
     interrupt, or by any of the three commands:
 
-	; !stty echo
-	; !stty -cbreak
-	; !stty echo -cbreak
+        ; !stty echo
+        ; !stty -cbreak
+        ; !stty echo -cbreak
 
 EXAMPLE
     ; calc_tty();
@@ -34,7 +34,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -42,7 +42,7 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	2000/12/14 01:33:00
-## File existed as early as:	2000
+## Under source code control:   2000/12/14 01:33:00
+## File existed as early as:    2000
 ##
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

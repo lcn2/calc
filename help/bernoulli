@@ -5,15 +5,15 @@ SYNOPSIS
     bernoulli(n)
 
 TYPES
-    n		integer, n < 2^31 if even
+    n           integer, n < 2^31 if even
 
-    return	rational
+    return      rational
 
 DESCRIPTION
     Returns the Bernoulli number with index n, i.e. the coefficient B_n in
     the expansion
 
-		t/(exp(t) - 1) = Sum B_n * t^n/n!
+                t/(exp(t) - 1) = Sum B_n * t^n/n!
 
     bernoulli(n) is zero both for n < 0 and for n odd and > 2.
     When bernoulli(n) is computed for positive even n, the values for
@@ -49,7 +49,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -57,7 +57,7 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	2000/07/13 01:33:00
-## File existed as early as:	2000
+## Under source code control:   2000/07/13 01:33:00
+## File existed as early as:    2000
 ##
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

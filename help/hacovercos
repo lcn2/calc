@@ -5,10 +5,10 @@ SYNOPSIS
     hacovercos(x [,eps])
 
 TYPES
-    x		number (real or complex)
-    eps		0 < real < 1, defaults to epsilon()
+    x           number (real or complex)
+    eps         0 < real < 1, defaults to epsilon()
 
-    return	number
+    return      number
 
 DESCRIPTION
     Calculate the half coversed trigonometric cosine of x to a multiple of eps with error less in
@@ -16,8 +16,8 @@ DESCRIPTION
 
     This function is sometimes called hacvc, or hacovercosine, is equivalent to:
 
-	hacovercos(x) = covercos(x) / 2
-	hacovercos(x) = (1 + sin(x)) / 2
+        hacovercos(x) = covercos(x) / 2
+        hacovercos(x) = (1 + sin(x)) / 2
 
 EXAMPLE
     ; print hacovercos(1/2), hacovercos(5/7), hacovercos(42/7)
@@ -55,14 +55,14 @@ SEE ALSO
 EXTERNAL RESOURCES
     For general information on trigonometric functions, see:
 
-	https://en.wikipedia.org/wiki/Trigonometric_functions#Unit-circle_definitions
-	https://en.wikipedia.org/wiki/Versine
-	https://en.wikipedia.org/wiki/Exsecant
-	https://en.wikipedia.org/wiki/Inverse_trigonometric_functions
-	https://en.wikipedia.org/wiki/Chord_(geometry)
-	https://en.wikipedia.org/wiki/Secant_line
-	https://en.wikipedia.org/wiki/Hartley_transform#cas
-	https://en.wikipedia.org/wiki/Cis_(mathematics)
+        https://en.wikipedia.org/wiki/Trigonometric_functions#Unit-circle_definitions
+        https://en.wikipedia.org/wiki/Versine
+        https://en.wikipedia.org/wiki/Exsecant
+        https://en.wikipedia.org/wiki/Inverse_trigonometric_functions
+        https://en.wikipedia.org/wiki/Chord_(geometry)
+        https://en.wikipedia.org/wiki/Secant_line
+        https://en.wikipedia.org/wiki/Hartley_transform#cas
+        https://en.wikipedia.org/wiki/Cis_(mathematics)
 
 ## Copyright (C) 2023  Landon Curt Noll
 ##
@@ -72,7 +72,7 @@ EXTERNAL RESOURCES
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -80,8 +80,8 @@ EXTERNAL RESOURCES
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	2023/09/24 11:10:08
-## File existed as early as:	2023
+## Under source code control:   2023/09/24 11:10:08
+## File existed as early as:    2023
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

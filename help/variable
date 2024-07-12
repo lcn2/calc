@@ -4,7 +4,7 @@ Variable declarations
     Global variables are visible to all functions and on the command
     line, and are permanent.  Local variables are visible only within
     a single function or command sequence.  When the function or command
-    sequence returns, the local variables are deleted.	Static variables
+    sequence returns, the local variables are deleted.  Static variables
     are permanent like global variables, but are only visible within the
     same input file or function where they are defined.
 
@@ -13,12 +13,12 @@ Variable declarations
     separated by commas.  The definition is terminated with a semicolon.
     Examples of declarations are:
 
-	    local	x, y, z;
-	    global	fred;
-	    local	foo, bar;
-	    static	var1, var2, var3;
+            local       x, y, z;
+            global      fred;
+            local       foo, bar;
+            static      var1, var2, var3;
 
-    Variables may have initializations applied to them.	 This is done
+    Variables may have initializations applied to them.  This is done
     by following the variable name by an equals sign and an expression.
     Global and local variables are initialized each time that control
     reaches them (e.g., at the entry to a function which contains them).
@@ -28,23 +28,23 @@ Variable declarations
     contain function calls and refer to variables.  Examples of such
     initializations are:
 
-	    local	a1 = 7, a2 = 3;
-	    static	b = a1 + sin(a2);
+            local       a1 = 7, a2 = 3;
+            static      b = a1 + sin(a2);
 
     Within function declarations, all variables must be defined.
     But on the top level command line, assignments automatically define
-    global variables as needed.	 For example, on the top level command
+    global variables as needed.  For example, on the top level command
     line, the following defines the global variable x if it had not
     already been defined:
 
-	    x = 7
+            x = 7
 
     The static keyword may be used at the top level command level to
     define a variable which is only accessible interactively, or within
     functions defined interactively.
 
     Variables have no fixed type, thus there is no need or way to
-    specify the types of variables as they are defined.	 Instead, the
+    specify the types of variables as they are defined.  Instead, the
     types of variables change as they are assigned to or are specified
     in special statements such as 'mat' and 'obj'.  When a variable is
     first defined using 'local', 'global', or 'static', it has the
@@ -61,15 +61,15 @@ Variable declarations
     of these variables are also allowed.  Examples of such declarations
     are:
 
-	    static mat table[3] = {5, 6, 7};
-	    local obj point p1, p2;
+            static mat table[3] = {5, 6, 7};
+            local obj point p1, p2;
 
     When working with user-defined functions, the syntax for passing an
     lvalue by reference rather than by value is to precede an expression
     for the lvalue by a backquote. For example, if the function invert is
     defined by:
 
-	    define invert(x) {x = inverse(x)}
+            define invert(x) {x = inverse(x)}
 
     then invert(`A) achieves the effect of A = inverse(A).  In other
     words, passing and argument of `variable (with a back-quote)
@@ -81,14 +81,14 @@ Variable declarations
     In an argument, a backquote before other than an lvalue is ignored.
     Consider, for example:
 
-	    ; define logplus(x,y,z) {return log(++x + ++y + ++z);}
+            ; define logplus(x,y,z) {return log(++x + ++y + ++z);}
 
-	    ; eh = 55;
-	    ; mi = 25;
-	    ; answer = logplus(eh, `mi, `17);
+            ; eh = 55;
+            ; mi = 25;
+            ; answer = logplus(eh, `mi, `17);
 
-	    ; print eh, mi, answer;
-	    55 26 2
+            ; print eh, mi, answer;
+            55 26 2
 
     The value of eh is was not changed because eh was used as
     an argument without a back-quote (`).  However, mi was incremented
@@ -102,27 +102,27 @@ Variable declarations
     use the indirection operator * (star) to refer to the lvalue in the
     function body.  Consider the following function:
 
-	    ; define ten(a) { *a = 10; }
+            ; define ten(a) { *a = 10; }
 
-	    ; n = 17;
-	    ; ten(n);
-	    ; print n;
-	    17
+            ; n = 17;
+            ; ten(n);
+            ; print n;
+            17
 
-	    ; ten(`n);
-	    ; print n;
-	    17
+            ; ten(`n);
+            ; print n;
+            17
 
-	    ; ten(&n);
-	    ; print n;
-	    10
+            ; ten(&n);
+            ; print n;
+            10
 
     Passing an argument with a & (ampersand) allows the tenmore()
     function to modify the calling variable:
 
-	    ; wa = tenmore(&vx);
-	    ; print vx, wa;
-	    65 65
+            ; wa = tenmore(&vx);
+            ; print vx, wa;
+            65 65
 
     Great care should be taken when using a pointer to a local variable
     or element of a matrix, list or object, since the lvalue pointed to
@@ -147,7 +147,7 @@ Variable declarations
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -155,8 +155,8 @@ Variable declarations
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1991/07/21 04:37:25
-## File existed as early as:	1991
+## Under source code control:   1991/07/21 04:37:25
+## File existed as early as:    1991
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

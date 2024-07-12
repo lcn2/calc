@@ -5,55 +5,55 @@ SYNOPSIS
     errno([errnum | "E_STRING"])
 
 TYPES
-    errnum	integer
-    E_STRING	string
+    errnum      integer
+    E_STRING    string
 
-    return	integer
+    return      integer
 
 DESCRIPTION
     With errno(errnum) numeric argument:
 
-	For 0 < errnum <= 32767:
+        For 0 < errnum <= 32767:
 
-	    errno(errnum) sets "global calc_errno value" to the value
-	    errnum and returns its previous value.  Unlike error(errnum)
-	    calling errno(errnum) does NOT increment the global calc
-	    error count (see help errcount).
+            errno(errnum) sets "global calc_errno value" to the value
+            errnum and returns its previous value.  Unlike error(errnum)
+            calling errno(errnum) does NOT increment the global calc
+            error count (see help errcount).
 
-	For all other errnum values:
+        For all other errnum values:
 
-	    An error error condition is raised about the valid errnum.
+            An error error condition is raised about the valid errnum.
 
     With errno("E_STRING") string argument:
 
-	If E_STRING is a valid errsym code, then the E_STRING errsym
-	is converted into an equivalent errnum and errno is set to errnum.
+        If E_STRING is a valid errsym code, then the E_STRING errsym
+        is converted into an equivalent errnum and errno is set to errnum.
 
-	If E_STRING is not a valid errsym code, an error error condition
-	is raised about the invalid E_STRING.
+        If E_STRING is not a valid errsym code, an error error condition
+        is raised about the invalid E_STRING.
 
-	For example, these two calls are equivalent:
+        For example, these two calls are equivalent:
 
-	    errno(10003);	/* error 10003 has a E_STRING of "E_ADD" */
-	    errno("E_ADD");	/* error 10003 has a E_STRING of "E_ADD" */
+            errno(10003);       /* error 10003 has a E_STRING of "E_ADD" */
+            errno("E_ADD");     /* error 10003 has a E_STRING of "E_ADD" */
 
-	See help errsym for information on E_STRING errsym codes.
+        See help errsym for information on E_STRING errsym codes.
 
-	For a list of the E_STRING associated with calc computation error
-	codes, see help errorcodes.
+        For a list of the E_STRING associated with calc computation error
+        codes, see help errorcodes.
 
     With errno() no argument:
 
-	errno() returns the current value of "global calc_errno
-	value".  Unlike error() calling errno() does NOT increment
-	the global calc error count (see help errcount).
+        errno() returns the current value of "global calc_errno
+        value".  Unlike error() calling errno() does NOT increment
+        the global calc error count (see help errcount).
 
     NOTE:
 
-	The errno() builtin should not be confused with the errno
-	used by libc in C.  The range of errnum extend beyond the
-	C's libc errno.  See help error for information on the mean
-	of various errnum ranges.
+        The errno() builtin should not be confused with the errno
+        used by libc in C.  The range of errnum extend beyond the
+        C's libc errno.  See help error for information on the mean
+        of various errnum ranges.
 
     Unlike error() calling errno() does NOT increment the global
     calc error count (see help errcount).
@@ -97,10 +97,10 @@ LIMITS
     E_STRING is string that must match the regular expression: ^E_[A-Z0-9_]+$
 
 LINK LIBRARY
-    int calc_errno;				/* global calc_errno value */
+    int calc_errno;                             /* global calc_errno value */
     int set_errno(int e);
 
-    CONST struct errtbl error_table[ECOUNT+2];	/* calc error codes, error symbols and error messages */
+    CONST struct errtbl error_table[ECOUNT+2];  /* calc error codes, error symbols and error messages */
 
     bool is_e_digits(CONST char *errsym);
     bool is_valid_errnum(int errnum);
@@ -126,7 +126,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -134,8 +134,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1994/10/27 03:05:08
-## File existed as early as:	1994
+## Under source code control:   1994/10/27 03:05:08
+## File existed as early as:    1994
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

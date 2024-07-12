@@ -5,9 +5,9 @@ SYNOPSIS
     min(x_1, x_2, ...)
 
 TYPES
-    x_1, x_2, ...	any
+    x_1, x_2, ...       any
 
-    return		any
+    return              any
 
 DESCRIPTION
     If an argument x_i is a list with elements e_1, e_2, ..., e_n, it
@@ -18,7 +18,7 @@ DESCRIPTION
     xx_min(x_i) if the function xx_min() has been defined.  If the
     type xx has been defined by:
 
-		obj xx = {x, y, z},
+                obj xx = {x, y, z},
 
     an appropriate definition of xx_min(a) is sometimes min(a.x, a.y, a.z).
     min(a) then returns the minimum of the elements of a.
@@ -34,9 +34,9 @@ DESCRIPTION
     and returns a real-number value for any comparison that has to be made,
     min(x_1, x_2, ...) returns the value determined by min(x_1) = x_1,
     and successively for later arguments, by the use of the equivalent of
-    min(a,b) = (a < b) ? a : b.	 If the ordering determined by < is total,
+    min(a,b) = (a < b) ? a : b.  If the ordering determined by < is total,
     min(x_1, ...) will be the minimum value among the arguments.  For a
-    pre-order relation it may be one of several minimal values.	For other
+    pre-order relation it may be one of several minimal values. For other
     relations, it may be difficult to predict the result.
 
 EXAMPLE
@@ -78,7 +78,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -86,8 +86,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/10/05 04:52:27
-## File existed as early as:	1995
+## Under source code control:   1995/10/05 04:52:27
+## File existed as early as:    1995
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

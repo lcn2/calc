@@ -5,10 +5,10 @@ SYNOPSIS
     fputc(fd, data)
 
 TYPES
-    fd		file
-    data	str
+    fd          file
+    data        str
 
-    return	nil
+    return      nil
 
 DESCRIPTION
     This function writes the first character in data to the file
@@ -19,7 +19,7 @@ EXAMPLE
     ; fputc(fd, "c")
     ; fd2 = fopen("/tmp/newfile", "r")
     ; fgetc(fd2)
-	    "c"
+            "c"
 
 LIMITS
     fd must be associated with an open file
@@ -39,7 +39,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -47,8 +47,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/03/04 11:33:20
-## File existed as early as:	1995
+## Under source code control:   1995/03/04 11:33:20
+## File existed as early as:    1995
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

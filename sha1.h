@@ -6,7 +6,7 @@
  * This file is not covered under version 2.1 of the GNU LGPL.
  * This file is covered under "The unlicense":
  *
- *	https://unlicense.org
+ *      https://unlicense.org
  *
  * In particular:
  *
@@ -61,11 +61,11 @@
  * We will assume that bit count is a multiple of 8.
  */
 typedef struct {
-	USB32 digest[SHA1_DIGESTWORDS]; /* message digest */
-	USB32 countLo;			/* 64 bit count: bits 3-34 */
-	USB32 countHi;			/* 64 bit count: bits 35-63 */
-	USB32 datalen;			/* length of data in data */
-	USB32 data[SHA1_CHUNKWORDS];	/* SHA1 chunk buffer */
+        USB32 digest[SHA1_DIGESTWORDS]; /* message digest */
+        USB32 countLo;                  /* 64 bit count: bits 3-34 */
+        USB32 countHi;                  /* 64 bit count: bits 35-63 */
+        USB32 datalen;                  /* length of data in data */
+        USB32 data[SHA1_CHUNKWORDS];    /* SHA1 chunk buffer */
 } SHA1_INFO;
 
 /*
@@ -74,12 +74,12 @@ typedef struct {
  * We will count bytes and convert to bit count during the final
  * transform.
  */
-#define SHA1COUNT(sha1info, count) {					\
-	USB32 tmp_countLo;						\
-	tmp_countLo = (sha1info)->countLo;				\
-	if (((sha1info)->countLo += (count)) < tmp_countLo) {		\
-		(sha1info)->countHi++;					\
-	}								\
+#define SHA1COUNT(sha1info, count) {                                    \
+        USB32 tmp_countLo;                                              \
+        tmp_countLo = (sha1info)->countLo;                              \
+        if (((sha1info)->countLo += (count)) < tmp_countLo) {           \
+                (sha1info)->countHi++;                                  \
+        }                                                               \
 }
 
 

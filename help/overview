@@ -1,18 +1,18 @@
-		    CALC - An arbitrary precision calculator.
-			    by David I. Bell
+                    CALC - An arbitrary precision calculator.
+                            by David I. Bell
 
 
     This is a calculator program with arbitrary precision arithmetic.
     All numbers are represented as fractions with arbitrarily large
     numerators and denominators which are always reduced to lowest terms.
     Real or exponential format numbers can be input and are converted
-    to the equivalent fraction.	 Hex, binary, or octal numbers can be
+    to the equivalent fraction.  Hex, binary, or octal numbers can be
     input by using numbers with leading '0x', '0b' or '0' characters.
     Complex numbers can be input using a trailing 'i', as in '2+3i'.
     Strings and characters are input by using single or double quotes.
 
     Commands are statements in a C-like language, where each input
-    line is treated as the body of a procedure.	 Thus the command
+    line is treated as the body of a procedure.  Thus the command
     line can contain variable declarations, expressions, labels,
     conditional tests, and loops.  Assignments to any variable name
     will automatically define that name as a global variable.  The
@@ -20,7 +20,7 @@
     which are evaluated are automatically printed.  Thus, you can evaluate
     an expression's value by simply typing it in.
 
-    Many useful built-in mathematical functions are available.	Use
+    Many useful built-in mathematical functions are available.  Use
     the 'show builtins' command to list them.  You can also define
     your own functions by using the 'define' keyword, followed by a
     function declaration very similar to C.  Functions which only
@@ -29,7 +29,7 @@
     Variables in functions can be defined as either 'global', 'local',
     or 'static'.  Global variables are common to all functions and the
     command line, whereas local variables are unique to each function
-    level, and are destroyed when the function returns.	 Static variables
+    level, and are destroyed when the function returns.  Static variables
     are scoped within single input files, or within functions, and are
     never destroyed.  Variables are not typed at definition time, but
     dynamically change as they are used.  So you must supply the correct
@@ -40,57 +40,57 @@
     every builtin function, command as well as a number of other
     aspects of calc usage.  Try the command:
 
-	    help help
+            help help
 
     for and overview of the help system.  The command:
 
-	    help builtin
+            help builtin
 
     provides information on built-in mathematical functions, whereas:
 
-	    help asinh
+            help asinh
 
     will provides information a specific function.  The following
     help files:
 
-	    help command
-	    help define
-	    help operator
-	    help statement
-	    help variable
+            help command
+            help define
+            help operator
+            help statement
+            help variable
 
     provide a good overview of the calc language.  If you are familiar
     with C, you should also try:
 
-	    help unexpected
+            help unexpected
 
     It contains information about differences between C and calc
     that may surprise you.
 
     To learn about calc standard resource files, try:
 
-	    help resource
+            help resource
 
     To learn how to invoke the calc command and about calc -flags, try:
 
-	    help usage
+            help usage
 
     To learn about calc shell scripts, try:
 
-	    help script
+            help script
 
     A full and extensive overview of calc may be obtained by:
 
-	    help full
+            help full
 
     The man command is an alias for the help command.  Try:
 
-	    man jacobi
+            man jacobi
 
     Only calc help files may be displayed by the help and man commands.
 
     By default, arguments to functions are passed by value (even
-    matrices).	For speed, you can put an ampersand before any
+    matrices).  For speed, you can put an ampersand before any
     variable argument in a function call, and that variable will be
     passed by reference instead.  However, if the function changes
     its argument, the variable will change.  Arguments to built-in
@@ -127,17 +127,17 @@
     example 'x.real'. All user-defined routines have names composed
     of the object type and the action to perform separated by an
     underscore, as in the example 'complex_add'.  The command 'show
-    objfuncs' lists all the definable routines.	 Object routines
+    objfuncs' lists all the definable routines.  Object routines
     which accept two arguments should be prepared to handle cases
     in which either one of the arguments is not of the expected
     object type.
 
     These are the differences between the normal C operators and
-    the ones defined by the calculator.	 The '/' operator divides
+    the ones defined by the calculator.  The '/' operator divides
     fractions, so that '7 / 2' evaluates to 7/2. The '//' operator
     is an integer divide, so that '7 // 2' evaluates to 3.  The '^'
     operator is a integral power function, so that 3^4 evaluates to
-    81.	 Matrices of any dimension can be treated as a zero based
+    81.  Matrices of any dimension can be treated as a zero based
     linear array using double square brackets, as in 'foo[[3]]'.
     Matrices can be indexed by using commas between the indices, as
     in foo[3,4].  Object and list elements can be referenced by
@@ -149,32 +149,32 @@
     output values.  A trailing colon suppresses printing of the end
     of line.  An example of printing is
 
-	print "The square of", x, "is", x^2
+        print "The square of", x, "is", x^2
 
     The 'config' function is used to modify certain parameters that
     affect calculations or the display of values.  For example, the
     output display mode can be set using:
 
-	config("mode", type)
+        config("mode", type)
 
     where 'type' is one of 'frac', 'int', 'real', 'exp', 'hex',
-    'oct', or 'bin'.  The default output mode is real.	For the
+    'oct', or 'bin'.  The default output mode is real.  For the
     integer, real, or exponential formats, a leading '~' indicates
     that the number was truncated to the number of decimal places
-    specified by the default precision.	 If the '~' does not
+    specified by the default precision.  If the '~' does not
     appear, then the displayed number is the exact value.
 
     The number of decimal places printed is set by using:
 
-	config("display", n)
+        config("display", n)
 
     The default precision for real-valued functions can be set by
     using 'epsilon(x)', where x is the required precision (such as
     1e-50).  For example:
 
-	config("display", 70)
-	epsilon(1e-70)
-	sin(1)
+        config("display", 70)
+        epsilon(1e-70)
+        sin(1)
 
     There is a command stack feature so that you can easily
     re-execute previous commands and expressions from the terminal.
@@ -194,7 +194,7 @@
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -202,8 +202,8 @@
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1991/07/21 04:37:23
-## File existed as early as:	1991
+## Under source code control:   1991/07/21 04:37:23
+## File existed as early as:    1991
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

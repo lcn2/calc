@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,11 +17,11 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1997/02/15 04:01:56
- * File existed as early as:	1997
+ * Under source code control:   1997/02/15 04:01:56
+ * File existed as early as:    1997
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -29,7 +29,7 @@
 #define INCLUDE_ZRANDOM_H
 
 
-#if defined(CALC_SRC)	/* if we are building from the calc source tree */
+#if defined(CALC_SRC)   /* if we are building from the calc source tree */
 # include "value.h"
 # include "have_const.h"
 #else
@@ -46,25 +46,25 @@
  * most this implies that a turn can yield no more than 15 bits when BASEB==16
  * or 31 bits when BASEB==32.  Should we deal with a excessively large
  * Blum modulus (>=2^16 bits long for BASEB==16, >=2^32 bits for BASEB==32)
- * the higher order random bits will be tossed.	 This is not a loss as
+ * the higher order random bits will be tossed.  This is not a loss as
  * regular sub-segments of the sequence are just as random.  It only means
  * that excessively large Blum modulus values waste CPU time.
  */
 struct random {
-	int seeded;	/* 1 => state has been seeded */
-	int bits;	/* number of unused bits in buffer */
-	int loglogn;	/* int(log2(log2(n))), bits produced per turn */
-	HALF buffer;	/* unused random bits from previous call */
-	HALF mask;	/* mask for the log2(log2(n)) lower bits of r */
-	ZVALUE n;	/* Blum modulus */
-	ZVALUE r;	/* Blum quadratic residue */
+        int seeded;     /* 1 => state has been seeded */
+        int bits;       /* number of unused bits in buffer */
+        int loglogn;    /* int(log2(log2(n))), bits produced per turn */
+        HALF buffer;    /* unused random bits from previous call */
+        HALF mask;      /* mask for the log2(log2(n)) lower bits of r */
+        ZVALUE n;       /* Blum modulus */
+        ZVALUE r;       /* Blum quadratic residue */
 };
 
 
 /*
  * Blum constants
  */
-#define BLUM_PREGEN 20	/* number of non-default predefined Blum generators */
+#define BLUM_PREGEN 20  /* number of non-default predefined Blum generators */
 
 
 /*
@@ -73,7 +73,7 @@ struct random {
 E_FUNC RANDOM *zsrandom1(CONST ZVALUE seed, bool need_ret);
 E_FUNC RANDOM *zsrandom2(CONST ZVALUE seed, CONST ZVALUE newn);
 E_FUNC RANDOM *zsrandom4(CONST ZVALUE seed,
-			 CONST ZVALUE ip, CONST ZVALUE iq, long trials);
+                         CONST ZVALUE ip, CONST ZVALUE iq, long trials);
 E_FUNC RANDOM *zsetrandom(CONST RANDOM *state);
 E_FUNC void zrandomskip(long count);
 E_FUNC void zrandom(long count, ZVALUE *res);

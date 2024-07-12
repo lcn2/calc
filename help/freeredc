@@ -5,7 +5,7 @@ SYNOPSIS
     freeredc()
 
 TYPES
-    return	null value
+    return      null value
 
 DESCRIPTION
     This function frees the memory used for any redc data currently stored by
@@ -15,8 +15,8 @@ EXAMPLE
     ; a = rcin(10,27)
     ; b = rcin(10,15)
     ; show redc
-    0	    1	    27
-    1	    2	    15
+    0       1       27
+    1       2       15
     ; freeredc()
     ; show redc
 
@@ -37,7 +37,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -45,8 +45,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1997/09/06 20:03:35
-## File existed as early as:	1997
+## Under source code control:   1997/09/06 20:03:35
+## File existed as early as:    1997
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

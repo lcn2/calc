@@ -5,21 +5,21 @@ SYNOPSIS
     sizeof(x)
 
 TYPES
-    x		any
+    x           any
 
-    return	integer
+    return      integer
 
 DESCRIPTION
     This is analogous to the C operator sizeof for the value only.
     It attempts to assess the number of bytes in memory used to store
-    a value and all of its components.	Unlike memsize(x), this
+    a value and all of its components.  Unlike memsize(x), this
     builtin does not include the size of the overhead.
 
     Unlike size(x), this builtin includes the trailing \0 byte on the
     end of strings.
 
     For numeric values, sizeof(x) ignores the denominator if 'x' is
-    an integer.	 For complex values, sizeof(x) ignores the imaginary
+    an integer.  For complex values, sizeof(x) ignores the imaginary
     part if 'x' is real.  Because the 0, 1 and -1 numeric values are
     shared static values, sizeof(x) reports such values as having
     0 bytes of storage.
@@ -34,15 +34,15 @@ DESCRIPTION
     substantially greater) than the number of bytes actually used.
     For example, after:
 
-		a = sqrt(2);
-		mat A[3] = {a, a, a};
+                a = sqrt(2);
+                mat A[3] = {a, a, a};
 
     the numerical information for a, A[0], A[1], A[2] are stored in the
     same memory, so the memory used for A is the same as if
     its 3 elements were null values.  The value returned by
     sizeof(A) is calculated as A were defined by:
 
-		mat A[3] = {sqrt(2), sqrt(2), sqrt(2)}.
+                mat A[3] = {sqrt(2), sqrt(2), sqrt(2)}.
 
     Similar sharing of memory occurs with literal strings.
 
@@ -93,7 +93,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -101,8 +101,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1996/05/24 02:04:04
-## File existed as early as:	1996
+## Under source code control:   1996/05/24 02:04:04
+## File existed as early as:    1996
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,25 +17,25 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1997/04/16 02:02:34
- * File existed as early as:	1997
+ * Under source code control:   1997/04/16 02:02:34
+ * File existed as early as:    1997
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 /*
  * usage:
- *	have_memmv
+ *      have_memmv
  *
  * Not all systems with memcpy() have memmove() functions, so this may not
  * compile on your system.
  *
  * This prog outputs several defines:
  *
- *	HAVE_MEMMOVE
- *		defined ==> use memmove()
- *		undefined ==> use internal slow memmove() instead
+ *      HAVE_MEMMOVE
+ *              defined ==> use memmove()
+ *              undefined ==> use internal slow memmove() instead
  */
 
 #include <stdio.h>
@@ -45,7 +45,7 @@
 #endif
 
 
-#include "banned.h"	/* include after system header <> includes */
+#include "banned.h"     /* include after system header <> includes */
 
 
 #define MOVELEN 3
@@ -58,16 +58,16 @@ main(void)
 {
 #if defined(HAVE_NO_MEMMOVE)
 
-	printf("#undef HAVE_MEMMOVE /* no */\n");
+        printf("#undef HAVE_MEMMOVE /* no */\n");
 
 #else /* HAVE_NO_MEMMOVE */
 
-	(void) memmove(dest, src, MOVELEN);
+        (void) memmove(dest, src, MOVELEN);
 
-	printf("#define HAVE_MEMMOVE /* yes */\n");
+        printf("#define HAVE_MEMMOVE /* yes */\n");
 
 #endif /* HAVE_NO_MEMMOVE */
 
-	/* exit(0); */
-	return 0;
+        /* exit(0); */
+        return 0;
 }

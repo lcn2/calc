@@ -10,15 +10,15 @@ Calc shell scripts
     As a simple example, assuming a C or Bourne shell, let add be a
     file containing just one line:
 
-	    calc -q -- $1 + $2
+            calc -q -- $1 + $2
 
     Then:
 
-	    ./add 1.23 4.56
+            ./add 1.23 4.56
 
     should respond with the display of:
 
-	    5.9
+            5.9
 
     The "-q" was included in the command to avoid reading of any
     start-up calc files which could contain commands not wanted
@@ -30,11 +30,11 @@ Calc shell scripts
 
     By making add executable by a command like:
 
-	    chmod u+x add
+            chmod u+x add
 
     the command used here may be simplified to:
 
-	    ./add 1.23 4.56
+            ./add 1.23 4.56
 
     Here we shall assume that any script we refer to has been made
     executable in this way.
@@ -55,63 +55,63 @@ Calc shell scripts
     For example, the add script should have no problem with
     commands like:
 
-	    ./add "sqrt(2)" "3 * 4"
+            ./add "sqrt(2)" "3 * 4"
 
-	    ./add "mat A[2,2] = {1,2,3,4}" "A^2"
+            ./add "mat A[2,2] = {1,2,3,4}" "A^2"
 
-	    ./add "2 + 3i" "(3 + 4i)^2"
+            ./add "2 + 3i" "(3 + 4i)^2"
 
     If the shell arguments are to be integers, one could use
     scripts like the following with arithmetic expansion
     for the bash and ksh:
 
-	    declare -i a=$1
-	    declare -i b=$2
-	    calc -q -- $a + $b
+            declare -i a=$1
+            declare -i b=$2
+            calc -q -- $a + $b
 
     and for csh:
 
-	    @ a = $1
-	    @ b = $2
-	    calc -q -- $a + $b
+            @ a = $1
+            @ b = $2
+            calc -q -- $a + $b
 
     Specifying the shell for a script may be done by including
     in the script a first line with the "magic number" "#!" and
     the full file path for the shell as in:
 
-	    #!/bin/bash
-	    declare -i a=$1
-	    declare -i b=$2
-	    calc -q -- $a + $b
+            #!/bin/bash
+            declare -i a=$1
+            declare -i b=$2
+            calc -q -- $a + $b
 
     For a script to multiply rather than add two expressions, one
     could have a file mul with the one line:
 
-	    calc -q -- $1 \* $2
+            calc -q -- $1 \* $2
     or:
-	    calc -q -- "$1 * $2"
+            calc -q -- "$1 * $2"
 
     which will work so long as $1 and $2 are literal numbers, but
     will not work for:
 
-	    ./mul 2+3 4
+            ./mul 2+3 4
     or:
-	    ./mul "2 + 3" 4
+            ./mul "2 + 3" 4
 
     both of which calc interprets as evaluating 2 + 3 * 4.  What should
     work for most shells is:
 
-	    calc -q -- "($1) * ($2)"
+            calc -q -- "($1) * ($2)"
 
     For adding an arbitrary number of expressions that evaluate to
     rational numbers expressible with at most 20 decimal places,
     simple shell script could be used:
 
-	    s=0
-	    for i do
-		    s=`calc -q -- $s + $i`
-	    done
-	    echo sum = $s
+            s=0
+            for i do
+                    s=`calc -q -- $s + $i`
+            done
+            echo sum = $s
 
     This is not particularly efficient since it calls calc once for
     each argument.  Also, a more serious script would permit more
@@ -120,17 +120,17 @@ Calc shell scripts
     Another way of handling a sum of several expressions is with
     the script addall2 with a here document:
 
-	    calc "-q -s" $* << +
-	    global i, n, s;
-	    n = argv();
-	    for (i = 1; i < n; i++)
-		    s += eval(argv(i));
-	    print "sum =", s;
-	    +
+            calc "-q -s" $* << +
+            global i, n, s;
+            n = argv();
+            for (i = 1; i < n; i++)
+                    s += eval(argv(i));
+            print "sum =", s;
+            +
 
     In executing the command:
 
-	    ./addall2 2 3 4
+            ./addall2 2 3 4
 
     the $* in this script expands to  2 3 4, and because of the "-s"
     in the options, calc starts with argv(1) = "2", argv(2) = "3",
@@ -150,55 +150,55 @@ Calc shell scripts
     interpreter.  Assuming the full path for calc is
     /usr/local/bin/calc, one could use the file addall3 with contents
 
-	    #!/usr/bin/calc -q -f
-	    global i, n, s;
-	    n = argv();
-	    for (i = 1; i < n; i++)
-		    s += eval(argv(i));
-	    print "sum =", s;
+            #!/usr/bin/calc -q -f
+            global i, n, s;
+            n = argv();
+            for (i = 1; i < n; i++)
+                    s += eval(argv(i));
+            print "sum =", s;
 
-	IMPORTANT NOTE:
+        IMPORTANT NOTE:
 
-	    The -f flag must be at the very end of the #! line.
-	    The #! line must be the first line of the executable file.
-	    The path after the #! must be the full path to the calc executable.
+            The -f flag must be at the very end of the #! line.
+            The #! line must be the first line of the executable file.
+            The path after the #! must be the full path to the calc executable.
 
     After the command:
 
-	    ./addall3 2 3 4
+            ./addall3 2 3 4
 
     the arguments calc receives are argv(0) = "./addall3", argv(1) =
     "2", argv(3) = "3", argv(4) = "4".
 
     Another kind of script that can be useful is sqrts1:
 
-	    calc -q 'global s; while (scanf("%s", s) == 1) print sqrt(eval(s));'
+            calc -q 'global s; while (scanf("%s", s) == 1) print sqrt(eval(s));'
 
     or what is essentially an interpreter equivalent sqrts2:
 
-	    #!/usr/local/bin/calc -q -f
-	    global s;
-	    while (scanf('%s', s) == 1)
-		    print sqrt(eval(s));
+            #!/usr/local/bin/calc -q -f
+            global s;
+            while (scanf('%s', s) == 1)
+                    print sqrt(eval(s));
 
     If sqrts is either of these scripts, the command:
 
-	    echo 27 2+3i | sqrts
+            echo 27 2+3i | sqrts
 
     or, if datafile contains the one line:
 
-	    27 2+3i
+            27 2+3i
 
     or the two lines:
 
-	    27
-	    2+3i
+            27
+            2+3i
 
     either:
 
-	    cat datafile | ./sqrts
+            cat datafile | ./sqrts
     or:
-	    ./sqrts < datafile
+            ./sqrts < datafile
 
     should display the square-roots of 27 and 2+3i.  The output could
     be piped to another command by | or directed to a file by use of
@@ -214,7 +214,7 @@ Calc shell scripts
     options, but neither "-s" nor "--" in its first line) is that it
     can be invoked with further options as in
 
-	    echo 2 3 4 | ./sqrts2 -i -D 32
+            echo 2 3 4 | ./sqrts2 -i -D 32
 
     An advantage of non-interpreter files is that they can use shell
     features.  For example, for unquoted arguments or arguments in
@@ -223,23 +223,23 @@ Calc shell scripts
     compiled by calc.  For example, if "doit" is an executable
     script with contents
 
-	    calc -q -- "$1($2)"
+            calc -q -- "$1($2)"
 
     it may be used as in:
 
-	    ./doit sqrt 7
+            ./doit sqrt 7
     and:
-	    ./doit exp 7
+            ./doit exp 7
 
     to display the values of sqrt(7) and exp(7).  The "--" prevents a
     leading '-' in the $1 argument as indicating one or more additional
     options. E.g., without the "--" in doit,
 
-	    ./doit -sqrt 7
+            ./doit -sqrt 7
 
     would be interpreted as:
 
-	    calc -q "-sqrt(7)"
+            calc -q "-sqrt(7)"
 
     in which the dash in the quoted part would be taken as indicating a
     list of options -s, -q, -r, etc.; this would give an "illegal option"
@@ -249,26 +249,26 @@ Calc shell scripts
     calc function name and $2 to an expression; all that is required is
     that:
 
-	    $1($2)
+            $1($2)
 
     expands to a string that calc will recognize as a command.  E.g.:
 
-	    ./doit "define f(x) = x^2; 2 + mod" "f(7), 6"
+            ./doit "define f(x) = x^2; 2 + mod" "f(7), 6"
 
     does the same as:
 
-	    calc -q -- "define f(x) = x^2; 2 + mod(f(7), 6)"
+            calc -q -- "define f(x) = x^2; 2 + mod(f(7), 6)"
 
     Essentially the same is achieved by the contents of doit is changed to:
 
-	    calc -q -p -- << +
-	    $1($2)
-	    +
+            calc -q -p -- << +
+            $1($2)
+            +
 
     The "-p" stops calc going interactive; without it the effect would be
     be the same as that of a script with the one line:
 
-	    calc -q -i -- "$1($2)"
+            calc -q -i -- "$1($2)"
 
 For more information use the following calc commands:
 
@@ -285,7 +285,7 @@ For more information use the following calc commands:
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -293,9 +293,9 @@ For more information use the following calc commands:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1999/11/30 05:29:48
-## File existed as early as:	1999
+## Under source code control:   1999/11/30 05:29:48
+## File existed as early as:    1999
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
 

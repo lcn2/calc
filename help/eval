@@ -5,13 +5,13 @@ SYNOPSIS
     eval(str)
 
 TYPES
-    str		string
+    str         string
 
-    return	any
+    return      any
 
 DESCRIPTION
    For eval(str), the value of str is to be a string that could be the body
-   of the definition of a function f().	 This string may declare local
+   of the definition of a function f().  This string may declare local
    variables and include keywords (while, for, ...) other than the
    reserved keywords (define, show, help, read, write, show, cd) intended
    for interactive use or for reading from a file.
@@ -43,12 +43,12 @@ EXAMPLE
 
    ; eval("2 + ");
    Missing expression
-	49
+        49
 
 LIMITS
    The string str in eval(str) should not include a call to itself as in
 
-	str = "2 + eval(str)"
+        str = "2 + eval(str)"
 
    For this str, eval(str) causes an "Evaluation stack depth exceeded" error.
    Similarly, if str1 = "2 + eval(str2)", str2 should not include a call
@@ -68,7 +68,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -76,8 +76,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/12/18 03:30:59
-## File existed as early as:	1995
+## Under source code control:   1995/12/18 03:30:59
+## File existed as early as:    1995
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,10 +17,10 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1993/07/30 19:42:47
- * File existed as early as:	1993
+ * Under source code control:   1993/07/30 19:42:47
+ * File existed as early as:    1993
  *
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -28,7 +28,7 @@
 #define INCLUDE_VALUE_H
 
 
-#if defined(CALC_SRC)	/* if we are building from the calc source tree */
+#if defined(CALC_SRC)   /* if we are building from the calc source tree */
 # include "decl.h"
 # include "cmath.h"
 # include "config.h"
@@ -51,17 +51,17 @@
 #endif
 
 
-#define MAXDIM		4	/* maximum number of dimensions in matrices */
-#define USUAL_ELEMENTS	4	/* usual number of elements for objects */
+#define MAXDIM          4       /* maximum number of dimensions in matrices */
+#define USUAL_ELEMENTS  4       /* usual number of elements for objects */
 
 
 /*
  * Flags to modify results from the printvalue routine.
  * These flags are OR'd together.
  */
-#define PRINT_NORMAL	0x00	/* print in normal manner */
-#define PRINT_SHORT	0x01	/* print in short format (no elements) */
-#define PRINT_UNAMBIG	0x02	/* print in non-ambiguous manner */
+#define PRINT_NORMAL    0x00    /* print in normal manner */
+#define PRINT_SHORT     0x01    /* print in short format (no elements) */
+#define PRINT_UNAMBIG   0x02    /* print in non-ambiguous manner */
 
 
 /*
@@ -83,51 +83,51 @@ typedef struct random RANDOM;
  * See below for information on what needs to be added for a new type.
  *
  * NOTE: The v_type can be a negative value.  This happens when
- *	 an error is returned as a VALUE.
+ *       an error is returned as a VALUE.
  */
 struct value {
-	short v_type;			/* type of value - IMPORTANT: v_type < 0 is an error code */
-	unsigned short v_subtype;	/* other data related to some types */
-	union {				/* types of values (see V_XYZ below) */
-		long vv_int;		/* 1: small integer value */
-		NUMBER *vv_num;		/* 2, 21: real number */
-		COMPLEX *vv_com;	/* 3: complex number */
-		VALUE *vv_addr;		/* 4, 18: address of variable value */
-		STRING *vv_str;		/* 5, 20: string value */
-		MATRIX *vv_mat;		/* 6: address of matrix */
-		LIST *vv_list;		/* 7: address of list */
-		ASSOC *vv_assoc;	/* 8: address of association */
-		OBJECT *vv_obj;		/* 9: address of object */
-		FILEID vv_file;		/* 10: id of opened file */
-		RAND *vv_rand;		/* 11: subtractive 100 random state */
-		RANDOM *vv_random;	/* 12: Blum random state */
-		CONFIG *vv_config;	/* 13: configuration state */
-		HASH *vv_hash;		/* 14: hash state */
-		BLOCK *vv_block;	/* 15: memory block */
-		OCTET *vv_octet;	/* 16, 19: octet addr (unsigned char) */
-		NBLOCK *vv_nblock;	/* 17: named memory block */
-	} v_union;
+        short v_type;                   /* type of value - IMPORTANT: v_type < 0 is an error code */
+        unsigned short v_subtype;       /* other data related to some types */
+        union {                         /* types of values (see V_XYZ below) */
+                long vv_int;            /* 1: small integer value */
+                NUMBER *vv_num;         /* 2, 21: real number */
+                COMPLEX *vv_com;        /* 3: complex number */
+                VALUE *vv_addr;         /* 4, 18: address of variable value */
+                STRING *vv_str;         /* 5, 20: string value */
+                MATRIX *vv_mat;         /* 6: address of matrix */
+                LIST *vv_list;          /* 7: address of list */
+                ASSOC *vv_assoc;        /* 8: address of association */
+                OBJECT *vv_obj;         /* 9: address of object */
+                FILEID vv_file;         /* 10: id of opened file */
+                RAND *vv_rand;          /* 11: subtractive 100 random state */
+                RANDOM *vv_random;      /* 12: Blum random state */
+                CONFIG *vv_config;      /* 13: configuration state */
+                HASH *vv_hash;          /* 14: hash state */
+                BLOCK *vv_block;        /* 15: memory block */
+                OCTET *vv_octet;        /* 16, 19: octet addr (unsigned char) */
+                NBLOCK *vv_nblock;      /* 17: named memory block */
+        } v_union;
 };
 
 
 /*
  * For ease in referencing
  */
-#define v_int	v_union.vv_int
-#define v_file	v_union.vv_file
-#define v_num	v_union.vv_num
-#define v_com	v_union.vv_com
-#define v_addr	v_union.vv_addr
-#define v_str	v_union.vv_str
-#define v_mat	v_union.vv_mat
-#define v_list	v_union.vv_list
+#define v_int   v_union.vv_int
+#define v_file  v_union.vv_file
+#define v_num   v_union.vv_num
+#define v_com   v_union.vv_com
+#define v_addr  v_union.vv_addr
+#define v_str   v_union.vv_str
+#define v_mat   v_union.vv_mat
+#define v_list  v_union.vv_list
 #define v_assoc v_union.vv_assoc
-#define v_obj	v_union.vv_obj
+#define v_obj   v_union.vv_obj
 #define v_valid v_union.vv_int
-#define v_rand	v_union.vv_rand
+#define v_rand  v_union.vv_rand
 #define v_random v_union.vv_random
 #define v_config v_union.vv_config
-#define v_hash	v_union.vv_hash
+#define v_hash  v_union.vv_hash
 #define v_block v_union.vv_block
 #define v_octet v_union.vv_octet
 #define v_nblock v_union.vv_nblock
@@ -138,56 +138,56 @@ struct value {
  *
  * NOTE: The following files should be checked/adjusted for a new type:
  *
- *	size.c		- elm_count(), lsizeof()
- *	help/size	- update what the size() builtin will report
- *	hash.c		- hash_value()
- *	quickhash.c	- hashvalue()
- *	value.c		- freevalue(), copyvalue(), comparevalue(),
- *			  printvalue(),
- *			  and other as needed such as testvalue(), etc.
+ *      size.c          - elm_count(), lsizeof()
+ *      help/size       - update what the size() builtin will report
+ *      hash.c          - hash_value()
+ *      quickhash.c     - hashvalue()
+ *      value.c         - freevalue(), copyvalue(), comparevalue(),
+ *                        printvalue(),
+ *                        and other as needed such as testvalue(), etc.
  *
  * There may be others, but at is at least a start.
  */
-#define V_NULL	0	/* null value */
-#define V_INT	1	/* normal integer */
-#define V_NUM	2	/* number */
-#define V_COM	3	/* complex number */
-#define V_ADDR	4	/* address of variable value */
-#define V_STR	5	/* address of string */
-#define V_MAT	6	/* address of matrix structure */
-#define V_LIST	7	/* address of list structure */
-#define V_ASSOC 8	/* address of association structure */
-#define V_OBJ	9	/* address of object structure */
-#define V_FILE	10	/* opened file id */
-#define V_RAND	11	/* address of subtractive 100 random state */
-#define V_RANDOM 12	/* address of Blum random state */
-#define V_CONFIG 13	/* configuration state */
-#define V_HASH	14	/* hash state */
-#define V_BLOCK 15	/* memory block */
-#define V_OCTET 16	/* octet (unsigned char) */
-#define V_NBLOCK 17	/* named memory block */
-#define V_VPTR	18	/* value address as pointer */
-#define V_OPTR	19	/* octet address as pointer */
-#define V_SPTR	20	/* string address as pointer */
-#define V_NPTR	21	/* number address as pointer */
+#define V_NULL  0       /* null value */
+#define V_INT   1       /* normal integer */
+#define V_NUM   2       /* number */
+#define V_COM   3       /* complex number */
+#define V_ADDR  4       /* address of variable value */
+#define V_STR   5       /* address of string */
+#define V_MAT   6       /* address of matrix structure */
+#define V_LIST  7       /* address of list structure */
+#define V_ASSOC 8       /* address of association structure */
+#define V_OBJ   9       /* address of object structure */
+#define V_FILE  10      /* opened file id */
+#define V_RAND  11      /* address of subtractive 100 random state */
+#define V_RANDOM 12     /* address of Blum random state */
+#define V_CONFIG 13     /* configuration state */
+#define V_HASH  14      /* hash state */
+#define V_BLOCK 15      /* memory block */
+#define V_OCTET 16      /* octet (unsigned char) */
+#define V_NBLOCK 17     /* named memory block */
+#define V_VPTR  18      /* value address as pointer */
+#define V_OPTR  19      /* octet address as pointer */
+#define V_SPTR  20      /* string address as pointer */
+#define V_NPTR  21      /* number address as pointer */
 
-#define V_MAX	V_NPTR	/* highest legal value - must be last and match highest V_something value */
+#define V_MAX   V_NPTR  /* highest legal value - must be last and match highest V_something value */
 
 /*
  * v_subtype values
  */
-#define V_NOSUBTYPE	0	/* subtype has no meaning */
-#define V_NOASSIGNTO	0x001	/* protection status 1 */
-#define V_NONEWVALUE	0x002	/* protection status 2 */
-#define V_NONEWTYPE	0x004	/* protection status 4 */
-#define V_NOERROR	0x008	/* protection status 8 */
-#define V_NOCOPYTO	0x010	/* protection status 16 */
-#define V_NOREALLOC	0x020	/* protection status 32 */
-#define V_NOASSIGNFROM	0x040	/* protection status 64 */
-#define V_NOCOPYFROM	0x080	/* protection status 128 */
-#define V_PROTECTALL	0x100	/* protection status 256 */
+#define V_NOSUBTYPE     0       /* subtype has no meaning */
+#define V_NOASSIGNTO    0x001   /* protection status 1 */
+#define V_NONEWVALUE    0x002   /* protection status 2 */
+#define V_NONEWTYPE     0x004   /* protection status 4 */
+#define V_NOERROR       0x008   /* protection status 8 */
+#define V_NOCOPYTO      0x010   /* protection status 16 */
+#define V_NOREALLOC     0x020   /* protection status 32 */
+#define V_NOASSIGNFROM  0x040   /* protection status 64 */
+#define V_NOCOPYFROM    0x080   /* protection status 128 */
+#define V_PROTECTALL    0x100   /* protection status 256 */
 
-#define MAXPROTECT	0x1ff	/* OR of all of the above protection statuses */
+#define MAXPROTECT      0x1ff   /* OR of all of the above protection statuses */
 
 /*
  * At present protect(var, sts) determines bits in var->v_subtype
@@ -211,35 +211,35 @@ struct value {
  * with one switches on that unsigned int, cases with a and/or b being
  * out of range will fall into the default (non-matching) case.
  *
- *	unsigned int twoval_as_uint;
+ *      unsigned int twoval_as_uint;
  *
- *	...
+ *      ...
  *
- *	twoval_as_uint = TWOVAL_AS_UINT(a,b);
- *	switch (twoval_as_uint) {
- *		case TWOVAL(V_INT,V_INT):
- *			...
- *			break;
- *		case TWOVAL(V_INT,V_NUM):
- *			...
- *			break;
- *		default:
- *			...
- *			break;
- *	}
+ *      twoval_as_uint = TWOVAL_AS_UINT(a,b);
+ *      switch (twoval_as_uint) {
+ *              case TWOVAL(V_INT,V_INT):
+ *                      ...
+ *                      break;
+ *              case TWOVAL(V_INT,V_NUM):
+ *                      ...
+ *                      break;
+ *              default:
+ *                      ...
+ *                      break;
+ *      }
  *
- *	 If a is NOT 0 <= a <= V_MAX or if b is NOT 0 <= b <= V_MAX,
- *	 when () macro returns -1 (all bits set) in order to
- *	 not match and true TWOVAL() macro combination that uses
- *	 uses a V_something defined value above.
+ *       If a is NOT 0 <= a <= V_MAX or if b is NOT 0 <= b <= V_MAX,
+ *       when () macro returns -1 (all bits set) in order to
+ *       not match and true TWOVAL() macro combination that uses
+ *       uses a V_something defined value above.
  */
 
-#define TWOVAL(a,b) ((unsigned int)(((a) << 8) | (b)))	/* logical OR for switch of two V_something values */
+#define TWOVAL(a,b) ((unsigned int)(((a) << 8) | (b)))  /* logical OR for switch of two V_something values */
 #define TWOVAL_ARGS_OK(a,b) (((a) >= 0) && ((a) <= V_MAX) && ((b) >= 0) && ((b) <= V_MAX))
-#define TWOVAL_INVALID  ((unsigned int)(-1))		/* never a valid TWOVAL(a,b) value when a and b are in range */
+#define TWOVAL_INVALID  ((unsigned int)(-1))            /* never a valid TWOVAL(a,b) value when a and b are in range */
 #define TWOVAL_AS_UINT(a,b) (TWOVAL_ARGS_OK(a,b) ? TWOVAL(a,b) : TWOVAL_INVALID)
 
-#define NULL_VALUE	((VALUE *) 0)
+#define NULL_VALUE      ((VALUE *) 0)
 
 
 /*
@@ -305,11 +305,11 @@ E_FUNC void set_update(int);
  * Structure of a matrix.
  */
 struct matrix {
-	long m_dim;		/* dimension of matrix */
-	long m_size;		/* total number of elements */
-	long m_min[MAXDIM];	/* minimum bound for indices */
-	long m_max[MAXDIM];	/* maximum bound for indices */
-	VALUE m_table[1];	/* actually varying length table */
+        long m_dim;             /* dimension of matrix */
+        long m_size;            /* total number of elements */
+        long m_min[MAXDIM];     /* minimum bound for indices */
+        long m_max[MAXDIM];     /* maximum bound for indices */
+        VALUE m_table[1];       /* actually varying length table */
 };
 
 #define matsize(n) (sizeof(MATRIX) - sizeof(VALUE) + ((n) * sizeof(VALUE)))
@@ -342,7 +342,7 @@ E_FUNC void matsum(MATRIX *m, VALUE *vres);
 E_FUNC bool matcmp(MATRIX *m1, MATRIX *m2);
 E_FUNC int matsearch(MATRIX *m, VALUE *vp, long start, long end, ZVALUE *index);
 E_FUNC int matrsearch(MATRIX *m, VALUE *vp, long start, long end,
-		      ZVALUE *index);
+                      ZVALUE *index);
 E_FUNC VALUE matdet(MATRIX *m);
 E_FUNC VALUE matdot(MATRIX *m1, MATRIX *m2);
 E_FUNC void matfill(MATRIX *m, VALUE *v1, VALUE *v2);
@@ -362,9 +362,9 @@ E_FUNC MATRIX *matbround(MATRIX *m, VALUE *v2, VALUE *v3);
  */
 typedef struct listelem LISTELEM;
 struct listelem {
-	LISTELEM *e_next;	/* next element in list (or NULL) */
-	LISTELEM *e_prev;	/* previous element in list (or NULL) */
-	VALUE e_value;		/* value of this element */
+        LISTELEM *e_next;       /* next element in list (or NULL) */
+        LISTELEM *e_prev;       /* previous element in list (or NULL) */
+        VALUE e_value;          /* value of this element */
 };
 
 
@@ -372,11 +372,11 @@ struct listelem {
  * Structure for a list of elements.
  */
 struct list {
-	LISTELEM *l_first;	/* first list element (or NULL) */
-	LISTELEM *l_last;	/* last list element (or NULL) */
-	LISTELEM *l_cache;	/* cached list element (or NULL) */
-	long l_cacheindex;	/* index of cached element (or undefined) */
-	long l_count;		/* total number of elements in the list */
+        LISTELEM *l_first;      /* first list element (or NULL) */
+        LISTELEM *l_last;       /* last list element (or NULL) */
+        LISTELEM *l_cache;      /* cached list element (or NULL) */
+        long l_cacheindex;      /* index of cached element (or undefined) */
+        long l_count;           /* total number of elements in the list */
 };
 
 
@@ -390,7 +390,7 @@ E_FUNC void listfree(LIST *lp);
 E_FUNC void listprint(LIST *lp, long max_print);
 E_FUNC int listsearch(LIST *lp, VALUE *vp, long start, long end, ZVALUE *index);
 E_FUNC int listrsearch(LIST *lp, VALUE *vp, long start, long end,
-		       ZVALUE *index);
+                       ZVALUE *index);
 E_FUNC bool listcmp(LIST *lp1, LIST *lp2);
 E_FUNC VALUE *listfindex(LIST *lp, long index);
 E_FUNC LIST *listalloc(void);
@@ -416,18 +416,18 @@ E_FUNC LIST *listsegment(LIST *, long, long);
  */
 typedef struct assocelem ASSOCELEM;
 struct assocelem {
-	ASSOCELEM *e_next;	/* next element in list (or NULL) */
-	long e_dim;		/* dimension of indexing for this element */
-	QCKHASH e_hash;		/* hash value for this element */
-	VALUE e_value;		/* value of association */
-	VALUE e_indices[1];	/* index values (variable length) */
+        ASSOCELEM *e_next;      /* next element in list (or NULL) */
+        long e_dim;             /* dimension of indexing for this element */
+        QCKHASH e_hash;         /* hash value for this element */
+        VALUE e_value;          /* value of association */
+        VALUE e_indices[1];     /* index values (variable length) */
 };
 
 
 struct assoc {
-	long a_count;		/* number of elements in the association */
-	long a_size;		/* current size of association hash table */
-	ASSOCELEM **a_table;	/* current hash table for elements */
+        long a_count;           /* number of elements in the association */
+        long a_size;            /* current size of association hash table */
+        ASSOCELEM **a_table;    /* current hash table for elements */
 };
 
 
@@ -436,9 +436,9 @@ E_FUNC ASSOC *assoccopy(ASSOC *ap);
 E_FUNC void assocfree(ASSOC *ap);
 E_FUNC void assocprint(ASSOC *ap, long max_print);
 E_FUNC int assocsearch(ASSOC *ap, VALUE *vp, long start, long end,
-		       ZVALUE *index);
+                       ZVALUE *index);
 E_FUNC int assocrsearch(ASSOC *ap, VALUE *vp, long start, long end,
-			ZVALUE *index);
+                        ZVALUE *index);
 E_FUNC bool assoccmp(ASSOC *ap1, ASSOC *ap2);
 E_FUNC VALUE *assocfindex(ASSOC *ap, long index);
 E_FUNC VALUE *associndex(ASSOC *ap, bool create, long dim, VALUE *indices);
@@ -447,51 +447,51 @@ E_FUNC VALUE *associndex(ASSOC *ap, bool create, long dim, VALUE *indices);
 /*
  * Object actions.
  */
-#define OBJ_PRINT	0	/* print the value */
-#define OBJ_ONE		1	/* create the multiplicative identity */
-#define OBJ_TEST	2	/* test a value for "zero" */
-#define OBJ_ADD		3	/* add two values */
-#define OBJ_SUB		4	/* sub-trace one value from another */
-#define OBJ_NEG		5	/* negate a value */
-#define OBJ_MUL		6	/* multiply two values */
-#define OBJ_DIV		7	/* divide one value by another */
-#define OBJ_INV		8	/* invert a value */
-#define OBJ_ABS		9	/* take absolute value of value */
-#define OBJ_NORM	10	/* take the norm of a value */
-#define OBJ_CONJ	11	/* take the conjugate of a value */
-#define OBJ_POW		12	/* take the power function */
-#define OBJ_SGN		13	/* return the sign of a value */
-#define OBJ_CMP		14	/* compare two values for equality */
-#define OBJ_REL		15	/* compare two values for inequality */
-#define OBJ_QUO		16	/* integer quotient of values */
-#define OBJ_MOD		17	/* remainder of division of values */
-#define OBJ_INT		18	/* integer part of */
-#define OBJ_FRAC	19	/* fractional part of */
-#define OBJ_INC		20	/* increment by one */
-#define OBJ_DEC		21	/* decrement by one */
-#define OBJ_SQUARE	22	/* square value */
-#define OBJ_SCALE	23	/* scale by power of two */
-#define OBJ_SHIFT	24	/* shift left (or right) by number of bits */
-#define OBJ_ROUND	25	/* round to specified decimal places */
-#define OBJ_BROUND	26	/* round to specified binary places */
-#define OBJ_ROOT	27	/* take nth root of value */
-#define OBJ_SQRT	28	/* take square root of value */
-#define OBJ_OR		29	/* take bitwise or of values */
-#define OBJ_AND		30	/* take bitwise and of values */
-#define OBJ_NOT		31	/* take logical not of value */
-#define OBJ_FACT	32	/* factorial or postfix ! */
-#define OBJ_MIN		33	/* minimum value */
-#define OBJ_MAX		34	/* maximum value */
-#define OBJ_SUM		35	/* sum value */
-#define OBJ_ASSIGN	36	/* assign value */
-#define OBJ_XOR		37	/* ~ difference of values */
-#define OBJ_COMP	38	/* ~ complement of value */
-#define OBJ_CONTENT	39	/* unary hash op */
-#define OBJ_HASHOP	40	/* binary hash op */
-#define OBJ_BACKSLASH	41	/* unary backslash op */
-#define OBJ_SETMINUS	42	/* binary backslash op */
-#define OBJ_PLUS	43	/* unary + op */
-#define OBJ_MAXFUNC	43	/* highest function */
+#define OBJ_PRINT       0       /* print the value */
+#define OBJ_ONE         1       /* create the multiplicative identity */
+#define OBJ_TEST        2       /* test a value for "zero" */
+#define OBJ_ADD         3       /* add two values */
+#define OBJ_SUB         4       /* sub-trace one value from another */
+#define OBJ_NEG         5       /* negate a value */
+#define OBJ_MUL         6       /* multiply two values */
+#define OBJ_DIV         7       /* divide one value by another */
+#define OBJ_INV         8       /* invert a value */
+#define OBJ_ABS         9       /* take absolute value of value */
+#define OBJ_NORM        10      /* take the norm of a value */
+#define OBJ_CONJ        11      /* take the conjugate of a value */
+#define OBJ_POW         12      /* take the power function */
+#define OBJ_SGN         13      /* return the sign of a value */
+#define OBJ_CMP         14      /* compare two values for equality */
+#define OBJ_REL         15      /* compare two values for inequality */
+#define OBJ_QUO         16      /* integer quotient of values */
+#define OBJ_MOD         17      /* remainder of division of values */
+#define OBJ_INT         18      /* integer part of */
+#define OBJ_FRAC        19      /* fractional part of */
+#define OBJ_INC         20      /* increment by one */
+#define OBJ_DEC         21      /* decrement by one */
+#define OBJ_SQUARE      22      /* square value */
+#define OBJ_SCALE       23      /* scale by power of two */
+#define OBJ_SHIFT       24      /* shift left (or right) by number of bits */
+#define OBJ_ROUND       25      /* round to specified decimal places */
+#define OBJ_BROUND      26      /* round to specified binary places */
+#define OBJ_ROOT        27      /* take nth root of value */
+#define OBJ_SQRT        28      /* take square root of value */
+#define OBJ_OR          29      /* take bitwise or of values */
+#define OBJ_AND         30      /* take bitwise and of values */
+#define OBJ_NOT         31      /* take logical not of value */
+#define OBJ_FACT        32      /* factorial or postfix ! */
+#define OBJ_MIN         33      /* minimum value */
+#define OBJ_MAX         34      /* maximum value */
+#define OBJ_SUM         35      /* sum value */
+#define OBJ_ASSIGN      36      /* assign value */
+#define OBJ_XOR         37      /* ~ difference of values */
+#define OBJ_COMP        38      /* ~ complement of value */
+#define OBJ_CONTENT     39      /* unary hash op */
+#define OBJ_HASHOP      40      /* binary hash op */
+#define OBJ_BACKSLASH   41      /* unary backslash op */
+#define OBJ_SETMINUS    42      /* binary backslash op */
+#define OBJ_PLUS        43      /* unary + op */
+#define OBJ_MAXFUNC     43      /* highest function */
 
 
 /*
@@ -499,14 +499,14 @@ E_FUNC VALUE *associndex(ASSOC *ap, bool create, long dim, VALUE *indices);
  * This is actually a varying sized structure.
  */
 typedef struct {
-	int oa_index;			/* index of object type */
-	int oa_count;			/* number of elements defined */
-	long oa_indices[OBJ_MAXFUNC+1]; /* function indices for actions */
-	int oa_elements[1];		/* element indices (MUST BE LAST) */
+        int oa_index;                   /* index of object type */
+        int oa_count;                   /* number of elements defined */
+        long oa_indices[OBJ_MAXFUNC+1]; /* function indices for actions */
+        int oa_elements[1];             /* element indices (MUST BE LAST) */
 } OBJECTACTIONS;
 
 #define objectactionsize(elements) \
-	(sizeof(OBJECTACTIONS) + ((elements) - 1) * sizeof(int))
+        (sizeof(OBJECTACTIONS) + ((elements) - 1) * sizeof(int))
 
 
 /*
@@ -515,12 +515,12 @@ typedef struct {
  * However, there are always at least USUAL_ELEMENTS values in the object.
  */
 struct object {
-	OBJECTACTIONS *o_actions;	/* action table for this object */
-	VALUE o_table[USUAL_ELEMENTS];	/* object values (MUST BE LAST) */
+        OBJECTACTIONS *o_actions;       /* action table for this object */
+        VALUE o_table[USUAL_ELEMENTS];  /* object values (MUST BE LAST) */
 };
 
 #define objectsize(elements) \
-	(sizeof(OBJECT) + ((elements) - USUAL_ELEMENTS) * sizeof(VALUE))
+        (sizeof(OBJECT) + ((elements) - USUAL_ELEMENTS) * sizeof(VALUE))
 
 
 E_FUNC OBJECT *objcopy(OBJECT *op);
@@ -543,7 +543,7 @@ E_FUNC int objoffset(OBJECT *op, long index);
 EXTERN NAMETYPE configs[];
 E_FUNC void config_value(CONFIG *cfg, int type, VALUE *ret);
 E_FUNC void setconfig(int type, VALUE *vp);
-E_FUNC void config_print(CONFIG *cfg);	/* the CONFIG to print */
+E_FUNC void config_print(CONFIG *cfg);  /* the CONFIG to print */
 
 
 /*

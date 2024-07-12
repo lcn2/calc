@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,11 +17,11 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1994/06/04 03:26:14
- * File existed as early as:	1994
+ * Under source code control:   1994/06/04 03:26:14
+ * File existed as early as:    1994
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -31,14 +31,14 @@
 #include "have_const.h"
 
 
-#include "banned.h"	/* include after system header <> includes */
+#include "banned.h"     /* include after system header <> includes */
 
 
 /*
  * odd prime bitmap for odd values < 2^16
  *
- * pr_map[i] & (1<<j) == 1  ==>	 i*16 + j*2 + 1 is prime
- *			 0  ==>	 i*16 + j*2 + 1 is not prime
+ * pr_map[i] & (1<<j) == 1  ==>  i*16 + j*2 + 1 is prime
+ *                       0  ==>  i*16 + j*2 + 1 is not prime
  *
  * This table is useful to quickly determine if a 16 bit odd number
  * is prime.  Use the prime[] array to quickly walk thru the 16 bit
@@ -312,18 +312,18 @@ CONST unsigned char pr_map[(MAX_MAP_VAL/8)+1] = {
  *
  * We end the list with the value 1.  Thus, loops of the form:
  *
- *	FULL isqr, n;
- *	unsigned short *tp;
+ *      FULL isqr, n;
+ *      unsigned short *tp;
  *
- *	for (isqr=fsqrt(n), tp=prime; (*tp <= isqr) && (n % *tp); ++tp) {
- *	}
+ *      for (isqr=fsqrt(n), tp=prime; (*tp <= isqr) && (n % *tp); ++tp) {
+ *      }
  *
  * will terminate because *tp == 1 and thus (n % *tp) == 0.  To determine if
  * a factor was found, one must:
  *
- *	if (*tp <= isqr && *tp != 1) {
- *		*tp is a factor of n
- *	}
+ *      if (*tp <= isqr && *tp != 1) {
+ *              *tp is a factor of n
+ *      }
  */
 CONST unsigned short prime[MAP_POPCNT+1] = {
     3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73,

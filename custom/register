@@ -5,10 +5,10 @@ SYNOPSIS
     custom("register", regnum[, value])
 
 TYPES
-    regnum	int
-    value	any, &any
+    regnum      int
+    value       any, &any
 
-    return	any
+    return      any
 
 DESCRIPTION
     This custom function reads or sets a value of a custom register.
@@ -22,7 +22,7 @@ DESCRIPTION
     There will be at least 32 registers although there could be more
     added in the future.  It may be determined by:
 
-		custom("sysinfo", "REGNUM_MAX")
+                custom("sysinfo", "REGNUM_MAX")
 
     The custom registers are initialized to 0 by the internal
     function libcalc_call_me_first() during calc startup.
@@ -32,16 +32,16 @@ DESCRIPTION
 
 EXAMPLE
     > custom("register", 3)
-	0
+        0
     > custom("register", 3, 45)
-	0
+        0
     > custom("register", 3)
-	45
+        45
 
     > custom("register", 7, 2i),
     > custom("register", 8, 3i),
     > custom("register", 7) * custom("register", 8)
-	-6
+        -6
 
 LIMITS
     calc must be built with ALLOW_CUSTOM= -DCUSTOM
@@ -63,7 +63,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -71,8 +71,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## Under source code control:	2005/02/04 22:39:50
-## File existed as early as:	2005
+## Under source code control:   2005/02/04 22:39:50
+## File existed as early as:    2005
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

@@ -5,29 +5,29 @@ SYNOPSIS
     size(x)
 
 TYPES
-    x		any
+    x           any
 
-    return	integer
+    return      integer
 
 DESCRIPTION
     For the different types of value x may have, size(x) is defined as follows:
 
-	null		0
-	real number	1
-	complex number	1
-	string		length of string (not including the trailing \0)
-	matrix		number of elements
-	list		number of members
-	association	number of (elements, value) pairs
-	object		value returned by xx_size(x) if x of type xx
-	file		length of the file in octets
-	rand state	1
-	random state	1
-	config state	1
-	hash state	1
-	block		number of octets of data it currently holds
-	octet		1
-	named block	number of octets of data it currently holds
+        null            0
+        real number     1
+        complex number  1
+        string          length of string (not including the trailing \0)
+        matrix          number of elements
+        list            number of members
+        association     number of (elements, value) pairs
+        object          value returned by xx_size(x) if x of type xx
+        file            length of the file in octets
+        rand state      1
+        random state    1
+        config state    1
+        hash state      1
+        block           number of octets of data it currently holds
+        octet           1
+        named block     number of octets of data it currently holds
 
 EXAMPLE
     ; print size(null()), size(3), size(2 - 7i), size("abc")
@@ -65,7 +65,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -73,8 +73,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1994/03/19 03:13:22
-## File existed as early as:	1994
+## Under source code control:   1994/03/19 03:13:22
+## File existed as early as:    1994
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

@@ -2,15 +2,15 @@ On calc versions and releases
 
 Calc version numbers have 4 levels.  For example:
 
-	 ++=== top 2 levels: calc builtin functions compatibility
-	 ||
-	vvvv
+         ++=== top 2 levels: calc builtin functions compatibility
+         ||
+        vvvv
 
-	2.14.0.8
-	 \\\\\\
-	^  \\\\----> top 3 levels: calc important code base change
-	|
-	+--- top version level: internal representation compatibility
+        2.14.0.8
+         \\\\\\
+        ^  \\\\----> top 3 levels: calc important code base change
+        |
+        +--- top version level: internal representation compatibility
 
 The top version level (e.g., 2) refers to the internal representation
 of values.  Any library or hardware linked/built for calc 2 will be able
@@ -35,10 +35,10 @@ a top 3 level release.
 
 The file, "version.h" defines the 4 version levels:
 
-    MAJOR_VER		/* level 1: major library version */
-    MINOR_VER		/* level 2: minor library version */
-    MAJOR_PATCH		/* level 3: major software version level */
-    MINOR_PATCH		/* level 4: minor software version level */
+    MAJOR_VER           /* level 1: major library version */
+    MINOR_VER           /* level 2: minor library version */
+    MAJOR_PATCH         /* level 3: major software version level */
+    MINOR_PATCH         /* level 4: minor software version level */
 
 
 The program "ver_calc" will print information about the compiled
@@ -46,8 +46,8 @@ calc version as defined "version.h" when "ver_calc" was compiled:
 
     usage: ./ver_calc [-h] [-V]
 
-	-h	print this message and exit non-zero
-	-V	print 3-level version (def: print 4-level version)
+        -h      print this message and exit non-zero
+        -V      print 3-level version (def: print 4-level version)
 
 Also "calc -v" will print the calc version as defined "version.h" when
 "calc" was compiled.
@@ -56,7 +56,7 @@ The master branch:
 
     The public repository of calc source code is:
 
-	http://github.com/lcn2/calc
+        http://github.com/lcn2/calc
 
     On that GitHub site you may find released version of calc,
     "production", "tested" and "alpha".  All commits on the master
@@ -65,66 +65,66 @@ The master branch:
     Any "alpha" commit is likely future code for a future
     "tested" or "production" version of calc.
 
-alpha		==> untagged GitHub commit
+alpha           ==> untagged GitHub commit
 
-	Any untagged commit to the GitHub master branch should be
-	considered as alpha code that may make calc unstable.
+        Any untagged commit to the GitHub master branch should be
+        considered as alpha code that may make calc unstable.
 
-	While we try to avoid breaking the calc code with commits,
-	there is a risk that picking up such a change could
-	negatively impact the code.
+        While we try to avoid breaking the calc code with commits,
+        there is a risk that picking up such a change could
+        negatively impact the code.
 
-	NOTE: The calc version found in "version.h", and printed
-	      by both "ver_calc [-V]" and "calc -v" for an untagged
-	      commit is the previous "tested" or "production" version
-	      of calc.  Any "alpha" changes that remain are code
-	      for some future version of calc.
+        NOTE: The calc version found in "version.h", and printed
+              by both "ver_calc [-V]" and "calc -v" for an untagged
+              commit is the previous "tested" or "production" version
+              of calc.  Any "alpha" changes that remain are code
+              for some future version of calc.
 
-	      At the last stage of the release process, "version.h"
-	      will be updated as well as the top level version range
-	      listed in "CHANGES".
+              At the last stage of the release process, "version.h"
+              will be updated as well as the top level version range
+              listed in "CHANGES".
 
-tested		==> tagged GitHub pre-release commit
+tested          ==> tagged GitHub pre-release commit
 
-	A new version of calc has been released and has recently passed
-	regression testing on at least to different platforms and chip
-	architectures.
+        A new version of calc has been released and has recently passed
+        regression testing on at least to different platforms and chip
+        architectures.
 
-	The "tested" class was historically called "untested",
-	however this term was misleading as such releases ARE tested.
-	Since 2.14.0.13 we have used the term "tested".
+        The "tested" class was historically called "untested",
+        however this term was misleading as such releases ARE tested.
+        Since 2.14.0.13 we have used the term "tested".
 
-	All tested releases are tagged with a new version number.
-	Such releases have GitHub assets such as a source tarball,
-	zip file, source rpm, development rpm and binary rpm.  See the
-	orange "Pre-release" GitHub releases under:
+        All tested releases are tagged with a new version number.
+        Such releases have GitHub assets such as a source tarball,
+        zip file, source rpm, development rpm and binary rpm.  See the
+        orange "Pre-release" GitHub releases under:
 
-	    https://github.com/lcn2/calc/releases
+            https://github.com/lcn2/calc/releases
 
-	 At the bottom of a given release is a "> Assets" that may
-	 be opened to reveal down-loadable files.
+         At the bottom of a given release is a "> Assets" that may
+         be opened to reveal down-loadable files.
 
-production	==> tagged GitHub release commit
+production      ==> tagged GitHub release commit
 
-	A new version of calc has been released and has undergone
-	extensive testing over time over a number of platforms.
-	Sometimes a "tested" release that is found work well over
-	a period of time will be re-released with a new version
-	number as a "production" release.
+        A new version of calc has been released and has undergone
+        extensive testing over time over a number of platforms.
+        Sometimes a "tested" release that is found work well over
+        a period of time will be re-released with a new version
+        number as a "production" release.
 
-	The latest production GitHub release is marked with green
-	"Latest" label under:
+        The latest production GitHub release is marked with green
+        "Latest" label under:
 
-	    https://github.com/lcn2/calc/releases
+            https://github.com/lcn2/calc/releases
 
-	A release that has neither an orange "Pre-release" nor
-	a green "Latest" label is a prior production class release.
+        A release that has neither an orange "Pre-release" nor
+        a green "Latest" label is a prior production class release.
 
-	At the bottom of a given release is a "> Assets" that may
-	be opened to reveal down-loadable files.
+        At the bottom of a given release is a "> Assets" that may
+        be opened to reveal down-loadable files.
 
-	Production class code where stability is critical should use a
-	"production" release.
+        Production class code where stability is critical should use a
+        "production" release.
 
 A historical note and apology:
 
@@ -143,7 +143,7 @@ A historical note and apology:
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -151,8 +151,8 @@ A historical note and apology:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	2021/12/12 19:36:26
-## File existed as early as:	2021
+## Under source code control:   2021/12/12 19:36:26
+## File existed as early as:    2021
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

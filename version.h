@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,11 +17,11 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	2023/08/19 17:32:42
- * File existed as early as:	2023
+ * Under source code control:   2023/08/19 17:32:42
+ * File existed as early as:    2023
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -32,13 +32,13 @@
 /*
  * MAJOR_VER
  *
- *	The MAJOR_VER is 2 is the classical version of calc.
+ *      The MAJOR_VER is 2 is the classical version of calc.
  *
  *      One of the main reasons why MAJOR_VER might incremented is
- *	if fundamental calc data objects (such as when ZVALUE or NUMBER
- *	or COMPLEX need to change) that would cause an incompatibility
+ *      if fundamental calc data objects (such as when ZVALUE or NUMBER
+ *      or COMPLEX need to change) that would cause an incompatibility
  *      with existing hardware accelerators that are using fundamental
- *	calc data objects.
+ *      calc data objects.
  *
  * MINOR_VER
  *
@@ -61,10 +61,10 @@
  *      Moreover, when we are working towards a new production release,
  *      bug fix and improvement updates will cause MINOR_PATCH to increment.
  */
-#define MAJOR_VER	2	/* level 1: major library version */
-#define MINOR_VER	15	/* level 2: minor library version */
-#define MAJOR_PATCH	0	/* level 3: major software version level */
-#define MINOR_PATCH	7	/* level 4: minor software version level */
+#define MAJOR_VER       2       /* level 1: major library version */
+#define MINOR_VER       15      /* level 2: minor library version */
+#define MAJOR_PATCH     0       /* level 3: major software version level */
+#define MINOR_PATCH     7       /* level 4: minor software version level */
 
 
 #endif /* !INCLUDE_VERSION_H*/

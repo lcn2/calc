@@ -16,35 +16,35 @@ TYPES
 
     If neither x nor y is an object, or x is not a matrix or list:
 
-    x		number (real or complex)
-    y		real
-    rnd		integer, defaults to config("mod")
+    x           number (real or complex)
+    y           real
+    rnd         integer, defaults to config("mod")
 
-    return	number
+    return      number
 
 DESCRIPTION
     The expression:
 
-	x % y
+        x % y
 
     is equivalent to call:
 
-	mod(x, y)
+        mod(x, y)
 
     The function:
 
-	mod(x, y, rnd)
+        mod(x, y, rnd)
 
     is equivalent to:
 
-	config("mod", rnd), x % y
+        config("mod", rnd), x % y
 
     except that the global config("mod") value does not change.
 
     If x is real or complex and y is zero, mod(x, y, rnd) returns x.
 
     If x is complex, mod(x, y, rnd) returns
-		mod(re(x), y, rnd) + mod(im(x), y, rnd) * 1i.
+                mod(re(x), y, rnd) + mod(im(x), y, rnd) * 1i.
 
     In the following it is assumed x is real and y is nonzero.
 
@@ -60,40 +60,40 @@ DESCRIPTION
     set and abs(r) = abs(y)/2, or if bit 4 of r is not set, the result for
     r depends on rnd as in the following table:
 
-	     rnd & 15	   sign of r		parity of q
+             rnd & 15      sign of r            parity of q
 
-		0	     sgn(y)
-		1	    -sgn(y)
-		2	     sgn(x)
-		3	    -sgn(x)
-		4	      +
-		5	      -
-		6	     sgn(x/y)
-		7	    -sgn(x/y)
-		8				   even
-		9				   odd
-	       10				even if x/y > 0, otherwise odd
-	       11				odd if x/y > 0, otherwise even
-	       12				even if y > 0, otherwise odd
-	       13				odd if y > 0, otherwise even
-	       14				even if x > 0, otherwise odd
-	       15				odd if x > 0, otherwise even
+                0            sgn(y)
+                1           -sgn(y)
+                2            sgn(x)
+                3           -sgn(x)
+                4             +
+                5             -
+                6            sgn(x/y)
+                7           -sgn(x/y)
+                8                                  even
+                9                                  odd
+               10                               even if x/y > 0, otherwise odd
+               11                               odd if x/y > 0, otherwise even
+               12                               even if y > 0, otherwise odd
+               13                               odd if y > 0, otherwise even
+               14                               even if x > 0, otherwise odd
+               15                               odd if x > 0, otherwise even
 
-		NOTE: Blank entries in the table above indicate that the
-		     description would be complicated and probably not of
-		     much interest.
+                NOTE: Blank entries in the table above indicate that the
+                     description would be complicated and probably not of
+                     much interest.
 
     The C language method of modulus and integer division is:
 
-	    config("quomod", 2)
-	    config("quo", 2)
-	    config("mod", 2)
+            config("quomod", 2)
+            config("quo", 2)
+            config("mod", 2)
 
     This dependence on rnd is consistent with quo(x, y, rnd) and
     appr(x, y, rnd) in that for any real x and y and any integer rnd,
 
-	    x = y * quo(x, y, rnd) + mod(x, y, rnd).
-	    mod(x, y, rnd) = x - appr(x, y, rnd)
+            x = y * quo(x, y, rnd) + mod(x, y, rnd).
+            mod(x, y, rnd) = x - appr(x, y, rnd)
 
     If y and rnd are fixed and mod(x, y, rnd) is to be considered as
     a canonical residue of x % y, bits 1 and 3 of rnd should be
@@ -101,11 +101,11 @@ DESCRIPTION
     20, or 21, that the set of possible values for mod(x, y, rnd)
     form an interval of length y, and for any x1, x2,
 
-	    mod(x1, y, rnd) = mod(x2, y, rnd)
+            mod(x1, y, rnd) = mod(x2, y, rnd)
 
     is equivalent to:
 
-	    x1 is congruent to x2 modulo y.
+            x1 is congruent to x2 modulo y.
 
     This is particularly relevant when working with the ring of
     integers modulo an integer y.
@@ -121,11 +121,11 @@ EXAMPLE
     ; print mod(A,10,0)
 
     list (5 elements, 5 nonzero):
-	[[0]] = 1
-	[[1]] = 3
-	[[2]] = 7
-	[[3]] = 3
-	[[4]] = 9
+        [[0]] = 1
+        [[1]] = 3
+        [[2]] = 7
+        [[3]] = 3
+        [[4]] = 9
 
 LIMITS
     none
@@ -145,7 +145,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -153,8 +153,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/09/18 02:09:31
-## File existed as early as:	1995
+## Under source code control:   1995/09/18 02:09:31
+## File existed as early as:    1995
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

@@ -7,7 +7,7 @@
  * This file is not covered under version 2.1 of the GNU LGPL.
  * This file is covered under "The unlicense":
  *
- *	https://unlicense.org
+ *      https://unlicense.org
  *
  * In particular:
  *
@@ -36,8 +36,8 @@
  *
  * For more information, please refer to <http://unlicense.org/>
  *
- * Under source dotest_code control:	2006/03/08 05:54:09
- * File existed as early as:	2006
+ * Under source dotest_code control:    2006/03/08 05:54:09
+ * File existed as early as:    2006
  */
 
 
@@ -45,29 +45,29 @@
  * dotest - perform tests from dotest_testline file
  *
  * given:
- *	dotest_file	filename containing single test lines
- *	dotest_code	regress.cal test number to use (def: 0)
- *	dotest_maxcond	max error conditions allowed (def: <0 ==> 2^31-1)
+ *      dotest_file     filename containing single test lines
+ *      dotest_code     regress.cal test number to use (def: 0)
+ *      dotest_maxcond  max error conditions allowed (def: <0 ==> 2^31-1)
  *
  * returns:
- *	number of line test failures
+ *      number of line test failures
  *
  * NOTE: All variables used by the dotest() function start with "dotest_".
- *	 The dotest_file and dotest_read should not use any variable
- *	 that starts with "dotest_".
+ *       The dotest_file and dotest_read should not use any variable
+ *       that starts with "dotest_".
  */
 define dotest(dotest_file, dotest_code = 0, dotest_maxcond = -1)
 {
-    local dotest_f_file;	/* open file containing test lines */
-    local dotest_testline;	/* test line */
-    local dotest_testeval;	/* eval value from dotest_testline test line */
-    local dotest_tmperrcnt;	/* temp error count after line test */
-    local dotest_errcnt;	/* total number of errors */
-    local dotest_failcnt;	/* number of line tests failed */
-    local dotest_testnum;	/* number of test lines evaluated */
-    local dotest_linenum;	/* test line number */
-    local dotest_old_errmax;	/* value of errmax() prior to calling */
-    local dotest_old_errcount;	/* value of errcount() prior to calling */
+    local dotest_f_file;        /* open file containing test lines */
+    local dotest_testline;      /* test line */
+    local dotest_testeval;      /* eval value from dotest_testline test line */
+    local dotest_tmperrcnt;     /* temp error count after line test */
+    local dotest_errcnt;        /* total number of errors */
+    local dotest_failcnt;       /* number of line tests failed */
+    local dotest_testnum;       /* number of test lines evaluated */
+    local dotest_linenum;       /* test line number */
+    local dotest_old_errmax;    /* value of errmax() prior to calling */
+    local dotest_old_errcount;  /* value of errcount() prior to calling */
 
     /*
      * preserve calling stats
@@ -87,9 +87,9 @@ define dotest(dotest_file, dotest_code = 0, dotest_maxcond = -1)
      * setup error accounting for dotest
      */
     if (dotest_maxcond >= 0 && dotest_maxcond < 2147483647) {
-	    errmax(dotest_maxcond + dotest_old_errcount + 1),;
+            errmax(dotest_maxcond + dotest_old_errcount + 1),;
     } else {
-	    errmax(2147483647),;
+            errmax(2147483647),;
     }
 
     /*
@@ -98,9 +98,9 @@ define dotest(dotest_file, dotest_code = 0, dotest_maxcond = -1)
     printf("%d-: opening line file: %d", dotest_code, dotest_file);
     dotest_f_file = fpathopen(dotest_file, "r");
     if (!isfile(dotest_f_file)) {
-	printf("**** Unable to file or open file \"%s\"\n",
-		dotest_file);
-	quit;
+        printf("**** Unable to file or open file \"%s\"\n",
+                dotest_file);
+        quit;
     }
     printf('%d: testing "%s"\n', dotest_code, dotest_file);
 
@@ -109,73 +109,73 @@ define dotest(dotest_file, dotest_code = 0, dotest_maxcond = -1)
      */
     for (;;) {
 
-	/* get the next test line */
-	dotest_testline = fgets(dotest_f_file);
-	++dotest_linenum;
-	if (iserror(dotest_testline)) {
-	    quit "**** Error while reading file";
-	} else if (isnull(dotest_testline)) {
-	    /* EOF - end of test file */
-	    break;
-	}
+        /* get the next test line */
+        dotest_testline = fgets(dotest_f_file);
+        ++dotest_linenum;
+        if (iserror(dotest_testline)) {
+            quit "**** Error while reading file";
+        } else if (isnull(dotest_testline)) {
+            /* EOF - end of test file */
+            break;
+        }
 
-	/* skip empty lines */
-	if (dotest_testline == "\n") {
-	    continue;
-	}
+        /* skip empty lines */
+        if (dotest_testline == "\n") {
+            continue;
+        }
 
-	/* evaluate the test line */
-	dotest_testeval = eval(dotest_testline);
+        /* evaluate the test line */
+        dotest_testeval = eval(dotest_testline);
 
-	/* ignore white space or comment lines */
-	if (isnull(dotest_testeval)) {
-	    continue;
-	}
+        /* ignore white space or comment lines */
+        if (isnull(dotest_testeval)) {
+            continue;
+        }
 
-	/* look for test line parse errors */
-	if (iserror(dotest_testeval)) {
-	    printf("**** evaluation error: ");
-	    ++dotest_failcnt;
+        /* look for test line parse errors */
+        if (iserror(dotest_testeval)) {
+            printf("**** evaluation error: ");
+            ++dotest_failcnt;
 
-	/* look for test line dotest_failcnt */
-	} else if (dotest_testeval != 1) {
-	    printf("**** did not return 1: ");
-	    ++dotest_failcnt;
-	}
+        /* look for test line dotest_failcnt */
+        } else if (dotest_testeval != 1) {
+            printf("**** did not return 1: ");
+            ++dotest_failcnt;
+        }
 
-	/* show the test line we just performed */
-	printf("%d-%d: %s", dotest_code, dotest_linenum, dotest_testline);
+        /* show the test line we just performed */
+        printf("%d-%d: %s", dotest_code, dotest_linenum, dotest_testline);
 
-	/* error accounting */
-	dotest_tmperrcnt = errcount() - dotest_errcnt;
-	if (dotest_tmperrcnt > 0) {
+        /* error accounting */
+        dotest_tmperrcnt = errcount() - dotest_errcnt;
+        if (dotest_tmperrcnt > 0) {
 
-	    /* report any other errors */
-	    if (dotest_tmperrcnt > 1) {
-		printf("%d-%d: NOTE: %d error conditions(s): %s\n",
-		    dotest_code, dotest_linenum, dotest_tmperrcnt);
-	    }
+            /* report any other errors */
+            if (dotest_tmperrcnt > 1) {
+                printf("%d-%d: NOTE: %d error conditions(s): %s\n",
+                    dotest_code, dotest_linenum, dotest_tmperrcnt);
+            }
 
-	    /* report the calc error string */
-	    printf("%d-%d: NOTE: last error string: %s\n",
-	        dotest_code, dotest_linenum, strerror());
+            /* report the calc error string */
+            printf("%d-%d: NOTE: last error string: %s\n",
+                dotest_code, dotest_linenum, strerror());
 
-	    /* new error count level */
-	    dotest_errcnt = errcount();
-	    if (dotest_maxcond >= 0 &&
-	        dotest_old_errcount-dotest_errcnt > dotest_maxcond) {
-		printf("%d-%d: total error conditions: %d > %d\n",
-		       dotest_code, dotest_linenum,
-		       dotest_maxcond, dotest_old_errcount-dotest_errcnt);
-	    }
-	}
+            /* new error count level */
+            dotest_errcnt = errcount();
+            if (dotest_maxcond >= 0 &&
+                dotest_old_errcount-dotest_errcnt > dotest_maxcond) {
+                printf("%d-%d: total error conditions: %d > %d\n",
+                       dotest_code, dotest_linenum,
+                       dotest_maxcond, dotest_old_errcount-dotest_errcnt);
+            }
+        }
     }
 
     /*
      * test the close of the line file
      */
     printf("%d-: detected %d error condition(s), many of which may be OK\n",
-	   dotest_code, dotest_old_errcount-dotest_errcnt);
+           dotest_code, dotest_old_errcount-dotest_errcnt);
     printf("%d-: closing line file: %d\n", dotest_code, dotest_file);
     fclose(dotest_f_file);
 
@@ -183,11 +183,11 @@ define dotest(dotest_file, dotest_code = 0, dotest_maxcond = -1)
      * test line file accounting
      */
     if (dotest_failcnt > 0) {
-	printf("**** %d-: %d test failure(s) in %d line(s)\n",
-	    dotest_code, dotest_failcnt, dotest_linenum);
+        printf("**** %d-: %d test failure(s) in %d line(s)\n",
+            dotest_code, dotest_failcnt, dotest_linenum);
     } else {
-	printf("%d-: no failure(s) in %d line(s)\n",
-	    dotest_code, dotest_linenum);
+        printf("%d-: no failure(s) in %d line(s)\n",
+            dotest_code, dotest_linenum);
     }
 
     /*

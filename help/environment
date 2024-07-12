@@ -2,119 +2,119 @@ Environment variables
 
     CALCPATH
 
-	A :-separated list of directories used to search for
-	resource filenames (*.cal files) that do not begin with:
+        A :-separated list of directories used to search for
+        resource filenames (*.cal files) that do not begin with:
 
-		/	./	../	~
+                /       ./      ../     ~
 
-	If this variable does not exist, or if this
-	variable is an empty string, a compiled value
-	is used.  Typically compiled in value is:
+        If this variable does not exist, or if this
+        variable is an empty string, a compiled value
+        is used.  Typically compiled in value is:
 
-		    .:./cal:~/cal:${CALC_SHAREDIR}:${CUSTOMCALDIR}
+                    .:./cal:~/cal:${CALC_SHAREDIR}:${CUSTOMCALDIR}
 
-	which is usually:
+        which is usually:
 
-		    .:./cal:~/cal:/usr/share/calc:/usr/share/calc/custom
+                    .:./cal:~/cal:/usr/share/calc:/usr/share/calc/custom
 
-	This value is used by the READ command.	 It is an error
-	if no such readable file is found.
+        This value is used by the READ command.  It is an error
+        if no such readable file is found.
 
-	The CALCBINDINGS file searches the CALCPATH as well.
+        The CALCBINDINGS file searches the CALCPATH as well.
 
     CALCRC
 
-	On startup (unless -h or -q was given on the command
-	line), calc searches for files along the :-separated
-	$CALCRC environment variable.
+        On startup (unless -h or -q was given on the command
+        line), calc searches for files along the :-separated
+        $CALCRC environment variable.
 
-	If this variable does not exist, or if this
+        If this variable does not exist, or if this
         variable is an empty string, a compiled value
-	is used.  Typically compiled in value is:
+        is used.  Typically compiled in value is:
 
-		    ${CALC_SHAREDIR}/startup:~/.calcrc:./.calcinit
+                    ${CALC_SHAREDIR}/startup:~/.calcrc:./.calcinit
 
-	which is usually:
+        which is usually:
 
-		    /usr/share/calc/startup:~/.calcrc:./.calcinit
+                    /usr/share/calc/startup:~/.calcrc:./.calcinit
 
-	Missing files along the $CALCRC path are silently ignored.
+        Missing files along the $CALCRC path are silently ignored.
 
     CALCBINDINGS
 
-	On startup (unless -h or -q was given on the command
-	line), calc reads key bindings from the filename specified
-	in the $CALCRC environment variable.  These key bindings
-	are used for command line editing and the command history.
+        On startup (unless -h or -q was given on the command
+        line), calc reads key bindings from the filename specified
+        in the $CALCRC environment variable.  These key bindings
+        are used for command line editing and the command history.
 
-	If this variable does not exist, a compiled value is used.
-	Typically compiled in value is:
+        If this variable does not exist, a compiled value is used.
+        Typically compiled in value is:
 
-		    bindings
+                    bindings
 
-	The bindings file is searched along the CALCPATH.  Unlike
-	the READ command, a .cal extension is not added.
+        The bindings file is searched along the CALCPATH.  Unlike
+        the READ command, a .cal extension is not added.
 
-	If the file could not be opened, or if standard input is not
-	a terminal, then calc will still run, but fancy command line
-	editing is disabled.
+        If the file could not be opened, or if standard input is not
+        a terminal, then calc will still run, but fancy command line
+        editing is disabled.
 
-	NOTE: If calc was compiled with GNU-readline support, the
-	      CALCBINDINGS facility is ignored and the standard
-	      readline mechanisms (see readline(3)) are used.
+        NOTE: If calc was compiled with GNU-readline support, the
+              CALCBINDINGS facility is ignored and the standard
+              readline mechanisms (see readline(3)) are used.
 
     HOME
 
-	This value is taken to be the home directory of the
-	current user.  It is used when files begin with '~/'.
+        This value is taken to be the home directory of the
+        current user.  It is used when files begin with '~/'.
 
-	If this variable does not exist, or if this
-	variable is an empty string, the home directory password
-	entry of the current user is used.  If that information
-	is not available, '.' is used.
+        If this variable does not exist, or if this
+        variable is an empty string, the home directory password
+        entry of the current user is used.  If that information
+        is not available, '.' is used.
 
     PAGER
 
-	When invoking help, this environment variable is used
-	to display a help file.
+        When invoking help, this environment variable is used
+        to display a help file.
 
-	If this variable does not exist, or if this
-	variable is an empty string, a compiled value
-	is used.  Typically compiled in value is something
-	such as 'more', 'less', 'pg' or 'cat'.
+        If this variable does not exist, or if this
+        variable is an empty string, a compiled value
+        is used.  Typically compiled in value is something
+        such as 'more', 'less', 'pg' or 'cat'.
 
     SHELL
 
-	When a !-command is used, the program indicated by
-	this environment variable is used.
+        When a !-command is used, the program indicated by
+        this environment variable is used.
 
-	If this variable does not exist, or if this
-	variable is an empty string, a compiled value
-	is used.  Typically compiled in value is something
-	such as 'sh' is used.
+        If this variable does not exist, or if this
+        variable is an empty string, a compiled value
+        is used.  Typically compiled in value is something
+        such as 'sh' is used.
 
     CALCHISTFILE
 
-	This value is taken to be the calc history file.
+        This value is taken to be the calc history file.
 
-	If this variable does not exist, or if this
-	variable is an empty string, then ~/.calc_history
-	is used.
+        If this variable does not exist, or if this
+        variable is an empty string, then ~/.calc_history
+        is used.
 
      CALCHELP
 
-	Location of the calc help directory.
+        Location of the calc help directory.
 
-	If this variable does not exist, or if this
-	variable is an empty string, then ${HELPDIR}
+        If this variable does not exist, or if this
+        variable is an empty string, then ${HELPDIR}
 
      CALCCUSTOMHELP
 
-	Location of the calc custom help directory.
+        Location of the calc custom help directory.
 
-	If this variable does not exist, or if this
-	variable is an empty string, then ${CUSTOMHELPDIR}
-	is used.
+        If this variable does not exist, or if this
+        variable is an empty string, then ${CUSTOMHELPDIR}
+        is used.
 
 ## Copyright (C) 1999,2021  Landon Curt Noll
 ##
@@ -124,7 +124,7 @@ Environment variables
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -132,8 +132,8 @@ Environment variables
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1991/07/23 05:47:25
-## File existed as early as:	1991
+## Under source code control:   1991/07/23 05:47:25
+## File existed as early as:    1991
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

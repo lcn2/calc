@@ -1,9 +1,9 @@
 s/VALUE/int/
-s/NUMBER[	 ]*\*/int /
+s/NUMBER[        ]*\*/int /
 s/NUMBER/int/
 s/STRINGHEAD/int/
 s/\(".*",.*,.*\),.*,.*,.*,.*,/\1, 0, 0, {.null = NULL}, {.null = NULL},/
-s/[	 ][	 ]*$//
+s/[      ][      ]*$//
 p
 
 ## Copyright (C) 1999,2023  Landon Curt Noll
@@ -14,7 +14,7 @@ p
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -22,8 +22,8 @@ p
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/07/10 01:33:06
-## File existed as early as:	1995
+## Under source code control:   1995/07/10 01:33:06
+## File existed as early as:    1995
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

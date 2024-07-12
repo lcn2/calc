@@ -5,10 +5,10 @@ SYNOPSIS
     g2d(x [,eps])
 
 TYPES
-    x		number (real or complex)
-    eps		eps value is ignored
+    x           number (real or complex)
+    eps         eps value is ignored
 
-    return	number
+    return      number
 
 DESCRIPTION
     Given x gradians, return the equivalent number of degrees.
@@ -40,7 +40,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -48,8 +48,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	2021/09/07 12:04:28
-## File existed as early as:	2021
+## Under source code control:   2021/09/07 12:04:28
+## File existed as early as:    2021
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

@@ -5,13 +5,13 @@ SYNOPSIS
     isprime(x [,err])
 
 TYPES
-    x		int
-    err		int
+    x           int
+    err         int
 
-    return	int
+    return      int
 
 DESCRIPTION
-    Determine if x is is a small prime.	 This function will return
+    Determine if x is is a small prime.  This function will return
     1 if x is a small prime.  If x is even, this function will
     return 0.  If x is negative or a small composite (non-prime),
     0 will be returned.
@@ -39,10 +39,10 @@ EXAMPLE
     -1 2 0
 
 LIMITS
-    err not given  and	(y is even  or	y < 2^32)
+    err not given  and  (y is even  or  y < 2^32)
 
 LINK LIBRARY
-    FLAG zisprime(ZVALUE x)	(return 1 if prime, 0 not prime, -1 if >= 2^32)
+    FLAG zisprime(ZVALUE x)     (return 1 if prime, 0 not prime, -1 if >= 2^32)
 
 SEE ALSO
     factor, lfactor, nextcand, nextprime, prevcand, prevprime,
@@ -56,7 +56,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -64,8 +64,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1994/10/21 02:21:29
-## File existed as early as:	1994
+## Under source code control:   1994/10/21 02:21:29
+## File existed as early as:    1994
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

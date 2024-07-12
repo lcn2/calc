@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,11 +17,11 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1999/10/31 01:00:03
- * File existed as early as:	1999
+ * Under source code control:   1999/10/31 01:00:03
+ * File existed as early as:    1999
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -38,7 +38,7 @@ define test8400()
     return x8401+s8401;
 }
 print "8402: parsed test8400()";
-vrfy(test8400() == 64434,	    '8403: test8400() == 64434');
+vrfy(test8400() == 64434,           '8403: test8400() == 64434');
 
 quit;
 prob('quit did not end test8400.cal');

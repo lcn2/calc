@@ -5,63 +5,63 @@ SYNOPSIS
     error([errnum | "E_STRING"])
 
 TYPES
-    errnum	integer, defaults to errno()
-    E_STRING	string
+    errnum      integer, defaults to errno()
+    E_STRING    string
 
-    return	null value or error value
+    return      null value or error value
 
 DESCRIPTION
     If errnum == 0:
 
-	error(errnum) returns the null value.
+        error(errnum) returns the null value.
 
-	The "global calc_errno value" is set to 0.
+        The "global calc_errno value" is set to 0.
 
-	The global calc error count is not changed.
+        The global calc error count is not changed.
 
     With error(errnum) numeric argument:
 
-	For 0 < errnum <= 32767:
+        For 0 < errnum <= 32767:
 
-	    error(errnum) returns a value that is of a special type called
-	    "error".  The "error" return value, when given to iserror()
-	    will cause that function to return a true value that happens
-	    to match the "global calc_errno value".
+            error(errnum) returns a value that is of a special type called
+            "error".  The "error" return value, when given to iserror()
+            will cause that function to return a true value that happens
+            to match the "global calc_errno value".
 
-	    The "global calc_errno value" is then set to errnum.
+            The "global calc_errno value" is then set to errnum.
 
-	For all other errnum values:
+        For all other errnum values:
 
-	    An error error condition is raised about the valid errnum.
+            An error error condition is raised about the valid errnum.
 
-	The global calc error count (see help errcount) is incremented.
-	If the global calc error count exceeds the maximum count
-	(see help errmax), any ongoing calc execution is aborted.
+        The global calc error count (see help errcount) is incremented.
+        If the global calc error count exceeds the maximum count
+        (see help errmax), any ongoing calc execution is aborted.
 
     With error("E_STRING") string argument:
 
-	If E_STRING is a valid errsym code, then the E_STRING errsym
-	is converted into an equivalent errnum and respective calc
-	error condition is raised.
+        If E_STRING is a valid errsym code, then the E_STRING errsym
+        is converted into an equivalent errnum and respective calc
+        error condition is raised.
 
-	If E_STRING is not a valid errsym code, an error error condition
-	is raised about the invalid E_STRING.
+        If E_STRING is not a valid errsym code, an error error condition
+        is raised about the invalid E_STRING.
 
-	For example, these two calls are equivalent:
+        For example, these two calls are equivalent:
 
-	    error(10003);	/* error 10003 has a E_STRING of "E_ADD" */
-	    error("E_ADD");	/* error 10003 has a E_STRING of "E_ADD" */
+            error(10003);       /* error 10003 has a E_STRING of "E_ADD" */
+            error("E_ADD");     /* error 10003 has a E_STRING of "E_ADD" */
 
-	See help errsym for information on E_STRING errsym codes.
+        See help errsym for information on E_STRING errsym codes.
 
-	For a list of the E_STRING associated with calc computation error
-	codes, see help errorcodes.
+        For a list of the E_STRING associated with calc computation error
+        codes, see help errorcodes.
 
     For no errnum arg:
 
-	Calling error() without an argument will return the current
-	"global calc_errno value" AND will also increment the
-	global calc error count.
+        Calling error() without an argument will return the current
+        "global calc_errno value" AND will also increment the
+        global calc error count.
 
     All other values of errnum are reserved for future use and currently
     will generate an error.
@@ -81,23 +81,23 @@ DESCRIPTION
 
     By convention, the "global calc_errno value" has the following ranges:
 
-	errnum < 0			Reserved for future use
-	errnum == 0			calc_errno cleared: libc errno codes above here
-	1 <= errnum <= 9999		system error and libc errno codes
-	errnum == 10000			Reserved for "No error" calc internal state
-	10001 <= errnum <= E__HIGHEST	calc computation error codes
-	E__HIGHEST < errnum < 20000	Reserved for future calc error codes
-	20000 < errnum <= 32767		User defined error codes start here
-	errnum >= 32768			Reserved for future use
+        errnum < 0                      Reserved for future use
+        errnum == 0                     calc_errno cleared: libc errno codes above here
+        1 <= errnum <= 9999             system error and libc errno codes
+        errnum == 10000                 Reserved for "No error" calc internal state
+        10001 <= errnum <= E__HIGHEST   calc computation error codes
+        E__HIGHEST < errnum < 20000     Reserved for future calc error codes
+        20000 < errnum <= 32767         User defined error codes start here
+        errnum >= 32768                 Reserved for future use
 
     The following constants are part of the calc error code mechanism:
 
-	E__BASE == 10000		1 less than the 1st calc computation error code
-	E__HIGHEST			highest assigned calc computation error code
-	E__USERDEF == 20000		user defined error codes start here
-	E__USERMAX == 32767		maximum user defined error code
+        E__BASE == 10000                1 less than the 1st calc computation error code
+        E__HIGHEST                      highest assigned calc computation error code
+        E__USERDEF == 20000             user defined error codes start here
+        E__USERMAX == 32767             maximum user defined error code
 
-	ECOUNT				number of calc computation error codes (not including E__BASE)
+        ECOUNT                          number of calc computation error codes (not including E__BASE)
 
     See help errorcodes for the actual values of the above constants.
 
@@ -134,9 +134,9 @@ LIMITS
     E_STRING is string that must match the regular expression: ^E_[A-Z0-9_]+$
 
 LINK LIBRARY
-    int calc_errno;				/* global calc_errno value */
+    int calc_errno;                             /* global calc_errno value */
 
-    CONST struct errtbl error_table[ECOUNT+2];	/* calc error codes, error symbols and error messages */
+    CONST struct errtbl error_table[ECOUNT+2];  /* calc error codes, error symbols and error messages */
 
     bool is_e_digits(CONST char *errsym);
     bool is_valid_errnum(int errnum);
@@ -163,7 +163,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -171,8 +171,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/12/18 03:30:59
-## File existed as early as:	1995
+## Under source code control:   1995/12/18 03:30:59
+## File existed as early as:    1995
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

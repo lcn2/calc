@@ -8,65 +8,65 @@ SYNOPSIS
 TYPES
     For first case:
 
-    a, b, ...	Arithmetic
+    a, b, ...   Arithmetic
 
-    x		Arithmetic
+    x           Arithmetic
 
-    return	Depends on argument types
+    return      Depends on argument types
 
     For second case:
 
-    clist	List of coefficients
+    clist       List of coefficients
 
-    x, y, ...	Coefficients
+    x, y, ...   Coefficients
 
-    return	Depends on argument types
+    return      Depends on argument types
 
     Here an arithmetic type is one for which the required + and *
     operations are defined, e.g. real or complex numbers or square
-    matrices of the same size.	A coefficient is either of arithmetic
+    matrices of the same size.  A coefficient is either of arithmetic
     type or a list of coefficients.
 
 DESCRIPTION
     If the first argument is not a list, and the necessary operations are
     defined:
 
-	poly(a_0, a_1, ..., a_n, x)
+        poly(a_0, a_1, ..., a_n, x)
 
      returns the value of:
 
-	a_n + (a_n-1 + ... + (a_1 + a_0 * x) * x ...) * x
+        a_n + (a_n-1 + ... + (a_1 + a_0 * x) * x ...) * x
 
     If the coefficients a_0, a_1, ..., a_n and x are elements of a
     commutative ring, e.g. if the coefficients and x are real or complex
     numbers, this is the value of the polynomial:
 
-	a_0 * x^n + a_1 * x^(n-1) + ... + a_(n-1) * x + a_n.
+        a_0 * x^n + a_1 * x^(n-1) + ... + a_(n-1) * x + a_n.
 
     For other structures (e.g. if addition is not commutative),
     the order of operations may be relevant.
 
     In particular:
 
-	poly(a, x) returns the value of a.
+        poly(a, x) returns the value of a.
 
-	poly(a, b, x) returns the value of b + a * x
+        poly(a, b, x) returns the value of b + a * x
 
-	poly(a, b, c, x) returns the value of c + (b + a * x) * x
+        poly(a, b, c, x) returns the value of c + (b + a * x) * x
 
 
     If the first argument is a list as if defined by:
 
-	clist = list(a_0, a_1, ..., a_n)
+        clist = list(a_0, a_1, ..., a_n)
 
     and the coefficients a_i and x are are of arithmetic type,
     poly(clist, x) returns:
 
-	a_0 + (a_1 + (a_2 + ... + a_n * x) * x)
+        a_0 + (a_1 + (a_2 + ... + a_n * x) * x)
 
     which for a commutative ring, expands to:
 
-	a_0 + a_1 * x + ... + a_n * x^n.
+        a_0 + a_1 * x + ... + a_n * x^n.
 
     If clist is the empty list, the value returned is the number 0.
 
@@ -78,36 +78,36 @@ DESCRIPTION
     to such an element is the value of poly for that list and the next
     argument in x, y, ...  For example:
 
-	poly(list(list(a,b,c), list(d,e), f), x, y)
+        poly(list(list(a,b,c), list(d,e), f), x, y)
 
     returns:
 
-	 (a + b * y + c * y^2) + (d + e * y) * x + f * x^2.
+         (a + b * y + c * y^2) + (d + e * y) * x + f * x^2.
 
     Arguments in excess of those required for clist are ignored, e.g.:
 
-	poly(list(1,2,3), x, y)
+        poly(list(1,2,3), x, y)
 
     returns the same as poly(list(1,2,3), x).  If the number of
     arguments is less than greatest depth of lists in clist, the
-    "missing" arguments are deemed to be zero.	E.g.:
+    "missing" arguments are deemed to be zero.  E.g.:
 
-	poly(list(list(1,2), list(3,4), 5), x)
+        poly(list(list(1,2), list(3,4), 5), x)
 
     returns the same as:
 
-	poly(list(1, 3, 5), x).
+        poly(list(1, 3, 5), x).
 
     If in the clist case, one or more of x, y, ... is a list, the
     arguments to be applied to the polynomial are the successive
     non-list values in the list or sublists.  For example, if the x_i
     are not lists:
 
-	poly(clist, list(x_0, x_1), x_2, list(list(x_3, x_4), x_5))
+        poly(clist, list(x_0, x_1), x_2, list(list(x_3, x_4), x_5))
 
     returns the same as:
 
-	poly(clist, x_0, x_1, x_2, x_3, x_4, x_5).
+        poly(clist, x_0, x_1, x_2, x_3, x_4, x_5).
 
 EXAMPLE
     ; print poly(2, 3, 5, 7), poly(list(5, 3, 2), 7), 5 + 3 * 7 + 2 * 7^2
@@ -144,7 +144,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -152,8 +152,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/12/02 02:40:43
-## File existed as early as:	1995
+## Under source code control:   1995/12/02 02:40:43
+## File existed as early as:    1995
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

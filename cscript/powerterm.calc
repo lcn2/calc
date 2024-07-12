@@ -7,16 +7,16 @@
  * usage:
  *      powerterm [base_limit] value
  *
- *	base_limit	largest base we will consider (def: 10000)
- *      value		value to convert into sums of powers of integers
+ *      base_limit      largest base we will consider (def: 10000)
+ *      value           value to convert into sums of powers of integers
  *
  * Example:
  *
- *	powerterm 5 1000000
+ *      powerterm 5 1000000
  *
  * prints:
  *
- *	4^10 - 3^10 + 5^6 - 4^6 - 4^5 - 2^5
+ *      4^10 - 3^10 + 5^6 - 4^6 - 4^5 - 2^5
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the powerterm of the version 2.1 of the GNU Lesser General Public License
@@ -47,7 +47,7 @@ argc = argv();
 stderr = files(2);
 program = argv(0);
 config("verbose_quit", 0),;
-base_lim = 10000;		/* default: highest base we will consider */
+base_lim = 10000;               /* default: highest base we will consider */
 if (argc < 2 || argc > 3) {
     fprintf(stderr, "usage: %s [base_limit] value\n", program);
     exit;
@@ -75,20 +75,20 @@ if (base_lim <= 1) {
 /*
  * setup loop variables
  */
-term = 0;			/* number of powerterm found */
+term = 0;                       /* number of powerterm found */
 
 /*
  * log constants
  */
-if (base_lim <= 2^20+1) {		/* 2^20 requires ~96 Megs of memory */
-    mat lni[base_lim];			/* log of integers */
+if (base_lim <= 2^20+1) {               /* 2^20 requires ~96 Megs of memory */
+    mat lni[base_lim];                  /* log of integers */
     for (i=2; i < base_lim; ++i) {
-	lni[i] = ln(i);
+        lni[i] = ln(i);
     }
-    have_lni = 1;			/* have lni[x] array */
+    have_lni = 1;                       /* have lni[x] array */
 } else {
-    mat lni[1];				/* not used */
-    have_lni = 0;			/* base_lim too large for array */
+    mat lni[1];                         /* not used */
+    have_lni = 0;                       /* base_lim too large for array */
 }
 
 /*
@@ -99,82 +99,82 @@ while (abs(x) >= base_lim) {
     /*
      * look for the nearest power
      */
-    lnx = ln(abs(x));			/* log of the remaining co-factor */
+    lnx = ln(abs(x));                   /* log of the remaining co-factor */
     closest = 0.5;
     base = 1;
     exponent = 0;
     if (have_lni) {
 
-	/*
-	 * use pre-calculated log array when looking for the nearest power
-	 */
-	for (i = 2; i < base_lim; ++i) {
+        /*
+         * use pre-calculated log array when looking for the nearest power
+         */
+        for (i = 2; i < base_lim; ++i) {
 
-	    /*
-	     * determine exponent closeness to an integer
-	     */
-	    ex = lnx / lni[i];
-	    power = int(ex + 0.5);
-	    diff = ex - power;
+            /*
+             * determine exponent closeness to an integer
+             */
+            ex = lnx / lni[i];
+            power = int(ex + 0.5);
+            diff = ex - power;
 
-	    /*
-	     * look for a closer power
-	     */
-	    if (abs(diff) < closest) {
-		closest = abs(diff);
-		base = i;
-		exponent = power;
-	    }
-	}
+            /*
+             * look for a closer power
+             */
+            if (abs(diff) < closest) {
+                closest = abs(diff);
+                base = i;
+                exponent = power;
+            }
+        }
 
     } else {
 
-	/*
-	 * re-calculate logs when looking for the nearest power
-	 */
-	for (i = 2; i < base_lim; ++i) {
+        /*
+         * re-calculate logs when looking for the nearest power
+         */
+        for (i = 2; i < base_lim; ++i) {
 
-	    /*
-	     * determine exponent closeness to an integer
-	     */
-	    ex = lnx / ln(i);
-	    power = int(ex + 0.5);
-	    diff = ex - power;
+            /*
+             * determine exponent closeness to an integer
+             */
+            ex = lnx / ln(i);
+            power = int(ex + 0.5);
+            diff = ex - power;
 
-	    /*
-	     * look for a closer power
-	     */
-	    if (abs(diff) < closest) {
-		closest = abs(diff);
-		base = i;
-		exponent = power;
-	    }
-	}
+            /*
+             * look for a closer power
+             */
+            if (abs(diff) < closest) {
+                closest = abs(diff);
+                base = i;
+                exponent = power;
+            }
+        }
     }
 
     /*
      * output current term and then subtract it
      */
     if (x != 0) {
-	if (x < 0) {
-	    print "-",;
-	} else if (term > 0) {
-	    print "+",;
-	}
-	if (exponent > 1) {
-	    print base: "^": exponent,;
-	} else {
-	    print base,;
-	}
+        if (x < 0) {
+            print "-",;
+        } else if (term > 0) {
+            print "+",;
+        }
+        if (exponent > 1) {
+            print base: "^": exponent,;
+        } else {
+            print base,;
+        }
     }
 
     /*
      * subtract (or add) this near power
      */
     if (x < 0) {
-	x = x + base^exponent;
+        x = x + base^exponent;
     } else {
-	x = x - base^exponent;
+        x = x - base^exponent;
     }
     ++term;
 }

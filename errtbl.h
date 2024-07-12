@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,10 +17,10 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	2023/09/12 20:55:14
- * File existed as early as:	2023
+ * Under source code control:   2023/09/12 20:55:14
+ * File existed as early as:    2023
  *
- * Share and enjoy!  :-)		http://www.isthe.com/chongo/tech/comp/calc/
+ * Share and enjoy!  :-)                http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -47,33 +47,33 @@
 /*
  * primary error code defines
  */
-#define E__NONE		0	/* calc_errno cleared: libc errno codes above here */
-#define E__BASE		10000	/* calc computation error codes start above here */
-#define E__USERDEF	20000	/* user defined error codes start here */
-#define E__USERMAX	32767	/* maximum user defined error code */
+#define E__NONE         0       /* calc_errno cleared: libc errno codes above here */
+#define E__BASE         10000   /* calc computation error codes start above here */
+#define E__USERDEF      20000   /* user defined error codes start here */
+#define E__USERMAX      32767   /* maximum user defined error code */
 
-#define USERMAX_DIGITS 5	/* number of decimal digits in E__USERMAX */
+#define USERMAX_DIGITS 5        /* number of decimal digits in E__USERMAX */
 
 /*
  * invalid errnum
  */
-#define NULL_ERRNUM (-1)	/* errnum for the final table terminating NULL entry */
+#define NULL_ERRNUM (-1)        /* errnum for the final table terminating NULL entry */
 
 
 /*
  * The error routine.
  */
 E_FUNC void math_error(char *, ...) \
-	__attribute__((format(printf, 1, 2))) __attribute__((noreturn));
+        __attribute__((format(printf, 1, 2))) __attribute__((noreturn));
 
 
 /*
  * calc error code, error symbol and error message
  */
 struct errtbl {
-	int errnum;		/* calc computation error codes or -1 */
-	char *errsym;		/* E_STRING - must match regexp: ^E_[A-Z0-9_]+$ or NULL */
-	char *errmsg;		/* calc error message or NULL */
+        int errnum;             /* calc computation error codes or -1 */
+        char *errsym;           /* E_STRING - must match regexp: ^E_[A-Z0-9_]+$ or NULL */
+        char *errmsg;           /* calc error message or NULL */
 };
 
 
@@ -88,7 +88,7 @@ struct errtbl {
  *
  * The final entry must have an errnum of -1, errsym of NULL and errmsg of NULL.
  */
-EXTERN CONST struct errtbl error_table[];	/* calc error codes, error symbols and error messages */
+EXTERN CONST struct errtbl error_table[];       /* calc error codes, error symbols and error messages */
 
 
 /*

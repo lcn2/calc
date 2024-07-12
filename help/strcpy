@@ -5,10 +5,10 @@ SYNOPSIS
     strcpy(s1, s2)
 
 TYPES
-    s1		string
-    s2		string
+    s1          string
+    s2          string
 
-    return	string
+    return      string
 
 DESCRIPTION
     Let n1 = size(s1), n2 = size(n2), and m = min(n1, n2).
@@ -49,7 +49,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -57,8 +57,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## Under source code control:	2006/03/03 03:32:44
-## File existed as early as:	2006
+## Under source code control:   2006/03/03 03:32:44
+## File existed as early as:    2006
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

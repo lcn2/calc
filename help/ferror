@@ -5,9 +5,9 @@ SYNOPSIS
     ferror(fd)
 
 TYPES
-    fd		file
+    fd          file
 
-    return	int
+    return      int
 
 DESCRIPTION
     This function determines whether the error condition was detected
@@ -20,7 +20,7 @@ DESCRIPTION
 EXAMPLE
     ; fd = fopen("/etc/motd", "r")
     ; ferror(fd)
-	    0
+            0
 
 LIMITS
     fd must be associated with an open file
@@ -40,7 +40,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -48,8 +48,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1994/10/27 03:04:17
-## File existed as early as:	1994
+## Under source code control:   1994/10/27 03:04:17
+## File existed as early as:    1994
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

@@ -24,7 +24,7 @@ via zsh:      calc
 
 Calc is an interactive calculator which provides for easy large
 numeric calculations, but which also can be easily programmed
-for difficult or long calculations.	 It can accept a command line
+for difficult or long calculations.      It can accept a command line
 argument, in which case it executes that single command and exits.
 Otherwise, it enters interactive mode.  In this mode, it accepts
 commands one at a time, processes them, and displays the answers.
@@ -189,12 +189,12 @@ followed by a function declaration very similar to C.
 ```sh
 define f2(n)
 {
-	local ans;
+        local ans;
 
-	ans = 1;
-	while (n > 1)
-		ans *= (n -= 2);
-	return ans;
+        ans = 1;
+        while (n > 1)
+                ans *= (n -= 2);
+        return ans;
 }
 ```
 

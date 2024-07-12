@@ -9,12 +9,12 @@ Interrupts
 
     You can generate the SIGINT signal multiple times if necessary,
     and each time the calculator will abort the calculation at a more
-    risky place within the calculation.	 Each new interrupt prints a
+    risky place within the calculation.  Each new interrupt prints a
     message of the form:
 
-	    [Abort level n]
+            [Abort level n]
 
-    where n ranges from 1 to 3.	 For n equal to 1, the calculator will
+    where n ranges from 1 to 3.  For n equal to 1, the calculator will
     abort calculations at the next statement boundary specified by an
     ABORT opcode as described below.  For n equal to 2, the calculator
     will abort calculations at the next opcode boundary.  For n equal to 3,
@@ -42,24 +42,24 @@ ABORT opcodes
     the calculation is never completed and to stop it, an interruption
     (on many systems, by ctrl-C) will be necessary.
 
-	; config("trace", 8),
-	; define f(x) {local s; while (x) {s += x--} return s}
-	0: DEBUG line 2
-	2: PARAMADDR x
-	4: JUMPZ 19
-	6: DEBUG line 2
-	8: LOCALADDR s
-	10: DUPLICATE
-	11: PARAMADDR x
-	13: POSTDEC
-	14: POP
-	15: ADD
-	16: ASSIGNPOP
-	17: JUMP 2
-	19: DEBUG line 2
-	21: LOCALADDR s
-	23: RETURN
-	f(x) defined
+        ; config("trace", 8),
+        ; define f(x) {local s; while (x) {s += x--} return s}
+        0: DEBUG line 2
+        2: PARAMADDR x
+        4: JUMPZ 19
+        6: DEBUG line 2
+        8: LOCALADDR s
+        10: DUPLICATE
+        11: PARAMADDR x
+        13: POSTDEC
+        14: POP
+        15: ADD
+        16: ASSIGNPOP
+        17: JUMP 2
+        19: DEBUG line 2
+        21: LOCALADDR s
+        23: RETURN
+        f(x) defined
 
     (The line number following DEBUG refers to the line in the file
     from which the definition is read.)   If an attempt is made to
@@ -68,38 +68,38 @@ ABORT opcodes
     {s += x--} loop.  In interactive mode, with ^C indicating
     input of ctrl-C, the displayed output is as in:
 
-	; f(-1)
-	^C
-	[Abort level 1]
-	"f": line 2: Calculation aborted at statement boundary
+        ; f(-1)
+        ^C
+        [Abort level 1]
+        "f": line 2: Calculation aborted at statement boundary
 
     The DEBUG opcodes are disabled by nonzero config("trace") & 2.
     Changing config("trace") to achieve this, and defining g(x) with
     the same definition as for f(x) gives:
 
-	; define g(x) {local s; while (x) {s += x--} return s}
-	0: PARAMADDR x
-	2: JUMPZ 15
-	4: LOCALADDR s
-	6: DUPLICATE
-	7: PARAMADDR x
-	9: POSTDEC
-	10: POP
-	11: ADD
-	12: ASSIGNPOP
-	13: JUMP 0
-	15: LOCALADDR s
-	17: RETURN
-	g(x) defined
+        ; define g(x) {local s; while (x) {s += x--} return s}
+        0: PARAMADDR x
+        2: JUMPZ 15
+        4: LOCALADDR s
+        6: DUPLICATE
+        7: PARAMADDR x
+        9: POSTDEC
+        10: POP
+        11: ADD
+        12: ASSIGNPOP
+        13: JUMP 0
+        15: LOCALADDR s
+        17: RETURN
+        g(x) defined
 
     If g(-1) is called, two interrupts are necessary, as in:
 
-	; g(-1)
-	^C
-	[Abort level 1]
-	^C
-	[Abort level 2]
-	"g": Calculation aborted in opcode
+        ; g(-1)
+        ^C
+        [Abort level 1]
+        ^C
+        [Abort level 2]
+        "g": Calculation aborted in opcode
 
 ## Copyright (C) 1999-2006  David I. Bell, Landon Curt Noll and Ernest Bowen
 ##
@@ -109,7 +109,7 @@ ABORT opcodes
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -117,8 +117,8 @@ ABORT opcodes
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1991/07/21 04:37:21
-## File existed as early as:	1991
+## Under source code control:   1991/07/21 04:37:21
+## File existed as early as:    1991
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

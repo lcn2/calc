@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,10 +17,10 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1999/10/06 03:12:25
- * File existed as early as:	1999
+ * Under source code control:   1999/10/06 03:12:25
+ * File existed as early as:    1999
  *
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -29,9 +29,9 @@
  * so we declare a global variable whose value is based on if CUSTOM is defined.
  */
 #if defined(CUSTOM)
-int c_pzasusb8_allowed = 1;	/* CUSTOM defined */
+int c_pzasusb8_allowed = 1;     /* CUSTOM defined */
 #else /* CUSTOM */
-int c_pzasusb8_allowed = 0;	/* CUSTOM undefined */
+int c_pzasusb8_allowed = 0;     /* CUSTOM undefined */
 #endif /* CUSTOM */
 
 
@@ -48,7 +48,7 @@ int c_pzasusb8_allowed = 0;	/* CUSTOM undefined */
 
 
 #include "../errtbl.h"
-#include "../banned.h"	/* include after system header <> includes */
+#include "../banned.h"  /* include after system header <> includes */
 
 
 /*
@@ -56,7 +56,7 @@ int c_pzasusb8_allowed = 0;	/* CUSTOM undefined */
  *
  * given:
  *    count = 1;
- *    vals[0]	real number;
+ *    vals[0]   real number;
  *
  * returns:
  *    null
@@ -65,42 +65,42 @@ int c_pzasusb8_allowed = 0;	/* CUSTOM undefined */
 VALUE
 c_pzasusb8(char *UNUSED(name), int UNUSED(count), VALUE **vals)
 {
-	VALUE result;		/* what we will return */
-	ZVALUE z;		/* numerator of the value */
-	long half_cnt;		/* number of HALFs in the numerator */
-	USB8 *h;		/* octet pointer */
-	long half_len;		/* length of a half in octets */
-	long i;
-	long j;
+        VALUE result;           /* what we will return */
+        ZVALUE z;               /* numerator of the value */
+        long half_cnt;          /* number of HALFs in the numerator */
+        USB8 *h;                /* octet pointer */
+        long half_len;          /* length of a half in octets */
+        long i;
+        long j;
 
-	/*
-	 * arg check
-	 */
-	result.v_type = V_NULL;
-	if (vals[0]->v_type != V_NUM) {
-		math_error("Non-real argument for pzasusb8");
-		not_reached();
-	}
+        /*
+         * arg check
+         */
+        result.v_type = V_NULL;
+        if (vals[0]->v_type != V_NUM) {
+                math_error("Non-real argument for pzasusb8");
+                not_reached();
+        }
 
-	/*
-	 * look at the numerator
-	 */
-	z = vals[0]->v_num->num;
-	half_len = sizeof(HALF);
-	half_cnt = z.len;
+        /*
+         * look at the numerator
+         */
+        z = vals[0]->v_num->num;
+        half_len = sizeof(HALF);
+        half_cnt = z.len;
 
-	/*
-	 * print the octets
-	 */
-	h = (USB8 *) z.v;
-	for (i=0; i < half_cnt; ++i) {
-		printf("%ld:\t", i);
-		for (j=0; j < half_len; ++j) {
-			printf("%02x", (int)(*h++));
-		}
-		putchar('\n');
-	}
-	return result;
+        /*
+         * print the octets
+         */
+        h = (USB8 *) z.v;
+        for (i=0; i < half_cnt; ++i) {
+                printf("%ld:\t", i);
+                for (j=0; j < half_len; ++j) {
+                        printf("%02x", (int)(*h++));
+                }
+                putchar('\n');
+        }
+        return result;
 }
 
 #endif /* CUSTOM */

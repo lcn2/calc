@@ -17,37 +17,37 @@
 define gvec(function, vector)
 {
     local xlen,y,foo;
-    local precx = 1e-50;	/* default for now */
+    local precx = 1e-50;        /* default for now */
     local argc = param(0)-1;
-    local old_tilde;		/* previous config("tilde") */
+    local old_tilde;            /* previous config("tilde") */
 
     /*
      * parse args
      */
     local plist = mat[argc];
     if (config("resource_debug") & 8) {
-	print "plist=", plist;
-	print "argc=", argc;
+        print "plist=", plist;
+        print "argc=", argc;
     }
     for(local i = 0; i< argc; i++) {
-	local ii = i + 2;
-	if (config("resource_debug") & 8) {
-	    print "ii=", ii;
-	    print "param(" : ii : "}=", param(ii);
-	    print "size(param(" : ii : ")=", size(param(ii));
-	}
-	plist[i] = size(param(ii));
+        local ii = i + 2;
+        if (config("resource_debug") & 8) {
+            print "ii=", ii;
+            print "param(" : ii : "}=", param(ii);
+            print "size(param(" : ii : ")=", size(param(ii));
+        }
+        plist[i] = size(param(ii));
     }
     local slist=sort(plist);
     if (config("resource_debug") & 8) {
-	print "plist=", plist;
+        print "plist=", plist;
     }
     local argm = argc-1;
     if (config("resource_debug") & 8) {
-	print "argm=", argm;
+        print "argm=", argm;
     }
     if (slist[0] != slist[argm]) {
-	quit "lengths don't match";
+        quit "lengths don't match";
     }
     xlen = size(vector);
     y = mat[xlen];
@@ -67,32 +67,32 @@ define gvec(function, vector)
      */
     if (isdefined(function)) {
 
-	/* yep, it's a function, either builtin or user-defined */
-	for (local j=0; j<xlen; j++) {
+        /* yep, it's a function, either builtin or user-defined */
+        for (local j=0; j<xlen; j++) {
 
-	    /* build the function call */
-	    foo = strcat(function, "(");
-	    for (local jj = 0; jj<argc; jj++) {
-		foo = strcat(foo , str(param(jj+2)[j]), ",");
-	    }
-	    foo = strcat(foo, str(precx), ")");
-	    if (config("resource_debug") & 8) {
-		print "foo=", foo;
-	    }
-	    y[j] = eval(foo);
-	}
+            /* build the function call */
+            foo = strcat(function, "(");
+            for (local jj = 0; jj<argc; jj++) {
+                foo = strcat(foo , str(param(jj+2)[j]), ",");
+            }
+            foo = strcat(foo, str(precx), ")");
+            if (config("resource_debug") & 8) {
+                print "foo=", foo;
+            }
+            y[j] = eval(foo);
+        }
 
     /*
      * it is an operator --  multi-argument operator makes no sense
      */
     } else {
-	if (argc > 1) {
-	    quit "Error: operator can accept only one argument";
-	}
-	for (j=0; j<xlen; j++) {
-	    foo = strcat(str(vector[j]), function);
-	    y[j] = eval(foo);
-	}
+        if (argc > 1) {
+            quit "Error: operator can accept only one argument";
+        }
+        for (j=0; j<xlen; j++) {
+            foo = strcat(str(vector[j]), function);
+            y[j] = eval(foo);
+        }
     }
 
     /* restore tilde mode if needed */

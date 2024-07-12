@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,10 +17,10 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1990/02/15 01:48:14
- * File existed as early as:	before 1990
+ * Under source code control:   1990/02/15 01:48:14
+ * File existed as early as:    before 1990
  *
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -30,31 +30,31 @@
 
 
 #include "errtbl.h"
-#include "banned.h"	/* include after system header <> includes */
+#include "banned.h"     /* include after system header <> includes */
 
 
-#define CONSTALLOCSIZE 400	/* number of constants to allocate */
+#define CONSTALLOCSIZE 400      /* number of constants to allocate */
 
 STATIC unsigned long constcount;/* number of constants defined */
-STATIC long constavail;		/* number of constants available */
-STATIC NUMBER **consttable;	/* table of constants */
+STATIC long constavail;         /* number of constants available */
+STATIC NUMBER **consttable;     /* table of constants */
 
 
 void
 initconstants(void)
 {
-	int i;
+        int i;
 
-	consttable = (NUMBER **) calloc(sizeof(NUMBER *), CONSTALLOCSIZE);
-	if (consttable == NULL) {
-		math_error("Unable to allocate constant table");
-		not_reached();
-	}
-	for (i = 0; initnumbs[i] != NULL; i++) {
-		consttable[i] = initnumbs[i];
-	}
-	constcount = i-1;
-	constavail = CONSTALLOCSIZE - constcount;
+        consttable = (NUMBER **) calloc(sizeof(NUMBER *), CONSTALLOCSIZE);
+        if (consttable == NULL) {
+                math_error("Unable to allocate constant table");
+                not_reached();
+        }
+        for (i = 0; initnumbs[i] != NULL; i++) {
+                consttable[i] = initnumbs[i];
+        }
+        constcount = i-1;
+        constavail = CONSTALLOCSIZE - constcount;
 }
 
 
@@ -65,15 +65,15 @@ initconstants(void)
  * Returns the index of the number in the constant table.
  *
  * given:
- *	str		string representation of number
+ *      str             string representation of number
  */
 long
 addnumber(char *str)
 {
-	NUMBER *q;
+        NUMBER *q;
 
-	q = str2q(str);
-	return addqconstant(q);
+        q = str2q(str);
+        return addqconstant(q);
 }
 
 
@@ -86,87 +86,87 @@ addnumber(char *str)
  * XXX - we should hash the constant table
  *
  * given:
- *	q		number to be added
+ *      q               number to be added
  */
 long
 addqconstant(NUMBER *q)
 {
-	register NUMBER **tp;	/* pointer to current number */
-	register NUMBER *t;	/* number being tested */
-	unsigned long index;	/* index into constant table */
-	long numlen;		/* numerator length */
-	long denlen;		/* denominator length */
-	HALF numlow;		/* bottom value of numerator */
-	HALF denlow;		/* bottom value of denominator */
-	long first;		/* first non-null position found */
-	bool havefirst;
+        register NUMBER **tp;   /* pointer to current number */
+        register NUMBER *t;     /* number being tested */
+        unsigned long index;    /* index into constant table */
+        long numlen;            /* numerator length */
+        long denlen;            /* denominator length */
+        HALF numlow;            /* bottom value of numerator */
+        HALF denlow;            /* bottom value of denominator */
+        long first;             /* first non-null position found */
+        bool havefirst;
 
-	if (constavail <= 0) {
-		if (consttable == NULL) {
-			initconstants();
-		} else {
-			tp = (NUMBER **) realloc((char *) consttable,
-			sizeof(NUMBER *) * (constcount + CONSTALLOCSIZE));
-			if (tp == NULL) {
-				math_error("Unable to reallocate const table");
-				not_reached();
-			}
-			consttable = tp;
-			constavail = CONSTALLOCSIZE;
-		}
-	}
-	numlen = q->num.len;
-	denlen = q->den.len;
-	numlow = q->num.v[0];
-	denlow = q->den.v[0];
-	first = 0;
-	havefirst = false;
-	tp = consttable;
-	for (index = 0; index < constcount; index++, tp++) {
-		t = *tp;
-		if (t == NULL) {	/* paranoia */
-			break;
-		}
-		if (t->links == 0) {
-			if (!havefirst) {
-				havefirst = true;
-				first = index;
-			}
-			continue;
-		}
-		if (q == t) {
-			if (q->links == 1) {
-				if (havefirst) {
-					*tp = consttable[first];
-					consttable[first] = q;
-				} else {
-					havefirst = true;
-					first = index;
-				}
-				continue;
-			}
-			return index;
-		}
+        if (constavail <= 0) {
+                if (consttable == NULL) {
+                        initconstants();
+                } else {
+                        tp = (NUMBER **) realloc((char *) consttable,
+                        sizeof(NUMBER *) * (constcount + CONSTALLOCSIZE));
+                        if (tp == NULL) {
+                                math_error("Unable to reallocate const table");
+                                not_reached();
+                        }
+                        consttable = tp;
+                        constavail = CONSTALLOCSIZE;
+                }
+        }
+        numlen = q->num.len;
+        denlen = q->den.len;
+        numlow = q->num.v[0];
+        denlow = q->den.v[0];
+        first = 0;
+        havefirst = false;
+        tp = consttable;
+        for (index = 0; index < constcount; index++, tp++) {
+                t = *tp;
+                if (t == NULL) {        /* paranoia */
+                        break;
+                }
+                if (t->links == 0) {
+                        if (!havefirst) {
+                                havefirst = true;
+                                first = index;
+                        }
+                        continue;
+                }
+                if (q == t) {
+                        if (q->links == 1) {
+                                if (havefirst) {
+                                        *tp = consttable[first];
+                                        consttable[first] = q;
+                                } else {
+                                        havefirst = true;
+                                        first = index;
+                                }
+                                continue;
+                        }
+                        return index;
+                }
 
-		if ((numlen != t->num.len) || (numlow != t->num.v[0]))
-			continue;
-		if ((denlen != t->den.len) || (denlow != t->den.v[0]))
-			continue;
-		if (q->num.sign != t->num.sign)
-			continue;
-		if (qcmp(q, t) == 0) {
-			t->links++;
-			qfree(q);
-			return index;
-		}
-	}
-	if (havefirst) {
-		consttable[first] = q;
-		return first;
-	}
-	constavail--;
-	consttable[constcount++] = q;
-	return index;
+                if ((numlen != t->num.len) || (numlow != t->num.v[0]))
+                        continue;
+                if ((denlen != t->den.len) || (denlow != t->den.v[0]))
+                        continue;
+                if (q->num.sign != t->num.sign)
+                        continue;
+                if (qcmp(q, t) == 0) {
+                        t->links++;
+                        qfree(q);
+                        return index;
+                }
+        }
+        if (havefirst) {
+                consttable[first] = q;
+                return first;
+        }
+        constavail--;
+        consttable[constcount++] = q;
+        return index;
 }
 
 
@@ -178,70 +178,70 @@ addqconstant(NUMBER *q)
 NUMBER *
 constvalue(unsigned long index)
 {
-	if (index >= constcount) {
-		math_error("Bad index value for constvalue");
-		not_reached();
-	}
-	if (consttable[index]->links == 0) {
-		math_error("Constvalue has been freed!!!");
-		not_reached();
-	}
-	return consttable[index];
+        if (index >= constcount) {
+                math_error("Bad index value for constvalue");
+                not_reached();
+        }
+        if (consttable[index]->links == 0) {
+                math_error("Constvalue has been freed!!!");
+                not_reached();
+        }
+        return consttable[index];
 }
 
 
 void
 freeconstant(unsigned long index)
 {
-	NUMBER *q;
+        NUMBER *q;
 
-	if (index >= constcount) {
-		math_error("Bad index value for freeconst");
-		not_reached();
-	}
-	q = consttable[index];
-	if (q->links == 0) {
-		math_error("Attempting to free freed const location");
-		not_reached();
-	}
-	qfree(q);
-	if (index == constcount - 1) {
-		trimconstants();
-	}
+        if (index >= constcount) {
+                math_error("Bad index value for freeconst");
+                not_reached();
+        }
+        q = consttable[index];
+        if (q->links == 0) {
+                math_error("Attempting to free freed const location");
+                not_reached();
+        }
+        qfree(q);
+        if (index == constcount - 1) {
+                trimconstants();
+        }
 }
 
 
 void
 trimconstants(void)
 {
-	while (constcount > 0 &&
-	       (consttable[constcount-1] == NULL ||
-		consttable[constcount-1]->links == 0)) {
-		constcount--;
-		constavail++;
-	}
+        while (constcount > 0 &&
+               (consttable[constcount-1] == NULL ||
+                consttable[constcount-1]->links == 0)) {
+                constcount--;
+                constavail++;
+        }
 }
 
 void
 showconstants(void)
 {
-	unsigned long index;
-	NUMBER **qp;
-	long count;
+        unsigned long index;
+        NUMBER **qp;
+        long count;
 
-	qp = consttable;
-	count = 0;
-	for (index = 0; index < constcount; index++, qp++) {
-		if ((*qp)->links) {
-			if (!count) {
-				printf("\n   Index   Links   Value\n");
-			}
-			count++;
-			printf("\n%8ld%8ld    ", index, (*qp)->links);
-			fitprint(*qp, 40);
-		}
-	}
-	printf("\n\nNumber = %ld\n", count);
+        qp = consttable;
+        count = 0;
+        for (index = 0; index < constcount; index++, qp++) {
+                if ((*qp)->links) {
+                        if (!count) {
+                                printf("\n   Index   Links   Value\n");
+                        }
+                        count++;
+                        printf("\n%8ld%8ld    ", index, (*qp)->links);
+                        fitprint(*qp, 40);
+                }
+        }
+        printf("\n\nNumber = %ld\n", count);
 }
 
 

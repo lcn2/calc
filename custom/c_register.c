@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,11 +17,11 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	2007/07/14 20:23:46
- * File existed as early as:	2007
+ * Under source code control:   2007/07/14 20:23:46
+ * File existed as early as:    2007
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -30,9 +30,9 @@
  * so we declare a global variable whose value is based on if CUSTOM is defined.
  */
 #if defined(CUSTOM)
-int c_register_allowed = 1;	/* CUSTOM defined */
+int c_register_allowed = 1;     /* CUSTOM defined */
 #else /* CUSTOM */
-int c_register_allowed = 0;	/* CUSTOM undefined */
+int c_register_allowed = 0;     /* CUSTOM undefined */
 #endif /* CUSTOM */
 
 
@@ -51,7 +51,7 @@ int c_register_allowed = 0;	/* CUSTOM undefined */
 
 
 #include "../errtbl.h"
-#include "../banned.h"	/* include after system header <> includes */
+#include "../banned.h"  /* include after system header <> includes */
 
 
 /*
@@ -66,17 +66,17 @@ STATIC VALUE custom_reg[CUSTOM_REG_MAX+1];
 void
 init_custreg(void)
 {
-	int i;
+        int i;
 
-	/*
-	 * set the registers to zero
-	 */
-	for (i=0; i < CUSTOM_REG_MAX+1; ++i) {
-	    custom_reg[i].v_type = V_NUM;
-	    custom_reg[i].v_subtype = V_NOSUBTYPE;
-	    custom_reg[i].v_num = itoq(0);
-	}
-	return;
+        /*
+         * set the registers to zero
+         */
+        for (i=0; i < CUSTOM_REG_MAX+1; ++i) {
+            custom_reg[i].v_type = V_NUM;
+            custom_reg[i].v_subtype = V_NOSUBTYPE;
+            custom_reg[i].v_num = itoq(0);
+        }
+        return;
 }
 
 
@@ -84,58 +84,58 @@ init_custreg(void)
  * c_register - set or print a custom register value
  *
  * given:
- *	vals[i]	  and arg to display information about
+ *      vals[i]   and arg to display information about
  *
  * returns:
- *	count
+ *      count
  */
 /*ARGSUSED*/
 VALUE
 c_register(char *UNUSED(name), int count, VALUE **vals)
 {
-	VALUE result;		/* what we will return */
-	long reg;		/* register number */
+        VALUE result;           /* what we will return */
+        long reg;               /* register number */
 
-	/*
-	 * arg check
-	 */
-	result.v_type = V_NULL;
-	if (vals[0]->v_type != V_NUM) {
-		math_error("Non-numeric register number");
-		not_reached();
-	}
-	if (qisfrac(vals[0]->v_num)) {
-		math_error("Non-integer register number");
-		not_reached();
-	}
-	if (qisneg(vals[0]->v_num)) {
-		math_error("register number < 0");
-		not_reached();
-	}
-	if (! qistiny(vals[0]->v_num)) {
-		math_error("register is huge");
-		not_reached();
-	}
-	reg = qtoi(vals[0]->v_num);
-	if (reg > CUSTOM_REG_MAX) {
-		math_error("register is larger than CUSTOM_REG_MAX");
-		not_reached();
-	}
+        /*
+         * arg check
+         */
+        result.v_type = V_NULL;
+        if (vals[0]->v_type != V_NUM) {
+                math_error("Non-numeric register number");
+                not_reached();
+        }
+        if (qisfrac(vals[0]->v_num)) {
+                math_error("Non-integer register number");
+                not_reached();
+        }
+        if (qisneg(vals[0]->v_num)) {
+                math_error("register number < 0");
+                not_reached();
+        }
+        if (! qistiny(vals[0]->v_num)) {
+                math_error("register is huge");
+                not_reached();
+        }
+        reg = qtoi(vals[0]->v_num);
+        if (reg > CUSTOM_REG_MAX) {
+                math_error("register is larger than CUSTOM_REG_MAX");
+                not_reached();
+        }
 
-	/*
-	 * print info on each arg
-	 */
-	/* save previous value */
-	copyvalue(&custom_reg[reg], &result);
-	/* set the new value if a 2nd arg was given */
-	if (count == 2) {
-	    copyvalue(vals[1], &custom_reg[reg]);
-	}
+        /*
+         * print info on each arg
+         */
+        /* save previous value */
+        copyvalue(&custom_reg[reg], &result);
+        /* set the new value if a 2nd arg was given */
+        if (count == 2) {
+            copyvalue(vals[1], &custom_reg[reg]);
+        }
 
-	/*
-	 * return result
-	 */
-	return result;
+        /*
+         * return result
+         */
+        return result;
 }
 
 #endif /* CUSTOM */

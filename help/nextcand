@@ -5,13 +5,13 @@ SYNOPSIS
     nextcand(n [,count [, skip [, residue [,modulus]]]])
 
 TYPES
-    n		integer
-    count	integer with absolute value less than 2^24, defaults to 1
-    skip	integer. defaults to 1
-    residue	integer, defaults to 0
-    modulus	integer, defaults to 1
+    n           integer
+    count       integer with absolute value less than 2^24, defaults to 1
+    skip        integer. defaults to 1
+    residue     integer, defaults to 0
+    modulus     integer, defaults to 1
 
-    return	integer
+    return      integer
 
 DESCRIPTION
     If modulus is nonzero, nextcand(n, count, skip, residue, modulus)
@@ -43,7 +43,7 @@ DESCRIPTION
 
 RUNTIME
     The runtime for v = nextcand(n, ...) will depend strongly on the
-    number and nature of the integers between n and v.	If this number
+    number and nature of the integers between n and v.  If this number
     is reasonably large the size of count is largely irrelevant as the
     compositeness of the numbers between n and v will usually be
     determined by the test for small prime factors or one pseudoprime
@@ -71,7 +71,7 @@ LIMITS
 
 LINK LIBRARY
     int znextcand(ZVALUE n, long count, long skip, ZVALUE res, ZVALUE mod,
-	ZVALUE *cand)
+        ZVALUE *cand)
 
 SEE ALSO
     factor, isprime, lfactor, nextprime, prevcand, prevprime,
@@ -85,7 +85,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -93,8 +93,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1996/02/25 00:27:43
-## File existed as early as:	1996
+## Under source code control:   1996/02/25 00:27:43
+## File existed as early as:    1996
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

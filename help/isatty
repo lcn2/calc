@@ -5,9 +5,9 @@ SYNOPSIS
     isatty(fd)
 
 TYPES
-    fd		any
+    fd          any
 
-    return	int
+    return      int
 
 DESCRIPTION
     This function returns 1 if fd is associated with a tty, 0 otherwise.
@@ -15,10 +15,10 @@ DESCRIPTION
 
 EXAMPLE
     ; print isatty(files(0)), isatty(files(1)), isatty(files(2))
-	    1 1 1
+            1 1 1
     ; fd = fopen("/dev/null", "r")
     ; isatty(fd)
-	    0
+            0
 
 LIMITS
     none
@@ -42,7 +42,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -50,8 +50,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/07/09 03:49:34
-## File existed as early as:	1995
+## Under source code control:   1995/07/09 03:49:34
+## File existed as early as:    1995
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

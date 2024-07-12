@@ -5,11 +5,11 @@ SYNOPSIS
     freopen(fs, mode [,filename])
 
 TYPES
-    fs		open or closed file stream
-    mode	one of the strings "r", "w", "a", "r+", "w+, "a+"
-    filename	string
+    fs          open or closed file stream
+    mode        one of the strings "r", "w", "a", "r+", "w+, "a+"
+    filename    string
 
-    return	null or error value
+    return      null or error value
 
 DESCRIPTION
     With two arguments, this function closes the file stream fs and
@@ -18,17 +18,17 @@ DESCRIPTION
 
     With three arguments, fs, if open, is closed, and an attempt is made to
     open the file with the specified name and assign it to the stream
-    fs.	 A non-null value is returned only if the attempt fails.
+    fs.  A non-null value is returned only if the attempt fails.
 
 EXAMPLE
     ; f = fopen("/tmp/junk", "w")
     ; fputs(f, "Leonard Euler")
     ; freopen(f, "r")
     ; fgets(f)
-	    "Leonard Euler"
+            "Leonard Euler"
     ; !chmod u-w /tmp/junk
     ; freopen(f, "w")
-	    Error E_FRAC
+            Error E_FRAC
 
 LIMITS
     none
@@ -48,7 +48,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -56,8 +56,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1996/04/30 03:05:18
-## File existed as early as:	1996
+## Under source code control:   1996/04/30 03:05:18
+## File existed as early as:    1996
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

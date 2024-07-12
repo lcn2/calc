@@ -12,27 +12,27 @@ SYNOPSIS
     decl id_1 id_2 ... [index-range-list] ...
 
 TYPES
-    index-range-list	range_1 [, range_2, ...]  up to 4 ranges
-    range_1, ...		integer, or integer_1 : integer_2
-    value, value_1, ...	any
-    variable_1 ...	lvalue
-    decl			declarator = global, static or local
-    id_1, ...		identifier
+    index-range-list    range_1 [, range_2, ...]  up to 4 ranges
+    range_1, ...                integer, or integer_1 : integer_2
+    value, value_1, ... any
+    variable_1 ...      lvalue
+    decl                        declarator = global, static or local
+    id_1, ...           identifier
 
 DESCRIPTION
     The expression  mat [index-range-list]  returns a matrix value.
     This may be assigned to one or more lvalues A, B, ... by either
 
-	mat A B ... [index-range-list]
+        mat A B ... [index-range-list]
 
     or
 
-	A = B = ... = mat[index-range-list]
+        A = B = ... = mat[index-range-list]
 
     If a variable is specified by an expression that is not a symbol with
     possibly object element specifiers, the expression should be enclosed
     in parentheses.  For example, parentheses are required in
-    mat (A[2]) [3]  and	mat (*p) [3]  but  mat P.x [3] is acceptable.
+    mat (A[2]) [3]  and mat (*p) [3]  but  mat P.x [3] is acceptable.
 
     When an index-range is specified as integer_1 : integer_2, where
     integer_1 and integer_2 are expressions which evaluate to integers,
@@ -56,7 +56,7 @@ DESCRIPTION
     For example, in order of location, the six element of A = mat [2,3]
     are:
 
-	A[0,0], A[0,1], A[0,2], A[1,0], A[1,1], and A[1,2].
+        A[0,0], A[0,1], A[0,2], A[1,0], A[1,1], and A[1,2].
 
     These elements may also be specified using the double-bracket operator
     with a single integer index as in A[[0]], A[[1]], ..., A[[5]].
@@ -64,35 +64,35 @@ DESCRIPTION
     is p + i as long as A exists and a new value is not assigned to A.
 
     When a matrix is created, each element is initially assigned the
-    value zero.	Other values may be assigned then or later using the
+    value zero. Other values may be assigned then or later using the
     "= {...}" assignment operation.  Thus
 
-	A = {value_0, value_1, ...}
+        A = {value_0, value_1, ...}
 
     assigns the values value_0, value_1, ... to the elements A[[0]],
-    A[[1]], ...	Any blank "value" is passed over.  For example,
+    A[[1]], ... Any blank "value" is passed over.  For example,
 
-	A = {1, , 2}
+        A = {1, , 2}
 
     will assign the value 1 to A[[0]], 2 to A[[2]] and leave all other
-    elements unchanged.	Values may also be assigned to elements by
+    elements unchanged. Values may also be assigned to elements by
     simple assignments, as in A[0,0] = 1, A[0,2] = 2;
 
     If the index-range is left blank but an initializer list is specified
     as in:
 
-	; mat A[] = {1, 2 }
-	; B = mat[] = {1, , 3, }
+        ; mat A[] = {1, 2 }
+        ; B = mat[] = {1, , 3, }
 
     the matrix created is one-dimensional.  If the list contains a
     positive number n of values or blanks, the result is as if the
     range were specified by [n], i.e. the range of indices is from
-    0 to n - 1.	In the above examples, A is of size 2 with A[0] = 1
+    0 to n - 1. In the above examples, A is of size 2 with A[0] = 1
     and A[1] = 2;  B is of size 4 with B[0] = 1, B[1] = B[3] = 0,
     B[2] = 3.  The specification mat[] = { } creates the same as mat[1].
 
     If the index-range is left blank and no initializer list is specified,
-    as in  mat C[]  or	C = mat[], the matrix assigned to C has zero
+    as in  mat C[]  or  C = mat[], the matrix assigned to C has zero
     dimension; this has one element C[].
 
     To assign a value using "= { ...}" at the same time as creating C,
@@ -112,21 +112,21 @@ DESCRIPTION
 
     For example, one may have an expressions like:
 
-	; A[1,2][3].alpha[2];
+        ; A[1,2][3].alpha[2];
 
     if A[1,2][3].alpha is a list with at least three elements, A[1,2][3] is
     an object of a type like  obj {alpha, beta}, A[1,2] is a matrix of
     type mat[4] and A is a mat[2,3] matrix.  When an element of a matrix
     is a matrix and the total number of indices does not exceed 4, the
     indices can be combined into one list, e.g. the A[1,2][3] in the
-    above example can be shortened to A[1,2,3].	(Unlike C, A[1,2] cannot
+    above example can be shortened to A[1,2,3]. (Unlike C, A[1,2] cannot
     be expressed as A[1][2].)
 
     The function ismat(V) returns 1 if V is a matrix, 0 otherwise.
 
     isident(V) returns 1 if V is a square matrix with diagonal elements 1,
     off-diagonal elements zero, or a zero- or one-dimensional matrix with
-    every element 1; otherwise zero is returned.	 Thus  isident(V) = 1
+    every element 1; otherwise zero is returned.         Thus  isident(V) = 1
     indicates that for  V * A  and  A * V  where A is any matrix of
     for which either product is defined and the elements of A are real
     or complex numbers, that product will equal A.
@@ -153,31 +153,31 @@ DESCRIPTION
     function mat_print(M); for example, for a not too big 2-dimensional
     matrix A it is a common practice to use a loop like:
 
-	define mat_print(A) {
-		local i,j;
+        define mat_print(A) {
+                local i,j;
 
-		for (i = matmin(A,1); i <= matmax(A,1); i++) {
-			if (i != matmin(A,1))
-				printf("\t");
-			for (j = matmin(A,2); j <= matmax(A,2); j++)
-				printf(" [%d,%d]: %e", i, j, A[i,j]);
-			if (i != matmax(A,1))
-				printf("\n");
-		}
-	}
+                for (i = matmin(A,1); i <= matmax(A,1); i++) {
+                        if (i != matmin(A,1))
+                                printf("\t");
+                        for (j = matmin(A,2); j <= matmax(A,2); j++)
+                                printf(" [%d,%d]: %e", i, j, A[i,j]);
+                        if (i != matmax(A,1))
+                                printf("\n");
+                }
+        }
 
     So that when one defines a 2D matrix such as:
 
-	; mat X[2,3] = {1,2,3,4,5,6}
+        ; mat X[2,3] = {1,2,3,4,5,6}
 
     then printing X results in:
 
-	[0,0]: 1 [0,1]: 2 [0,2]: 3
-	[1,0]: 4 [1,1]: 5 [1,2]: 6
+        [0,0]: 1 [0,1]: 2 [0,2]: 3
+        [1,0]: 4 [1,1]: 5 [1,2]: 6
 
     The default printing may be restored by
 
-	; undefine mat_print;
+        ; undefine mat_print;
 
     The keyword "mat" followed by two or more index-range-lists returns a
     matrix with indices specified by the first list, whose elements are
@@ -186,11 +186,11 @@ DESCRIPTION
     as its value a 3-element matrix.  Values may be assigned to the
     elements of the innermost matrices by nested = {...} operations as in
 
-	; mat [2][3] = {{1,2,3},{4,5,6}}
+        ; mat [2][3] = {{1,2,3},{4,5,6}}
 
     An example of the use of mat with a declarator is
 
-	; global mat A B [2,3], C [4]
+        ; global mat A B [2,3], C [4]
 
     This creates, if they do not already exist, three global variables with
     names A, B, C, and assigns to A and B the value mat[2,3] and to C mat[4].
@@ -198,138 +198,138 @@ DESCRIPTION
     Some operations are defined for matrices.
 
     A == B
-	Returns 1 if A and B are of the same "shape" and "corresponding"
-	elements are equal; otherwise 0 is returned.  Being of the same
-	shape means they have the same dimension d, and for each i <= d,
+        Returns 1 if A and B are of the same "shape" and "corresponding"
+        elements are equal; otherwise 0 is returned.  Being of the same
+        shape means they have the same dimension d, and for each i <= d,
 
-	    matmax(A,i) - matmin(A,i) == matmax(B,i) - matmin(B,i),
+            matmax(A,i) - matmin(A,i) == matmax(B,i) - matmin(B,i),
 
-	One consequence of being the same shape is that the matrices will
-	have the same size.   Elements "correspond" if they have the same
-	double-bracket indices; thus A == B implies that A[[i]] == B[[i]]
-	for 0 <= i < size(A) == size(B).
+        One consequence of being the same shape is that the matrices will
+        have the same size.   Elements "correspond" if they have the same
+        double-bracket indices; thus A == B implies that A[[i]] == B[[i]]
+        for 0 <= i < size(A) == size(B).
 
     A + B
     A - B
-	These are defined A and B have the same shape, the element
-	with double-bracket index j being evaluated by A[[j]] + B[[j]] and
-	A[[j]] - B[[j]], respectively.	The index-ranges for the results
-	are those for the matrix A.
+        These are defined A and B have the same shape, the element
+        with double-bracket index j being evaluated by A[[j]] + B[[j]] and
+        A[[j]] - B[[j]], respectively.  The index-ranges for the results
+        are those for the matrix A.
 
     A[i,j]
-	If A is two-dimensional, it is customary to speak of the indices
-	i, j in A[i,j] as referring to rows and columns;  the number of
-	rows is matmax(A,1) - matmin(A,1) + 1; the number of columns if
-	matmax(A,2) - matmin(A,2) + 1.	A matrix is said to be square
-	if it is two-dimensional and the number of rows is equal to the
-	number of columns.
+        If A is two-dimensional, it is customary to speak of the indices
+        i, j in A[i,j] as referring to rows and columns;  the number of
+        rows is matmax(A,1) - matmin(A,1) + 1; the number of columns if
+        matmax(A,2) - matmin(A,2) + 1.  A matrix is said to be square
+        if it is two-dimensional and the number of rows is equal to the
+        number of columns.
 
     A * B
-	Multiplication is defined provided certain conditions by the
-	dimensions and shapes of A and B are satisfied.	 If both have
-	dimension 2 and the column-index-list for A is the same as
-	the row-index-list for B, C = A * B is defined in the usual
-	way so that for i in the row-index-list of A and j in the
-	column-index-list for B,
+        Multiplication is defined provided certain conditions by the
+        dimensions and shapes of A and B are satisfied.  If both have
+        dimension 2 and the column-index-list for A is the same as
+        the row-index-list for B, C = A * B is defined in the usual
+        way so that for i in the row-index-list of A and j in the
+        column-index-list for B,
 
-		C[i,j] =  Sum A[i,k] * B[k,j]
+                C[i,j] =  Sum A[i,k] * B[k,j]
 
-	the sum being over k in the column-index-list of A.  The same
-	formula is used so long as the number of columns in A is the same
-	as the number of rows in B and k is taken to refer to the offset
-	from matmin(A,2) and matmin(B,1), respectively, for A and B.
-	If the multiplications and additions required cannot be performed,
-	an execution error may occur or the result for C may contain
-	one or more error-values as elements.
+        the sum being over k in the column-index-list of A.  The same
+        formula is used so long as the number of columns in A is the same
+        as the number of rows in B and k is taken to refer to the offset
+        from matmin(A,2) and matmin(B,1), respectively, for A and B.
+        If the multiplications and additions required cannot be performed,
+        an execution error may occur or the result for C may contain
+        one or more error-values as elements.
 
-	If A or B has dimension zero, the result for A * B is simply
-	that of multiplying the elements of the other matrix on the
-	left by A[] or on the right by B[].
+        If A or B has dimension zero, the result for A * B is simply
+        that of multiplying the elements of the other matrix on the
+        left by A[] or on the right by B[].
 
-	If both A and B have dimension 1, A * B is defined if A and B
-	have the same size; the result has the same index-list as A
-	and each element is the product of corresponding elements of
-	A and B.  If A and B have the same index-list, this multiplication
-	is consistent with multiplication of 2D matrices if A and B are
-	taken to represent 2D matrices for which the off-diagonal elements
-	are zero and the diagonal elements are those of A and B.
-	the real and complex numbers.
+        If both A and B have dimension 1, A * B is defined if A and B
+        have the same size; the result has the same index-list as A
+        and each element is the product of corresponding elements of
+        A and B.  If A and B have the same index-list, this multiplication
+        is consistent with multiplication of 2D matrices if A and B are
+        taken to represent 2D matrices for which the off-diagonal elements
+        are zero and the diagonal elements are those of A and B.
+        the real and complex numbers.
 
-	If A is of dimension 1 and B is of dimension 2, A * B is defined
-	if the number of rows in B is the same as the size of A.  The
-	result has the same index-lists as B; each row of B is multiplied
-	on the left by the corresponding element of A.
+        If A is of dimension 1 and B is of dimension 2, A * B is defined
+        if the number of rows in B is the same as the size of A.  The
+        result has the same index-lists as B; each row of B is multiplied
+        on the left by the corresponding element of A.
 
-	If A is of dimension 2 and B is of dimension 1, A * B is defined
-	if number of columns in A is the same as the size of A.	 The
-	result has the same index-lists as A; each column of A is
-	multiplied on the right by the corresponding element of B.
+        If A is of dimension 2 and B is of dimension 1, A * B is defined
+        if number of columns in A is the same as the size of A.  The
+        result has the same index-lists as A; each column of A is
+        multiplied on the right by the corresponding element of B.
 
-	The algebra of additions and multiplications involving both one-
-	and two-dimensional matrices is particularly simple when all the
-	elements are real or complex numbers and all the index-lists are
-	the same, as occurs, for example, if for some positive integer n,
-	all the matrices start as  mat [n]  or	mat [n,n].
+        The algebra of additions and multiplications involving both one-
+        and two-dimensional matrices is particularly simple when all the
+        elements are real or complex numbers and all the index-lists are
+        the same, as occurs, for example, if for some positive integer n,
+        all the matrices start as  mat [n]  or  mat [n,n].
 
     det(A)
-	If A is a square, det(A) is evaluated by an algorithm that returns
-	the determinant of A if the elements of A are real or complex
-	numbers, and if such an A is non-singular, inverse(A) returns
-	the inverse of A indexed in the same way as A.	For matrix A of
-	dimension 0 or 1, det(A) is defined as the product of the elements
-	of A in the order in which they occur in A, inverse(A) returns
-	a matrix indexed in the same way as A with each element inverted.
+        If A is a square, det(A) is evaluated by an algorithm that returns
+        the determinant of A if the elements of A are real or complex
+        numbers, and if such an A is non-singular, inverse(A) returns
+        the inverse of A indexed in the same way as A.  For matrix A of
+        dimension 0 or 1, det(A) is defined as the product of the elements
+        of A in the order in which they occur in A, inverse(A) returns
+        a matrix indexed in the same way as A with each element inverted.
 
 
     The following functions are defined to return matrices with the same
-	index-ranges as A and the specified operations performed on all
-	elements of A.	Here num is an arbitrary complex number (nonzero
-	when it is a divisor), int an integer, rnd a rounding-type
-	specifier integer, real a real number.
+        index-ranges as A and the specified operations performed on all
+        elements of A.  Here num is an arbitrary complex number (nonzero
+        when it is a divisor), int an integer, rnd a rounding-type
+        specifier integer, real a real number.
 
-	    num * A
-	    A * num
-	    A / num
-	    - A
-	    conj(A)
-	    A << int, A >> int
-	    scale(A, int)
-	    round(A, int, rnd)
-	    bround(A, int, rnd)
-	    appr(A, real, rnd)
-	    int(A)
-	    frac(A)
-	    A // real
-	    A % real
-	    A ^ int
+            num * A
+            A * num
+            A / num
+            - A
+            conj(A)
+            A << int, A >> int
+            scale(A, int)
+            round(A, int, rnd)
+            bround(A, int, rnd)
+            appr(A, real, rnd)
+            int(A)
+            frac(A)
+            A // real
+            A % real
+            A ^ int
 
     If A and B are one-dimensional of the same size dp(A, B) returns
-	their dot-product, i.e. the sum of the products of corresponding
-	elements.
+        their dot-product, i.e. the sum of the products of corresponding
+        elements.
 
     If A and B are one-dimension and of size 3, cp(A, B) returns their
-	cross-product.
+        cross-product.
 
     randperm(A) returns a matrix indexed the same as A in which the elements
-	of A have been randomly permuted.
+        of A have been randomly permuted.
 
     sort(A) returns a matrix indexed the same as A in which the elements
-	of A have been sorted.
+        of A have been sorted.
 
     If A is an lvalue whose current value is a matrix, matfill(A, v)
-	assigns the value v to every element of A, and if also, A is
-	square, matfill(A, v1, v2) assigns v1 to the off-diagonal elements,
-	v2 to the diagonal elements.  To create and assign to A the unit
-	n * n matrix, one may use matfill(mat A[n,n], 0, 1).
+        assigns the value v to every element of A, and if also, A is
+        square, matfill(A, v1, v2) assigns v1 to the off-diagonal elements,
+        v2 to the diagonal elements.  To create and assign to A the unit
+        n * n matrix, one may use matfill(mat A[n,n], 0, 1).
 
     For a square matrix A, mattrace(A) returns the trace of A, i.e. the
-	sum of the diagonal elements.  For zero- or one-dimensional A,
-	mattrace(A) returns the sum of the elements of A.
+        sum of the diagonal elements.  For zero- or one-dimensional A,
+        mattrace(A) returns the sum of the elements of A.
 
     For a two-dimensional matrix A, mattrans(A) returns the transpose
-	of A, i.e. if A is mat[m,n], it returns a mat[n,m] matrix with
-	[i,j] element equal to A[j,i].	For zero- or one-dimensional A,
-	mattrace(A) returns a matrix with the same value as A.
+        of A, i.e. if A is mat[m,n], it returns a mat[n,m] matrix with
+        [i,j] element equal to A[j,i].  For zero- or one-dimensional A,
+        mattrace(A) returns a matrix with the same value as A.
 
     The functions search(A, value, start, end]) and
     rsearch(A, value, start, end]) return the first or last index i
@@ -422,7 +422,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -430,8 +430,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1991/07/21 04:37:22
-## File existed as early as:	1991
+## Under source code control:   1991/07/21 04:37:22
+## File existed as early as:    1991
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

@@ -5,10 +5,10 @@ SYNOPSIS
     access(name [, mode])
 
 TYPES
-    name	string
-    mode	integer or string containing only 'r', 'w', 'x' characters
+    name        string
+    mode        integer or string containing only 'r', 'w', 'x' characters
 
-    return	null value or error
+    return      null value or error
 
 DESCRIPTION
     access(name) or access(name, 0) or access(name, "") returns the null
@@ -25,18 +25,18 @@ EXAMPLE
 
     ; !rm -f junk
     ; access("junk")
-	System error 2
+        System error 2
     ; strerror(.)
-	"No such file or directory"
+        "No such file or directory"
     ; f = fopen("junk", "w")
     ; access("junk")
     ; fputs(f, "Alpha")
     ; fclose(f)
     ; !chmod u-w junk
     ; access("junk", "w")
-	System error 13
+        System error 13
     ; strerror(.)
-	"Permission denied"
+        "Permission denied"
 
 LIMITS
     There may be implementation-dependent limits inherited from the
@@ -56,7 +56,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -64,8 +64,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1996/04/30 03:36:20
-## File existed as early as:	1996
+## Under source code control:   1996/04/30 03:36:20
+## File existed as early as:    1996
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

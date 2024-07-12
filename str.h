@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,10 +17,10 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1990/02/15 01:48:36
- * File existed as early as:	before 1990
+ * Under source code control:   1990/02/15 01:48:36
+ * File existed as early as:    before 1990
  *
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -28,7 +28,7 @@
 #define INCLUDE_STR_H
 
 
-#if defined(CALC_SRC)	/* if we are building from the calc source tree */
+#if defined(CALC_SRC)   /* if we are building from the calc source tree */
 # include "zmath.h"
 #else
 # include <calc/zmath.h>
@@ -37,20 +37,20 @@
 
 
 struct string {
-	char *s_str;
-	size_t s_len;
-	long s_links;
-	struct string *s_next;
+        char *s_str;
+        size_t s_len;
+        long s_links;
+        struct string *s_next;
 };
 
 typedef struct string STRING;
 
 
 typedef struct {
-	char *h_list;	/* list of strings separated by nulls */
-	size_t h_used;	/* characters used so far */
-	size_t h_avail;	/* characters available for use */
-	long h_count;	/* number of strings */
+        char *h_list;   /* list of strings separated by nulls */
+        size_t h_used;  /* characters used so far */
+        size_t h_avail; /* characters available for use */
+        long h_count;   /* number of strings */
 } STRINGHEAD;
 
 EXTERN STRING _nullstring_;

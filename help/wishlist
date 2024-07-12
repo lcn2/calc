@@ -28,7 +28,7 @@ Please read CONTRIB-CODE or run the following calc command:
        'eval' function, division by zeroes, and so on can be caught.
        This should be done using syntax similar to:
 
-		ONERROR statement DO statement;
+                ONERROR statement DO statement;
 
        Something like signal isn't versatile enough.
 
@@ -47,7 +47,7 @@ Please read CONTRIB-CODE or run the following calc command:
     *  Allow results of a command (or all commands) to be re-directed to a
        file or piped into a command.
 
-    *  Add some kind of #include and #define facility.	Perhaps use
+    *  Add some kind of #include and #define facility.  Perhaps use
        the C pre-processor itself?
 
     *  Support a more general input and output base mode other than
@@ -57,10 +57,10 @@ Please read CONTRIB-CODE or run the following calc command:
        begun.  This will use backquotes to define expressions, and new
        functions will be able to act on expressions.  For example:
 
-	    x = `hello * strlen(mom)`;
-	    x = sub(x, `hello`, `hello + 1`);
-	    x = sub(x, `hello`, 10, `mom`, "curds");
-	    eval(x);
+            x = `hello * strlen(mom)`;
+            x = sub(x, `hello`, `hello + 1`);
+            x = sub(x, `hello`, 10, `mom`, "curds");
+            eval(x);
 
        prints 55.
 
@@ -91,12 +91,12 @@ Please read CONTRIB-CODE or run the following calc command:
     *  Add a builtin that returns a value from the history list.
        As an example:
 
-	    histval(-10)
+            histval(-10)
 
        returns the 10th value on the history value list, if such
-       a value is in the history list (null otherwise).	 And:
+       a value is in the history list (null otherwise).  And:
 
-	    histval(23)
+            histval(23)
 
        return the value of the 23rd command given to calc, if
        such a value is in the history list (null otherwise).
@@ -107,13 +107,13 @@ Please read CONTRIB-CODE or run the following calc command:
     *  Add a builtin that returns command as a string from the
        history list.  As an example:
 
-	    history(-10)
+            history(-10)
 
        returns a string containing the 10th command on the
        history list, if a such a value is in the history list
        (empty string otherwise).  And:
 
-	    history(23)
+            history(23)
 
        return the string containing the 23rd command given to calc, if
        such a value is in the history list (empty string otherwise).
@@ -121,37 +121,37 @@ Please read CONTRIB-CODE or run the following calc command:
        One could use the eval() function to re-evaluate the command.
 
     *  Allow one to optionally restore the command number to calc
-       prompts.	 When going back in the history list, indicate the
+       prompts.  When going back in the history list, indicate the
        command number that is being examined.
 
        The command number was a useful item.  When one is scanning the
-       history list, knowing where you are is hard without it.	It can
+       history list, knowing where you are is hard without it.  It can
        get confusing when the history list wraps or when you use
-       search bindings.	 Command numbers would be useful in
+       search bindings.  Command numbers would be useful in
        conjunction with positive args for the history() and histval()
        functions as suggested above.
 
     *  Add a builtin that returns the current command number.
        For example:
 
-	    cmdnum()
+            cmdnum()
 
        returns the current command number.
 
-       This would allow one to tag a value in the history list.	 One
+       This would allow one to tag a value in the history list.  One
        could save the result of cmdnum() in a variable and later use
        it as an arg to the histval() or history() functions.
 
     *  Add a factoring builtin functions.  Provide functions that perform
        multiple polynomial quadratic sieves, elliptic curve, difference
-       of two squares, N-1 factoring as so on.	Provide a easy general
+       of two squares, N-1 factoring as so on.  Provide a easy general
        factoring builtin (say factor(foo)) that would attempt to apply
        whatever process was needed based on the value.
 
        Factoring builtins would return a matrix of factors.
 
        It would be handy to configure, via config(), the maximum time
-       that one should try to factor a number.	By default the time
+       that one should try to factor a number.  By default the time
        should be infinite.  If one set the time limit to a finite
        value and the time limit was exceeded, the factoring builtin
        would return whatever if had found thus far, even if no new
@@ -187,16 +187,16 @@ Please read CONTRIB-CODE or run the following calc command:
 
 Calc bug reports and calc bug fixes should be sent to:
 
-NOTE:	calc-bug-report Email address no longer in use
+NOTE:   calc-bug-report Email address no longer in use
 
-	NOTE: Remove spaces and replace 'at' with @, 'dot' with .
+        NOTE: Remove spaces and replace 'at' with @, 'dot' with .
 
     This replaces the old calc-bugs Email address.
 
     To be sure we see your Email reporting a calc bug, please use the
     following phase in your Email Subject line:
 
-	calc bug report
+        calc bug report
 
     That phrase in your subject line will help ensure your
     request will get past our anti-spam filters.  You may have
@@ -223,7 +223,7 @@ The calc web site is located at:
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -231,8 +231,8 @@ The calc web site is located at:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1991/07/21 04:37:24
-## File existed as early as:	1991
+## Under source code control:   1991/07/21 04:37:24
+## File existed as early as:    1991
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

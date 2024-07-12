@@ -5,9 +5,9 @@ SYNOPSIS
     custom("sysinfo" [, infoname]);
 
 TYPES
-    infoname	string or int
+    infoname    string or int
 
-    return	int, string or null
+    return      int, string or null
 
 DESCRIPTION
 
@@ -24,13 +24,13 @@ DESCRIPTION
 
     If infoname is a number, then it is interpreted as follows:
 
-	0	print all infonames and meanings	(same as no infoname)
-	1	print all infonames and values
-	2	print all infoname meanings and values
+        0       print all infonames and meanings        (same as no infoname)
+        1       print all infonames and values
+        2       print all infoname meanings and values
 
 EXAMPLE
     > custom("sysinfo", "baseb")
-	    32
+            32
 
     > custom("sysinfo")
     ... a list of infonames and meanings are printed ...
@@ -61,7 +61,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -69,8 +69,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1997/03/09 23:14:40
-## File existed as early as:	1997
+## Under source code control:   1997/03/09 23:14:40
+## File existed as early as:    1997
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

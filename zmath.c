@@ -11,7 +11,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -19,10 +19,10 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1990/02/15 01:48:28
- * File existed as early as:	before 1990
+ * Under source code control:   1990/02/15 01:48:28
+ * File existed as early as:    before 1990
  *
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -33,7 +33,7 @@
 
 
 #include "errtbl.h"
-#include "banned.h"	/* include after system header <> includes */
+#include "banned.h"     /* include after system header <> includes */
 
 
 HALF _zeroval_[] = { 0 };
@@ -68,7 +68,7 @@ ZVALUE _b64_ = { _pow4baseval_, 3, 0 };
 ZVALUE _b32_ = { _pow4baseval_, 3, 0 };
 ZVALUE _b64_ = { _pow8baseval_, 5, 0 };
 #else
-	-=@=- BASEB not 16 or 32 -=@=-
+        -=@=- BASEB not 16 or 32 -=@=-
 #endif
 
 /*
@@ -82,7 +82,7 @@ HALF *half_tbl[] = {
     _sqbaseval_,
     _pow4baseval_,
     _pow8baseval_,
-    NULL	/* must be last */
+    NULL        /* must be last */
 };
 
 
@@ -97,107 +97,107 @@ HALF *half_tbl[] = {
  */
 HALF highhalf[BASEB+1] = {
 #if BASEB == 32
-	0x00000000,
-	0x80000000, 0xC0000000, 0xE0000000, 0xF0000000,
-	0xF8000000, 0xFC000000, 0xFE000000, 0xFF000000,
-	0xFF800000, 0xFFC00000, 0xFFE00000, 0xFFF00000,
-	0xFFF80000, 0xFFFC0000, 0xFFFE0000, 0xFFFF0000,
-	0xFFFF8000, 0xFFFFC000, 0xFFFFE000, 0xFFFFF000,
-	0xFFFFF800, 0xFFFFFC00, 0xFFFFFE00, 0xFFFFFF00,
-	0xFFFFFF80, 0xFFFFFFC0, 0xFFFFFFE0, 0xFFFFFFF0,
-	0xFFFFFFF8, 0xFFFFFFFC, 0xFFFFFFFE, 0xFFFFFFFF
+        0x00000000,
+        0x80000000, 0xC0000000, 0xE0000000, 0xF0000000,
+        0xF8000000, 0xFC000000, 0xFE000000, 0xFF000000,
+        0xFF800000, 0xFFC00000, 0xFFE00000, 0xFFF00000,
+        0xFFF80000, 0xFFFC0000, 0xFFFE0000, 0xFFFF0000,
+        0xFFFF8000, 0xFFFFC000, 0xFFFFE000, 0xFFFFF000,
+        0xFFFFF800, 0xFFFFFC00, 0xFFFFFE00, 0xFFFFFF00,
+        0xFFFFFF80, 0xFFFFFFC0, 0xFFFFFFE0, 0xFFFFFFF0,
+        0xFFFFFFF8, 0xFFFFFFFC, 0xFFFFFFFE, 0xFFFFFFFF
 #elif BASEB == 16
-	0x0000,
-	0x8000, 0xC000, 0xE000, 0xF000,
-	0xF800, 0xFC00, 0xFE00, 0xFF00,
-	0xFF80, 0xFFC0, 0xFFE0, 0xFFF0,
-	0xFFF8, 0xFFFC, 0xFFFE, 0xFFFF
+        0x0000,
+        0x8000, 0xC000, 0xE000, 0xF000,
+        0xF800, 0xFC00, 0xFE00, 0xFF00,
+        0xFF80, 0xFFC0, 0xFFE0, 0xFFF0,
+        0xFFF8, 0xFFFC, 0xFFFE, 0xFFFF
 #else
-	-=@=- BASEB not 16 or 32 -=@=-
+        -=@=- BASEB not 16 or 32 -=@=-
 #endif
 };
 HALF rhighhalf[BASEB+1] = {
 #if BASEB == 32
-	0xFFFFFFFF, 0xFFFFFFFE, 0xFFFFFFFC, 0xFFFFFFF8,
-	0xFFFFFFF0, 0xFFFFFFE0, 0xFFFFFFC0, 0xFFFFFF80,
-	0xFFFFFF00, 0xFFFFFE00, 0xFFFFFC00, 0xFFFFF800,
-	0xFFFFF000, 0xFFFFE000, 0xFFFFC000, 0xFFFF8000,
-	0xFFFF0000, 0xFFFE0000, 0xFFFC0000, 0xFFF80000,
-	0xFFF00000, 0xFFE00000, 0xFFC00000, 0xFF800000,
-	0xFF000000, 0xFE000000, 0xFC000000, 0xF8000000,
-	0xF0000000, 0xE0000000, 0xC0000000, 0x80000000,
-	0x00000000
+        0xFFFFFFFF, 0xFFFFFFFE, 0xFFFFFFFC, 0xFFFFFFF8,
+        0xFFFFFFF0, 0xFFFFFFE0, 0xFFFFFFC0, 0xFFFFFF80,
+        0xFFFFFF00, 0xFFFFFE00, 0xFFFFFC00, 0xFFFFF800,
+        0xFFFFF000, 0xFFFFE000, 0xFFFFC000, 0xFFFF8000,
+        0xFFFF0000, 0xFFFE0000, 0xFFFC0000, 0xFFF80000,
+        0xFFF00000, 0xFFE00000, 0xFFC00000, 0xFF800000,
+        0xFF000000, 0xFE000000, 0xFC000000, 0xF8000000,
+        0xF0000000, 0xE0000000, 0xC0000000, 0x80000000,
+        0x00000000
 #elif BASEB == 16
-	0xFFFF, 0xFFFE, 0xFFFC, 0xFFF8,
-	0xFFF0, 0xFFE0, 0xFFC0, 0xFF80,
-	0xFF00, 0xFE00, 0xFC00, 0xF800,
-	0xF000, 0xE000, 0xC000, 0x8000,
-	0x0000
+        0xFFFF, 0xFFFE, 0xFFFC, 0xFFF8,
+        0xFFF0, 0xFFE0, 0xFFC0, 0xFF80,
+        0xFF00, 0xFE00, 0xFC00, 0xF800,
+        0xF000, 0xE000, 0xC000, 0x8000,
+        0x0000
 #else
-	-=@=- BASEB not 16 or 32 -=@=-
+        -=@=- BASEB not 16 or 32 -=@=-
 #endif
 };
 HALF lowhalf[BASEB+1] = {
-	0x0,
-	0x1,  0x3, 0x7, 0xF,
-	0x1F,  0x3F, 0x7F, 0xFF,
-	0x1FF,	0x3FF, 0x7FF, 0xFFF,
-	0x1FFF,	 0x3FFF, 0x7FFF, 0xFFFF
+        0x0,
+        0x1,  0x3, 0x7, 0xF,
+        0x1F,  0x3F, 0x7F, 0xFF,
+        0x1FF,  0x3FF, 0x7FF, 0xFFF,
+        0x1FFF,  0x3FFF, 0x7FFF, 0xFFFF
 #if BASEB == 32
        ,0x1FFFF,  0x3FFFF, 0x7FFFF, 0xFFFFF,
-	0x1FFFFF,  0x3FFFFF, 0x7FFFFF, 0xFFFFFF,
-	0x1FFFFFF,  0x3FFFFFF, 0x7FFFFFF, 0xFFFFFFF,
-	0x1FFFFFFF,  0x3FFFFFFF, 0x7FFFFFFF, 0xFFFFFFFF
+        0x1FFFFF,  0x3FFFFF, 0x7FFFFF, 0xFFFFFF,
+        0x1FFFFFF,  0x3FFFFFF, 0x7FFFFFF, 0xFFFFFFF,
+        0x1FFFFFFF,  0x3FFFFFFF, 0x7FFFFFFF, 0xFFFFFFFF
 #endif
 };
 HALF rlowhalf[BASEB+1] = {
 #if BASEB == 32
-	0xFFFFFFFF, 0x7FFFFFFF, 0x3FFFFFFF, 0x1FFFFFFF,
-	0xFFFFFFF, 0x7FFFFFF, 0x3FFFFFF, 0x1FFFFFF,
-	0xFFFFFF, 0x7FFFFF, 0x3FFFFF, 0x1FFFFF,
-	0xFFFFF, 0x7FFFF, 0x3FFFF, 0x1FFFF,
+        0xFFFFFFFF, 0x7FFFFFFF, 0x3FFFFFFF, 0x1FFFFFFF,
+        0xFFFFFFF, 0x7FFFFFF, 0x3FFFFFF, 0x1FFFFFF,
+        0xFFFFFF, 0x7FFFFF, 0x3FFFFF, 0x1FFFFF,
+        0xFFFFF, 0x7FFFF, 0x3FFFF, 0x1FFFF,
 #endif
-	0xFFFF, 0x7FFF, 0x3FFF, 0x1FFF,
-	0xFFF, 0x7FF, 0x3FF, 0x1FF,
-	0xFF, 0x7F, 0x3F, 0x1F,
-	0xF, 0x7, 0x3, 0x1,
-	0x0
+        0xFFFF, 0x7FFF, 0x3FFF, 0x1FFF,
+        0xFFF, 0x7FF, 0x3FF, 0x1FF,
+        0xFF, 0x7F, 0x3F, 0x1F,
+        0xF, 0x7, 0x3, 0x1,
+        0x0
 };
 HALF bitmask[(2*BASEB)+1] = {
 #if BASEB == 32
-	0x00000001, 0x00000002, 0x00000004, 0x00000008,
-	0x00000010, 0x00000020, 0x00000040, 0x00000080,
-	0x00000100, 0x00000200, 0x00000400, 0x00000800,
-	0x00001000, 0x00002000, 0x00004000, 0x00008000,
-	0x00010000, 0x00020000, 0x00040000, 0x00080000,
-	0x00100000, 0x00200000, 0x00400000, 0x00800000,
-	0x01000000, 0x02000000, 0x04000000, 0x08000000,
-	0x10000000, 0x20000000, 0x40000000, 0x80000000,
-	0x00000001, 0x00000002, 0x00000004, 0x00000008,
-	0x00000010, 0x00000020, 0x00000040, 0x00000080,
-	0x00000100, 0x00000200, 0x00000400, 0x00000800,
-	0x00001000, 0x00002000, 0x00004000, 0x00008000,
-	0x00010000, 0x00020000, 0x00040000, 0x00080000,
-	0x00100000, 0x00200000, 0x00400000, 0x00800000,
-	0x01000000, 0x02000000, 0x04000000, 0x08000000,
-	0x10000000, 0x20000000, 0x40000000, 0x80000000,
-	0x00000001
+        0x00000001, 0x00000002, 0x00000004, 0x00000008,
+        0x00000010, 0x00000020, 0x00000040, 0x00000080,
+        0x00000100, 0x00000200, 0x00000400, 0x00000800,
+        0x00001000, 0x00002000, 0x00004000, 0x00008000,
+        0x00010000, 0x00020000, 0x00040000, 0x00080000,
+        0x00100000, 0x00200000, 0x00400000, 0x00800000,
+        0x01000000, 0x02000000, 0x04000000, 0x08000000,
+        0x10000000, 0x20000000, 0x40000000, 0x80000000,
+        0x00000001, 0x00000002, 0x00000004, 0x00000008,
+        0x00000010, 0x00000020, 0x00000040, 0x00000080,
+        0x00000100, 0x00000200, 0x00000400, 0x00000800,
+        0x00001000, 0x00002000, 0x00004000, 0x00008000,
+        0x00010000, 0x00020000, 0x00040000, 0x00080000,
+        0x00100000, 0x00200000, 0x00400000, 0x00800000,
+        0x01000000, 0x02000000, 0x04000000, 0x08000000,
+        0x10000000, 0x20000000, 0x40000000, 0x80000000,
+        0x00000001
 #elif BASEB == 16
-	0x0001, 0x0002, 0x0004, 0x0008,
-	0x0010, 0x0020, 0x0040, 0x0080,
-	0x0100, 0x0200, 0x0400, 0x0800,
-	0x1000, 0x2000, 0x4000, 0x8000,
-	0x0001, 0x0002, 0x0004, 0x0008,
-	0x0010, 0x0020, 0x0040, 0x0080,
-	0x0100, 0x0200, 0x0400, 0x0800,
-	0x1000, 0x2000, 0x4000, 0x8000,
-	0x0001
+        0x0001, 0x0002, 0x0004, 0x0008,
+        0x0010, 0x0020, 0x0040, 0x0080,
+        0x0100, 0x0200, 0x0400, 0x0800,
+        0x1000, 0x2000, 0x4000, 0x8000,
+        0x0001, 0x0002, 0x0004, 0x0008,
+        0x0010, 0x0020, 0x0040, 0x0080,
+        0x0100, 0x0200, 0x0400, 0x0800,
+        0x1000, 0x2000, 0x4000, 0x8000,
+        0x0001
 #else
-	-=@=- BASEB not 16 or 32 -=@=-
+        -=@=- BASEB not 16 or 32 -=@=-
 #endif
-};		/* actual rotation thru 8 cycles */
+};              /* actual rotation thru 8 cycles */
 
-bool _math_abort_;		/* nonzero to abort calculations */
+bool _math_abort_;              /* nonzero to abort calculations */
 
 
 /*
@@ -233,21 +233,21 @@ STATIC long nfree = 0;
 HALF *
 alloc(LEN len)
 {
-	HALF *hp;
+        HALF *hp;
 
-	if (_math_abort_) {
-		math_error("Calculation aborted");
-		not_reached();
-	}
-	hp = (HALF *) malloc((len+1) * sizeof(HALF));
-	if (hp == 0) {
-		math_error("Not enough memory");
-		not_reached();
-	}
+        if (_math_abort_) {
+                math_error("Calculation aborted");
+                not_reached();
+        }
+        hp = (HALF *) malloc((len+1) * sizeof(HALF));
+        if (hp == 0) {
+                math_error("Not enough memory");
+                not_reached();
+        }
 #ifdef ALLOCTEST
-	++nalloc;
+        ++nalloc;
 #endif
-	return hp;
+        return hp;
 }
 
 
@@ -255,32 +255,32 @@ alloc(LEN len)
  * is_const - determine if a HALF array is an pre-allocated array
  *
  * given:
- *	h	pointer to the beginning of the HALF array
+ *      h       pointer to the beginning of the HALF array
  *
  * returns:
- *	true - h is found in the half_tbl array
- *	false - is is not found in the half_tbl array
+ *      true - h is found in the half_tbl array
+ *      false - is is not found in the half_tbl array
  */
 int
 is_const(HALF *h)
 {
-	HALF **h_p;	/* half_tbl array pointer */
+        HALF **h_p;     /* half_tbl array pointer */
 
-	/* firewall */
-	if (h == NULL) {
-		math_error("%s: h NULL", __func__);
-		not_reached();
-	}
+        /* firewall */
+        if (h == NULL) {
+                math_error("%s: h NULL", __func__);
+                not_reached();
+        }
 
-	/* search the half_tbl for h */
-	for (h_p = &half_tbl[0]; *h_p != NULL; ++h_p) {
-		if (h == *h_p) {
-			return true;	/* found in the half_tbl array */
-		}
-	}
+        /* search the half_tbl for h */
+        for (h_p = &half_tbl[0]; *h_p != NULL; ++h_p) {
+                if (h == *h_p) {
+                        return true;    /* found in the half_tbl array */
+                }
+        }
 
-	/* not found in the half_tbl array */
-	return false;
+        /* not found in the half_tbl array */
+        return false;
 }
 
 
@@ -288,25 +288,25 @@ is_const(HALF *h)
 void
 freeh(HALF *h)
 {
-	/* firewall */
-	if (h == NULL) {
-		math_error("%s: h NULL", __func__);
-		not_reached();
-	}
+        /* firewall */
+        if (h == NULL) {
+                math_error("%s: h NULL", __func__);
+                not_reached();
+        }
 
-	/* free h is not a constant */
-	if (!is_const(h)) {
-		free(h);
-		++nfree;
-	}
+        /* free h is not a constant */
+        if (!is_const(h)) {
+                free(h);
+                ++nfree;
+        }
 }
 
 
 void
 allocStat(void)
 {
-	fprintf(stderr, "nalloc: %ld nfree: %ld kept: %ld\n",
-		nalloc, nfree, nalloc - nfree);
+        fprintf(stderr, "nalloc: %ld nfree: %ld kept: %ld\n",
+                nalloc, nfree, nalloc - nfree);
 }
 #endif
 
@@ -317,39 +317,39 @@ allocStat(void)
 void
 itoz(long i, ZVALUE *res)
 {
-	long diddle, len;
+        long diddle, len;
 
-	/* firewall */
-	if (res == NULL) {
-		math_error("%s: res NULL", __func__);
-		not_reached();
-	}
+        /* firewall */
+        if (res == NULL) {
+                math_error("%s: res NULL", __func__);
+                not_reached();
+        }
 
-	res->len = 1;
-	res->sign = 0;
-	diddle = 0;
-	if (i == 0) {
-		res->v = _zeroval_;
-		return;
-	}
-	if (i < 0) {
-		res->sign = 1;
-		i = -i;
-		if (i < 0) {	/* fix most negative number */
-			diddle = 1;
-			i--;
-		}
-	}
-	if (i == 1) {
-		res->v = _oneval_;
-		return;
-	}
-	len = 1 + (((FULL) i) >= BASE);
-	res->len = (LEN)len;
-	res->v = alloc((LEN)len);
-	res->v[0] = (HALF) (i + diddle);
-	if (len == 2)
-		res->v[1] = (HALF) (i / BASE);
+        res->len = 1;
+        res->sign = 0;
+        diddle = 0;
+        if (i == 0) {
+                res->v = _zeroval_;
+                return;
+        }
+        if (i < 0) {
+                res->sign = 1;
+                i = -i;
+                if (i < 0) {    /* fix most negative number */
+                        diddle = 1;
+                        i--;
+                }
+        }
+        if (i == 1) {
+                res->v = _oneval_;
+                return;
+        }
+        len = 1 + (((FULL) i) >= BASE);
+        res->len = (LEN)len;
+        res->v = alloc((LEN)len);
+        res->v[0] = (HALF) (i + diddle);
+        if (len == 2)
+                res->v[1] = (HALF) (i / BASE);
 }
 
 
@@ -360,14 +360,14 @@ itoz(long i, ZVALUE *res)
 long
 ztoi(ZVALUE z)
 {
-	long i;
+        long i;
 
-	if (zgtmaxlong(z)) {
-		i = MAXLONG;
-		return (z.sign ? -i : i);
-	}
-	i = ztolong(z);
-	return (z.sign ? -i : i);
+        if (zgtmaxlong(z)) {
+                i = MAXLONG;
+                return (z.sign ? -i : i);
+        }
+        i = ztolong(z);
+        return (z.sign ? -i : i);
 }
 
 
@@ -377,30 +377,30 @@ ztoi(ZVALUE z)
 void
 utoz(FULL i, ZVALUE *res)
 {
-	long len;
+        long len;
 
-	/* firewall */
-	if (res == NULL) {
-		math_error("%s: res NULL", __func__);
-		not_reached();
-	}
+        /* firewall */
+        if (res == NULL) {
+                math_error("%s: res NULL", __func__);
+                not_reached();
+        }
 
-	res->len = 1;
-	res->sign = 0;
-	if (i == 0) {
-		res->v = _zeroval_;
-		return;
-	}
-	if (i == 1) {
-		res->v = _oneval_;
-		return;
-	}
-	len = 1 + (((FULL) i) >= BASE);
-	res->len = (LEN)len;
-	res->v = alloc((LEN)len);
-	res->v[0] = (HALF)i;
-	if (len == 2)
-		res->v[1] = (HALF) (i / BASE);
+        res->len = 1;
+        res->sign = 0;
+        if (i == 0) {
+                res->v = _zeroval_;
+                return;
+        }
+        if (i == 1) {
+                res->v = _oneval_;
+                return;
+        }
+        len = 1 + (((FULL) i) >= BASE);
+        res->len = (LEN)len;
+        res->v = alloc((LEN)len);
+        res->v[0] = (HALF)i;
+        if (len == 2)
+                res->v[1] = (HALF) (i / BASE);
 }
 
 
@@ -410,39 +410,39 @@ utoz(FULL i, ZVALUE *res)
 void
 stoz(SFULL i, ZVALUE *res)
 {
-	long diddle, len;
+        long diddle, len;
 
-	/* firewall */
-	if (res == NULL) {
-		math_error("%s: res NULL", __func__);
-		not_reached();
-	}
+        /* firewall */
+        if (res == NULL) {
+                math_error("%s: res NULL", __func__);
+                not_reached();
+        }
 
-	res->len = 1;
-	res->sign = 0;
-	diddle = 0;
-	if (i == 0) {
-		res->v = _zeroval_;
-		return;
-	}
-	if (i < 0) {
-		res->sign = 1;
-		i = -i;
-		if (i < 0) {	/* fix most negative number */
-			diddle = 1;
-			i--;
-		}
-	}
-	if (i == 1) {
-		res->v = _oneval_;
-		return;
-	}
-	len = 1 + (((FULL) i) >= BASE);
-	res->len = (LEN)len;
-	res->v = alloc((LEN)len);
-	res->v[0] = (HALF) (i + diddle);
-	if (len == 2)
-		res->v[1] = (HALF) (i / BASE);
+        res->len = 1;
+        res->sign = 0;
+        diddle = 0;
+        if (i == 0) {
+                res->v = _zeroval_;
+                return;
+        }
+        if (i < 0) {
+                res->sign = 1;
+                i = -i;
+                if (i < 0) {    /* fix most negative number */
+                        diddle = 1;
+                        i--;
+                }
+        }
+        if (i == 1) {
+                res->v = _oneval_;
+                return;
+        }
+        len = 1 + (((FULL) i) >= BASE);
+        res->len = (LEN)len;
+        res->v = alloc((LEN)len);
+        res->v[0] = (HALF) (i + diddle);
+        if (len == 2)
+                res->v[1] = (HALF) (i / BASE);
 }
 
 
@@ -454,10 +454,10 @@ stoz(SFULL i, ZVALUE *res)
 FULL
 ztou(ZVALUE z)
 {
-	if (z.len > 2) {
-		return MAXUFULL;
-	}
-	return ztofull(z);
+        if (z.len > 2) {
+                return MAXUFULL;
+        }
+        return ztofull(z);
 }
 
 
@@ -470,29 +470,29 @@ ztou(ZVALUE z)
 SFULL
 ztos(ZVALUE z)
 {
-	FULL val;	/* absolute value of the return value */
+        FULL val;       /* absolute value of the return value */
 
-	/* negative value processing */
-	if (z.sign) {
-	    if (z.len > 2) {
-		return MINSFULL;
-	    }
-	    val = ztofull(z);
-	    if (val > TOPFULL) {
-		return MINSFULL;
-	    }
-	    return (SFULL)(-val);
-	}
+        /* negative value processing */
+        if (z.sign) {
+            if (z.len > 2) {
+                return MINSFULL;
+            }
+            val = ztofull(z);
+            if (val > TOPFULL) {
+                return MINSFULL;
+            }
+            return (SFULL)(-val);
+        }
 
-	/* positive value processing */
-	if (z.len > 2) {
-	    return (SFULL)MAXFULL;
-	}
-	val = ztofull(z);
-	if (val > MAXFULL) {
-	    return (SFULL)MAXFULL;
-	}
-	return (SFULL)val;
+        /* positive value processing */
+        if (z.len > 2) {
+            return (SFULL)MAXFULL;
+        }
+        val = ztofull(z);
+        if (val > MAXFULL) {
+            return (SFULL)MAXFULL;
+        }
+        return (SFULL)val;
 }
 
 
@@ -502,21 +502,21 @@ ztos(ZVALUE z)
 void
 zcopy(ZVALUE z, ZVALUE *res)
 {
-	/* firewall */
-	if (res == NULL) {
-		math_error("%s: res NULL", __func__);
-		not_reached();
-	}
+        /* firewall */
+        if (res == NULL) {
+                math_error("%s: res NULL", __func__);
+                not_reached();
+        }
 
-	/* make copy */
-	res->sign = z.sign;
-	res->len = z.len;
-	if (zisabsleone(z)) {	/* zero or plus or minus one are easy */
-		res->v = (z.v[0] ? _oneval_ : _zeroval_);
-		return;
-	}
-	res->v = alloc(z.len);
-	zcopyval(z, *res);
+        /* make copy */
+        res->sign = z.sign;
+        res->len = z.len;
+        if (zisabsleone(z)) {   /* zero or plus or minus one are easy */
+                res->v = (z.v[0] ? _oneval_ : _zeroval_);
+                return;
+        }
+        res->v = alloc(z.len);
+        zcopyval(z, *res);
 }
 
 
@@ -526,56 +526,56 @@ zcopy(ZVALUE z, ZVALUE *res)
 void
 zadd(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 {
-	ZVALUE dest;
-	HALF *p1, *p2, *pd;
-	long len;
-	FULL carry;
-	SIUNION sival;
+        ZVALUE dest;
+        HALF *p1, *p2, *pd;
+        long len;
+        FULL carry;
+        SIUNION sival;
 
-	/* firewall */
-	if (res == NULL) {
-		math_error("%s: res NULL", __func__);
-		not_reached();
-	}
+        /* firewall */
+        if (res == NULL) {
+                math_error("%s: res NULL", __func__);
+                not_reached();
+        }
 
-	if (z1.sign && !z2.sign) {
-		z1.sign = 0;
-		zsub(z2, z1, res);
-		return;
-	}
-	if (z2.sign && !z1.sign) {
-		z2.sign = 0;
-		zsub(z1, z2, res);
-		return;
-	}
-	if (z2.len > z1.len) {
-		pd = z1.v; z1.v = z2.v; z2.v = pd;
-		len = z1.len; z1.len = z2.len; z2.len = (LEN)len;
-	}
-	dest.len = z1.len + 1;
-	dest.v = alloc(dest.len);
-	dest.sign = z1.sign;
-	carry = 0;
-	pd = dest.v;
-	p1 = z1.v;
-	p2 = z2.v;
-	len = z2.len;
-	while (len--) {
-		sival.ivalue = ((FULL) *p1++) + ((FULL) *p2++) + carry;
-		/* ignore Saber-C warning #112 - get ushort from uint */
-		/*	  OK to ignore on name zadd`sival */
-		*pd++ = sival.silow;
-		carry = sival.sihigh;
-	}
-	len = z1.len - z2.len;
-	while (len--) {
-		sival.ivalue = ((FULL) *p1++) + carry;
-		*pd++ = sival.silow;
-		carry = sival.sihigh;
-	}
-	*pd = (HALF)carry;
-	zquicktrim(dest);
-	*res = dest;
+        if (z1.sign && !z2.sign) {
+                z1.sign = 0;
+                zsub(z2, z1, res);
+                return;
+        }
+        if (z2.sign && !z1.sign) {
+                z2.sign = 0;
+                zsub(z1, z2, res);
+                return;
+        }
+        if (z2.len > z1.len) {
+                pd = z1.v; z1.v = z2.v; z2.v = pd;
+                len = z1.len; z1.len = z2.len; z2.len = (LEN)len;
+        }
+        dest.len = z1.len + 1;
+        dest.v = alloc(dest.len);
+        dest.sign = z1.sign;
+        carry = 0;
+        pd = dest.v;
+        p1 = z1.v;
+        p2 = z2.v;
+        len = z2.len;
+        while (len--) {
+                sival.ivalue = ((FULL) *p1++) + ((FULL) *p2++) + carry;
+                /* ignore Saber-C warning #112 - get ushort from uint */
+                /*        OK to ignore on name zadd`sival */
+                *pd++ = sival.silow;
+                carry = sival.sihigh;
+        }
+        len = z1.len - z2.len;
+        while (len--) {
+                sival.ivalue = ((FULL) *p1++) + carry;
+                *pd++ = sival.silow;
+                carry = sival.sihigh;
+        }
+        *pd = (HALF)carry;
+        zquicktrim(dest);
+        *res = dest;
 }
 
 
@@ -585,71 +585,71 @@ zadd(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 void
 zsub(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 {
-	register HALF *h1, *h2, *hd;
-	long len1, len2;
-	FULL carry;
-	SIUNION sival;
-	ZVALUE dest;
+        register HALF *h1, *h2, *hd;
+        long len1, len2;
+        FULL carry;
+        SIUNION sival;
+        ZVALUE dest;
 
-	/* firewall */
-	if (res == NULL) {
-		math_error("%s: res NULL", __func__);
-		not_reached();
-	}
+        /* firewall */
+        if (res == NULL) {
+                math_error("%s: res NULL", __func__);
+                not_reached();
+        }
 
-	if (z1.sign != z2.sign) {
-		z2.sign = z1.sign;
-		zadd(z1, z2, res);
-		return;
-	}
-	len1 = z1.len;
-	len2 = z2.len;
-	if (len1 == len2) {
-		h1 = z1.v + len1;
-		h2 = z2.v + len2;
-		while ((len1 > 0) && ((FULL)*--h1 == (FULL)*--h2)) {
-			len1--;
-		}
-		if (len1 == 0) {
-			*res = _zero_;
-			return;
-		}
-		len2 = len1;
-		carry = ((FULL)*h1 < (FULL)*h2);
-	} else {
-		carry = (len1 < len2);
-	}
-	dest.sign = z1.sign;
-	h1 = z1.v;
-	h2 = z2.v;
-	if (carry) {
-		carry = len1;
-		len1 = len2;
-		len2 = (long)carry;
-		h1 = z2.v;
-		h2 = z1.v;
-		dest.sign = !dest.sign;
-	}
-	hd = alloc((LEN)len1);
-	dest.v = hd;
-	dest.len = (LEN)len1;
-	len1 -= len2;
-	carry = 0;
-	while (--len2 >= 0) {
-		/* ignore Saber-C warning #112 - get ushort from uint */
-		/*	  OK to ignore on name zsub`sival */
-		sival.ivalue = (BASE1 - ((FULL) *h1++)) + *h2++ + carry;
-		*hd++ = (HALF)(BASE1 - sival.silow);
-		carry = sival.sihigh;
-	}
-	while (--len1 >= 0) {
-		sival.ivalue = (BASE1 - ((FULL) *h1++)) + carry;
-		*hd++ = (HALF)(BASE1 - sival.silow);
-		carry = sival.sihigh;
-	}
-	if (hd[-1] == 0)
-		ztrim(&dest);
-	*res = dest;
+        if (z1.sign != z2.sign) {
+                z2.sign = z1.sign;
+                zadd(z1, z2, res);
+                return;
+        }
+        len1 = z1.len;
+        len2 = z2.len;
+        if (len1 == len2) {
+                h1 = z1.v + len1;
+                h2 = z2.v + len2;
+                while ((len1 > 0) && ((FULL)*--h1 == (FULL)*--h2)) {
+                        len1--;
+                }
+                if (len1 == 0) {
+                        *res = _zero_;
+                        return;
+                }
+                len2 = len1;
+                carry = ((FULL)*h1 < (FULL)*h2);
+        } else {
+                carry = (len1 < len2);
+        }
+        dest.sign = z1.sign;
+        h1 = z1.v;
+        h2 = z2.v;
+        if (carry) {
+                carry = len1;
+                len1 = len2;
+                len2 = (long)carry;
+                h1 = z2.v;
+                h2 = z1.v;
+                dest.sign = !dest.sign;
+        }
+        hd = alloc((LEN)len1);
+        dest.v = hd;
+        dest.len = (LEN)len1;
+        len1 -= len2;
+        carry = 0;
+        while (--len2 >= 0) {
+                /* ignore Saber-C warning #112 - get ushort from uint */
+                /*        OK to ignore on name zsub`sival */
+                sival.ivalue = (BASE1 - ((FULL) *h1++)) + *h2++ + carry;
+                *hd++ = (HALF)(BASE1 - sival.silow);
+                carry = sival.sihigh;
+        }
+        while (--len1 >= 0) {
+                sival.ivalue = (BASE1 - ((FULL) *h1++)) + carry;
+                *hd++ = (HALF)(BASE1 - sival.silow);
+                carry = sival.sihigh;
+        }
+        if (hd[-1] == 0)
+                ztrim(&dest);
+        *res = dest;
 }
 
 
@@ -659,85 +659,85 @@ zsub(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 void
 zmuli(ZVALUE z, long n, ZVALUE *res)
 {
-	register HALF *h1, *sd;
-	FULL low;
-	FULL high;
-	FULL carry;
-	long len;
-	SIUNION sival;
-	ZVALUE dest;
+        register HALF *h1, *sd;
+        FULL low;
+        FULL high;
+        FULL carry;
+        long len;
+        SIUNION sival;
+        ZVALUE dest;
 
-	/* firewall */
-	if (res == NULL) {
-		math_error("%s: res NULL", __func__);
-		not_reached();
-	}
+        /* firewall */
+        if (res == NULL) {
+                math_error("%s: res NULL", __func__);
+                not_reached();
+        }
 
-	if ((n == 0) || ziszero(z)) {
-		*res = _zero_;
-		return;
-	}
-	if (n < 0) {
-		n = -n;
-		z.sign = !z.sign;
-	}
-	if (n == 1) {
-		zcopy(z, res);
-		return;
-	}
+        if ((n == 0) || ziszero(z)) {
+                *res = _zero_;
+                return;
+        }
+        if (n < 0) {
+                n = -n;
+                z.sign = !z.sign;
+        }
+        if (n == 1) {
+                zcopy(z, res);
+                return;
+        }
 #if LONG_BITS > BASEB
-	low = ((FULL) n) & BASE1;
-	high = ((FULL) n) >> BASEB;
+        low = ((FULL) n) & BASE1;
+        high = ((FULL) n) >> BASEB;
 #else
-	low = (FULL)n;
-	high = 0;
+        low = (FULL)n;
+        high = 0;
 #endif
-	dest.len = z.len + 2;
-	dest.v = alloc(dest.len);
-	dest.sign = z.sign;
-	/*
-	 * Multiply by the low digit.
-	 */
-	h1 = z.v;
-	sd = dest.v;
-	len = z.len;
-	carry = 0;
-	while (len--) {
-		/* ignore Saber-C warning #112 - get ushort from uint */
-		/*	  OK to ignore on name zmuli`sival */
-		sival.ivalue = ((FULL) *h1++) * low + carry;
-		*sd++ = sival.silow;
-		carry = sival.sihigh;
-	}
-	*sd = (HALF)carry;
-	/*
-	 * If there was only one digit, then we are all done except
-	 * for trimming the number if there was no last carry.
-	 */
-	if (high == 0) {
-		dest.len--;
-		if (carry == 0)
-			dest.len--;
-		*res = dest;
-		return;
-	}
-	/*
-	 * Need to multiply by the high digit and add it into the
-	 * previous value.  Clear the final word of rubbish first.
-	 */
-	*(++sd) = 0;
-	h1 = z.v;
-	sd = dest.v + 1;
-	len = z.len;
-	carry = 0;
-	while (len--) {
-		sival.ivalue = ((FULL) *h1++) * high + ((FULL) *sd) + carry;
-		*sd++ = sival.silow;
-		carry = sival.sihigh;
-	}
-	*sd = (HALF)carry;
-	zquicktrim(dest);
-	*res = dest;
+        dest.len = z.len + 2;
+        dest.v = alloc(dest.len);
+        dest.sign = z.sign;
+        /*
+         * Multiply by the low digit.
+         */
+        h1 = z.v;
+        sd = dest.v;
+        len = z.len;
+        carry = 0;
+        while (len--) {
+                /* ignore Saber-C warning #112 - get ushort from uint */
+                /*        OK to ignore on name zmuli`sival */
+                sival.ivalue = ((FULL) *h1++) * low + carry;
+                *sd++ = sival.silow;
+                carry = sival.sihigh;
+        }
+        *sd = (HALF)carry;
+        /*
+         * If there was only one digit, then we are all done except
+         * for trimming the number if there was no last carry.
+         */
+        if (high == 0) {
+                dest.len--;
+                if (carry == 0)
+                        dest.len--;
+                *res = dest;
+                return;
+        }
+        /*
+         * Need to multiply by the high digit and add it into the
+         * previous value.  Clear the final word of rubbish first.
+         */
+        *(++sd) = 0;
+        h1 = z.v;
+        sd = dest.v + 1;
+        len = z.len;
+        carry = 0;
+        while (len--) {
+                sival.ivalue = ((FULL) *h1++) * high + ((FULL) *sd) + carry;
+                *sd++ = sival.silow;
+                carry = sival.sihigh;
+        }
+        *sd = (HALF)carry;
+        zquicktrim(dest);
+        *res = dest;
 }
 
 
@@ -749,30 +749,30 @@ zmuli(ZVALUE z, long n, ZVALUE *res)
 void
 zreduce(ZVALUE z1, ZVALUE z2, ZVALUE *z1res, ZVALUE *z2res)
 {
-	ZVALUE tmp;
+        ZVALUE tmp;
 
-	/* firewall */
-	if (z1res == NULL) {
-		math_error("%s: z1res NULL", __func__);
-		not_reached();
-	}
-	if (z2res == NULL) {
-		math_error("%s: z2res NULL", __func__);
-		not_reached();
-	}
+        /* firewall */
+        if (z1res == NULL) {
+                math_error("%s: z1res NULL", __func__);
+                not_reached();
+        }
+        if (z2res == NULL) {
+                math_error("%s: z2res NULL", __func__);
+                not_reached();
+        }
 
-	if (zisabsleone(z1) || zisabsleone(z2))
-		tmp = _one_;
-	else
-		zgcd(z1, z2, &tmp);
-	if (zisunit(tmp)) {
-		zcopy(z1, z1res);
-		zcopy(z2, z2res);
-	} else {
-		zequo(z1, tmp, z1res);
-		zequo(z2, tmp, z2res);
-	}
-	zfree(tmp);
+        if (zisabsleone(z1) || zisabsleone(z2))
+                tmp = _one_;
+        else
+                zgcd(z1, z2, &tmp);
+        if (zisunit(tmp)) {
+                zcopy(z1, z1res);
+                zcopy(z2, z2res);
+        } else {
+                zequo(z1, tmp, z1res);
+                zequo(z2, tmp, z2res);
+        }
+        zfree(tmp);
 }
 
 
@@ -785,242 +785,242 @@ zreduce(ZVALUE z1, ZVALUE z2, ZVALUE *z1res, ZVALUE *z2res)
 long
 zdiv(ZVALUE z1, ZVALUE z2, ZVALUE *quo, ZVALUE *rem, long rnd)
 {
-	register HALF *a, *b;
-	HALF s, u;
-	HALF *A, *B, *a1, *b0;
-	FULL f, g, h, x;
-	bool adjust, onebit;
-	LEN m, n, len, i, p, j1, j2, k;
-	long t, val;
+        register HALF *a, *b;
+        HALF s, u;
+        HALF *A, *B, *a1, *b0;
+        FULL f, g, h, x;
+        bool adjust, onebit;
+        LEN m, n, len, i, p, j1, j2, k;
+        long t, val;
 
-	/* firewall */
-	if (quo == NULL) {
-		math_error("%s: quo NULL", __func__);
-		not_reached();
-	}
-	if (rem == NULL) {
-		math_error("%s: rem NULL", __func__);
-		not_reached();
-	}
+        /* firewall */
+        if (quo == NULL) {
+                math_error("%s: quo NULL", __func__);
+                not_reached();
+        }
+        if (rem == NULL) {
+                math_error("%s: rem NULL", __func__);
+                not_reached();
+        }
 
-	if (ziszero(z2)) {
-		math_error("Division by zero in zdiv");
-		not_reached();
-	}
-	m = z1.len;
-	n = z2.len;
-	B = z2.v;
-	s = 0;
-	if (m < n) {
-		A = alloc(n + 1);
-		memcpy(A, z1.v, m * sizeof(HALF));
-		for (i = m; i <= n; i++)
-			A[i] = 0;
-		a1 = A + n;
-		len = 1;
-		goto done;
-	}
-	A = alloc(m + 2);
-	memcpy(A, z1.v, m * sizeof(HALF));
-	A[m] = 0;
-	A[m + 1] = 0;
-	len = m - n + 1;	/* quotient length will be len or len +/- 1 */
-	a1 = A + n;		/* start of digits for quotient */
-	b0 = B;
-	p = n;
-	while (!*b0) {		/* b0: working start for divisor */
-		++b0;
-		--p;
-	}
-	if (p == 1) {
-		u = *b0;
-		if (u == 1) {
-			for (; m >= n; m--)
-				A[m] = A[m - 1];
-			A[m] = 0;
-			goto done;
-		}
-		f = 0;
-		a = A + m;
-		i = len;
-		while (i--) {
-			f = f << BASEB | *--a;
-			a[1] = (HALF)(f / u);
-			f = f % u;
-		}
-		*a = (HALF)f;
-		m = n;
-		goto done;
-	}
-	f = B[n - 1];
-	k = 1;
-	while (f >>= 1)
-		k++;		/* k: number of bits in top divisor digit */
-	j1 = BASEB - k;
-	j2 = BASEB + j1;
-	h = j1 ? ((FULL) B[n - 1] << j1 | B[n - 2] >> k) : B[n-1];
-	onebit = (bool)((B[n - 2] >> (k - 1)) & 1);
-	m++;
-	while (m > n) {
-		m--;
-		f = (FULL) A[m] << j2 | (FULL) A[m - 1] << j1;
-		if (j1) f |= A[m - 2] >> k;
-		if (s) f = ~f;
-		x = f / h;
-		if (x) {
-			if (onebit && x > TOPHALF + f % h)
-				x--;
-			a = A + m - p;
-			b = b0;
-			u = 0;
-			i = p;
-			if (s) {
-				while (i--) {
-					f = (FULL) *a + u + x * *b++;
-					*a++ = (HALF) f;
-					u = (HALF) (f >> BASEB);
-				}
-				s = *a + u;
-				A[m] = (HALF) (~x + !s);
-			} else {
-				while (i--) {
-					f = (FULL) *a - u - x * *b++;
-					*a++ = (HALF) f;
-					u = -(HALF)(f >> BASEB);
-				}
-				s = *a - u;
-				A[m] = (HALF)(x + s);
-			}
-		}
-		else
-			A[m] = s;
-	}
-done:	while (m > 0 && A[m - 1] == 0)
-		m--;
-	if (m == 0 && s == 0) {
-		*rem = _zero_;
-		val = 0;
-		if (a1[len - 1] == 0)
-			len--;
-		if (len == 0) {
-			*quo = _zero_;
-		} else {
-			quo->len = len;
-			quo->v = alloc(len);
-			memcpy(quo->v, a1, len * sizeof(HALF));
-			quo->sign = z1.sign ^ z2.sign;
-		}
-		freeh(A);
-		return val;
-	}
-	if (rnd & 8)
-		adjust = (((*a1 ^ rnd) & 1) ? true : false);
-	else
-		adjust = (((rnd & 1) ^ z1.sign ^ z2.sign) ? true : false);
-	if (rnd & 2)
-		adjust ^= z1.sign ^ z2.sign;
-	if (rnd & 4)
-		adjust ^= z2.sign;
-	if (rnd & 16) {			/* round-off case */
-		a = A + n;
-		b = B + n;
-		i = n + 1;
-		f = g = 0;
-		t = -1;
-		if (s) {
-			while (--i > 0) {
-				g = (FULL) *--a + (*--b >> 1 | f);
-				f = *b & 1 ? TOPHALF : 0;
-				if (g != BASE1)
-					break;
-			}
-			if (g == BASE && f == 0) {
-				while ((--i > 0) && ((*--a | *--b) == 0));
-				t = (i > 0);
-			} else if (g >= BASE) {
-				t = 1;
-			}
-		} else {
-			while (--i > 0) {
-				g = (FULL) *--a - (*--b >> 1 | f);
-				f = *b & 1 ? TOPHALF : 0;
-				if (g != 0)
-					break;
-			}
-			if (g > 0 && g < BASE)
-				t = 1;
-			else if (g == 0 && f == 0)
-				t = 0;
-		}
-		if (t)
-			adjust = (t > 0);
-	}
-	if (adjust) {
-		i = len;
-		a = a1;
-		while (i > 0 && *a == BASE1) {
-			i--;
-			*a++ = 0;
-		}
-		(*a)++;
-		if (i == 0)
-			len++;
-	}
-	if (s && adjust) {
-		i = 0;
-		while (A[i] == 0)
-			i++;
-		A[i] = -A[i];
-		while (++i < n)
-			A[i] = ~A[i];
-		m = n;
-		while (A[m - 1] == 0)
-			m--;
-	}
-	if (!s && adjust) {
-		a = A;
-		b = B;
-		i = n;
-		u = 0;
-		while (i--) {
-			f = (FULL) *b++ - *a - (FULL) u;
-			*a++ = (HALF) f;
-			u = -(HALF)(f >> BASEB);
-		}
-		m = n;
-		while (A[m - 1] == 0)
-			m--;
-	}
-	if (s && !adjust) {
-		a = A;
-		b = B;
-		i = n;
-		f = 0;
-		while (i--) {
-			f = (FULL) *b++ + *a + (f >> BASEB);
-			*a++ = (HALF) f;
-		}
-		m = n;
-		while (A[m-1] == 0)
-			m--;
-	}
-	rem->len = m;
-	rem->v = alloc(m);
-	memcpy(rem->v, A, m * sizeof(HALF));
-	rem->sign = z1.sign ^ adjust;
-	val = rem->sign ? -1 : 1;
-	if (a1[len - 1] == 0)
-		len--;
-	if (len == 0) {
-		*quo = _zero_;
-	} else {
-		quo->len = len;
-		quo->v = alloc(len);
-		memcpy(quo->v, a1, len * sizeof(HALF));
-		quo->sign = z1.sign ^ z2.sign;
-	}
-	freeh(A);
-	return val;
+        if (ziszero(z2)) {
+                math_error("Division by zero in zdiv");
+                not_reached();
+        }
+        m = z1.len;
+        n = z2.len;
+        B = z2.v;
+        s = 0;
+        if (m < n) {
+                A = alloc(n + 1);
+                memcpy(A, z1.v, m * sizeof(HALF));
+                for (i = m; i <= n; i++)
+                        A[i] = 0;
+                a1 = A + n;
+                len = 1;
+                goto done;
+        }
+        A = alloc(m + 2);
+        memcpy(A, z1.v, m * sizeof(HALF));
+        A[m] = 0;
+        A[m + 1] = 0;
+        len = m - n + 1;        /* quotient length will be len or len +/- 1 */
+        a1 = A + n;             /* start of digits for quotient */
+        b0 = B;
+        p = n;
+        while (!*b0) {          /* b0: working start for divisor */
+                ++b0;
+                --p;
+        }
+        if (p == 1) {
+                u = *b0;
+                if (u == 1) {
+                        for (; m >= n; m--)
+                                A[m] = A[m - 1];
+                        A[m] = 0;
+                        goto done;
+                }
+                f = 0;
+                a = A + m;
+                i = len;
+                while (i--) {
+                        f = f << BASEB | *--a;
+                        a[1] = (HALF)(f / u);
+                        f = f % u;
+                }
+                *a = (HALF)f;
+                m = n;
+                goto done;
+        }
+        f = B[n - 1];
+        k = 1;
+        while (f >>= 1)
+                k++;            /* k: number of bits in top divisor digit */
+        j1 = BASEB - k;
+        j2 = BASEB + j1;
+        h = j1 ? ((FULL) B[n - 1] << j1 | B[n - 2] >> k) : B[n-1];
+        onebit = (bool)((B[n - 2] >> (k - 1)) & 1);
+        m++;
+        while (m > n) {
+                m--;
+                f = (FULL) A[m] << j2 | (FULL) A[m - 1] << j1;
+                if (j1) f |= A[m - 2] >> k;
+                if (s) f = ~f;
+                x = f / h;
+                if (x) {
+                        if (onebit && x > TOPHALF + f % h)
+                                x--;
+                        a = A + m - p;
+                        b = b0;
+                        u = 0;
+                        i = p;
+                        if (s) {
+                                while (i--) {
+                                        f = (FULL) *a + u + x * *b++;
+                                        *a++ = (HALF) f;
+                                        u = (HALF) (f >> BASEB);
+                                }
+                                s = *a + u;
+                                A[m] = (HALF) (~x + !s);
+                        } else {
+                                while (i--) {
+                                        f = (FULL) *a - u - x * *b++;
+                                        *a++ = (HALF) f;
+                                        u = -(HALF)(f >> BASEB);
+                                }
+                                s = *a - u;
+                                A[m] = (HALF)(x + s);
+                        }
+                }
+                else
+                        A[m] = s;
+        }
+done:   while (m > 0 && A[m - 1] == 0)
+                m--;
+        if (m == 0 && s == 0) {
+                *rem = _zero_;
+                val = 0;
+                if (a1[len - 1] == 0)
+                        len--;
+                if (len == 0) {
+                        *quo = _zero_;
+                } else {
+                        quo->len = len;
+                        quo->v = alloc(len);
+                        memcpy(quo->v, a1, len * sizeof(HALF));
+                        quo->sign = z1.sign ^ z2.sign;
+                }
+                freeh(A);
+                return val;
+        }
+        if (rnd & 8)
+                adjust = (((*a1 ^ rnd) & 1) ? true : false);
+        else
+                adjust = (((rnd & 1) ^ z1.sign ^ z2.sign) ? true : false);
+        if (rnd & 2)
+                adjust ^= z1.sign ^ z2.sign;
+        if (rnd & 4)
+                adjust ^= z2.sign;
+        if (rnd & 16) {                 /* round-off case */
+                a = A + n;
+                b = B + n;
+                i = n + 1;
+                f = g = 0;
+                t = -1;
+                if (s) {
+                        while (--i > 0) {
+                                g = (FULL) *--a + (*--b >> 1 | f);
+                                f = *b & 1 ? TOPHALF : 0;
+                                if (g != BASE1)
+                                        break;
+                        }
+                        if (g == BASE && f == 0) {
+                                while ((--i > 0) && ((*--a | *--b) == 0));
+                                t = (i > 0);
+                        } else if (g >= BASE) {
+                                t = 1;
+                        }
+                } else {
+                        while (--i > 0) {
+                                g = (FULL) *--a - (*--b >> 1 | f);
+                                f = *b & 1 ? TOPHALF : 0;
+                                if (g != 0)
+                                        break;
+                        }
+                        if (g > 0 && g < BASE)
+                                t = 1;
+                        else if (g == 0 && f == 0)
+                                t = 0;
+                }
+                if (t)
+                        adjust = (t > 0);
+        }
+        if (adjust) {
+                i = len;
+                a = a1;
+                while (i > 0 && *a == BASE1) {
+                        i--;
+                        *a++ = 0;
+                }
+                (*a)++;
+                if (i == 0)
+                        len++;
+        }
+        if (s && adjust) {
+                i = 0;
+                while (A[i] == 0)
+                        i++;
+                A[i] = -A[i];
+                while (++i < n)
+                        A[i] = ~A[i];
+                m = n;
+                while (A[m - 1] == 0)
+                        m--;
+        }
+        if (!s && adjust) {
+                a = A;
+                b = B;
+                i = n;
+                u = 0;
+                while (i--) {
+                        f = (FULL) *b++ - *a - (FULL) u;
+                        *a++ = (HALF) f;
+                        u = -(HALF)(f >> BASEB);
+                }
+                m = n;
+                while (A[m - 1] == 0)
+                        m--;
+        }
+        if (s && !adjust) {
+                a = A;
+                b = B;
+                i = n;
+                f = 0;
+                while (i--) {
+                        f = (FULL) *b++ + *a + (f >> BASEB);
+                        *a++ = (HALF) f;
+                }
+                m = n;
+                while (A[m-1] == 0)
+                        m--;
+        }
+        rem->len = m;
+        rem->v = alloc(m);
+        memcpy(rem->v, A, m * sizeof(HALF));
+        rem->sign = z1.sign ^ adjust;
+        val = rem->sign ? -1 : 1;
+        if (a1[len - 1] == 0)
+                len--;
+        if (len == 0) {
+                *quo = _zero_;
+        } else {
+                quo->len = len;
+                quo->v = alloc(len);
+                memcpy(quo->v, a1, len * sizeof(HALF));
+                quo->sign = z1.sign ^ z2.sign;
+        }
+        freeh(A);
+        return val;
 }
 
 
@@ -1032,20 +1032,20 @@ done:	while (m > 0 && A[m - 1] == 0)
 long
 zquo(ZVALUE z1, ZVALUE z2, ZVALUE *res, long rnd)
 {
-	ZVALUE tmp;
-	long val;
+        ZVALUE tmp;
+        long val;
 
-	/* firewall */
-	if (res == NULL) {
-		math_error("%s: res NULL", __func__);
-		not_reached();
-	}
+        /* firewall */
+        if (res == NULL) {
+                math_error("%s: res NULL", __func__);
+                not_reached();
+        }
 
-	val = zdiv(z1, z2, res, &tmp, rnd);
-	if (z2.sign)
-		val = -val;
-	zfree(tmp);
-	return val;
+        val = zdiv(z1, z2, res, &tmp, rnd);
+        if (z2.sign)
+                val = -val;
+        zfree(tmp);
+        return val;
 }
 
 
@@ -1057,18 +1057,18 @@ zquo(ZVALUE z1, ZVALUE z2, ZVALUE *res, long rnd)
 long
 zmod(ZVALUE z1, ZVALUE z2, ZVALUE *res, long rnd)
 {
-	ZVALUE tmp;
-	long val;
+        ZVALUE tmp;
+        long val;
 
-	/* firewall */
-	if (res == NULL) {
-		math_error("%s: res NULL", __func__);
-		not_reached();
-	}
+        /* firewall */
+        if (res == NULL) {
+                math_error("%s: res NULL", __func__);
+                not_reached();
+        }
 
-	val = zdiv(z1, z2, &tmp, res, rnd);
-	zfree(tmp);
-	return val;
+        val = zdiv(z1, z2, &tmp, res, rnd);
+        zfree(tmp);
+        return val;
 }
 
 
@@ -1080,127 +1080,127 @@ zmod(ZVALUE z1, ZVALUE z2, ZVALUE *res, long rnd)
 void
 zequo(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 {
-	LEN i, j, k, len, m, n, o, p;
-	HALF *a, *a0, *A, *b, *B, u, v, w, x;
-	FULL f, g;
+        LEN i, j, k, len, m, n, o, p;
+        HALF *a, *a0, *A, *b, *B, u, v, w, x;
+        FULL f, g;
 
-	/* firewall */
-	if (res == NULL) {
-		math_error("%s: res NULL", __func__);
-		not_reached();
-	}
+        /* firewall */
+        if (res == NULL) {
+                math_error("%s: res NULL", __func__);
+                not_reached();
+        }
 
-	if (ziszero(z1)) {
-		*res = _zero_;
-		return;
-	}
-	if (ziszero(z2)) {
-		math_error("Division by zero");
-		not_reached();
-	}
-	if (zisone(z2)) {
-		zcopy(z1, res);
-		return;
-	}
-	if (zhighbit(z1) < zhighbit(z2)) {
-		math_error("Bad call to zequo");
-		not_reached();
-	}
-	B = z2.v;
-	o = 0;
-	while (!*B) {
-		++B;
-		++o;
-	}
-	m = z1.len - o;
-	n = z2.len - o;
-	len = m - n + 1;		/* Maximum length of quotient */
-	v = *B;
-	A = alloc(len+1);
-	memcpy(A, z1.v + o, len * sizeof(HALF));
-	A[len] = 0;
-	if (n == 1) {
-		if (v > 1) {
-			a = A + len;
-			i = len;
-			f = 0;
-			while (i--) {
-				f = f << BASEB | *--a;
-				*a = (HALF)(f / v);
-				f %= v;
-			}
-		}
-	} else {
-		k = 0;
-		while (!(v & 1)) {
-			k++;
-			v >>= 1;
-		}
-		j = BASEB - k;
-		if (n > 1 && k > 0)
-			v |= B[1] << j;
-		u = v - 1;
-		w = x = 1;
-		while (u) {	/* To find w = inverse of v modulo BASE */
-			do {
-				v <<= 1;
-				x <<= 1;
-			}
-			while (!(u & x));
-			u += v;
-			w |= x;
-		}
-		a0 = A;
-		p = len;
-		while (p > 1) {
-			if (!*a0) {
-				while (!*++a0 && p > 1)
-					p--;
-				--a0;
-			}
-			if (p == 1)
-				break;
-			x = k ? w * (*a0 >> k | a0[1] << j) : w * *a0;
-			g = x;
-			if (x) {
-				a = a0;
-				b = B;
-				u = 0;
-				i = n;
-				if (i > p)
-					i = p;
-				while (i--) {
-					f = (FULL) *a - g * *b++ - (FULL) u;
-					*a++ = (HALF)f;
-					u = -(HALF)(f >> BASEB);
-				}
-				if (u && p > n) {
-					i = p - n;
-					while (u && i--) {
-						f = (FULL) *a - u;
-						*a++ = (HALF) f;
-						u = -(HALF)(f >> BASEB);
-					}
-				}
-			}
-			*a0++ = x;
-			p--;
-		}
-		if (k == 0) {
-			*a0 = w * *a0;
-		} else {
-			u = (HALF)(w * *a0) >> k;
-			x = (HALF)(((FULL) z1.v[z1.len - 1] << BASEB
-				| z1.v[z1.len - 2])
-				/((FULL) B[n-1] << BASEB | B[n-2]));
-			if ((x ^ u) & 1) x--;
-			*a0 = x;
-		}
-	}
-	if (!A[len - 1]) len--;
-	res->v = A;
-	res->len = len;
-	res->sign = z1.sign != z2.sign;
+        if (ziszero(z1)) {
+                *res = _zero_;
+                return;
+        }
+        if (ziszero(z2)) {
+                math_error("Division by zero");
+                not_reached();
+        }
+        if (zisone(z2)) {
+                zcopy(z1, res);
+                return;
+        }
+        if (zhighbit(z1) < zhighbit(z2)) {
+                math_error("Bad call to zequo");
+                not_reached();
+        }
+        B = z2.v;
+        o = 0;
+        while (!*B) {
+                ++B;
+                ++o;
+        }
+        m = z1.len - o;
+        n = z2.len - o;
+        len = m - n + 1;                /* Maximum length of quotient */
+        v = *B;
+        A = alloc(len+1);
+        memcpy(A, z1.v + o, len * sizeof(HALF));
+        A[len] = 0;
+        if (n == 1) {
+                if (v > 1) {
+                        a = A + len;
+                        i = len;
+                        f = 0;
+                        while (i--) {
+                                f = f << BASEB | *--a;
+                                *a = (HALF)(f / v);
+                                f %= v;
+                        }
+                }
+        } else {
+                k = 0;
+                while (!(v & 1)) {
+                        k++;
+                        v >>= 1;
+                }
+                j = BASEB - k;
+                if (n > 1 && k > 0)
+                        v |= B[1] << j;
+                u = v - 1;
+                w = x = 1;
+                while (u) {     /* To find w = inverse of v modulo BASE */
+                        do {
+                                v <<= 1;
+                                x <<= 1;
+                        }
+                        while (!(u & x));
+                        u += v;
+                        w |= x;
+                }
+                a0 = A;
+                p = len;
+                while (p > 1) {
+                        if (!*a0) {
+                                while (!*++a0 && p > 1)
+                                        p--;
+                                --a0;
+                        }
+                        if (p == 1)
+                                break;
+                        x = k ? w * (*a0 >> k | a0[1] << j) : w * *a0;
+                        g = x;
+                        if (x) {
+                                a = a0;
+                                b = B;
+                                u = 0;
+                                i = n;
+                                if (i > p)
+                                        i = p;
+                                while (i--) {
+                                        f = (FULL) *a - g * *b++ - (FULL) u;
+                                        *a++ = (HALF)f;
+                                        u = -(HALF)(f >> BASEB);
+                                }
+                                if (u && p > n) {
+                                        i = p - n;
+                                        while (u && i--) {
+                                                f = (FULL) *a - u;
+                                                *a++ = (HALF) f;
+                                                u = -(HALF)(f >> BASEB);
+                                        }
+                                }
+                        }
+                        *a0++ = x;
+                        p--;
+                }
+                if (k == 0) {
+                        *a0 = w * *a0;
+                } else {
+                        u = (HALF)(w * *a0) >> k;
+                        x = (HALF)(((FULL) z1.v[z1.len - 1] << BASEB
+                                | z1.v[z1.len - 2])
+                                /((FULL) B[n-1] << BASEB | B[n-2]));
+                        if ((x ^ u) & 1) x--;
+                        *a0 = x;
+                }
+        }
+        if (!A[len - 1]) len--;
+        res->v = A;
+        res->len = len;
+        res->sign = z1.sign != z2.sign;
 }
 
 
@@ -1213,72 +1213,72 @@ zequo(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 long
 zdivi(ZVALUE z, long n, ZVALUE *res)
 {
-	HALF *h1, *sd;
-	FULL val;
-	HALF divval[2];
-	ZVALUE div;
-	ZVALUE dest;
-	LEN len;
+        HALF *h1, *sd;
+        FULL val;
+        HALF divval[2];
+        ZVALUE div;
+        ZVALUE dest;
+        LEN len;
 
-	/* firewall */
-	if (res == NULL) {
-		math_error("%s: res NULL", __func__);
-		not_reached();
-	}
+        /* firewall */
+        if (res == NULL) {
+                math_error("%s: res NULL", __func__);
+                not_reached();
+        }
 
-	if (n == 0) {
-		math_error("Division by zero");
-		not_reached();
-	}
-	if (ziszero(z)) {
-		*res = _zero_;
-		return 0;
-	}
-	if (n < 0) {
-		n = -n;
-		z.sign = !z.sign;
-	}
-	if (n == 1) {
-		zcopy(z, res);
-		return 0;
-	}
-	/*
-	 * If the division is by a large number, then call the normal
-	 * divide routine.
-	 */
-	if (n & ~BASE1) {
-		div.sign = 0;
-		div.v = divval;
-		divval[0] = (HALF) n;
+        if (n == 0) {
+                math_error("Division by zero");
+                not_reached();
+        }
+        if (ziszero(z)) {
+                *res = _zero_;
+                return 0;
+        }
+        if (n < 0) {
+                n = -n;
+                z.sign = !z.sign;
+        }
+        if (n == 1) {
+                zcopy(z, res);
+                return 0;
+        }
+        /*
+         * If the division is by a large number, then call the normal
+         * divide routine.
+         */
+        if (n & ~BASE1) {
+                div.sign = 0;
+                div.v = divval;
+                divval[0] = (HALF) n;
 #if LONG_BITS > BASEB
-		divval[1] = (HALF)(((FULL) n) >> BASEB);
-		div.len = 2;
+                divval[1] = (HALF)(((FULL) n) >> BASEB);
+                div.len = 2;
 #else
-		div.len = 1;
+                div.len = 1;
 #endif
-		zdiv(z, div, res, &dest, 0);
-		n = ztolong(dest);
-		zfree(dest);
-		return n;
-	}
-	/*
-	 * Division is by a small number, so we can be quick about it.
-	 */
-	len = z.len;
-	dest.sign = z.sign;
-	dest.len = len;
-	dest.v = alloc(len);
-	h1 = z.v + len;
-	sd = dest.v + len;
-	val = 0;
-	while (len--) {
-		val = ((val << BASEB) + ((FULL) *--h1));
-		*--sd = (HALF)(val / n);
-		val %= n;
-	}
-	zquicktrim(dest);
-	*res = dest;
-	return (long)val;
+                zdiv(z, div, res, &dest, 0);
+                n = ztolong(dest);
+                zfree(dest);
+                return n;
+        }
+        /*
+         * Division is by a small number, so we can be quick about it.
+         */
+        len = z.len;
+        dest.sign = z.sign;
+        dest.len = len;
+        dest.v = alloc(len);
+        h1 = z.v + len;
+        sd = dest.v + len;
+        val = 0;
+        while (len--) {
+                val = ((val << BASEB) + ((FULL) *--h1));
+                *--sd = (HALF)(val / n);
+                val %= n;
+        }
+        zquicktrim(dest);
+        *res = dest;
+        return (long)val;
 }
 
 
@@ -1290,55 +1290,55 @@ zdivi(ZVALUE z, long n, ZVALUE *res)
 long
 zmodi(ZVALUE z, long n)
 {
-	register HALF *h1;
-	FULL val;
-	HALF divval[2];
-	ZVALUE div;
-	ZVALUE temp;
-	long len;
+        register HALF *h1;
+        FULL val;
+        HALF divval[2];
+        ZVALUE div;
+        ZVALUE temp;
+        long len;
 
-	if (n == 0) {
-		math_error("Division by zero");
-		not_reached();
-	}
-	if (n < 0) {
-		math_error("Non-positive modulus");
-		not_reached();
-	}
-	if (ziszero(z) || (n == 1))
-		return 0;
-	if (zisone(z))
-		return 1;
-	/*
-	 * If the modulus is by a large number, then call the normal
-	 * modulo routine.
-	 */
-	if (n & ~BASE1) {
-		div.sign = 0;
-		div.v = divval;
-		divval[0] = (HALF) n;
+        if (n == 0) {
+                math_error("Division by zero");
+                not_reached();
+        }
+        if (n < 0) {
+                math_error("Non-positive modulus");
+                not_reached();
+        }
+        if (ziszero(z) || (n == 1))
+                return 0;
+        if (zisone(z))
+                return 1;
+        /*
+         * If the modulus is by a large number, then call the normal
+         * modulo routine.
+         */
+        if (n & ~BASE1) {
+                div.sign = 0;
+                div.v = divval;
+                divval[0] = (HALF) n;
 #if LONG_BITS > BASEB
-		divval[1] = (HALF)(((FULL) n) >> BASEB);
-		div.len = 2;
+                divval[1] = (HALF)(((FULL) n) >> BASEB);
+                div.len = 2;
 #else
-		div.len = 1;
+                div.len = 1;
 #endif
-		zmod(z, div, &temp, 0);
-		n = ztolong(temp);
-		zfree(temp);
-		return n;
-	}
-	/*
-	 * The modulus is by a small number, so we can do this quickly.
-	 */
-	len = z.len;
-	h1 = z.v + len;
-	val = 0;
-	while (len-- > 0)
-		val = ((val << BASEB) + ((FULL) *--h1)) % n;
-	if (val && z.sign)
-		val = n - val;
-	return (long)val;
+                zmod(z, div, &temp, 0);
+                n = ztolong(temp);
+                zfree(temp);
+                return n;
+        }
+        /*
+         * The modulus is by a small number, so we can do this quickly.
+         */
+        len = z.len;
+        h1 = z.v + len;
+        val = 0;
+        while (len-- > 0)
+                val = ((val << BASEB) + ((FULL) *--h1)) % n;
+        if (val && z.sign)
+                val = n - val;
+        return (long)val;
 }
 
 
@@ -1351,112 +1351,112 @@ zmodi(ZVALUE z, long n)
 bool
 zdivides(ZVALUE z1, ZVALUE z2)
 {
-	LEN i, j, k, m, n;
-	HALF u, v, w, x;
-	HALF *a, *a0, *A, *b, *B, *c, *d;
-	FULL f;
-	bool ans;
+        LEN i, j, k, m, n;
+        HALF u, v, w, x;
+        HALF *a, *a0, *A, *b, *B, *c, *d;
+        FULL f;
+        bool ans;
 
-	if (zisunit(z2) || ziszero(z1)) return true;
-	if (ziszero(z2)) return false;
+        if (zisunit(z2) || ziszero(z1)) return true;
+        if (ziszero(z2)) return false;
 
-	m = z1.len;
-	n = z2.len;
-	if (m < n) return false;
+        m = z1.len;
+        n = z2.len;
+        if (m < n) return false;
 
-	c = z1.v;
-	d = z2.v;
+        c = z1.v;
+        d = z2.v;
 
-	while (!*d) {
-		if (*c++) return false;
-		d++;
-		m--;
-		n--;
-	}
+        while (!*d) {
+                if (*c++) return false;
+                d++;
+                m--;
+                n--;
+        }
 
-	j = 0;
-	u = *c;
-	v = *d;
-	while (!(v & 1)) {	/* Counting and checking zero bits */
-		if (u & 1) return false;
-		u >>= 1;
-		v >>= 1;
-		j++;
-	}
+        j = 0;
+        u = *c;
+        v = *d;
+        while (!(v & 1)) {      /* Counting and checking zero bits */
+                if (u & 1) return false;
+                u >>= 1;
+                v >>= 1;
+                j++;
+        }
 
-	if (n == 1 && v == 1) return true;
-	if (!*c) {			/* Removing any further zeros */
-		while(!*++c)
-			m--;
-		c--;
-	}
+        if (n == 1 && v == 1) return true;
+        if (!*c) {                      /* Removing any further zeros */
+                while(!*++c)
+                        m--;
+                c--;
+        }
 
-	if (m < n) return false;
+        if (m < n) return false;
 
-	if (j) {
-		B = alloc((LEN)n);	/* Array for shifted z2 */
-		d += n;
-		b = B + n;
-		i = n;
-		f = 0;
-		while(i--) {
-			f = f << BASEB | *--d;
-			*--b = (HALF)(f >> j);
-		}
-		if (!B[n - 1]) n--;
-	}
-	else B = d;
-	u = *B;
-	v = x = 1;
-	w = 0;
-	while (x) {			/* Finding minv(*B, BASE) */
-		if (v & x) {
-			v -= x * u;
-			w |= x;
-		}
-		x <<= 1;
-	}
+        if (j) {
+                B = alloc((LEN)n);      /* Array for shifted z2 */
+                d += n;
+                b = B + n;
+                i = n;
+                f = 0;
+                while(i--) {
+                        f = f << BASEB | *--d;
+                        *--b = (HALF)(f >> j);
+                }
+                if (!B[n - 1]) n--;
+        }
+        else B = d;
+        u = *B;
+        v = x = 1;
+        w = 0;
+        while (x) {                     /* Finding minv(*B, BASE) */
+                if (v & x) {
+                        v -= x * u;
+                        w |= x;
+                }
+                x <<= 1;
+        }
 
-	A = alloc((LEN)(m + 2));	/* Main working array */
-	memcpy(A, c, m * sizeof(HALF));
-	A[m + 1] = 1;
-	A[m] = 0;
+        A = alloc((LEN)(m + 2));        /* Main working array */
+        memcpy(A, c, m * sizeof(HALF));
+        A[m + 1] = 1;
+        A[m] = 0;
 
-	k = m - n + 1;			/* Length of presumed quotient */
+        k = m - n + 1;                  /* Length of presumed quotient */
 
-	a0 = A;
+        a0 = A;
 
-	while (k--) {
-		if (*a0) {
-			x = w * *a0;
-			a = a0;
-			b = B;
-			i = n;
-			u = 0;
-			while (i--) {
-				f = (FULL) *a - (FULL) x * *b++ - u;
-				*a++ = (HALF)f;
-				u = -(HALF)(f >> BASEB);
-			}
-			f = (FULL) *a - u;
-			*a++ = (HALF)f;
-			u = -(HALF)(f >> BASEB);
-			if (u) {
-				while (*a == 0) *a++ = BASE1;
-				(*a)--;
-			}
-		}
-		a0++;
-	}
-	ans = false;
-	if (A[m + 1]) {
-		a = A + m;
-		while (--n && !*--a);
-		if (!n) ans = true;
-	}
-	freeh(A);
-	if (j) freeh(B);
-	return ans;
+        while (k--) {
+                if (*a0) {
+                        x = w * *a0;
+                        a = a0;
+                        b = B;
+                        i = n;
+                        u = 0;
+                        while (i--) {
+                                f = (FULL) *a - (FULL) x * *b++ - u;
+                                *a++ = (HALF)f;
+                                u = -(HALF)(f >> BASEB);
+                        }
+                        f = (FULL) *a - u;
+                        *a++ = (HALF)f;
+                        u = -(HALF)(f >> BASEB);
+                        if (u) {
+                                while (*a == 0) *a++ = BASE1;
+                                (*a)--;
+                        }
+                }
+                a0++;
+        }
+        ans = false;
+        if (A[m + 1]) {
+                a = A + m;
+                while (--n && !*--a);
+                if (!n) ans = true;
+        }
+        freeh(A);
+        if (j) freeh(B);
+        return ans;
 }
 
 
@@ -1466,33 +1466,33 @@ zdivides(ZVALUE z1, ZVALUE z2)
 void
 zor(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 {
-	register HALF *sp, *dp;
-	long len;
-	ZVALUE bz, lz, dest;
+        register HALF *sp, *dp;
+        long len;
+        ZVALUE bz, lz, dest;
 
-	/* firewall */
-	if (res == NULL) {
-		math_error("%s: res NULL", __func__);
-		not_reached();
-	}
+        /* firewall */
+        if (res == NULL) {
+                math_error("%s: res NULL", __func__);
+                not_reached();
+        }
 
-	if (z1.len >= z2.len) {
-		bz = z1;
-		lz = z2;
-	} else {
-		bz = z2;
-		lz = z1;
-	}
-	dest.len = bz.len;
-	dest.v = alloc(dest.len);
-	dest.sign = 0;
-	zcopyval(bz, dest);
-	len = lz.len;
-	sp = lz.v;
-	dp = dest.v;
-	while (len--)
-		*dp++ |= *sp++;
-	*res = dest;
+        if (z1.len >= z2.len) {
+                bz = z1;
+                lz = z2;
+        } else {
+                bz = z2;
+                lz = z1;
+        }
+        dest.len = bz.len;
+        dest.v = alloc(dest.len);
+        dest.sign = 0;
+        zcopyval(bz, dest);
+        len = lz.len;
+        sp = lz.v;
+        dp = dest.v;
+        while (len--)
+                *dp++ |= *sp++;
+        *res = dest;
 }
 
 
@@ -1502,33 +1502,33 @@ zor(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 void
 zand(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 {
-	HALF *h1, *h2, *hd;
-	LEN len;
-	ZVALUE dest;
+        HALF *h1, *h2, *hd;
+        LEN len;
+        ZVALUE dest;
 
-	/* firewall */
-	if (res == NULL) {
-		math_error("%s: res NULL", __func__);
-		not_reached();
-	}
+        /* firewall */
+        if (res == NULL) {
+                math_error("%s: res NULL", __func__);
+                not_reached();
+        }
 
-	len = ((z1.len <= z2.len) ? z1.len : z2.len);
-	h1 = &z1.v[len-1];
-	h2 = &z2.v[len-1];
-	while ((len > 1) && ((*h1 & *h2) == 0)) {
-		h1--;
-		h2--;
-		len--;
-	}
-	dest.len = len;
-	dest.v = alloc(len);
-	dest.sign = 0;
-	h1 = z1.v;
-	h2 = z2.v;
-	hd = dest.v;
-	while (len--)
-		*hd++ = (*h1++ & *h2++);
-	*res = dest;
+        len = ((z1.len <= z2.len) ? z1.len : z2.len);
+        h1 = &z1.v[len-1];
+        h2 = &z2.v[len-1];
+        while ((len > 1) && ((*h1 & *h2) == 0)) {
+                h1--;
+                h2--;
+                len--;
+        }
+        dest.len = len;
+        dest.v = alloc(len);
+        dest.sign = 0;
+        h1 = z1.v;
+        h2 = z2.v;
+        hd = dest.v;
+        while (len--)
+                *hd++ = (*h1++ & *h2++);
+        *res = dest;
 }
 
 
@@ -1538,40 +1538,40 @@ zand(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 void
 zxor(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 {
-	HALF *dp, *h1, *h2;
-	LEN len, j, k;
-	ZVALUE dest;
+        HALF *dp, *h1, *h2;
+        LEN len, j, k;
+        ZVALUE dest;
 
-	/* firewall */
-	if (res == NULL) {
-		math_error("%s: res NULL", __func__);
-		not_reached();
-	}
+        /* firewall */
+        if (res == NULL) {
+                math_error("%s: res NULL", __func__);
+                not_reached();
+        }
 
-	h1 = z1.v;
-	h2 = z2.v;
-	len = z1.len;
-	j = z2.len;
-	if (z1.len < z2.len) {
-		len = z2.len;
-		j = z1.len;
-		h1 = z2.v;
-		h2 = z1.v;
-	} else if (z1.len == z2.len) {
-		while (len > 1 && z1.v[len-1] == z2.v[len-1])
-			len--;
-		j = len;
-	}
-	k = len - j;
-	dest.len = len;
-	dest.v = alloc(len);
-	dest.sign = 0;
-	dp = dest.v;
-	while (j-- > 0)
-		*dp++ = *h1++ ^ *h2++;
-	while (k-- > 0)
-		*dp++ = *h1++;
-	*res = dest;
+        h1 = z1.v;
+        h2 = z2.v;
+        len = z1.len;
+        j = z2.len;
+        if (z1.len < z2.len) {
+                len = z2.len;
+                j = z1.len;
+                h1 = z2.v;
+                h2 = z1.v;
+        } else if (z1.len == z2.len) {
+                while (len > 1 && z1.v[len-1] == z2.v[len-1])
+                        len--;
+                j = len;
+        }
+        k = len - j;
+        dest.len = len;
+        dest.v = alloc(len);
+        dest.sign = 0;
+        dp = dest.v;
+        while (j-- > 0)
+                *dp++ = *h1++ ^ *h2++;
+        while (k-- > 0)
+                *dp++ = *h1++;
+        *res = dest;
 }
 
 
@@ -1581,37 +1581,37 @@ zxor(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 void
 zandnot(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 {
-	HALF *dp, *h1, *h2;
-	LEN len, j, k;
-	ZVALUE dest;
+        HALF *dp, *h1, *h2;
+        LEN len, j, k;
+        ZVALUE dest;
 
-	/* firewall */
-	if (res == NULL) {
-		math_error("%s: res NULL", __func__);
-		not_reached();
-	}
+        /* firewall */
+        if (res == NULL) {
+                math_error("%s: res NULL", __func__);
+                not_reached();
+        }
 
-	len = z1.len;
-	if (z2.len >= len) {
-		while (len > 1 && (z1.v[len-1] & ~z2.v[len-1]) == 0)
-			len--;
-		j = len;
-		k = 0;
-	} else {
-		j = z2.len;
-		k = len - z2.len;
-	}
-	dest.len = len;
-	dest.v = alloc(len);
-	dest.sign = 0;
-	dp = dest.v;
-	h1 = z1.v;
-	h2 = z2.v;
-	while (j-- > 0)
-		*dp++ = *h1++ & ~*h2++;
-	while (k-- > 0)
-		*dp++ = *h1++;
-	*res = dest;
+        len = z1.len;
+        if (z2.len >= len) {
+                while (len > 1 && (z1.v[len-1] & ~z2.v[len-1]) == 0)
+                        len--;
+                j = len;
+                k = 0;
+        } else {
+                j = z2.len;
+                k = len - z2.len;
+        }
+        dest.len = len;
+        dest.v = alloc(len);
+        dest.sign = 0;
+        dp = dest.v;
+        h1 = z1.v;
+        h2 = z2.v;
+        while (j-- > 0)
+                *dp++ = *h1++ & ~*h2++;
+        while (k-- > 0)
+                *dp++ = *h1++;
+        *res = dest;
 }
 
 
@@ -1623,81 +1623,81 @@ zandnot(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 void
 zshift(ZVALUE z, long n, ZVALUE *res)
 {
-	ZVALUE ans;
-	LEN hc;		/* number of halfwords shift is by */
+        ZVALUE ans;
+        LEN hc;         /* number of halfwords shift is by */
 
-	/* firewall */
-	if (res == NULL) {
-		math_error("%s: res NULL", __func__);
-		not_reached();
-	}
+        /* firewall */
+        if (res == NULL) {
+                math_error("%s: res NULL", __func__);
+                not_reached();
+        }
 
-	if (ziszero(z)) {
-		*res = _zero_;
-		return;
-	}
-	if (n == 0) {
-		zcopy(z, res);
-		return;
-	}
-	/*
-	 * If shift value is negative, then shift right.
-	 * Check for large shifts, and handle word-sized shifts quickly.
-	 */
-	if (n < 0) {
-		n = -n;
-		if ((n < 0) || (n >= (z.len * BASEB))) {
-			*res = _zero_;
-			return;
-		}
-		hc = (LEN)(n / BASEB);
-		n %= BASEB;
-		z.v += hc;
-		z.len -= hc;
-		ans.len = z.len;
-		ans.v = alloc(ans.len);
-		ans.sign = z.sign;
-		zcopyval(z, ans);
-		if (n > 0) {
-			zshiftr(ans, n);
-			ztrim(&ans);
-		}
-		if (ziszero(ans)) {
-			zfree(ans);
-			ans = _zero_;
-		}
-		*res = ans;
-		return;
-	}
-	/*
-	 * Shift value is positive, so shift leftwards.
-	 * Check specially for a shift of the value 1, since this is common.
-	 * Also handle word-sized shifts quickly.
-	 */
-	if (zisunit(z)) {
-		zbitvalue(n, res);
-		res->sign = z.sign;
-		return;
-	}
-	hc = (LEN)(n / BASEB);
-	n %= BASEB;
-	ans.len = z.len + hc + 1;
-	ans.v = alloc(ans.len);
-	ans.sign = z.sign;
-	if (hc > 0)
-		memset((char *) ans.v, 0, hc * sizeof(HALF));
-	memcpy((char *) (ans.v + hc),
-	    (char *) z.v, z.len * sizeof(HALF));
-	ans.v[ans.len - 1] = 0;
-	if (n > 0) {
-		ans.v += hc;
-		ans.len -= hc;
-		zshiftl(ans, n);
-		ans.v -= hc;
-		ans.len += hc;
-	}
-	ztrim(&ans);
-	*res = ans;
+        if (ziszero(z)) {
+                *res = _zero_;
+                return;
+        }
+        if (n == 0) {
+                zcopy(z, res);
+                return;
+        }
+        /*
+         * If shift value is negative, then shift right.
+         * Check for large shifts, and handle word-sized shifts quickly.
+         */
+        if (n < 0) {
+                n = -n;
+                if ((n < 0) || (n >= (z.len * BASEB))) {
+                        *res = _zero_;
+                        return;
+                }
+                hc = (LEN)(n / BASEB);
+                n %= BASEB;
+                z.v += hc;
+                z.len -= hc;
+                ans.len = z.len;
+                ans.v = alloc(ans.len);
+                ans.sign = z.sign;
+                zcopyval(z, ans);
+                if (n > 0) {
+                        zshiftr(ans, n);
+                        ztrim(&ans);
+                }
+                if (ziszero(ans)) {
+                        zfree(ans);
+                        ans = _zero_;
+                }
+                *res = ans;
+                return;
+        }
+        /*
+         * Shift value is positive, so shift leftwards.
+         * Check specially for a shift of the value 1, since this is common.
+         * Also handle word-sized shifts quickly.
+         */
+        if (zisunit(z)) {
+                zbitvalue(n, res);
+                res->sign = z.sign;
+                return;
+        }
+        hc = (LEN)(n / BASEB);
+        n %= BASEB;
+        ans.len = z.len + hc + 1;
+        ans.v = alloc(ans.len);
+        ans.sign = z.sign;
+        if (hc > 0)
+                memset((char *) ans.v, 0, hc * sizeof(HALF));
+        memcpy((char *) (ans.v + hc),
+            (char *) z.v, z.len * sizeof(HALF));
+        ans.v[ans.len - 1] = 0;
+        if (n > 0) {
+                ans.v += hc;
+                ans.len -= hc;
+                zshiftl(ans, n);
+                ans.v -= hc;
+                ans.len += hc;
+        }
+        ztrim(&ans);
+        *res = ans;
 }
 
 
@@ -1709,22 +1709,22 @@ zshift(ZVALUE z, long n, ZVALUE *res)
 long
 zlowbit(ZVALUE z)
 {
-	register HALF *zp;
-	long n;
-	HALF dataval;
-	HALF *bitval;
+        register HALF *zp;
+        long n;
+        HALF dataval;
+        HALF *bitval;
 
-	n = 0;
-	for (zp = z.v; *zp == 0; zp++)
-		if (++n >= z.len)
-			return 0;
-	dataval = *zp;
-	bitval = bitmask;
-	/* ignore Saber-C warning #530 about empty while statement */
-	/*	  OK to ignore in proc zlowbit */
-	while ((*(bitval++) & dataval) == 0) {
-	}
-	return (n*BASEB)+(bitval-bitmask-1);
+        n = 0;
+        for (zp = z.v; *zp == 0; zp++)
+                if (++n >= z.len)
+                        return 0;
+        dataval = *zp;
+        bitval = bitmask;
+        /* ignore Saber-C warning #530 about empty while statement */
+        /*        OK to ignore in proc zlowbit */
+        while ((*(bitval++) & dataval) == 0) {
+        }
+        return (n*BASEB)+(bitval-bitmask-1);
 }
 
 
@@ -1736,21 +1736,21 @@ zlowbit(ZVALUE z)
 LEN
 zhighbit(ZVALUE z)
 {
-	HALF dataval;
-	HALF *bitval;
+        HALF dataval;
+        HALF *bitval;
 
-	dataval = z.v[z.len-1];
-	if (dataval == 0) {
-		return 0;
-	}
-	bitval = bitmask+BASEB;
-	if (dataval) {
-		/* ignore Saber-C warning #530 about empty while statement */
-		/*	  OK to ignore in proc zhighbit */
-		while ((*(--bitval) & dataval) == 0) {
-		}
-	}
-	return (z.len*BASEB)+(LEN)(bitval-bitmask-BASEB);
+        dataval = z.v[z.len-1];
+        if (dataval == 0) {
+                return 0;
+        }
+        bitval = bitmask+BASEB;
+        if (dataval) {
+                /* ignore Saber-C warning #530 about empty while statement */
+                /*        OK to ignore in proc zhighbit */
+                while ((*(--bitval) & dataval) == 0) {
+                }
+        }
+        return (z.len*BASEB)+(LEN)(bitval-bitmask-BASEB);
 }
 
 
@@ -1761,9 +1761,9 @@ zhighbit(ZVALUE z)
 bool
 zisset(ZVALUE z, long n)
 {
-	if ((n < 0) || ((n / BASEB) >= z.len))
-		return false;
-	return ((z.v[n / BASEB] & (((HALF) 1) << (n % BASEB))) != 0);
+        if ((n < 0) || ((n / BASEB) >= z.len))
+                return false;
+        return ((z.v[n / BASEB] & (((HALF) 1) << (n % BASEB))) != 0);
 }
 
 
@@ -1774,23 +1774,23 @@ zisset(ZVALUE z, long n)
 bool
 zisonebit(ZVALUE z)
 {
-	register HALF *hp;
-	register LEN len;
+        register HALF *hp;
+        register LEN len;
 
-	if (ziszero(z) || zisneg(z))
-		return false;
-	hp = z.v;
-	len = z.len;
-	while (len > 4) {
-		len -= 4;
-		if (*hp++ || *hp++ || *hp++ || *hp++)
-			return false;
-	}
-	while (--len > 0) {
-		if (*hp++)
-			return false;
-	}
-	return ((*hp & -*hp) == *hp);		/* NEEDS 2'S COMPLEMENT */
+        if (ziszero(z) || zisneg(z))
+                return false;
+        hp = z.v;
+        len = z.len;
+        while (len > 4) {
+                len -= 4;
+                if (*hp++ || *hp++ || *hp++ || *hp++)
+                        return false;
+        }
+        while (--len > 0) {
+                if (*hp++)
+                        return false;
+        }
+        return ((*hp & -*hp) == *hp);           /* NEEDS 2'S COMPLEMENT */
 }
 
 
@@ -1802,26 +1802,26 @@ zisonebit(ZVALUE z)
 bool
 zisallbits(ZVALUE z)
 {
-	register HALF *hp;
-	register LEN len;
-	HALF digit;
+        register HALF *hp;
+        register LEN len;
+        HALF digit;
 
-	if (ziszero(z) || zisneg(z))
-		return false;
-	hp = z.v;
-	len = z.len;
-	while (len > 4) {
-		len -= 4;
-		if ((*hp++ != BASE1) || (*hp++ != BASE1) ||
-			(*hp++ != BASE1) || (*hp++ != BASE1))
-				return false;
-	}
-	while (--len > 0) {
-		if (*hp++ != BASE1)
-			return false;
-	}
-	digit = (HALF)(*hp + 1);
-	return ((digit & -digit) == digit);	/* NEEDS 2'S COMPLEMENT */
+        if (ziszero(z) || zisneg(z))
+                return false;
+        hp = z.v;
+        len = z.len;
+        while (len > 4) {
+                len -= 4;
+                if ((*hp++ != BASE1) || (*hp++ != BASE1) ||
+                        (*hp++ != BASE1) || (*hp++ != BASE1))
+                                return false;
+        }
+        while (--len > 0) {
+                if (*hp++ != BASE1)
+                        return false;
+        }
+        digit = (HALF)(*hp + 1);
+        return ((digit & -digit) == digit);     /* NEEDS 2'S COMPLEMENT */
 }
 
 
@@ -1833,21 +1833,21 @@ zisallbits(ZVALUE z)
 void
 zbitvalue(long n, ZVALUE *res)
 {
-	ZVALUE z;
+        ZVALUE z;
 
-	/* firewall */
-	if (res == NULL) {
-		math_error("%s: res NULL", __func__);
-		not_reached();
-	}
+        /* firewall */
+        if (res == NULL) {
+                math_error("%s: res NULL", __func__);
+                not_reached();
+        }
 
-	if (n < 0) n = 0;
-	z.sign = 0;
-	z.len = (LEN)((n / BASEB) + 1);
-	z.v = alloc(z.len);
-	zclearval(z);
-	z.v[z.len-1] = (((HALF) 1) << (n % BASEB));
-	*res = z;
+        if (n < 0) n = 0;
+        z.sign = 0;
+        z.len = (LEN)((n / BASEB) + 1);
+        z.v = alloc(z.len);
+        zclearval(z);
+        z.v[z.len-1] = (((HALF) 1) << (n % BASEB));
+        *res = z;
 }
 
 
@@ -1858,19 +1858,19 @@ zbitvalue(long n, ZVALUE *res)
 FLAG
 ztest(ZVALUE z)
 {
-	register int sign;
-	register HALF *h;
-	register long len;
+        register int sign;
+        register HALF *h;
+        register long len;
 
-	sign = 1;
-	if (z.sign)
-		sign = -sign;
-	h = z.v;
-	len = z.len;
-	while (len--)
-		if (*h++)
-			return sign;
-	return 0;
+        sign = 1;
+        if (z.sign)
+                sign = -sign;
+        h = z.v;
+        len = z.len;
+        while (len--)
+                if (*h++)
+                        return sign;
+        return 0;
 }
 
 
@@ -1881,31 +1881,31 @@ ztest(ZVALUE z)
 FLAG
 zrel(ZVALUE z1, ZVALUE z2)
 {
-	HALF *h1, *h2;
-	LEN len;
-	int sign;
+        HALF *h1, *h2;
+        LEN len;
+        int sign;
 
-	sign = 1;
-	if (z1.sign < z2.sign)
-		return 1;
-	if (z2.sign < z1.sign)
-		return -1;
-	if (z2.sign)
-		sign = -1;
-	if (z1.len != z2.len)
-		return (z1.len > z2.len) ? sign : -sign;
-	len = z1.len;
-	h1 = z1.v + len;
-	h2 = z2.v + len;
+        sign = 1;
+        if (z1.sign < z2.sign)
+                return 1;
+        if (z2.sign < z1.sign)
+                return -1;
+        if (z2.sign)
+                sign = -1;
+        if (z1.len != z2.len)
+                return (z1.len > z2.len) ? sign : -sign;
+        len = z1.len;
+        h1 = z1.v + len;
+        h2 = z2.v + len;
 
-	while (len > 0) {
-		if (*--h1 != *--h2)
-			break;
-		len--;
-	}
-	if (len > 0)
-		return (*h1 > *h2) ? sign : -sign;
-	return 0;
+        while (len > 0) {
+                if (*--h1 != *--h2)
+                        break;
+                len--;
+        }
+        if (len > 0)
+                return (*h1 > *h2) ? sign : -sign;
+        return 0;
 }
 
 
@@ -1917,23 +1917,23 @@ zrel(ZVALUE z1, ZVALUE z2)
 FLAG
 zabsrel(ZVALUE z1, ZVALUE z2)
 {
-	HALF *h1, *h2;
-	LEN len;
+        HALF *h1, *h2;
+        LEN len;
 
-	if (z1.len != z2.len)
-		return (z1.len > z2.len) ? 1 : -1;
+        if (z1.len != z2.len)
+                return (z1.len > z2.len) ? 1 : -1;
 
-	len = z1.len;
-	h1 = z1.v + len;
-	h2 = z2.v + len;
-	while (len > 0) {
-		if (*--h1 != *--h2)
-			break;
-		len--;
-	}
-	if (len > 0)
-		return (*h1 > *h2) ? 1 : -1;
-	return 0;
+        len = z1.len;
+        h1 = z1.v + len;
+        h2 = z2.v + len;
+        while (len > 0) {
+                if (*--h1 != *--h2)
+                        break;
+                len--;
+        }
+        if (len > 0)
+                return (*h1 > *h2) ? 1 : -1;
+        return 0;
 }
 
 
@@ -1944,19 +1944,19 @@ zabsrel(ZVALUE z1, ZVALUE z2)
 bool
 zcmp(ZVALUE z1, ZVALUE z2)
 {
-	register HALF *h1, *h2;
-	register long len;
+        register HALF *h1, *h2;
+        register long len;
 
-	if ((z1.sign != z2.sign) || (z1.len != z2.len) || (*z1.v != *z2.v))
-		return true;
-	len = z1.len;
-	h1 = z1.v;
-	h2 = z2.v;
-	while (--len > 0) {
-		if (*++h1 != *++h2)
-			return true;
-	}
-	return false;
+        if ((z1.sign != z2.sign) || (z1.len != z2.len) || (*z1.v != *z2.v))
+                return true;
+        len = z1.len;
+        h1 = z1.v;
+        h2 = z2.v;
+        while (--len > 0) {
+                if (*++h1 != *++h2)
+                        return true;
+        }
+        return false;
 }
 
 
@@ -1966,14 +1966,14 @@ zcmp(ZVALUE z1, ZVALUE z2)
 FULL
 uugcd(FULL f1, FULL f2)
 {
-	FULL temp;
+        FULL temp;
 
-	while (f1) {
-		temp = f2 % f1;
-		f2 = f1;
-		f1 = temp;
-	}
-	return (FULL) f2;
+        while (f1) {
+                temp = f2 % f1;
+                f2 = f1;
+                f1 = temp;
+        }
+        return (FULL) f2;
 }
 
 
@@ -1983,38 +1983,38 @@ uugcd(FULL f1, FULL f2)
 long
 iigcd(long i1, long i2)
 {
-	FULL f1, f2, temp;
+        FULL f1, f2, temp;
 
-	f1 = (FULL) ((i1 >= 0) ? i1 : -i1);
-	f2 = (FULL) ((i2 >= 0) ? i2 : -i2);
-	while (f1) {
-		temp = f2 % f1;
-		f2 = f1;
-		f1 = temp;
-	}
-	return (long) f2;
+        f1 = (FULL) ((i1 >= 0) ? i1 : -i1);
+        f2 = (FULL) ((i2 >= 0) ? i2 : -i2);
+        while (f1) {
+                temp = f2 % f1;
+                f2 = f1;
+                f1 = temp;
+        }
+        return (long) f2;
 }
 
 
 void
 ztrim(ZVALUE *z)
 {
-	HALF *h;
-	LEN len;
+        HALF *h;
+        LEN len;
 
-	/* firewall */
-	if (z == NULL) {
-		math_error("%s: z NULL", __func__);
-		not_reached();
-	}
+        /* firewall */
+        if (z == NULL) {
+                math_error("%s: z NULL", __func__);
+                not_reached();
+        }
 
-	h = z->v + z->len - 1;
-	len = z->len;
-	while (*h == 0 && len > 1) {
-		--h;
-		--len;
-	}
-	z->len = len;
+        h = z->v + z->len - 1;
+        len = z->len;
+        while (*h == 0 && len > 1) {
+                --h;
+                --len;
+        }
+        z->len = len;
 }
 
 
@@ -2022,39 +2022,39 @@ ztrim(ZVALUE *z)
  * Utility routine to shift right.
  *
  * NOTE: The ZVALUE length is not adjusted instead, the value is
- *	 zero padded from the left.  One may need to call ztrim()
- *	 or use zshift() instead.
+ *       zero padded from the left.  One may need to call ztrim()
+ *       or use zshift() instead.
  */
 void
 zshiftr(ZVALUE z, long n)
 {
-	register HALF *h, *lim;
-	FULL mask, maskt;
-	long len;
+        register HALF *h, *lim;
+        FULL mask, maskt;
+        long len;
 
-	if (n >= BASEB) {
-		len = n / BASEB;
-		h = z.v;
-		lim = z.v + z.len - len;
-		while (h < lim) {
-			h[0] = h[len];
-			++h;
-		}
-		n -= BASEB * len;
-		lim = z.v + z.len;
-		while (h < lim)
-			*h++ = 0;
-	}
-	if (n) {
-		len = z.len;
-		h = z.v + len;
-		mask = 0;
-		while (len--) {
-			maskt = (((FULL) *--h) << (BASEB - n)) & BASE1;
-			*h = ((*h >> n) | (HALF)mask);
-			mask = maskt;
-		}
-	}
+        if (n >= BASEB) {
+                len = n / BASEB;
+                h = z.v;
+                lim = z.v + z.len - len;
+                while (h < lim) {
+                        h[0] = h[len];
+                        ++h;
+                }
+                n -= BASEB * len;
+                lim = z.v + z.len;
+                while (h < lim)
+                        *h++ = 0;
+        }
+        if (n) {
+                len = z.len;
+                h = z.v + len;
+                mask = 0;
+                while (len--) {
+                        maskt = (((FULL) *--h) << (BASEB - n)) & BASE1;
+                        *h = ((*h >> n) | (HALF)mask);
+                        mask = maskt;
+                }
+        }
 }
 
 
@@ -2062,44 +2062,44 @@ zshiftr(ZVALUE z, long n)
  * Utility routine to shift left.
  *
  * NOTE: The ZVALUE length is not adjusted.  The bits in the upper
- *	 HALF are simply tossed.  You may want to use zshift() instead.
+ *       HALF are simply tossed.  You may want to use zshift() instead.
  */
 void
 zshiftl(ZVALUE z, long n)
 {
-	register HALF *h;
-	FULL mask, i;
-	long len;
+        register HALF *h;
+        FULL mask, i;
+        long len;
 
-	if (n >= BASEB) {
-		len = n / BASEB;
-		h = z.v + z.len - 1;
-		while (!*h)
-			--h;
-		while (h >= z.v) {
-			h[len] = h[0];
-			--h;
-		}
-		n -= BASEB * len;
-		while (len)
-			h[len--] = 0;
-	}
-	if (n > 0) {
-		len = z.len;
-		h = z.v;
-		mask = 0;
-		while (len--) {
-			i = (((FULL) *h) << n) | mask;
-			if (i > BASE1) {
-				mask = i >> BASEB;
-				i &= BASE1;
-			} else {
-				mask = 0;
-			}
-			*h = (HALF) i;
-			++h;
-		}
-	}
+        if (n >= BASEB) {
+                len = n / BASEB;
+                h = z.v + z.len - 1;
+                while (!*h)
+                        --h;
+                while (h >= z.v) {
+                        h[len] = h[0];
+                        --h;
+                }
+                n -= BASEB * len;
+                while (len)
+                        h[len--] = 0;
+        }
+        if (n > 0) {
+                len = z.len;
+                h = z.v;
+                mask = 0;
+                while (len--) {
+                        i = (((FULL) *h) << n) | mask;
+                        if (i > BASE1) {
+                                mask = i >> BASEB;
+                                i &= BASE1;
+                        } else {
+                                mask = 0;
+                        }
+                        *h = (HALF) i;
+                        ++h;
+                }
+        }
 }
 
 
@@ -2111,55 +2111,55 @@ zshiftl(ZVALUE z, long n)
 long
 zpopcnt(ZVALUE z, int bitval)
 {
-	long cnt = 0;	/* number of times found */
-	HALF h;		/* HALF to count */
-	int i;
+        long cnt = 0;   /* number of times found */
+        HALF h;         /* HALF to count */
+        int i;
 
-	/*
-	 * count 1's
-	 */
-	if (bitval) {
+        /*
+         * count 1's
+         */
+        if (bitval) {
 
-		/*
-		 * count each HALF
-		 */
-		for (i=0; i < z.len; ++i) {
-			/* count each octet */
-			for (h = z.v[i]; h; h >>= 8) {
-				cnt += (long)popcnt[h & 0xff];
-			}
-		}
+                /*
+                 * count each HALF
+                 */
+                for (i=0; i < z.len; ++i) {
+                        /* count each octet */
+                        for (h = z.v[i]; h; h >>= 8) {
+                                cnt += (long)popcnt[h & 0xff];
+                        }
+                }
 
-	/*
-	 * count 0's
-	 */
-	} else {
+        /*
+         * count 0's
+         */
+        } else {
 
-		/*
-		 * count each HALF up until the last
-		 */
-		for (i=0; i < z.len-1; ++i) {
+                /*
+                 * count each HALF up until the last
+                 */
+                for (i=0; i < z.len-1; ++i) {
 
-			/* count each octet */
-			cnt += BASEB;
-			for (h = z.v[i]; h; h >>= 8) {
-				cnt -= (long)popcnt[h & 0xff];
-			}
-		}
+                        /* count each octet */
+                        cnt += BASEB;
+                        for (h = z.v[i]; h; h >>= 8) {
+                                cnt -= (long)popcnt[h & 0xff];
+                        }
+                }
 
-		/*
-		 * count the last octet up until the highest 1 bit
-		 */
-		for (h = z.v[z.len-1]; h; h>>=1) {
-			/* count each 0 bit */
-			if ((h & 0x1) == 0) {
-				++cnt;
-			}
-		}
-	}
+                /*
+                 * count the last octet up until the highest 1 bit
+                 */
+                for (h = z.v[z.len-1]; h; h>>=1) {
+                        /* count each 0 bit */
+                        if ((h & 0x1) == 0) {
+                                ++cnt;
+                        }
+                }
+        }
 
-	/*
-	 * return count
-	 */
-	return cnt;
+        /*
+         * return count
+         */
+        return cnt;
 }

@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,11 +17,11 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1997/03/09 23:14:40
- * File existed as early as:	1997
+ * Under source code control:   1997/03/09 23:14:40
+ * File existed as early as:    1997
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -30,9 +30,9 @@
  * so we declare a global variable whose value is based on if CUSTOM is defined.
  */
 #if defined(CUSTOM)
-int c_sysinfo_allowed = 1;	/* CUSTOM defined */
+int c_sysinfo_allowed = 1;      /* CUSTOM defined */
 #else /* CUSTOM */
-int c_sysinfo_allowed = 0;	/* CUSTOM undefined */
+int c_sysinfo_allowed = 0;      /* CUSTOM undefined */
 #endif /* CUSTOM */
 
 
@@ -68,17 +68,17 @@ int c_sysinfo_allowed = 0;	/* CUSTOM undefined */
 
 
 #include "../errtbl.h"
-#include "../banned.h"	/* include after system header <> includes */
+#include "../banned.h"  /* include after system header <> includes */
 
 
 /*
  * sys_info - names and values of selected #defines
  */
 struct infoname {
-	char *name;	/* name of #define converted to all UPPER_CASE */
-	char *meaning;	/* brief explanation of the #define */
-	char *str;	/* non-NULL ==> value of #define is a string */
-	FULL nmbr;	/* if str==NULL ==> value fo #define as a FULL */
+        char *name;     /* name of #define converted to all UPPER_CASE */
+        char *meaning;  /* brief explanation of the #define */
+        char *str;      /* non-NULL ==> value of #define is a string */
+        FULL nmbr;      /* if str==NULL ==> value fo #define as a FULL */
 };
 STATIC struct infoname sys_info[] = {
     {"S100", "slots in an subtractive 100 table", NULL,
@@ -254,130 +254,130 @@ STATIC struct infoname sys_info[] = {
 /*
  * forward declarations
  */
-S_FUNC void dump_name_meaning(void);	/* custom("sysinfo", 0) */
-S_FUNC void dump_name_value(void);	/* custom("sysinfo", 1) */
-S_FUNC void dump_mening_value(void);	/* custom("sysinfo", 2) */
+S_FUNC void dump_name_meaning(void);    /* custom("sysinfo", 0) */
+S_FUNC void dump_name_value(void);      /* custom("sysinfo", 1) */
+S_FUNC void dump_mening_value(void);    /* custom("sysinfo", 2) */
 
 
 /*
  * c_sysinfo - return a calc #define value
  *
  * given:
- *	vals[0]	  if given, name of #define to print
- *		  otherwise a list of #defines are printed
+ *      vals[0]   if given, name of #define to print
+ *                otherwise a list of #defines are printed
  *
  * returns:
- *	value of #define if given (int or string)
- *	null if no #define arg was given
+ *      value of #define if given (int or string)
+ *      null if no #define arg was given
  */
 /*ARGSUSED*/
 VALUE
 c_sysinfo(char *UNUSED(name), int count, VALUE **vals)
 {
-	VALUE result;		/* what we will return */
-	struct infoname *p;	/* current infoname */
-	char *buf;		/* upper case value of vals[0] */
-	char *q;		/* to upper case converter */
-	char *r;		/* to upper case converter */
+        VALUE result;           /* what we will return */
+        struct infoname *p;     /* current infoname */
+        char *buf;              /* upper case value of vals[0] */
+        char *q;                /* to upper case converter */
+        char *r;                /* to upper case converter */
 
-	/*
-	 * we will return NULL if a value was not found
-	 */
-	result.v_type = V_NULL;
-	result.v_subtype = V_NOSUBTYPE;
+        /*
+         * we will return NULL if a value was not found
+         */
+        result.v_type = V_NULL;
+        result.v_subtype = V_NOSUBTYPE;
 
-	/*
-	 * case 0: if no args, then dump the table with no values
-	 */
-	if (count == 0) {
+        /*
+         * case 0: if no args, then dump the table with no values
+         */
+        if (count == 0) {
 
-		/* dump the entire table */
-		dump_name_meaning();
+                /* dump the entire table */
+                dump_name_meaning();
 
-	/*
-	 * case 1: numeric arg is given
-	 */
-	} else if (vals[0]->v_type == V_NUM) {
+        /*
+         * case 1: numeric arg is given
+         */
+        } else if (vals[0]->v_type == V_NUM) {
 
-		/* firewall - must be a tiny non-negative integer */
-		if (qisneg(vals[0]->v_num) ||
-		    qisfrac(vals[0]->v_num) ||
-		    zge31b(vals[0]->v_num->num)) {
-			math_error("sysinfo: arg must be string, 0, 1 or 2");
-			not_reached();
-		}
+                /* firewall - must be a tiny non-negative integer */
+                if (qisneg(vals[0]->v_num) ||
+                    qisfrac(vals[0]->v_num) ||
+                    zge31b(vals[0]->v_num->num)) {
+                        math_error("sysinfo: arg must be string, 0, 1 or 2");
+                        not_reached();
+                }
 
-		/*
-		 * select action based on numeric value of arg
-		 */
-		switch (z1tol(vals[0]->v_num->num)) {
-		case 0:		/* print all infonames and meanings */
-			dump_name_meaning();
-			break;
-		case 1:		/* print all infonames and values */
-			dump_name_value();
-			break;
-		case 2:		/* print all values and meanings */
-			dump_mening_value();
-			break;
-		default:
-			math_error("sysinfo: arg must be string, 0, 1 or 2");
-			not_reached();
-		}
+                /*
+                 * select action based on numeric value of arg
+                 */
+                switch (z1tol(vals[0]->v_num->num)) {
+                case 0:         /* print all infonames and meanings */
+                        dump_name_meaning();
+                        break;
+                case 1:         /* print all infonames and values */
+                        dump_name_value();
+                        break;
+                case 2:         /* print all values and meanings */
+                        dump_mening_value();
+                        break;
+                default:
+                        math_error("sysinfo: arg must be string, 0, 1 or 2");
+                        not_reached();
+                }
 
-	/*
-	 * case 2: string arg is given
-	 *
-	 * The string is taken to be the infoname we want to print.
-	 */
-	} else if (vals[0]->v_type == V_STR) {
+        /*
+         * case 2: string arg is given
+         *
+         * The string is taken to be the infoname we want to print.
+         */
+        } else if (vals[0]->v_type == V_STR) {
 
-		/* convert vals[0] to upper case string */
-		buf = (char *)malloc(strlen((char *)vals[0]->v_str->s_str)+1);
-		for (q = (char *)vals[0]->v_str->s_str, r = buf; *q; ++q, ++r)
-		{
-			if (isascii((int)*q) && islower((int)*q)) {
-				*r = *q - 'a' + 'A';
-			} else {
-				*r = *q;
-			}
-		}
-		*r = '\0';
+                /* convert vals[0] to upper case string */
+                buf = (char *)malloc(strlen((char *)vals[0]->v_str->s_str)+1);
+                for (q = (char *)vals[0]->v_str->s_str, r = buf; *q; ++q, ++r)
+                {
+                        if (isascii((int)*q) && islower((int)*q)) {
+                                *r = *q - 'a' + 'A';
+                        } else {
+                                *r = *q;
+                        }
+                }
+                *r = '\0';
 
-		/* search the table for the infoname */
-		for (p = sys_info; p->name != NULL; ++p) {
+                /* search the table for the infoname */
+                for (p = sys_info; p->name != NULL; ++p) {
 
-			if (strcmp(p->name, buf) == 0) {
+                        if (strcmp(p->name, buf) == 0) {
 
-				/* found the infoname */
-				if (p->str == NULL) {
-					/* return value as integer */
-					result.v_type = V_NUM;
-					result.v_num = utoq( p->nmbr);
-				} else {
-					/* return value as string */
-					result.v_type = V_STR;
-					result.v_subtype = V_NOSUBTYPE;
-					result.v_str = makestring(p->str);
-				}
+                                /* found the infoname */
+                                if (p->str == NULL) {
+                                        /* return value as integer */
+                                        result.v_type = V_NUM;
+                                        result.v_num = utoq( p->nmbr);
+                                } else {
+                                        /* return value as string */
+                                        result.v_type = V_STR;
+                                        result.v_subtype = V_NOSUBTYPE;
+                                        result.v_str = makestring(p->str);
+                                }
 
-				/* return found infotype as value */
-				break;
-			}
-		}
+                                /* return found infotype as value */
+                                break;
+                        }
+                }
 
-	/*
-	 * bad arg given
-	 */
-	} else {
-		math_error("sysinfo: arg must be string, 0, 1 or 2");
-		not_reached();
-	}
+        /*
+         * bad arg given
+         */
+        } else {
+                math_error("sysinfo: arg must be string, 0, 1 or 2");
+                not_reached();
+        }
 
-	/*
-	 * return what we found or didn't find
-	 */
-	return result;
+        /*
+         * return what we found or didn't find
+         */
+        return result;
 }
 
 
@@ -387,13 +387,13 @@ c_sysinfo(char *UNUSED(name), int count, VALUE **vals)
 S_FUNC void
 dump_name_meaning(void)
 {
-	struct infoname *p;	/* current infoname */
+        struct infoname *p;     /* current infoname */
 
-	/* dump the entire table */
-	for (p = sys_info; p->name != NULL; ++p) {
-		printf("%s%-23s\t%s\n",
-		    (conf->tab_ok ? "\t" : ""), p->name, p->meaning);
-	}
+        /* dump the entire table */
+        for (p = sys_info; p->name != NULL; ++p) {
+                printf("%s%-23s\t%s\n",
+                    (conf->tab_ok ? "\t" : ""), p->name, p->meaning);
+        }
 
 }
 
@@ -404,27 +404,27 @@ dump_name_meaning(void)
 S_FUNC void
 dump_name_value(void)
 {
-	struct infoname *p;	/* current infoname */
+        struct infoname *p;     /* current infoname */
 
-	/* dump the entire table */
-	for (p = sys_info; p->name != NULL; ++p) {
-		if (p->str == NULL) {
+        /* dump the entire table */
+        for (p = sys_info; p->name != NULL; ++p) {
+                if (p->str == NULL) {
 #if LONG_BITS == FULL_BITS || FULL_BITS == 32
-			printf("%s%-23s\t%-8lu\t(0x%lx)\n",
-			    (conf->tab_ok ? "\t" : ""), p->name,
-			    (unsigned long)p->nmbr,
-			    (unsigned long)p->nmbr);
+                        printf("%s%-23s\t%-8lu\t(0x%lx)\n",
+                            (conf->tab_ok ? "\t" : ""), p->name,
+                            (unsigned long)p->nmbr,
+                            (unsigned long)p->nmbr);
 #else
-			printf("%s%-23s\t%-8llu\t(0x%llx)\n",
-			    (conf->tab_ok ? "\t" : ""), p->name,
-			    (unsigned long long)p->nmbr,
-			    (unsigned long long)p->nmbr);
+                        printf("%s%-23s\t%-8llu\t(0x%llx)\n",
+                            (conf->tab_ok ? "\t" : ""), p->name,
+                            (unsigned long long)p->nmbr,
+                            (unsigned long long)p->nmbr);
 #endif
-		} else {
-			printf("%s%-23s\t\"%s\"\n",
-			    (conf->tab_ok ? "\t" : ""), p->name, p->str);
-		}
-	}
+                } else {
+                        printf("%s%-23s\t\"%s\"\n",
+                            (conf->tab_ok ? "\t" : ""), p->name, p->str);
+                }
+        }
 
 }
 
@@ -435,27 +435,27 @@ dump_name_value(void)
 S_FUNC void
 dump_mening_value(void)
 {
-	struct infoname *p;	/* current infoname */
+        struct infoname *p;     /* current infoname */
 
-	/* dump the entire table */
-	for (p = sys_info; p->name != NULL; ++p) {
-		if (p->str == NULL) {
+        /* dump the entire table */
+        for (p = sys_info; p->name != NULL; ++p) {
+                if (p->str == NULL) {
 #if LONG_BITS == FULL_BITS || FULL_BITS == 32
-			printf("%s%-36.36s\t%-8lu\t(0x%lx)\n",
-			    (conf->tab_ok ? "\t" : ""), p->meaning,
-			    (unsigned long)p->nmbr,
-			    (unsigned long)p->nmbr);
+                        printf("%s%-36.36s\t%-8lu\t(0x%lx)\n",
+                            (conf->tab_ok ? "\t" : ""), p->meaning,
+                            (unsigned long)p->nmbr,
+                            (unsigned long)p->nmbr);
 #else
-			printf("%s%-36.36s\t%-8llu\t(0x%llx)\n",
-			    (conf->tab_ok ? "\t" : ""), p->meaning,
-			    (unsigned long long)p->nmbr,
-			    (unsigned long long)p->nmbr);
+                        printf("%s%-36.36s\t%-8llu\t(0x%llx)\n",
+                            (conf->tab_ok ? "\t" : ""), p->meaning,
+                            (unsigned long long)p->nmbr,
+                            (unsigned long long)p->nmbr);
 #endif
-		} else {
-			printf("%s%-36.36s\t\"%s\"\n",
-			    (conf->tab_ok ? "\t" : ""), p->meaning, p->str);
-		}
-	}
+                } else {
+                        printf("%s%-36.36s\t\"%s\"\n",
+                            (conf->tab_ok ? "\t" : ""), p->meaning, p->str);
+                }
+        }
 
 }
 
