@@ -2,7 +2,8 @@ The following are the changes from calc version 2.15.0.7 to 2.15.1.0:
 
     Converted all ASCII tabs to ASCII spaces using a 8 character
     tab stop, for all files, except for all Makefiles (plus rpm.mk).
-    The `git diff -w` reports no changes.
+    The command `git diff -w` reports no changes.  There is no
+    functionality change in calc: only ASCII tabs to ASCII spaces.
 
 
 The following are the changes from calc version 2.15.0.6 to 2.15.0.7:
