@@ -61,70 +61,27 @@ int u_pfe_allowed = 0;		/* CUSTOM undefined */
 const char*
 type2str(short type)
 {
+	// originally from c_argv.c
 	switch (type) {
-	case V_NULL:	/* null value */
-		return "null";
-		break;
-	case V_INT:	/* normal integer */
-		return "int";
-		break;
-	case V_NUM:	/* number */
-		return "rational_value";
-		break;
-	case V_COM:	/* complex number */
-		return "complex_value";
-		break;
-	case V_ADDR:	/* address of variable value */
-		return "address";
-		break;
-	case V_STR:	/* address of string */
-		return "string";
-		break;
-	case V_MAT:	/* address of matrix structure */
-		return "matrix";
-		break;
-	case V_LIST:	/* address of list structure */
-		return "list";
-		break;
-	case V_ASSOC:	/* address of association structure */
-		return "assoc";
-		break;
-	case V_OBJ:	/* address of object structure */
-		return "object";
-		break;
-	case V_FILE:	/* opened file id */
-		return "file";
-		break;
-	case V_RAND:	/* subtractive 100 random state */
-		return "rand_state";
-		break;
-	case V_RANDOM:	/* address of Blum random state */
-		return "random_state";
-		break;
-	case V_CONFIG:	/* configuration state */
-		return "config_state";
-		break;
-	case V_HASH:	/* hash state */
-		return "hash_state";
-		break;
-	case V_BLOCK:	/* memory block */
-		return "octet_block";
-		break;
-	case V_OCTET:	/* octet (unsigned char) */
-		return "octet";
-		break;
-	default:
-		return "unknown";
-		break;
+		case V_NULL:	return "null";				// null value
+		case V_INT:		return "int";				// normal integer
+		case V_NUM:		return "rational_value";	// number
+		case V_COM:		return "complex_value";		// complex number
+		case V_ADDR:	return "address";			// address of variable value
+		case V_STR:		return "string";			// address of string
+		case V_MAT:		return "matrix";			// address of matrix structure
+		case V_LIST:	return "list";				// address of list structure
+		case V_ASSOC:	return "assoc";				// address of association structure
+		case V_OBJ:		return "object";			// address of object structure
+		case V_FILE:	return "file";				// opened file id
+		case V_RAND:	return "rand_state";		// subtractive 100 random state
+		case V_RANDOM:	return "random_state";		// address of Blum random state
+		case V_CONFIG:	return "config_state";		// configuration state
+		case V_HASH:	return "hash_state";		// hash state
+		case V_BLOCK:	return "octet_block";		// memory block
+		case V_OCTET:	return "octet";				// octet (unsigned char)
+		default:		return "unknown";
 	}
-}
-const char*
-value_type2str(VALUE value) {
-	return type2str(value.v_type);
-}
-const char*
-value_ptr_type2str(VALUE*value) {
-	return type2str(value->v_type);
 }
 
 /*
@@ -255,7 +212,7 @@ valv_type_check(int UNUSED(count), VALUE **vals, int idx, const char* UNUSED(nam
 }
 void
 valv_type_require(const char* custname, int count, VALUE **vals, int idx, const char* name, short wanted) {
-	if (!valv_type_check(count, vals, idx, name, wanted)) math_error("%s: argment %d (%s) must be of type %s (%s given)", custname, idx+1, name, type2str(wanted), value_ptr_type2str(vals[idx]));
+	if (!valv_type_check(count, vals, idx, name, wanted)) math_error("%s: argment %d (%s) must be of type %s (%s given)", custname, idx+1, name, type2str(wanted), type2str(vals[idx]->v_type));
 }
 bool
 valv_ref_type_check(int UNUSED(count), VALUE **vals, int idx, const char* UNUSED(name), short wanted) {
@@ -263,8 +220,8 @@ valv_ref_type_check(int UNUSED(count), VALUE **vals, int idx, const char* UNUSED
 }
 void
 valv_ref_type_require(const char* custname, int count, VALUE **vals, int idx, const char* name, short wanted) {
-	if (!valv_type_check(count, vals, idx, name, V_VPTR)) math_error("%s: argment %d (%s) must be address (%s given) of type %s", custname, idx+1, name, value_ptr_type2str(vals[idx]), type2str(wanted));
-	if (!valv_ref_type_check(count, vals, idx, name, wanted)) math_error("%s: argment %d (%s) must be address of type %s (%s given)", custname, idx+1, name, type2str(wanted), value_ptr_type2str(vals[idx]->v_addr));
+	if (!valv_type_check(count, vals, idx, name, V_VPTR)) math_error("%s: argment %d (%s) must be address (%s given) of type %s", custname, idx+1, name, type2str(vals[idx]->v_type), type2str(wanted));
+	if (!valv_ref_type_check(count, vals, idx, name, wanted)) math_error("%s: argment %d (%s) must be address of type %s (%s given)", custname, idx+1, name, type2str(wanted), type2str(vals[idx]->v_addr->v_type));
 }
 
 long
@@ -435,7 +392,7 @@ u_pfe_execvp(char *UNUSED(name), int count, VALUE **vals)
 		el = el->e_next,
 		s++
 	) {
-		if (el->e_value.v_type != V_STR) math_error("%s: argment 2 (args) element %d must be of type string (%s given)", custname, s, value_type2str(el->e_value));
+		if (el->e_value.v_type != V_STR) math_error("%s: argment 2 (args) element %d must be of type string (%s given)", custname, s, type2str(el->e_value.v_type));
 		
 		args[s] = el->e_value.v_str->s_str;
 	}
@@ -626,7 +583,7 @@ optional_valv_ref_list2fd_set(const char* custname, int count, VALUE **vals, int
 		el = el->e_next,
 		s++
 	) {
-		if (el->e_value.v_type != V_NUM) math_error("%s: argument %d (%s) element %d must be of type number (%s given)", custname, *idx, name, s, value_type2str(el->e_value));
+		if (el->e_value.v_type != V_NUM) math_error("%s: argument %d (%s) element %d must be of type number (%s given)", custname, *idx, name, s, type2str(el->e_value.v_type));
 		
 		int i = qtoi(el->e_value.v_num);
 		if (*setsize < i+1)
@@ -817,7 +774,7 @@ u_pfe_poll(char *UNUSED(name), int count, VALUE **vals)
 		if (		el		->e_value.v_type != V_LIST	) {
 			free(pollfds);
 			math_error("%s: argument %d (%s) element %d must be of type list (%s given)",
-						custname, 1, i_name, s, value_type2str(el->e_value));
+						custname, 1, i_name, s, type2str(el->e_value.v_type));
 		}
 		
 		LIST* el_list = el->e_value.v_list;
@@ -828,12 +785,12 @@ u_pfe_poll(char *UNUSED(name), int count, VALUE **vals)
 		if (		el_el	->e_value.v_type != V_NUM	) {
 			free(pollfds);
 			math_error("%s: argument %d (%s) element %d element %d must be of type number (%s given)",
-						custname, 1, i_name, s, 1, value_type2str(el_el->e_value));
+						custname, 1, i_name, s, 1, type2str(el_el->e_value.v_type));
 		}
 		if (!qisint(el_el	->e_value.v_num)			) {
 			free(pollfds);
 			math_error("%s: argument %d (%s) element %d element %d must be integer (%s given)",
-						custname, 1, i_name, s, 1, value_type2str(el_el->e_value));
+						custname, 1, i_name, s, 1, type2str(el_el->e_value.v_type));
 		}
 		pollfds[s].fd = qtoi(el_el->e_value.v_num);
 		
@@ -850,7 +807,7 @@ u_pfe_poll(char *UNUSED(name), int count, VALUE **vals)
 			if (	el_el	->e_value.v_type != V_STR	) {
 				free(pollfds);
 				math_error("%s: argument %d (%s) element %d element %d must be of type string (%s given)",
-							custname, 1, i_name, s, el_el_s, value_type2str(el_el->e_value));
+							custname, 1, i_name, s, el_el_s, type2str(el_el->e_value.v_type));
 			}
 			
 			char* el_el_str = el_el->e_value.v_str->s_str;
@@ -964,7 +921,7 @@ u_pfe_wait4(char *UNUSED(name), int count, VALUE **vals)
 			el = el->e_next,
 			s++
 		) {
-			if (el->e_value.v_type != V_STR) math_error("%s: options list element %d must be of type string (%s given)", custname, s, value_type2str(el->e_value));
+			if (el->e_value.v_type != V_STR) math_error("%s: options list element %d must be of type string (%s given)", custname, s, type2str(el->e_value.v_type));
 			
 			char* opt_str = el->e_value.v_str->s_str;
 			if (FALSE);
@@ -1076,7 +1033,7 @@ u_pfe_pfe(char *UNUSED(name), int count, VALUE **vals)
 			el = el->e_next,
 			s++
 		) {
-			if (el->e_value.v_type != V_STR) math_error("%s: argment 2 (args) element %d must be of type string (%s given)", custname, s, value_type2str(el->e_value));
+			if (el->e_value.v_type != V_STR) math_error("%s: argment 2 (args) element %d must be of type string (%s given)", custname, s, type2str(el->e_value.v_type));
 			
 			args[s] = el->e_value.v_str->s_str;
 		}
