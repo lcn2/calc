@@ -40,6 +40,9 @@ charbit.h
 chatbit
 chk_c
 .cache/clangd
+.clang-format
+compile_commands.json
+compile_flags.txt
 conf.h
 const_tmp
 cscript/4dsphere
@@ -55,8 +58,6 @@ cscript/square
 custom/.all
 custom/libcustcalc*
 custom/.gitignore
-compile_commands.json
-compile_flags.txt
 debug.out
 .dynamic
 endian
