@@ -41,6 +41,7 @@ chatbit
 chk_c
 .cache/clangd
 .clang-format
+clang-format-testee.c
 compile_commands.json
 compile_flags.txt
 conf.h
