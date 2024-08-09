@@ -471,7 +471,7 @@ u_pfe_execvp(char *UNUSED(name), int count, VALUE **vals)
     VALUE *args_list = valv_get_list(custname, count, vals, 1, "args");
 
     char **args;
-    if (!(args = malloc(sizeof(char *) * args_list->v_list->l_count)))
+    if (!(args = malloc(sizeof(char *) * (args_list->v_list->l_count + 1))))
         math_error("%s: "__FILE__ ": %d: malloc: %s", custname, __LINE__,
             strerror(errno));
 
@@ -484,6 +484,7 @@ u_pfe_execvp(char *UNUSED(name), int count, VALUE **vals)
 
         args[s] = el->e_value.v_str->s_str;
     }
+    args[s] = NULL;
 
     if (execvp(path, args))
         math_error("%s: "__FILE__ ": %d: %s", custname, __LINE__,
@@ -1173,7 +1174,7 @@ u_pfe_pfe(char *UNUSED(name), int count, VALUE **vals)
         VALUE *args_list = valv_get_list(custname, count, vals, 3, "args");
 
         char **args;
-        if (!(args = malloc(sizeof(char *) * args_list->v_list->l_count)))
+        if (!(args = malloc(sizeof(char *) * (args_list->v_list->l_count + 1))))
             math_error("%s: "__FILE__ ": %d: malloc: %s", custname, __LINE__,
                 strerror(errno));
 
@@ -1186,6 +1187,7 @@ u_pfe_pfe(char *UNUSED(name), int count, VALUE **vals)
 
             args[s] = el->e_value.v_str->s_str;
         }
+        args[s] = NULL;
 
         if (execvp(args[0], args))
             math_error("%s: "__FILE__ ": %d: execvp: %s", custname, __LINE__,
