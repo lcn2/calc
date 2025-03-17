@@ -283,3 +283,8 @@ help unexpected
 
 It contains information about differences between C and calc
 that may surprise C programmers.
+
+
+# Reporting Security Issues
+
+To report a security issue, please visit "[Reporting Security Issues](https://github.com/lcn2/calc/security/policy)".
