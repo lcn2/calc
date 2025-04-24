@@ -8,7 +8,7 @@ on Debian:  sudo apt install calc
 on RHEL:    sudo dnf install calc
 on Ubuntu:  sudo apt install calc
 via Termux: apt install calc
-via src:    sudo make clobber all chk instsll
+via src:    sudo make clobber all chk install
 ```
 
 ## TL;DR Run calc
