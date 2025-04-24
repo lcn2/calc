@@ -3,6 +3,8 @@ The following are the changes from calc version 2.15.1.1 to 2.15.1.1:
     Change Makefile.config to, if not using not HomeBrew, then try to
     detect macports and/or using /opt/local/{lib,include}.
 
+    Put full date range (1989-2025) of calc source into version.h.
+
 
 The following are the changes from calc version 2.15.0.7 to 2.15.1.0:
 
