@@ -45,6 +45,7 @@ int u_pfe_allowed = 0; /* CUSTOM undefined */
     #include <stdio.h>
     #include <string.h>
     #include <unistd.h>
+    #include <sys/resource.h>
 
     #include "../have_const.h"
     #include "../value.h"
