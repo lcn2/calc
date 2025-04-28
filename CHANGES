@@ -1,9 +1,11 @@
-The following are the changes from calc version 2.15.1.1 to 2.15.1.1:
+The following are the changes from calc version 2.15.1.1 to date:
 
     Change Makefile.config to, if not using not HomeBrew, then try to
     detect macports and/or using /opt/local/{lib,include}.
 
     Put full date range (1989-2025) of calc source into version.h.
+
+    Version 2.16.0.0 will form the basis for the calc v2 to calc v3 fork.
 
 
 The following are the changes from calc version 2.15.0.7 to 2.15.1.0:
@@ -15,8 +17,6 @@ The following are the changes from calc version 2.15.0.7 to 2.15.1.0:
 
     Fixed trailblank.  It was pruning . in its find search.
     Added check for ASCII tabs is non-Makefiles.
-
-    This version will form the basis for the calc v2 to calc v3 fork.
 
 
 The following are the changes from calc version 2.15.0.6 to 2.15.0.7:
