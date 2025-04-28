@@ -45,6 +45,7 @@ int u_pfe_allowed = 0; /* CUSTOM undefined */
     #include <stdio.h>
     #include <string.h>
     #include <unistd.h>
+    #include <sys/resource.h>
 
     #include "../have_const.h"
     #include "../value.h"
@@ -1251,7 +1252,7 @@ char *
 strext(char **subject, char *with)
 {
     size_t n = strlen(*subject) + strlen(with);
-    if ((*subject = reallocf(*subject, n + 1)) == NULL) return NULL;
+    if ((*subject = realloc(*subject, n + 1)) == NULL) return NULL;
     strlcat(*subject, with, n + 1);
     return *subject;
 }
@@ -1488,7 +1489,7 @@ u_vadd_basename(char *UNUSED(name), int count, VALUE **vals)
     VALUE *strp = valv_get_strp(custname, count, vals, 0, "path");
 
     char buf[MAXPATHLEN];
-    if (!basename_r(strp->v_str->s_str, buf))
+    if (!basename(strp->v_str->s_str, buf))
         math_error("%s: "__FILE__ ": %d: %s", custname, __LINE__,
             strerror(errno));
 
@@ -1518,7 +1519,7 @@ u_vadd_dirname(char *UNUSED(name), int count, VALUE **vals)
     VALUE *strp = valv_get_strp(custname, count, vals, 0, "path");
 
     char buf[MAXPATHLEN];
-    if (!dirname_r(strp->v_str->s_str, buf))
+    if (!dirname(strp->v_str->s_str, buf))
         math_error("%s: "__FILE__ ": %d: %s", custname, __LINE__,
             strerror(errno));
 
