@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	2013/08/11 01:31:28
- * File existed as early as:	2013
+ * Under source code control:   2013/08/11 01:31:28
+ * File existed as early as:    2013
  */
 
 /*
@@ -336,7 +336,7 @@ define __CZ__produce_long_random_number(n)
   ret = 1;
   if(!isint(n) || n<1)
     return newerror("__CZ__produce_long_random_number(n): "
-		    "n is not an integer >=1");
+                    "n is not an integer >=1");
   for(k=0;k<n;k++){
     ret += random();
     ret  = toomcook4square(ret);

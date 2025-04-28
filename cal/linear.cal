@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,23 +17,23 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	2005/12/12 06:41:50
- * File existed as early as:	2005
+ * Under source code control:   2005/12/12 06:41:50
+ * File existed as early as:    2005
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 /*
  * linear - perform a simple two point 2D linear interpolation
  *
  * given:
- *	x0, y0		first known point on the line
- *	x1, y1		second known point on the line
- *	x		a given point to interpolate on
+ *      x0, y0          first known point on the line
+ *      x1, y1          second known point on the line
+ *      x               a given point to interpolate on
  *
  * returns:
- *	y such that (x,y) is on the line defined by (x0,y0) and (x1,y1)
+ *      y such that (x,y) is on the line defined by (x0,y0) and (x1,y1)
  *
  * NOTE: The line cannot be vertical.  So x0 != y0.
  */
@@ -41,10 +41,10 @@ define linear(x0, y0, x1, y1, x)
 {
     /* firewall */
     if (!isnum(x0) || ! isnum(y0) || !isnum(x1) || ! isnum(y1) || !isnum(x)) {
-	quit "non-numeric argument passed to linear";
+        quit "non-numeric argument passed to linear";
     }
     if (x0 == x1) {
-	quit "linear given a line with an infinite slope";
+        quit "linear given a line with an infinite slope";
     }
 
     /* return y = y0 + (delta_Y/delta_X) * (x - x0) */

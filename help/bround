@@ -12,16 +12,16 @@ TYPES
     Otherwise, if x is an object of type tt, or if x is not an object or
     number but y is an object of type tt, and the function tt_bround has
     to be defined; the types for x, plcs, rnd, and the returned value,
-    if any, are as required for specified in tt_bround.	 For the object
+    if any, are as required for specified in tt_bround.  For the object
     case, plcs and rnd default to the null value.
 
     For other cases:
 
-    x		number (real or complex)
-    plcs	integer, defaults to zero
-    rnd		integer, defaults to config("round")
+    x           number (real or complex)
+    plcs        integer, defaults to zero
+    rnd         integer, defaults to config("round")
 
-    return	number
+    return      number
 
 DESCRIPTION
     For real x, bround(x, plcs, rnd) returns x rounded to either
@@ -31,39 +31,39 @@ DESCRIPTION
     If the number of binary places is n and eps = 10^-n, the
     result is the same as for appr(x, eps, rnd).  This will be
     exactly x if x is a multiple of eps; otherwise rounding occurs
-    to one of the nearest multiples of eps on either side of x.	 Which
+    to one of the nearest multiples of eps on either side of x.  Which
     of these multiples is returned is determined by z = rnd & 31, i.e.
     the five low order bits of rnd, as follows:
 
-	    z = 0 or 4:		round down, i.e. towards minus infinity
-	    z = 1 or 5:		round up, i.e. towards plus infinity
-	    z = 2 or 6:		round towards zero
-	    z = 3 or 7:		round away from zero
-	    z = 8 or 12:	round to the nearest even multiple of eps
-	    z = 9 or 13:	round to the nearest odd multiple of eps
-	    z = 10 or 14:	round to nearest even or odd multiple of eps
-				    according as x > or < 0
-	    z = 11 or 15:	round to nearest odd or even multiple of eps
-				    according as x > or < 0
-	    z = 16 to 31:	round to the nearest multiple of eps when
-				    this is uniquely determined.  Otherwise
-				    rounding is as if z is replaced by z - 16
+            z = 0 or 4:         round down, i.e. towards minus infinity
+            z = 1 or 5:         round up, i.e. towards plus infinity
+            z = 2 or 6:         round towards zero
+            z = 3 or 7:         round away from zero
+            z = 8 or 12:        round to the nearest even multiple of eps
+            z = 9 or 13:        round to the nearest odd multiple of eps
+            z = 10 or 14:       round to nearest even or odd multiple of eps
+                                    according as x > or < 0
+            z = 11 or 15:       round to nearest odd or even multiple of eps
+                                    according as x > or < 0
+            z = 16 to 31:       round to the nearest multiple of eps when
+                                    this is uniquely determined.  Otherwise
+                                    rounding is as if z is replaced by z - 16
 
     For complex x:
 
-	The real and imaginary parts are rounded as for real x; if the
-	imaginary part rounds to zero, the result is real.
+        The real and imaginary parts are rounded as for real x; if the
+        imaginary part rounds to zero, the result is real.
 
     For matrix or list x:
 
-	The returned values has element bround(x[[i]], plcs, rnd) in
-	the same position as x[[i]] in x.
+        The returned values has element bround(x[[i]], plcs, rnd) in
+        the same position as x[[i]] in x.
 
     For object x or plcs:
 
-	When bround(x, plcs, rnd) is called, x is passed by address so may be
-	changed by assignments; plcs and rnd are copied to temporary
-	variables, so their values are not changed by the call.
+        When bround(x, plcs, rnd) is called, x is passed by address so may be
+        changed by assignments; plcs and rnd are copied to temporary
+        variables, so their values are not changed by the call.
 
 EXAMPLE
     ; a = 7/32, b = -7/32
@@ -100,18 +100,18 @@ EXAMPLE
     ; print round(A,2,24)
 
     list(7 elements, 7 nonzero):
-	[[0]] = 0.12
-	[[1]] = 0.25
-	[[3]] = 0.38
-	[[4]] = 0.5
-	[[5]] = 0.62
-	[[6]] = 0.75
-	[[7]] = 0.88
+        [[0]] = 0.12
+        [[1]] = 0.25
+        [[3]] = 0.38
+        [[4]] = 0.5
+        [[5]] = 0.62
+        [[6]] = 0.75
+        [[7]] = 0.88
 
 LIMITS
     For non-object case:
-	0 <= abs(plcs) < 2^31
-	0 <= abs(rnd) < 2^31
+        0 <= abs(plcs) < 2^31
+        0 <= abs(rnd) < 2^31
 
 LINK LIBRARY
     void broundvalue(VALUE *x, VALUE *plcs, VALUE *rnd, VALUE *result)
@@ -130,7 +130,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -138,8 +138,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1994/09/30 00:22:35
-## File existed as early as:	1994
+## Under source code control:   1994/09/30 00:22:35
+## File existed as early as:    1994
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

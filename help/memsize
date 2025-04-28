@@ -5,12 +5,12 @@ SYNOPSIS
     memsize(x)
 
 TYPES
-    x		any
+    x           any
 
-    return	integer
+    return      integer
 
 DESCRIPTION
-    This is analogous to the C operator sizeof.	 It attempts to assess
+    This is analogous to the C operator sizeof.  It attempts to assess
     the number of bytes in memory used to store a value and all its
     components plus all of the related structure overhead.  Unlike
     sizeof(x), this builtin includes overhead.
@@ -19,7 +19,7 @@ DESCRIPTION
     end of strings.
 
     Unlike sizeof(x), this builtin includes the size denominator for integers
-    and the imaginary part for complex values.	Storage for holding
+    and the imaginary part for complex values.  Storage for holding
     0, 1 and -1 values are also included.
 
     The number returned by memsize(x) may be less than the actual number
@@ -32,15 +32,15 @@ DESCRIPTION
     substantially greater) than the number of bytes actually used.
     For example, after:
 
-		a = sqrt(2);
-		mat A[3] = {a, a, a};
+                a = sqrt(2);
+                mat A[3] = {a, a, a};
 
     the numerical information for a, A[0], A[1], A[2] are stored in the
     same memory, so the memory used for A is the same as if
     its 3 elements were null values.  The value returned by
     memsize(A) is calculated as A were defined by:
 
-		mat A[3] = {sqrt(2), sqrt(2), sqrt(2)}.
+                mat A[3] = {sqrt(2), sqrt(2), sqrt(2)}.
 
     Similar sharing of memory occurs with literal strings.
 
@@ -98,7 +98,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -106,8 +106,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1997/03/23 20:28:02
-## File existed as early as:	1997
+## Under source code control:   1997/03/23 20:28:02
+## File existed as early as:    1997
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

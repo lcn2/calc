@@ -5,9 +5,9 @@ SYNOPSIS
     remove(lst)
 
 TYPES
-    lst		lvalue whose current value is a list
+    lst         lvalue whose current value is a list
 
-    return	any
+    return      any
 
 DESCRIPTION
     If lst has no members, remove(lst) returns the null value and does
@@ -26,14 +26,14 @@ EXAMPLE
       [[1]] = "three"
 
     ; remove(lst)
-	    "three"
+            "three"
     ; print lst
 
     list (1 elements, 1 nonzero):
       [[0]] = 2
 
     ; remove(lst)
-	    2
+            2
     ; print lst
     list (0 elements, 0 nonzero)
     ; remove(lst)
@@ -58,7 +58,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -66,8 +66,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1996/03/12 23:10:01
-## File existed as early as:	1996
+## Under source code control:   1996/03/12 23:10:01
+## File existed as early as:    1996
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

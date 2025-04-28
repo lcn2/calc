@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,11 +17,11 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1995/02/13 03:43:11
- * File existed as early as:	1995
+ * Under source code control:   1995/02/13 03:43:11
+ * File existed as early as:    1995
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 /*
@@ -32,30 +32,30 @@
 
 define randbitrun(run_cnt)
 {
-    local i;			/* index */
-    local max_run;		/* longest run */
-    local long_run_cnt;		/* number of runs longer than MAX_RUN */
-    local run;			/* current run length */
-    local tally_sum;		/* sum of all tally values */
-    local last;			/* last random number */
-    local current;		/* current random number */
-    local MAX_RUN = 18;		/* max run we will keep track of */
+    local i;                    /* index */
+    local max_run;              /* longest run */
+    local long_run_cnt;         /* number of runs longer than MAX_RUN */
+    local run;                  /* current run length */
+    local tally_sum;            /* sum of all tally values */
+    local last;                 /* last random number */
+    local current;              /* current random number */
+    local MAX_RUN = 18;         /* max run we will keep track of */
     local mat tally[1:MAX_RUN]; /* tally of length of a rise run of 'x' */
-    local mat prob[1:MAX_RUN];	/* prob[x] = probability of 'x' length run */
+    local mat prob[1:MAX_RUN];  /* prob[x] = probability of 'x' length run */
 
     /*
      * parse args
      */
     if (param(0) == 0) {
-	run_cnt = 65536;
+        run_cnt = 65536;
     }
 
     /*
      * run setup
      */
-    max_run = 0;		/* no runs yet */
-    long_run_cnt = 0;		/* no long runs set */
-    current = randbit(1);	/* our first number */
+    max_run = 0;                /* no runs yet */
+    long_run_cnt = 0;           /* no long runs set */
+    current = randbit(1);       /* our first number */
     run = 1;
 
     /*
@@ -63,10 +63,10 @@ define randbitrun(run_cnt)
      *
      * A bit run length of 'r' occurs with a probability of:
      *
-     *			1/2^n;
+     *                  1/2^n;
      */
     for (i=1; i <= MAX_RUN; ++i) {
-	prob[i] = 1.0/(1<<i);
+        prob[i] = 1.0/(1<<i);
     }
 
     /*
@@ -74,31 +74,31 @@ define randbitrun(run_cnt)
      */
     for (i=0; i < run_cnt; ++i) {
 
-	/* get our current number */
-	last = current;
-	current = randbit(1);
+        /* get our current number */
+        last = current;
+        current = randbit(1);
 
-	/* look for a run break */
-	if (current != last) {
+        /* look for a run break */
+        if (current != last) {
 
-	    /*	record the stats */
-	    if (run > max_run) {
-		max_run = run;
-	    }
-	    if (run > MAX_RUN) {
-		++long_run_cnt;
-	    } else {
-		++tally[run];
-	    }
+            /*  record the stats */
+            if (run > max_run) {
+                max_run = run;
+            }
+            if (run > MAX_RUN) {
+                ++long_run_cnt;
+            } else {
+                ++tally[run];
+            }
 
-	    /* start a new run */
-	    current = randbit(1);
-	    run = 1;
+            /* start a new run */
+            current = randbit(1);
+            run = 1;
 
-	/* note the continuing run */
-	} else {
-	    ++run;
-	}
+        /* note the continuing run */
+        } else {
+            ++run;
+        }
     }
     /* determine the number of runs found */
     tally_sum = matsum(tally) + long_run_cnt;
@@ -109,9 +109,9 @@ define randbitrun(run_cnt)
     printf("rand runbit test used %d values to produce %d runs\n",
       run_cnt, tally_sum);
     for (i=1; i <= MAX_RUN; ++i) {
-	printf("length=%d\tprob=%9.7f\texpect=%d \tcount=%d \terr=%9.7f\n",
-	  i, prob[i], round(tally_sum*prob[i]), tally[i],
-	  (tally[i] - round(tally_sum*prob[i]))/tally_sum);
+        printf("length=%d\tprob=%9.7f\texpect=%d \tcount=%d \terr=%9.7f\n",
+          i, prob[i], round(tally_sum*prob[i]), tally[i],
+          (tally[i] - round(tally_sum*prob[i]))/tally_sum);
     }
     printf("length>%d\t\t\t\t\tcount=%d\n", MAX_RUN, long_run_cnt);
     printf("max length=%d\n", max_run);

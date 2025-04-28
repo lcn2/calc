@@ -5,9 +5,9 @@ SYNOPSIS
     srand([seed])
 
 TYPES
-    seed	integer, matrix of integers or rand state
+    seed        integer, matrix of integers or rand state
 
-    return	rand state
+    return      rand state
 
 DESCRIPTION
     Seed the pseudo-random number using an subtractive 100 shuffle generator.
@@ -15,120 +15,120 @@ DESCRIPTION
     It you want a quick and effective way to seed the generator,
     we recommended that you call srand() with the seed() value:
 
-	srand(seed())
+        srand(seed())
 
     For integer seed != 0:
 
-	Any buffered rand generator bits are flushed.  The subtractive table
-	for the rand generator is loaded with the default subtractive table.
-	The low order 64 bits of seed is xor-ed against each table value.
-	The subtractive table is shuffled according to seed/2^64.
+        Any buffered rand generator bits are flushed.  The subtractive table
+        for the rand generator is loaded with the default subtractive table.
+        The low order 64 bits of seed is xor-ed against each table value.
+        The subtractive table is shuffled according to seed/2^64.
 
-	The following calc code produces the same effect on the internal
-	subtractive table:
+        The following calc code produces the same effect on the internal
+        subtractive table:
 
-	    /* reload default subtractive table xor-ed with low 64 seed bits */
-	    seed_xor = seed & ((1<<64)-1);
-	    for (i=0; i < 100; ++i) {
-		subtractive[i] = xor(default_subtractive[i], seed_xor);
-	    }
+            /* reload default subtractive table xor-ed with low 64 seed bits */
+            seed_xor = seed & ((1<<64)-1);
+            for (i=0; i < 100; ++i) {
+                subtractive[i] = xor(default_subtractive[i], seed_xor);
+            }
 
-	    /* shuffle the subtractive table */
-	    seed >>= 64;
-	    for (i=100; seed > 0 && i > 0; --i) {
-		quomod(seed, i+1, seed, j);
-		swap(subtractive[i], subtractive[j]);
-	    }
+            /* shuffle the subtractive table */
+            seed >>= 64;
+            for (i=100; seed > 0 && i > 0; --i) {
+                quomod(seed, i+1, seed, j);
+                swap(subtractive[i], subtractive[j]);
+            }
 
-	Seed must be >= 0.  All seed values < 0 are reserved for future use.
+        Seed must be >= 0.  All seed values < 0 are reserved for future use.
 
-	The subtractive table pointers are reset to subtractive[36]
-	and subtractive[99].  Last the shuffle table is loaded with
-	successive values from the subtractive 100 generator.
+        The subtractive table pointers are reset to subtractive[36]
+        and subtractive[99].  Last the shuffle table is loaded with
+        successive values from the subtractive 100 generator.
 
-	There is no limit on the size of a seed.  On the other hand,
-	extremely large seeds require large tables and long seed times.
-	Using a seed in the range of [2^64, 2^64 * 100!) should be
-	sufficient for most purposes.  An easy way to stay within this
-	range to to use seeds that are between 21 and 178 digits, or
-	64 to 588 bits long.
+        There is no limit on the size of a seed.  On the other hand,
+        extremely large seeds require large tables and long seed times.
+        Using a seed in the range of [2^64, 2^64 * 100!) should be
+        sufficient for most purposes.  An easy way to stay within this
+        range to to use seeds that are between 21 and 178 digits, or
+        64 to 588 bits long.
 
-	To help make the generator produced by seed S, significantly
-	different from S+1, seeds are scrambled prior to use.  The
-	internal function randreseed64 maps [0,2^64) into [0,2^64) in a
-	1-to-1 and onto fashion for every 64 bits of S.
+        To help make the generator produced by seed S, significantly
+        different from S+1, seeds are scrambled prior to use.  The
+        internal function randreseed64 maps [0,2^64) into [0,2^64) in a
+        1-to-1 and onto fashion for every 64 bits of S.
 
-	The purpose of the randreseed64() is not to add security.  It
-	simply helps remove the human perception of the relationship
-	between the seed and the production of the generator.
+        The purpose of the randreseed64() is not to add security.  It
+        simply helps remove the human perception of the relationship
+        between the seed and the production of the generator.
 
-	The randreseed64 process does not reduce the security of the
-	rand generator.	 Every seed is converted into a different
-	unique seed.  No seed is ignored or favored.  See the rand
-	help file for details.
+        The randreseed64 process does not reduce the security of the
+        rand generator.  Every seed is converted into a different
+        unique seed.  No seed is ignored or favored.  See the rand
+        help file for details.
 
     For integer seed == 0:
 
-	Restore the initial state and modulus of the rand generator.
-	After this call, the rand generator is restored to its initial
-	state after calc started.
+        Restore the initial state and modulus of the rand generator.
+        After this call, the rand generator is restored to its initial
+        state after calc started.
 
-	The subtractive 100 pointers are reset to subtractive[36]
-	and subtractive[99].  Last the shuffle table is loaded with
-	successive values from the subtractive 100 generator.
+        The subtractive 100 pointers are reset to subtractive[36]
+        and subtractive[99].  Last the shuffle table is loaded with
+        successive values from the subtractive 100 generator.
 
-	The call:
+        The call:
 
-	    srand(0)
+            srand(0)
 
-	restores the rand generator to the initial conditions at calc startup.
+        restores the rand generator to the initial conditions at calc startup.
 
     For matrix arg:
 
-	Any buffered random bits are flushed.  The subtractive table with the
-	first 100 entries of the matrix mod 2^64.
+        Any buffered random bits are flushed.  The subtractive table with the
+        first 100 entries of the matrix mod 2^64.
 
-	The subtractive 100 pointers are reset to subtractive[36]
-	and subtractive[99].  Last the shuffle table is loaded with
-	successive values from the subtractive 100 generator.
+        The subtractive 100 pointers are reset to subtractive[36]
+        and subtractive[99].  Last the shuffle table is loaded with
+        successive values from the subtractive 100 generator.
 
-	This form allows one to load the internal subtractive 100 generator
-	with user supplied values.
+        This form allows one to load the internal subtractive 100 generator
+        with user supplied values.
 
-	The randreseed64 process is NOT applied to the matrix values.
+        The randreseed64 process is NOT applied to the matrix values.
 
     For rand state arg:
 
-	Restore the rand state and return the previous state.  Note that
-	the argument state is a rand state value (isrand(state) is true).
-	Any internally buffered random bits are restored.
+        Restore the rand state and return the previous state.  Note that
+        the argument state is a rand state value (isrand(state) is true).
+        Any internally buffered random bits are restored.
 
-	All calls to srand(seed) return the previous state or current
-	state in case of srand().  Their return value can be supplied
-	to srand in restore the generator to that previous state:
+        All calls to srand(seed) return the previous state or current
+        state in case of srand().  Their return value can be supplied
+        to srand in restore the generator to that previous state:
 
-	     state = srand(123456789);
-	     newstate = srand();	/* save state */
+             state = srand(123456789);
+             newstate = srand();        /* save state */
 
-	     x = rand();
-	     ...
-	     srand(newstate);	/* restore state to after srand(123456789) */
-	     x1 = rand();	/* produces the same value as x */
-	     ...
-	     srand(state);	/* restore original state */
+             x = rand();
+             ...
+             srand(newstate);   /* restore state to after srand(123456789) */
+             x1 = rand();       /* produces the same value as x */
+             ...
+             srand(state);      /* restore original state */
 
     For no arg given:
 
-	Return current s100 generator state.  This call does not alter
-	the generator state.
+        Return current s100 generator state.  This call does not alter
+        the generator state.
 
-	This call allows one to take a snapshot of the current generator state.
+        This call allows one to take a snapshot of the current generator state.
 
     See the rand help file for details on the generator.
 
 EXAMPLE
     ; srand(0x8d2dcb2bed3212844f4ad31)
-	    RAND state
+            RAND state
     ; state = srand();
     ; print rand(123), rand(123), rand(123), rand(123), rand(123), rand(123);
     80 95 41 78 100 27
@@ -163,7 +163,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -171,8 +171,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1996/01/01 04:19:07
-## File existed as early as:	1996
+## Under source code control:   1996/01/01 04:19:07
+## File existed as early as:    1996
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

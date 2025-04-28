@@ -20,10 +20,10 @@ test_random
 
     usage:
 
-	test_random [bitlen [seed_string]]
+        test_random [bitlen [seed_string]]
 
-	bitlen		number of random bits to generate (default: 128 bits)
-	seed_string	seed using this ASCII string (default: use default seed)
+        bitlen          number of random bits to generate (default: 128 bits)
+        seed_string     seed using this ASCII string (default: use default seed)
 
 
 many_random
@@ -32,7 +32,7 @@ many_random
     Generate many (100000) sets random bits using the Blum-Blum-Shub
     generator that is used by the random() and srandom() builtin functions.
 
-    Output is one set per line.	 Unlike test_random, the seed is not
+    Output is one set per line.  Unlike test_random, the seed is not
     printed.  There is no leading 0x on numbers and there is no prefix
     strings.  The only thing printed (normally) is ASCII hex chars and
     newlines.
@@ -47,10 +47,10 @@ many_random
 
     usage:
 
-	many_random [bitlen [seed_string]]
+        many_random [bitlen [seed_string]]
 
-	bitlen		number of random bits per line set (default: 128 bits)
-	seed_string	seed using this ASCII string (default: use default seed)
+        bitlen          number of random bits per line set (default: 128 bits)
+        seed_string     seed using this ASCII string (default: use default seed)
 
 ## Copyright (C) 1999-2007  Landon Curt Noll
 ##
@@ -60,7 +60,7 @@ many_random
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -68,8 +68,8 @@ many_random
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1997/04/19 23:15:42
-## File existed as early as:	1997
+## Under source code control:   1997/04/19 23:15:42
+## File existed as early as:    1997
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

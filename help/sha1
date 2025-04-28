@@ -5,10 +5,10 @@ SYNOPSIS
     sha1([arg1 [, val ...]])
 
 TYPES
-    arg1	any
-    val		any
+    arg1        any
+    val         any
 
-    return	HASH or number
+    return      HASH or number
 
 DESCRIPTION
     The sha1() builtin implements the old Secure Hash Algorithm
@@ -25,58 +25,58 @@ DESCRIPTION
     The new arg1 HASH state is returned.
 
     If arg1 is not a a HASH state, then the initial HASH is
-    used and modified by arg1 and any val args supplied.	 The
+    used and modified by arg1 and any val args supplied.         The
     return value is the new HASH state.
 
     The following table gives a summary of actions and return values.
     Here, assume that 'h' is a HASH state:
 
-	sha1()			HASH	returns initial HASH state
+        sha1()                  HASH    returns initial HASH state
 
-	sha1(h)			number	h is put into final form and the
-					numeric value of the hash state
+        sha1(h)                 number  h is put into final form and the
+                                        numeric value of the hash state
 
-	sha1(x)			HASH	modify the initial state by hashing 'x'
+        sha1(x)                 HASH    modify the initial state by hashing 'x'
 
-	sha1(sha1(), x)		HASH	the same as sha1(x)
+        sha1(sha1(), x)         HASH    the same as sha1(x)
 
-	sha1(x, y)		HASH	the same as sha1(sha1(x), y)
+        sha1(x, y)              HASH    the same as sha1(sha1(x), y)
 
-	sha1(h, x, y)		HASH	modify state 'h' by 'x' and then 'y'
+        sha1(h, x, y)           HASH    modify state 'h' by 'x' and then 'y'
 
-	sha1(sha1(h,x,y))	number	numeric value of the above call
+        sha1(sha1(h,x,y))       number  numeric value of the above call
 
 EXAMPLE
     ; base(16)
-	    0xa
+            0xa
 
     ; sha1()
-	    sha1 hash state
+            sha1 hash state
     ; sha1(sha1())
-	    0xda39a3ee5e6b4b0d3255bfef95601890afd80709
+            0xda39a3ee5e6b4b0d3255bfef95601890afd80709
 
     ; sha1("x", "y", "z") == sha1("xyz")
-	    1
+            1
     ; sha1("x", "y", "z") == sha1("xy")
-	    0
+            0
 
     ; sha1(sha1("this is", 7^19-8, "a composite", 3i+4.5, "hash"))
-	    0xc3e1b562bf45b3bcfc055ac65b5b39cdeb6a6c55
+            0xc3e1b562bf45b3bcfc055ac65b5b39cdeb6a6c55
 
     ; x = sha1(list(1,2,3), "curds and whey", 2^21701-1, pi())
     ; x
-	    sha1 hash state
+            sha1 hash state
     ; sha1(x)
-	    0x988d2de4584b7536aa9a50a5749707a37affa1b5
+            0x988d2de4584b7536aa9a50a5749707a37affa1b5
 
     ; y = sha1()
     ; y = sha1(y, list(1,2,3), "curds and whey")
     ; y = sha1(y, 2^21701-1)
     ; y = sha1(y, pi())
     ; y
-	    sha1 hash state
+            sha1 hash state
     ; sha1(y)
-	    0x988d2de4584b7536aa9a50a5749707a37affa1b5
+            0x988d2de4584b7536aa9a50a5749707a37affa1b5
 
 LIMITS
     none
@@ -107,7 +107,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -115,8 +115,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1997/03/23 00:01:18
-## File existed as early as:	1997
+## Under source code control:   1997/03/23 00:01:18
+## File existed as early as:    1997
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

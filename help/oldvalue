@@ -5,14 +5,14 @@ SYNOPSIS
     .  (with no adjacent letters or digits or _ or .)
 
 TYPES
-    return	any
+    return      any
 
 DESCRIPTION
     The "old value" is essentially a global variable with identifier "."
     which at top level when directly from a file or keyboard
     is automatically assigned the saved value for a line
     of statements when evaluation of that line is completed and this saved
-    value is not null.	A line of statements is normally completed by a
+    value is not null.  A line of statements is normally completed by a
     '\n' not within a block bounded by braces or an expression bounded by
     parentheses.
 
@@ -26,7 +26,7 @@ EXAMPLE
     ; saveval(1);
     ; a = 2
     ; .
-	    2
+            2
     ; . += 3; b = . + 4
     ; print ., b
     9 9
@@ -36,9 +36,9 @@ EXAMPLE
     ; list(a, b, a + b)
 
     list (3 elements, 3 nonzero):
-	    [[0]] = 2
-	    [[1]] = 16
-	    [[2]] = 18
+            [[0]] = 2
+            [[1]] = 16
+            [[2]] = 18
 
     ; saveval(0)
     ; print pop(.), .[[1]]
@@ -61,7 +61,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -69,8 +69,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1997/09/06 20:03:35
-## File existed as early as:	1997
+## Under source code control:   1997/09/06 20:03:35
+## File existed as early as:    1997
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

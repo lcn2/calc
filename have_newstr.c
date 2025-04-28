@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,27 +17,27 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1995/05/02 03:55:08
- * File existed as early as:	1995
+ * Under source code control:   1995/05/02 03:55:08
+ * File existed as early as:    1995
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 /*
  * usage:
- *	have_newstr
+ *      have_newstr
  *
  * Not all systems support all ANSI C string functions, so this may not
  * compile on your system.
  *
  * This prog outputs several defines:
  *
- *	HAVE_NEWSTR
- *		defined ==> use memcpy(), memset(), strchr()
- *		undefined ==> use bcopy() instead of memcpy(),
- *			      use bfill() instead of memset(),
- *			      use index() instead of strchr()
+ *      HAVE_NEWSTR
+ *              defined ==> use memcpy(), memset(), strchr()
+ *              undefined ==> use bcopy() instead of memcpy(),
+ *                            use bfill() instead of memset(),
+ *                            use index() instead of strchr()
  */
 
 #include <stdio.h>
@@ -47,7 +47,7 @@
 #endif
 
 
-#include "banned.h"	/* include after system header <> includes */
+#include "banned.h"     /* include after system header <> includes */
 
 
 #define MOVELEN 3
@@ -60,18 +60,18 @@ main(void)
 {
 #if defined(HAVE_NO_NEWSTR)
 
-	printf("#undef HAVE_NEWSTR /* no */\n");
+        printf("#undef HAVE_NEWSTR /* no */\n");
 
 #else /* HAVE_NO_NEWSTR */
 
-	(void) memcpy(dest, src, MOVELEN);
-	(void) memset(dest, 0, MOVELEN);
-	(void) strchr(src, 'e');
+        (void) memcpy(dest, src, MOVELEN);
+        (void) memset(dest, 0, MOVELEN);
+        (void) strchr(src, 'e');
 
-	printf("#define HAVE_NEWSTR /* yes */\n");
+        printf("#define HAVE_NEWSTR /* yes */\n");
 
 #endif /* HAVE_NO_NEWSTR */
 
-	/* exit(0); */
-	return 0;
+        /* exit(0); */
+        return 0;
 }

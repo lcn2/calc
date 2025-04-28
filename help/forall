@@ -5,10 +5,10 @@ SYNOPSIS
     forall(x, y)
 
 TYPES
-    x		list or matrix
-    y		string
+    x           list or matrix
+    y           string
 
-    return	null value
+    return      null value
 
 DESCRIPTION
     In forall(x,y), y is the name of a function; that function
@@ -21,12 +21,12 @@ EXAMPLE
     ; A = list(1,2,3,4)
     ; forall(A, "s")
     ; n
-	    10
+            10
 
     ; define e(a) {if (iseven(a)) print a;}
     ; forall(A, "e")
-	    2
-	    4
+            2
+            4
 
 LIMITS
     none
@@ -45,7 +45,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -53,8 +53,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/07/10 02:09:31
-## File existed as early as:	1995
+## Under source code control:   1995/07/10 02:09:31
+## File existed as early as:    1995
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,10 +17,10 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1997/04/17 00:08:50
- * File existed as early as:	1997
+ * Under source code control:   1997/04/17 00:08:50
+ * File existed as early as:    1997
  *
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -38,184 +38,184 @@ B = blk();
 define is_octet(a) = istype(a, B[0]);
 
 define list_print(a) {
-	local i;
-	print "(":;
-	for (i = 0; i < size(a); i++) {
-		if (i > 0)
-			print ",":;
-		if (i >= listmax) {
-			print "...":;
-			break;
-		}
-		print a[[i]]:;
-	}
-	print ")":;
+        local i;
+        print "(":;
+        for (i = 0; i < size(a); i++) {
+                if (i > 0)
+                        print ",":;
+                if (i >= listmax) {
+                        print "...":;
+                        break;
+                }
+                print a[[i]]:;
+        }
+        print ")":;
 }
 
 define mat_print (a) {
-	local i, j;
+        local i, j;
 
-	if (matdim(a) == 1) {
-		for (i = 0; i < size(a); i++) {
-			if (i >= matrowmax) {
-				printf("  ...");
-				break;
-			}
-			printf("%8d", a[i]);
-		}
-		return;
-	}
-	if (matdim(a) > 2)
-		quit "Dimension for mat_print greater than 2";
+        if (matdim(a) == 1) {
+                for (i = 0; i < size(a); i++) {
+                        if (i >= matrowmax) {
+                                printf("  ...");
+                                break;
+                        }
+                        printf("%8d", a[i]);
+                }
+                return;
+        }
+        if (matdim(a) > 2)
+                quit "Dimension for mat_print greater than 2";
 
-	for (i = matmin(a,1); i <= matmax(a,1); i++) {
-		if (i >= matmin(a,1) + matcolmax) {
-			print "	    ...";
-			break;
-		}
-		for (j = matmin(a,2); j <= matmax(a,2); j++) {
-			if (j >= matmin(a,2) + matrowmax) {
-				printf("   ...");
-				break;
-			}
-			printf("%8d", a[i,j]);
-		}
-		print;
-	}
+        for (i = matmin(a,1); i <= matmax(a,1); i++) {
+                if (i >= matmin(a,1) + matcolmax) {
+                        print "     ...";
+                        break;
+                }
+                for (j = matmin(a,2); j <= matmax(a,2); j++) {
+                        if (j >= matmin(a,2) + matrowmax) {
+                                printf("   ...");
+                                break;
+                        }
+                        printf("%8d", a[i,j]);
+                }
+                print;
+        }
 }
 
 define octet_print(a) {
-	switch(a) {
-		case 8: print "BS":;
-			return;
-		case 9: print "HT":;
-			return;
-		case 10: print "NL":;
-			return;
-		case 12: print "FF":;
-			return;
-		case 13: print "CR":;
-			return;
-		case 27: print "ESC":;
-			return;
-	}
-	if (a > 31 && a < 127)
-		print char(a):;
-	else
-		print "Non-print":;
+        switch(a) {
+                case 8: print "BS":;
+                        return;
+                case 9: print "HT":;
+                        return;
+                case 10: print "NL":;
+                        return;
+                case 12: print "FF":;
+                        return;
+                case 13: print "CR":;
+                        return;
+                case 27: print "ESC":;
+                        return;
+        }
+        if (a > 31 && a < 127)
+                print char(a):;
+        else
+                print "Non-print":;
 }
 
 
 define blk_print(a) {
-	local i, n;
+        local i, n;
 
-	n = size(a);
+        n = size(a);
 
-	printf("Unnamed block with %d bytes of data\n", n);
-	print "First few characters: ":;
-	for (i = 0; i < n; i++) {
-		if (i >= blkmax) {
-			print "...",;
-			break;
-		}
-		print a[i],;
-	}
+        printf("Unnamed block with %d bytes of data\n", n);
+        print "First few characters: ":;
+        for (i = 0; i < n; i++) {
+                if (i >= blkmax) {
+                        print "...",;
+                        break;
+                }
+                print a[i],;
+        }
 }
 
 
 define nblk_print (a) {
-	local n, i;
+        local n, i;
 
-	n = size(a);
+        n = size(a);
 
-	printf("Block named \"%s\" with %d bytes of data\n", name(a), n);
-	print "First few characters: ":;
-	for (i = 0; i < n; i++) {
-		if (i >= blkmax) {
-			print "...",;
-			break;
-		}
-		print a[i],;
-	}
+        printf("Block named \"%s\" with %d bytes of data\n", name(a), n);
+        print "First few characters: ":;
+        for (i = 0; i < n; i++) {
+                if (i >= blkmax) {
+                        print "...",;
+                        break;
+                }
+                print a[i],;
+        }
 }
 
 
 define strchar(a) {
 
-	if (isstr(a))
-		a = ord(a);
+        if (isstr(a))
+                a = ord(a);
 
-	else if (is_octet(a))
-		a = a;		/* This converts octet to number */
+        else if (is_octet(a))
+                a = a;          /* This converts octet to number */
 
-	else if (!isint(a) || a < 0 || a > 255)
-		quit "Bad argument for strchar";
+        else if (!isint(a) || a < 0 || a > 255)
+                quit "Bad argument for strchar";
 
-	switch (a) {
-		case 7: print "\\a":;
-			return;
-		case 8: print "\\b":;
-			return;
-		case 9: print "\\t":;
-			return;
-		case 10: print "\\n":;
-			return;
-		case 11: print "\\v":;
-			return;
-		case 12: print "\\f":;
-			return;
-		case 13: print "\\r":;
-			return;
-		case 27: print "\\e":;
-			return;
-		case 34: print "\\\"":;
-			return;
-		case 39: print "\\\'":;
-			return;
-		case 92: print "\\\\":;
-			return;
-	}
-	if (a > 31 && a < 127) {
-		print char(a):;
-		return;
-	}
-	print "\\":;
-	if (a >= 64) print a // 64:;
-	a = a % 64;
-	if (a >= 8) print a // 8:;
-	a = a % 8;
-	print a:;
+        switch (a) {
+                case 7: print "\\a":;
+                        return;
+                case 8: print "\\b":;
+                        return;
+                case 9: print "\\t":;
+                        return;
+                case 10: print "\\n":;
+                        return;
+                case 11: print "\\v":;
+                        return;
+                case 12: print "\\f":;
+                        return;
+                case 13: print "\\r":;
+                        return;
+                case 27: print "\\e":;
+                        return;
+                case 34: print "\\\"":;
+                        return;
+                case 39: print "\\\'":;
+                        return;
+                case 92: print "\\\\":;
+                        return;
+        }
+        if (a > 31 && a < 127) {
+                print char(a):;
+                return;
+        }
+        print "\\":;
+        if (a >= 64) print a // 64:;
+        a = a % 64;
+        if (a >= 8) print a // 8:;
+        a = a % 8;
+        print a:;
 }
 
 
 define file_print(a) {
-	local c;
+        local c;
 
-	rewind(a);
-	for (;;) {
-		c = fgetc(a);
-		if (iserror(c))
-			quit "Failure when reading from file";
-		if (isnull(c))
-			break;
-		strchar(c);
-	}
-	print;
+        rewind(a);
+        for (;;) {
+                c = fgetc(a);
+                if (iserror(c))
+                        quit "Failure when reading from file";
+                if (isnull(c))
+                        break;
+                strchar(c);
+        }
+        print;
 }
 
 
 define error_print(a) {
-	local n = iserror(a);
+        local n = iserror(a);
 
-	if (n == 10001) {
-		print "1/0":;
-		return;
-	}
-	if (n == 10002) {
-		print "0/0":;
-		return;
-	}
-	print strerror(a):;
+        if (n == 10001) {
+                print "1/0":;
+                return;
+        }
+        if (n == 10002) {
+                print "0/0":;
+                return;
+        }
+        print strerror(a):;
 }
 
 
@@ -273,11 +273,11 @@ print M;
 print;
 
 define octet_print(a) {
-	local b, x;
-	x = a;
+        local b, x;
+        x = a;
 
-	for (b = 128; b; b >>= 1)
-		print (x >= b ? (x -= b, 1) : 0):;
+        for (b = 128; b; b >>= 1)
+                print (x >= b ? (x -= b, 1) : 0):;
 }
 
 print "Here is the earlier block with a new octet_print()";

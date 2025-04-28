@@ -5,10 +5,10 @@ SYNOPSIS
     sin(x [,eps])
 
 TYPES
-    x		number (real or complex)
-    eps		0 < real < 1, defaults to epsilon()
+    x           number (real or complex)
+    eps         0 < real < 1, defaults to epsilon()
 
-    return	number
+    return      number
 
 DESCRIPTION
     Calculate the trigonometric sine of x to a multiple of eps with error less in
@@ -50,14 +50,14 @@ SEE ALSO
 EXTERNAL RESOURCES
     For general information on trigonometric functions, see:
 
-	https://en.wikipedia.org/wiki/Trigonometric_functions#Unit-circle_definitions
-	https://en.wikipedia.org/wiki/Versine
-	https://en.wikipedia.org/wiki/Exsecant
-	https://en.wikipedia.org/wiki/Inverse_trigonometric_functions
-	https://en.wikipedia.org/wiki/Chord_(geometry)
-	https://en.wikipedia.org/wiki/Secant_line
-	https://en.wikipedia.org/wiki/Hartley_transform#cas
-	https://en.wikipedia.org/wiki/Cis_(mathematics)
+        https://en.wikipedia.org/wiki/Trigonometric_functions#Unit-circle_definitions
+        https://en.wikipedia.org/wiki/Versine
+        https://en.wikipedia.org/wiki/Exsecant
+        https://en.wikipedia.org/wiki/Inverse_trigonometric_functions
+        https://en.wikipedia.org/wiki/Chord_(geometry)
+        https://en.wikipedia.org/wiki/Secant_line
+        https://en.wikipedia.org/wiki/Hartley_transform#cas
+        https://en.wikipedia.org/wiki/Cis_(mathematics)
 
 ## Copyright (C) 1999,2021,2023  Landon Curt Noll
 ##
@@ -67,7 +67,7 @@ EXTERNAL RESOURCES
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -75,8 +75,8 @@ EXTERNAL RESOURCES
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1994/03/19 01:40:28
-## File existed as early as:	1994
+## Under source code control:   1994/03/19 01:40:28
+## File existed as early as:    1994
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

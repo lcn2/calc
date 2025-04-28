@@ -5,14 +5,14 @@ SYNOPSIS
     blkfree(val)
 
 TYPES
-    val		named block, string, or integer
+    val         named block, string, or integer
 
-    return	null value
+    return      null value
 
 DESCRIPTION
     If val is a named block, or the name of a named block, or the
     identifying index for a named block, blkfree(val) frees the
-    memory block allocated to this named block.	 The block remains
+    memory block allocated to this named block.  The block remains
     in existence with the same name, identifying index, and chunksize,
     but its size and maxsize becomes zero and the pointer for the start
     of its data block null.
@@ -26,27 +26,27 @@ EXAMPLE
     ; B1 = blk("foo")
     ; B2 = blk("Second block")
     show blocks
-     id	  name
+     id   name
     ----  -----
-     0	 foo
-     1	 Second block
+     0   foo
+     1   Second block
 
     ; blkfree(B1)
     ; show blocks
-     id	  name
+     id   name
     ----  -----
-     1	 Second block
+     1   Second block
 
     ; B1
-	block 0: foo
-	chunksize = 256, maxsize = 0, datalen = 0
-	NULL
+        block 0: foo
+        chunksize = 256, maxsize = 0, datalen = 0
+        NULL
 
     ; blk(B1); B[7] = 5
     ; B1
-	block 0: foo
-	chunksize = 256, maxsize = 256, datalen = 8
-	0000000000000005
+        block 0: foo
+        chunksize = 256, maxsize = 256, datalen = 8
+        0000000000000005
 
 LIMITS
     none
@@ -65,7 +65,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -73,8 +73,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1997/04/05 13:07:13
-## File existed as early as:	1997
+## Under source code control:   1997/04/05 13:07:13
+## File existed as early as:    1997
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

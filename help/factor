@@ -5,11 +5,11 @@ SYNOPSIS
     factor(n [, limit [, err]])
 
 TYPES
-    n		integer
-    limit	integer with abs(limit) < 2^32, defaults to 2^32 - 1
-    err		integer
+    n           integer
+    limit       integer with abs(limit) < 2^32, defaults to 2^32 - 1
+    err         integer
 
-    return	positive integer or err
+    return      positive integer or err
 
 DESCRIPTION
     This function ignores the signs of n and limit, so here we shall
@@ -19,9 +19,9 @@ DESCRIPTION
     factor(n, limit) returns the smallest such factor, or 1 if no
     factor was found below the limit.
 
-	NOTE: A proper factor of n>1 is a factor < n.  In other words,
-	      for n>1 is not a proper factor of itself.  The value 1
-	      is a special case because 1 is a proper factor of 1.
+        NOTE: A proper factor of n>1 is a factor < n.  In other words,
+              for n>1 is not a proper factor of itself.  The value 1
+              is a special case because 1 is a proper factor of 1.
 
     When every prime proper factor of n is greater than limit, 1 is
     returned.  In particular, if limit < 2, factor(n, limit) always
@@ -59,7 +59,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -67,8 +67,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/12/18 12:34:57
-## File existed as early as:	1995
+## Under source code control:   1995/12/18 12:34:57
+## File existed as early as:    1995
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

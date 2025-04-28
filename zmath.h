@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,10 +17,10 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1993/07/30 19:42:48
- * File existed as early as:	1993
+ * Under source code control:   1993/07/30 19:42:48
+ * File existed as early as:    1993
  *
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 /*
@@ -34,7 +34,7 @@
 #define INCLUDE_ZMATH_H
 
 
-#if defined(CALC_SRC)	/* if we are building from the calc source tree */
+#if defined(CALC_SRC)   /* if we are building from the calc source tree */
 # include "version.h"
 # include "bool.h"
 # include "decl.h"
@@ -67,59 +67,59 @@
 
 /*
  * NOTE: FULL must be twice the storage size of a HALF
- *	 HALF must be BASEB bits long
+ *       HALF must be BASEB bits long
  */
 
 #if defined(HAVE_B64)
 
-#define BASEB	32			/* use base 2^32 */
-typedef USB32 HALF;			/* unit of number storage */
-typedef SB32 SHALF;			/* signed HALF */
-typedef USB64 FULL;			/* double unit of number storage */
-typedef SB64 SFULL;			/* signed FULL */
+#define BASEB   32                      /* use base 2^32 */
+typedef USB32 HALF;                     /* unit of number storage */
+typedef SB32 SHALF;                     /* signed HALF */
+typedef USB64 FULL;                     /* double unit of number storage */
+typedef SB64 SFULL;                     /* signed FULL */
 
-#define SWAP_HALF_IN_B64(dest, src)	SWAP_B32_IN_B64(dest, src)
-#define SWAP_HALF_IN_B32(dest, src)	(*((HALF *)(dest)) = *((HALF *)(src)))
-#define SWAP_HALF_IN_FULL(dest, src)	SWAP_B32_IN_B64(dest, src)
-#define SWAP_HALF_IN_HASH(dest, src)	SWAP_B16_IN_HASH(dest, src)
-#define SWAP_HALF_IN_FLAG(dest, src)	SWAP_B16_IN_FLAG(dest, src)
-#define SWAP_HALF_IN_bool(dest, src)	SWAP_B16_IN_bool(dest, src)
-#define SWAP_HALF_IN_LEN(dest, src)	SWAP_B16_IN_LEN(dest, src)
-#define SWAP_B32_IN_FULL(dest, src)	SWAP_B32_IN_B64(dest, src)
-#define SWAP_B16_IN_FULL(dest, src)	SWAP_B16_IN_B64(dest, src)
-#define SWAP_B16_IN_HALF(dest, src)	SWAP_B16_IN_B32(dest, src)
-#define SWAP_B8_IN_FULL(dest, src)	SWAP_B8_IN_B64(dest, src)
-#define SWAP_B8_IN_HALF(dest, src)	SWAP_B8_IN_B32(dest, src)
+#define SWAP_HALF_IN_B64(dest, src)     SWAP_B32_IN_B64(dest, src)
+#define SWAP_HALF_IN_B32(dest, src)     (*((HALF *)(dest)) = *((HALF *)(src)))
+#define SWAP_HALF_IN_FULL(dest, src)    SWAP_B32_IN_B64(dest, src)
+#define SWAP_HALF_IN_HASH(dest, src)    SWAP_B16_IN_HASH(dest, src)
+#define SWAP_HALF_IN_FLAG(dest, src)    SWAP_B16_IN_FLAG(dest, src)
+#define SWAP_HALF_IN_bool(dest, src)    SWAP_B16_IN_bool(dest, src)
+#define SWAP_HALF_IN_LEN(dest, src)     SWAP_B16_IN_LEN(dest, src)
+#define SWAP_B32_IN_FULL(dest, src)     SWAP_B32_IN_B64(dest, src)
+#define SWAP_B16_IN_FULL(dest, src)     SWAP_B16_IN_B64(dest, src)
+#define SWAP_B16_IN_HALF(dest, src)     SWAP_B16_IN_B32(dest, src)
+#define SWAP_B8_IN_FULL(dest, src)      SWAP_B8_IN_B64(dest, src)
+#define SWAP_B8_IN_HALF(dest, src)      SWAP_B8_IN_B32(dest, src)
 
 #else
 
-#define BASEB	16			/* use base 2^16 */
-typedef USB16 HALF;			/* unit of number storage */
-typedef SB16 SHALF;			/* signed HALF */
-typedef USB32 FULL;			/* double unit of number storage */
-typedef SB32 SFULL;			/* signed FULL */
+#define BASEB   16                      /* use base 2^16 */
+typedef USB16 HALF;                     /* unit of number storage */
+typedef SB16 SHALF;                     /* signed HALF */
+typedef USB32 FULL;                     /* double unit of number storage */
+typedef SB32 SFULL;                     /* signed FULL */
 
-#define SWAP_HALF_IN_B64(dest, src)	SWAP_B16_IN_B64(dest, src)
-#define SWAP_HALF_IN_B32(dest, src)	SWAP_B16_IN_B32(dest, src)
-#define SWAP_HALF_IN_FULL(dest, src)	SWAP_B16_IN_B32(dest, src)
-#define SWAP_HALF_IN_HASH(dest, src)	SWAP_B16_IN_HASH(dest, src)
-#define SWAP_HALF_IN_FLAG(dest, src)	SWAP_B16_IN_FLAG(dest, src)
-#define SWAP_HALF_IN_bool(dest, src)	SWAP_B16_IN_bool(dest, src)
-#define SWAP_HALF_IN_LEN(dest, src)	SWAP_B16_IN_LEN(dest, src)
-#define SWAP_B32_IN_FULL(dest, src)	(*((FULL *)(dest)) = *((FULL *)(src)))
-#define SWAP_B16_IN_FULL(dest, src)	SWAP_B16_IN_B32(dest, src)
-#define SWAP_B16_IN_HALF(dest, src)	(*((HALF *)(dest)) = *((HALF *)(src)))
-#define SWAP_B8_IN_FULL(dest, src)	SWAP_B8_IN_B32(dest, src)
-#define SWAP_B8_IN_HALF(dest, src)	SWAP_B8_IN_B16(dest, src)
+#define SWAP_HALF_IN_B64(dest, src)     SWAP_B16_IN_B64(dest, src)
+#define SWAP_HALF_IN_B32(dest, src)     SWAP_B16_IN_B32(dest, src)
+#define SWAP_HALF_IN_FULL(dest, src)    SWAP_B16_IN_B32(dest, src)
+#define SWAP_HALF_IN_HASH(dest, src)    SWAP_B16_IN_HASH(dest, src)
+#define SWAP_HALF_IN_FLAG(dest, src)    SWAP_B16_IN_FLAG(dest, src)
+#define SWAP_HALF_IN_bool(dest, src)    SWAP_B16_IN_bool(dest, src)
+#define SWAP_HALF_IN_LEN(dest, src)     SWAP_B16_IN_LEN(dest, src)
+#define SWAP_B32_IN_FULL(dest, src)     (*((FULL *)(dest)) = *((FULL *)(src)))
+#define SWAP_B16_IN_FULL(dest, src)     SWAP_B16_IN_B32(dest, src)
+#define SWAP_B16_IN_HALF(dest, src)     (*((HALF *)(dest)) = *((HALF *)(src)))
+#define SWAP_B8_IN_FULL(dest, src)      SWAP_B8_IN_B32(dest, src)
+#define SWAP_B8_IN_HALF(dest, src)      SWAP_B8_IN_B16(dest, src)
 
 #endif
 
-#define BASE	((FULL)1<<BASEB)		/* base for calculations */
-#define BASE1	(BASE - (FULL)1)		/* one less than base */
-#define BASEDIG ((BASEB/16)*5)			/* number of digits in base */
-#define FULL_BITS (2*BASEB)			/* bits in a FULL */
-#define HALF_LEN (sizeof(HALF))			/* length of HALF in bites */
-#define FULL_LEN (sizeof(FULL))			/* length of FULL in bites */
+#define BASE    ((FULL)1<<BASEB)                /* base for calculations */
+#define BASE1   (BASE - (FULL)1)                /* one less than base */
+#define BASEDIG ((BASEB/16)*5)                  /* number of digits in base */
+#define FULL_BITS (2*BASEB)                     /* bits in a FULL */
+#define HALF_LEN (sizeof(HALF))                 /* length of HALF in bites */
+#define FULL_LEN (sizeof(FULL))                 /* length of FULL in bites */
 
 
 /*
@@ -130,59 +130,59 @@ typedef SB32 SFULL;			/* signed FULL */
  * NOTE: mult must != 0
  *
  * NOTE: If value is a multiple of mult, then ROUNDUP(value, mult)
- *	 will just return value.
+ *       will just return value.
  */
 #define ROUNDUP(value, mult) ( ( ((value)+(mult)-1) / (mult) ) * (mult) )
 
-#define TOPHALF ((FULL)1 << (BASEB-1))		/* highest bit in a HALF */
-#define MAXHALF (TOPHALF - (FULL)1)		/* largest SHALF value */
+#define TOPHALF ((FULL)1 << (BASEB-1))          /* highest bit in a HALF */
+#define MAXHALF (TOPHALF - (FULL)1)             /* largest SHALF value */
 
-#define TOPFULL ((FULL)1 << (FULL_BITS-1))	/* highest bit in FULL */
-#define MAXFULL (TOPFULL - (FULL)1)		/* largest SFULL value */
-#define MINSFULL ((SFULL)(TOPFULL))		/* most negative SFULL value */
-#define MAXUFULL (MAXFULL | TOPFULL)		/* largest FULL value */
+#define TOPFULL ((FULL)1 << (FULL_BITS-1))      /* highest bit in FULL */
+#define MAXFULL (TOPFULL - (FULL)1)             /* largest SFULL value */
+#define MINSFULL ((SFULL)(TOPFULL))             /* most negative SFULL value */
+#define MAXUFULL (MAXFULL | TOPFULL)            /* largest FULL value */
 
-#define TOPLONG ((unsigned long)1 << (LONG_BITS-1))	/* top long bit */
-#define MAXLONG ((long) (TOPLONG - (unsigned long)1))	/* largest long val */
-#define MAXULONG (MAXLONG | TOPLONG)		/* largest unsigned long val */
+#define TOPLONG ((unsigned long)1 << (LONG_BITS-1))     /* top long bit */
+#define MAXLONG ((long) (TOPLONG - (unsigned long)1))   /* largest long val */
+#define MAXULONG (MAXLONG | TOPLONG)            /* largest unsigned long val */
 
 
 /*
  * other miscellaneous typedefs
  */
-typedef USB32 QCKHASH;			/* 32 bit hash value */
+typedef USB32 QCKHASH;                  /* 32 bit hash value */
 #if defined(HAVE_B64) && LONG_BITS == 32
-typedef HALF PRINT;			/* cast for zio printing functions */
-#define SWAP_B16_IN_PRINT(dest, src)	SWAP_B16_IN_HALF(dest, src)
-#define SWAP_B8_IN_PRINT(dest, src)	SWAP_B8_IN_HALF(dest, src)
+typedef HALF PRINT;                     /* cast for zio printing functions */
+#define SWAP_B16_IN_PRINT(dest, src)    SWAP_B16_IN_HALF(dest, src)
+#define SWAP_B8_IN_PRINT(dest, src)     SWAP_B8_IN_HALF(dest, src)
 #else
-typedef FULL PRINT;			/* cast for zio printing functions */
-#define SWAP_B16_IN_PRINT(dest, src)	SWAP_B16_IN_FULL(dest, src)
-#define SWAP_B8_IN_PRINT(dest, src)	SWAP_B8_IN_FULL(dest, src)
+typedef FULL PRINT;                     /* cast for zio printing functions */
+#define SWAP_B16_IN_PRINT(dest, src)    SWAP_B16_IN_FULL(dest, src)
+#define SWAP_B8_IN_PRINT(dest, src)     SWAP_B8_IN_FULL(dest, src)
 #endif
-typedef SB32 FLAG;			/* small value (e.g. comparison) */
+typedef SB32 FLAG;                      /* small value (e.g. comparison) */
 
 /*
  * length of internal integer values in units of HALF
  */
 #if MAJOR_VER < 3
-typedef SB32 LEN;			/* calc v2 compatible unit of length storage */
+typedef SB32 LEN;                       /* calc v2 compatible unit of length storage */
 #else /* MAJOR_VER < 3 */
-typedef uintptr_t LEN;			/* unit of length storage */
+typedef uintptr_t LEN;                  /* unit of length storage */
 #endif /* MAJOR_VER < 3 */
 
-#define SWAP_B32_IN_bool(dest, src)	(*((bool *)(dest)) = *((bool *)(src)))
-#define SWAP_B16_IN_bool(dest, src)	SWAP_B16_IN_B32(dest, src)
-#define SWAP_B8_IN_bool(dest, src)	SWAP_B8_IN_B32(dest, src)
+#define SWAP_B32_IN_bool(dest, src)     (*((bool *)(dest)) = *((bool *)(src)))
+#define SWAP_B16_IN_bool(dest, src)     SWAP_B16_IN_B32(dest, src)
+#define SWAP_B8_IN_bool(dest, src)      SWAP_B8_IN_B32(dest, src)
 
-#define SWAP_B32_IN_LEN(dest, src)	(*((LEN *)(dest)) = *((LEN *)(src)))
-#define SWAP_B16_IN_LEN(dest, src)	SWAP_B16_IN_B32(dest, src)
-#define SWAP_B8_IN_LEN(dest, src)	SWAP_B8_IN_B32(dest, src)
+#define SWAP_B32_IN_LEN(dest, src)      (*((LEN *)(dest)) = *((LEN *)(src)))
+#define SWAP_B16_IN_LEN(dest, src)      SWAP_B16_IN_B32(dest, src)
+#define SWAP_B8_IN_LEN(dest, src)       SWAP_B8_IN_B32(dest, src)
 
 #if LONG_BITS == 64
-#define SWAP_HALF_IN_LONG(dest, src)	SWAP_HALF_IN_B64(dest, src)
+#define SWAP_HALF_IN_LONG(dest, src)    SWAP_HALF_IN_B64(dest, src)
 #else /* LONG_BITS == 64 */
-#define SWAP_HALF_IN_LONG(dest, src)	SWAP_HALF_IN_B32(dest, src)
+#define SWAP_HALF_IN_LONG(dest, src)    SWAP_HALF_IN_B32(dest, src)
 #endif /* LONG_BITS == 64 */
 
 
@@ -194,7 +194,7 @@ typedef uintptr_t LEN;			/* unit of length storage */
  * 0 hash value.  The virgin value that we use below is the 32-bit
  * FNV-0 hash value that we would get from following 32 ASCII characters:
  *
- *		chongo <Landon Curt Noll> /\../\
+ *              chongo <Landon Curt Noll> /\../\
  *
  * Note that the \'s above are not back-slashing escape characters.
  * They are literal ASCII  backslash 0x5c characters.
@@ -227,7 +227,7 @@ typedef uintptr_t LEN;			/* unit of length storage */
  * The largest power of 10 we will compute for our decimal conversion
  * internal constants is: 10^(2^TEN_MAX).
  */
-#define TEN_MAX 31	/* 10^2^31 requires about 1.66 * 2^29 bytes */
+#define TEN_MAX 31      /* 10^2^31 requires about 1.66 * 2^29 bytes */
 
 
 /*
@@ -238,9 +238,9 @@ typedef uintptr_t LEN;			/* unit of length storage */
  * will need 4 huge integers, plus other data, code and stack space.
  */
 #if MAJOR_VER < 3
-#define MAXDATA (0x80000000>>3)		/* calc v2 compatible supported address space */
+#define MAXDATA (0x80000000>>3)         /* calc v2 compatible supported address space */
 #else /* MAJOR_VER < 3 */
-#define MAXDATA ((LEN) 1<<(UINTPTR_WIDTH-4))	/* 1/16 of address space */
+#define MAXDATA ((LEN) 1<<(UINTPTR_WIDTH-4))    /* 1/16 of address space */
 #endif /* MAJOR_VER < 3 */
 
 /*
@@ -249,41 +249,41 @@ typedef uintptr_t LEN;			/* unit of length storage */
  * We limit MAXLEN based on 1 less than the number of HALFs that
  * will fit into MAXDATA bytes.
  */
-#define MAXLEN ((LEN) ((MAXDATA / HALF_LEN) - 1))	/* longest value allowed */
+#define MAXLEN ((LEN) ((MAXDATA / HALF_LEN) - 1))       /* longest value allowed */
 
 
-#define MAXREDC 256			/* number of entries in REDC cache */
-#define SQ_ALG2 28			/* size for alternative squaring */
-#define MUL_ALG2 28			/* size for alternative multiply */
-#define POW_ALG2 20			/* size for using REDC for powers */
+#define MAXREDC 256                     /* number of entries in REDC cache */
+#define SQ_ALG2 28                      /* size for alternative squaring */
+#define MUL_ALG2 28                     /* size for alternative multiply */
+#define POW_ALG2 20                     /* size for using REDC for powers */
 /* old REDC_ALG2 was 5/4 of POW_ALG2, so we will keep the same ratio */
-#define REDC_ALG2 25			/* size for using alternative REDC */
+#define REDC_ALG2 25                    /* size for using alternative REDC */
 
 
 typedef union {
-	FULL	ivalue;
-	struct {
-		HALF Svalue1;
-		HALF Svalue2;
-	} sis;
+        FULL    ivalue;
+        struct {
+                HALF Svalue1;
+                HALF Svalue2;
+        } sis;
 } SIUNION;
 
 
 #if !defined(LITTLE_ENDIAN)
-#define LITTLE_ENDIAN	1234	/* Least Significant Byte first */
+#define LITTLE_ENDIAN   1234    /* Least Significant Byte first */
 #endif
 #if !defined(BIG_ENDIAN)
-#define BIG_ENDIAN	4321	/* Most Significant Byte first */
+#define BIG_ENDIAN      4321    /* Most Significant Byte first */
 #endif
 /* PDP_ENDIAN - LSB in word, MSW in long is not supported */
 
 #if CALC_BYTE_ORDER == LITTLE_ENDIAN
-# define silow	sis.Svalue1	/* low order half of full value */
-# define sihigh sis.Svalue2	/* high order half of full value */
+# define silow  sis.Svalue1     /* low order half of full value */
+# define sihigh sis.Svalue2     /* high order half of full value */
 #else
 # if CALC_BYTE_ORDER == BIG_ENDIAN
-#  define silow sis.Svalue2	/* low order half of full value */
-#  define sihigh sis.Svalue1	/* high order half of full value */
+#  define silow sis.Svalue2     /* low order half of full value */
+#  define sihigh sis.Svalue1    /* high order half of full value */
 # else
    /\oo/\    CALC_BYTE_ORDER must be BIG_ENDIAN or LITTLE_ENDIAN    /\oo/\  !!!
 # endif
@@ -295,14 +295,14 @@ typedef union {
  * ZVALUE - multi-prevision integer
  */
 #if MAJOR_VER < 3
-typedef SB32 SIGN;			/* calc v2 compatible sign type */
+typedef SB32 SIGN;                      /* calc v2 compatible sign type */
 #else /* MAJOR_VER < 3 */
-typedef bool SIGN;			/* sign as a C boolean */
+typedef bool SIGN;                      /* sign as a C boolean */
 #endif /* MAJOR_VER < 3 */
 typedef struct {
-	HALF	*v;		/* pointer to array of values */
-	LEN	len;		/* number of values in array */
-	SIGN	sign;		/* sign, nonzero is negative */
+        HALF    *v;             /* pointer to array of values */
+        LEN     len;            /* number of values in array */
+        SIGN    sign;           /* sign, nonzero is negative */
 } ZVALUE;
 
 
@@ -312,7 +312,7 @@ typedef struct {
  */
 E_FUNC HALF * alloc(LEN len);
 E_FUNC int is_const(HALF* h);
-#ifdef	ALLOCTEST
+#ifdef  ALLOCTEST
 E_FUNC void freeh(HALF *);
 #endif
 
@@ -411,9 +411,9 @@ E_FUNC void zpfact(ZVALUE z, ZVALUE *dest);
 E_FUNC bool zprimetest(ZVALUE z, long count, ZVALUE skip);
 E_FUNC bool zredcprimetest(ZVALUE z, long count, ZVALUE skip);
 E_FUNC bool znextcand(ZVALUE z1, long count, ZVALUE skip, ZVALUE res,
-		      ZVALUE mod, ZVALUE *cand);
+                      ZVALUE mod, ZVALUE *cand);
 E_FUNC bool zprevcand(ZVALUE z1, long count, ZVALUE skip, ZVALUE res,
-		      ZVALUE mod, ZVALUE *cand);
+                      ZVALUE mod, ZVALUE *cand);
 E_FUNC FULL zlowfactor(ZVALUE z, long count);
 E_FUNC FLAG zfactor(ZVALUE z1, ZVALUE z2, ZVALUE *res);
 E_FUNC long zpix(ZVALUE z1);
@@ -446,10 +446,10 @@ E_FUNC HALF *zalloctemp(LEN len);
  * Len of zero means the structure is not initialized.
  */
 typedef struct {
-	LEN len;		/* number of words in binary modulus */
-	ZVALUE mod;		/* modulus REDC is computing with */
-	ZVALUE inv;		/* inverse of modulus in binary modulus */
-	ZVALUE one;		/* REDC format for the number 1 */
+        LEN len;                /* number of words in binary modulus */
+        ZVALUE mod;             /* modulus REDC is computing with */
+        ZVALUE inv;             /* inverse of modulus in binary modulus */
+        ZVALUE one;             /* REDC format for the number 1 */
 } REDC;
 
 E_FUNC REDC *zredcalloc(ZVALUE z1);
@@ -464,103 +464,103 @@ E_FUNC void zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
 /*
  * macro expansions to speed this thing up
  */
-#define ziseven(z)	(!(*(z).v & 0x1))
-#define zisodd(z)	(*(z).v & 0x1)
-#define ziszero(z)	((*(z).v == 0) && ((z).len == 1))
-#define zisneg(z)	((z).sign)
-#define zispos(z)	(((z).sign == 0) && (*(z).v || ((z).len > 1)))
-#define zisunit(z)	((*(z).v == 1) && ((z).len == 1))
-#define zisone(z)	((*(z).v == 1) && ((z).len == 1) && !(z).sign)
-#define zisnegone(z)	((*(z).v == 1) && ((z).len == 1) && (z).sign)
-#define zltnegone(z)	(zisneg(z) && (((z).len > 1) || *(z).v > 1))
-#define zistwo(z)	((*(z).v == 2) && ((z).len == 1) && !(z).sign)
-#define zisabstwo(z)	((*(z).v == 2) && ((z).len == 1))
-#define zisabsleone(z)	((*(z).v <= 1) && ((z).len == 1))
-#define zislezero(z)	(zisneg(z) || ziszero(z))
-#define zisleone(z)	(zisneg(z) || zisabsleone(z))
-#define zistiny(z)	((z).len == 1)
+#define ziseven(z)      (!(*(z).v & 0x1))
+#define zisodd(z)       (*(z).v & 0x1)
+#define ziszero(z)      ((*(z).v == 0) && ((z).len == 1))
+#define zisneg(z)       ((z).sign)
+#define zispos(z)       (((z).sign == 0) && (*(z).v || ((z).len > 1)))
+#define zisunit(z)      ((*(z).v == 1) && ((z).len == 1))
+#define zisone(z)       ((*(z).v == 1) && ((z).len == 1) && !(z).sign)
+#define zisnegone(z)    ((*(z).v == 1) && ((z).len == 1) && (z).sign)
+#define zltnegone(z)    (zisneg(z) && (((z).len > 1) || *(z).v > 1))
+#define zistwo(z)       ((*(z).v == 2) && ((z).len == 1) && !(z).sign)
+#define zisabstwo(z)    ((*(z).v == 2) && ((z).len == 1))
+#define zisabsleone(z)  ((*(z).v <= 1) && ((z).len == 1))
+#define zislezero(z)    (zisneg(z) || ziszero(z))
+#define zisleone(z)     (zisneg(z) || zisabsleone(z))
+#define zistiny(z)      ((z).len == 1)
 
 /*
- * zgtmaxfull(z)	true if abs(z) > MAXFULL
+ * zgtmaxfull(z)        true if abs(z) > MAXFULL
  */
-#define zgtmaxfull(z)	(((z).len > 2) || (((z).len == 2) && \
-			 (((SHALF)(z).v[1]) < 0)))
+#define zgtmaxfull(z)   (((z).len > 2) || (((z).len == 2) && \
+                         (((SHALF)(z).v[1]) < 0)))
 
 /*
- * zgtmaxufull(z)	true if abs(z) will not fit into a FULL (> MAXUFULL)
+ * zgtmaxufull(z)       true if abs(z) will not fit into a FULL (> MAXUFULL)
  */
-#define zgtmaxufull(z)	((z).len > 2)
+#define zgtmaxufull(z)  ((z).len > 2)
 
 /*
- * zgtmaxulong(z)	true if abs(z) > MAXULONG
+ * zgtmaxulong(z)       true if abs(z) > MAXULONG
  */
 #if BASEB >= LONG_BITS
-#define zgtmaxulong(z)	((z).len > 1)
+#define zgtmaxulong(z)  ((z).len > 1)
 #else
-#define zgtmaxulong(z)	zgtmaxufull(z)
+#define zgtmaxulong(z)  zgtmaxufull(z)
 #endif
 
 /*
- * zgtmaxlong(z)	true if abs(z) > MAXLONG
+ * zgtmaxlong(z)        true if abs(z) > MAXLONG
  */
 #if BASEB >= LONG_BITS
-#define zgtmaxlong(z)	(((z).len > 1) || (((z).len == 1) && \
-			 (((SHALF)(z).v[0]) < 0)))
+#define zgtmaxlong(z)   (((z).len > 1) || (((z).len == 1) && \
+                         (((SHALF)(z).v[0]) < 0)))
 #else
-#define zgtmaxlong(z)	zgtmaxfull(z)
+#define zgtmaxlong(z)   zgtmaxfull(z)
 #endif
 
 /*
  * Some algorithms testing for values of a certain length.  Macros such as
  * zistiny() do this well.  In other cases algorithms require tests for values
- * in comparison to a given power of 2.	 In the later case, zistiny() compares
- * against a different power of 2 on a 64 bit machine.	The macros below
+ * in comparison to a given power of 2.  In the later case, zistiny() compares
+ * against a different power of 2 on a 64 bit machine.  The macros below
  * provide a tests against powers of 2 that are independent of the work size.
  *
- *	zge16b(z)	true if abs(z) >= 2^16
- *	zge24b(z)	true if abs(z) >= 2^24
- *	zge31b(z)	true if abs(z) >= 2^31
- *	zge32b(z)	true if abs(z) >= 2^32
- *	zge64b(z)	true if abs(z) >= 2^64
- *	zge128b(z)	true if abs(z) >= 2^128
- *	zge256b(z)	true if abs(z) >= 2^256
- *	zge512b(z)	true if abs(z) >= 2^512
- *	zge1024b(z)	true if abs(z) >= 2^1024
- *	zge2048b(z)	true if abs(z) >= 2^2048
- *	zge4096b(z)	true if abs(z) >= 2^4096
- *	zge8192b(z)	true if abs(z) >= 2^8192
+ *      zge16b(z)       true if abs(z) >= 2^16
+ *      zge24b(z)       true if abs(z) >= 2^24
+ *      zge31b(z)       true if abs(z) >= 2^31
+ *      zge32b(z)       true if abs(z) >= 2^32
+ *      zge64b(z)       true if abs(z) >= 2^64
+ *      zge128b(z)      true if abs(z) >= 2^128
+ *      zge256b(z)      true if abs(z) >= 2^256
+ *      zge512b(z)      true if abs(z) >= 2^512
+ *      zge1024b(z)     true if abs(z) >= 2^1024
+ *      zge2048b(z)     true if abs(z) >= 2^2048
+ *      zge4096b(z)     true if abs(z) >= 2^4096
+ *      zge8192b(z)     true if abs(z) >= 2^8192
  */
 #if BASEB == 32
 
-#define zge16b(z)	(!zistiny(z) || ((z).v[0] >= (HALF)0x10000))
-#define zge24b(z)	(!zistiny(z) || ((z).v[0] >= (HALF)0x1000000))
-#define zge31b(z)	(!zistiny(z) || (((SHALF)(z).v[0]) < 0))
-#define zge32b(z)	(!zistiny(z))
-#define zge64b(z)	((z).len > 2)
-#define zge128b(z)	((z).len > 4)
-#define zge256b(z)	((z).len > 8)
-#define zge512b(z)	((z).len > 16)
-#define zge1024b(z)	((z).len > 32)
-#define zge2048b(z)	((z).len > 64)
-#define zge4096b(z)	((z).len > 128)
-#define zge8192b(z)	((z).len > 256)
+#define zge16b(z)       (!zistiny(z) || ((z).v[0] >= (HALF)0x10000))
+#define zge24b(z)       (!zistiny(z) || ((z).v[0] >= (HALF)0x1000000))
+#define zge31b(z)       (!zistiny(z) || (((SHALF)(z).v[0]) < 0))
+#define zge32b(z)       (!zistiny(z))
+#define zge64b(z)       ((z).len > 2)
+#define zge128b(z)      ((z).len > 4)
+#define zge256b(z)      ((z).len > 8)
+#define zge512b(z)      ((z).len > 16)
+#define zge1024b(z)     ((z).len > 32)
+#define zge2048b(z)     ((z).len > 64)
+#define zge4096b(z)     ((z).len > 128)
+#define zge8192b(z)     ((z).len > 256)
 
 #else
 
-#define zge16b(z)	(!zistiny(z))
-#define zge24b(z)	(((z).len > 2) || (((z).len == 2) && \
-			 ((z).v[1] >= (HALF)0x100)))
-#define zge31b(z)	(((z).len > 2) || (((z).len == 2) && \
-			 (((SHALF)(z).v[1]) < 0)))
-#define zge32b(z)	((z).len > 2)
-#define zge64b(z)	((z).len > 4)
-#define zge128b(z)	((z).len > 8)
-#define zge256b(z)	((z).len > 16)
-#define zge512b(z)	((z).len > 32)
-#define zge1024b(z)	((z).len > 64)
-#define zge2048b(z)	((z).len > 128)
-#define zge4096b(z)	((z).len > 256)
-#define zge8192b(z)	((z).len > 512)
+#define zge16b(z)       (!zistiny(z))
+#define zge24b(z)       (((z).len > 2) || (((z).len == 2) && \
+                         ((z).v[1] >= (HALF)0x100)))
+#define zge31b(z)       (((z).len > 2) || (((z).len == 2) && \
+                         (((SHALF)(z).v[1]) < 0)))
+#define zge32b(z)       ((z).len > 2)
+#define zge64b(z)       ((z).len > 4)
+#define zge128b(z)      ((z).len > 8)
+#define zge256b(z)      ((z).len > 16)
+#define zge512b(z)      ((z).len > 32)
+#define zge1024b(z)     ((z).len > 64)
+#define zge2048b(z)     ((z).len > 128)
+#define zge4096b(z)     ((z).len > 256)
+#define zge8192b(z)     ((z).len > 512)
 
 #endif
 
@@ -571,13 +571,13 @@ E_FUNC void zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
  * If the value is too large, only the low order bits that are able to
  * be converted into a FULL will be used.
  */
-#define ztofull(z)	(zistiny(z) ? ((FULL)((z).v[0])) :		\
-				      ((FULL)((z).v[0]) +		\
-				       ((FULL)((z).v[1]) << BASEB)))
+#define ztofull(z)      (zistiny(z) ? ((FULL)((z).v[0])) :              \
+                                      ((FULL)((z).v[0]) +               \
+                                       ((FULL)((z).v[1]) << BASEB)))
 
-#define z1tol(z)	((long)((z).v[0]))
-#define z2tol(z)	((long)(((z).v[0]) + \
-				(((z).v[1] & MAXHALF) << BASEB)))
+#define z1tol(z)        ((long)((z).v[0]))
+#define z2tol(z)        ((long)(((z).v[0]) + \
+                                (((z).v[1] & MAXHALF) << BASEB)))
 
 /*
  * ztoulong - convert an absolute value of a ZVALUE to an unsigned long
@@ -586,9 +586,9 @@ E_FUNC void zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
  * be converted into a long will be used.
  */
 #if BASEB >= LONG_BITS
-# define ztoulong(z)	((unsigned long)z1tol(z))
+# define ztoulong(z)    ((unsigned long)z1tol(z))
 #else
-# define ztoulong(z)	((unsigned long)ztofull(z))
+# define ztoulong(z)    ((unsigned long)ztofull(z))
 #endif
 
 /*
@@ -597,38 +597,38 @@ E_FUNC void zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
  * If the value is too large, only the low order bits that are able to
  * be converted into a long will be used.
  */
-#define ztolong(z)	((long)(ztoulong(z) & MAXLONG))
+#define ztolong(z)      ((long)(ztoulong(z) & MAXLONG))
 
-#define zclearval(z)	memset((z).v, 0, (z).len * sizeof(HALF))
+#define zclearval(z)    memset((z).v, 0, (z).len * sizeof(HALF))
 #define zcopyval(z1,z2) memcpy((z2).v, (z1).v, (z1).len * sizeof(HALF))
-#define zquicktrim(z)	{if (((z).len > 1) && ((z).v[(z).len-1] == 0)) \
-				(z).len--;}
-#define zfree(z)	{if ((z).len != 0 && (z).v != NULL) { \
-			    freeh((z).v); \
-			    (z).v = NULL; \
-			    (z).len = 0; \
-			    (z).sign = 0; } \
-			}
+#define zquicktrim(z)   {if (((z).len > 1) && ((z).v[(z).len-1] == 0)) \
+                                (z).len--;}
+#define zfree(z)        {if ((z).len != 0 && (z).v != NULL) { \
+                            freeh((z).v); \
+                            (z).v = NULL; \
+                            (z).len = 0; \
+                            (z).sign = 0; } \
+                        }
 
 
 /*
  * Output modes for numeric displays.
  */
-#define MODE_DEFAULT	0
-#define MODE_FRAC	1
-#define MODE_INT	2
-#define MODE_REAL	3
-#define MODE_EXP	4
-#define MODE_HEX	5
-#define MODE_OCTAL	6
-#define MODE_BINARY	7
-#define MODE_REAL_AUTO	8
+#define MODE_DEFAULT    0
+#define MODE_FRAC       1
+#define MODE_INT        2
+#define MODE_REAL       3
+#define MODE_EXP        4
+#define MODE_HEX        5
+#define MODE_OCTAL      6
+#define MODE_BINARY     7
+#define MODE_REAL_AUTO  8
 #define MODE_ENG    9
-#define MODE_MAX	9
-#define MODE2_OFF	(MODE_MAX+1)
+#define MODE_MAX        9
+#define MODE2_OFF       (MODE_MAX+1)
 
-#define MODE_INITIAL	MODE_REAL
-#define MODE2_INITIAL	MODE2_OFF
+#define MODE_INITIAL    MODE_REAL
+#define MODE2_INITIAL   MODE2_OFF
 
 
 /*
@@ -691,18 +691,18 @@ EXTERN ZVALUE _b64_;
 
 EXTERN HALF *half_tbl[]; /* preset HALF constants, NULL terminated list */
 
-EXTERN bool _math_abort_;	/* nonzero to abort calculations */
-EXTERN ZVALUE _tenpowers_[];	/* table of 10^2^n */
+EXTERN bool _math_abort_;       /* nonzero to abort calculations */
+EXTERN ZVALUE _tenpowers_[];    /* table of 10^2^n */
 
 /*
  * Bit fiddling functions and types
  */
-EXTERN HALF bitmask[];		/* bit rotation, norm 0 */
-EXTERN HALF lowhalf[];		/* bit masks from low end of HALF */
-EXTERN HALF rlowhalf[];		/* reversed bit masks from low end of HALF */
-EXTERN HALF highhalf[];		/* bit masks from high end of HALF */
-EXTERN HALF rhighhalf[];	/* reversed bit masks from high end of HALF */
-#define HAVE_REVERSED_MASKS	/* allows old code to know libcalc.a has them */
+EXTERN HALF bitmask[];          /* bit rotation, norm 0 */
+EXTERN HALF lowhalf[];          /* bit masks from low end of HALF */
+EXTERN HALF rlowhalf[];         /* reversed bit masks from low end of HALF */
+EXTERN HALF highhalf[];         /* bit masks from high end of HALF */
+EXTERN HALF rhighhalf[];        /* reversed bit masks from high end of HALF */
+#define HAVE_REVERSED_MASKS     /* allows old code to know libcalc.a has them */
 
 
 /*
@@ -715,9 +715,9 @@ EXTERN HALF rhighhalf[];	/* reversed bit masks from high end of HALF */
  * significance may be found in previous bits and HALFs.
  */
 typedef struct {
-	HALF *loc;	/* half address of most significant bit */
-	int bit;	/* bit position within half of most significant bit */
-	int len;	/* length of string in bits */
+        HALF *loc;      /* half address of most significant bit */
+        int bit;        /* bit position within half of most significant bit */
+        int len;        /* length of string in bits */
 } BITSTR;
 
 

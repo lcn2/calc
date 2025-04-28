@@ -1,7 +1,7 @@
 operators
 
     The operators are similar to C, but there are some differences in
-    the associativity and precedence rules for some operators.	In
+    the associativity and precedence rules for some operators.  In
     addition, there are several operators not in C, and some C
     operators are missing.  A more detailed discussion of situations
     that may be unexpected for the C programmer may be found in
@@ -18,35 +18,35 @@ operators
     skipping of terms may occur for ||, && and ? : .  For example,
     an expression of the form:
 
-	    A * B + C * D
+            A * B + C * D
 
     is evaluated in the following order:
 
-	    A
-	    B
-	    A * B
-	    C
-	    D
-	    C * D
-	    A * B + C * D
+            A
+            B
+            A * B
+            C
+            D
+            C * D
+            A * B + C * D
 
     This order of evaluation is significant if evaluation of a
     term changes a variable on which a later term depends.  For example:
 
-	    x++ * x++ + x++ * x++
+            x++ * x++ + x++ * x++
 
     returns the value of:
 
-	    x * (x + 1) + (x + 2) * (x + 3)
+            x * (x + 1) + (x + 2) * (x + 3)
 
     and increments x as if by x += 4.  Similarly, for functions f, g,
     the expression:
 
-	    f(x++, x++) + g(x++)
+            f(x++, x++) + g(x++)
 
     evaluates to:
 
-	    f(x, x + 1) + g(x + 2)
+            f(x, x + 1) + g(x + 2)
 
     and increments x three times.
 
@@ -56,153 +56,153 @@ operators
     it returns x + 1 and increments x twice.
 
 
-    ,	Comma operator.
-	    a, b returns the value of b.
-	    For situations in which a comma is used for another purpose
-	    (function arguments, array indexing, and the print statement),
-	    parenthesis must be used around the comma operator expression.
-	    E.g., if A is a matrix, A[(a, b), c] evaluates a, b, and c, and
-	    returns the value of A[b, c].
+    ,   Comma operator.
+            a, b returns the value of b.
+            For situations in which a comma is used for another purpose
+            (function arguments, array indexing, and the print statement),
+            parenthesis must be used around the comma operator expression.
+            E.g., if A is a matrix, A[(a, b), c] evaluates a, b, and c, and
+            returns the value of A[b, c].
 
-    +=	-=  *=	/=  %=	//=  &=	 |=  <<=  >>=  ^=  **=
-	 Operator-with-assignments.
-	    These associate from left to right, e.g. a += b *= c has the
-	    effect of a = (a + b) * c, where only a is required to be an
-	    lvalue.  For the effect of b *= c; a += b; when both a and b
-	    are lvalues, use a += (b *= c).
+    +=  -=  *=  /=  %=  //=  &=  |=  <<=  >>=  ^=  **=
+         Operator-with-assignments.
+            These associate from left to right, e.g. a += b *= c has the
+            effect of a = (a + b) * c, where only a is required to be an
+            lvalue.  For the effect of b *= c; a += b; when both a and b
+            are lvalues, use a += (b *= c).
 
-    =	Assignment.
-	    As in C, this, when repeated, this associates from right to left,
-	    e.g. a = b = c has the effect of a = (b = c).  Here both a and b
-	    are to be lvalues.
+    =   Assignment.
+            As in C, this, when repeated, this associates from right to left,
+            e.g. a = b = c has the effect of a = (b = c).  Here both a and b
+            are to be lvalues.
 
     ? : Conditional value.
-	    a ? b : c  returns b if a tests as true (i.e. nonzero if
-	    a is a number), c otherwise.  Thus it is equivalent to:
-	    if (a) return b; else return c;.
-	    All that is required of the arguments in this function
-	    is that the "is-it-true?" test is meaningful for a.
-	    As in C, this operator associates from right to left,
-	    i.e. a ? b : c ? d : e is evaluated as a ? b : (c ? d : e).
+            a ? b : c  returns b if a tests as true (i.e. nonzero if
+            a is a number), c otherwise.  Thus it is equivalent to:
+            if (a) return b; else return c;.
+            All that is required of the arguments in this function
+            is that the "is-it-true?" test is meaningful for a.
+            As in C, this operator associates from right to left,
+            i.e. a ? b : c ? d : e is evaluated as a ? b : (c ? d : e).
 
-    ||	Logical OR.
-	    Unlike C, the result for a || b is one of the operands
-	    a, b rather than one of the numbers 0 and 1.
-	    a || b is equivalent to a ? a : b, i.e. if a tests as
-	    true, a is returned, otherwise b.  The effect in a
-	    test like "if (a || b) ... " is the same as in C.
+    ||  Logical OR.
+            Unlike C, the result for a || b is one of the operands
+            a, b rather than one of the numbers 0 and 1.
+            a || b is equivalent to a ? a : b, i.e. if a tests as
+            true, a is returned, otherwise b.  The effect in a
+            test like "if (a || b) ... " is the same as in C.
 
-    &&	Logical AND.
-	    Unlike C, the result for a && b is one of the operands
-	    a, b rather than one of the numbers 0 and 1.
-	    a && b is equivalent to a ? b : a, i.e. if a tests as
-	    true, b is returned, otherwise a.  The effect in a
-	    test like "if (a && b) ... " is the same as in C.
+    &&  Logical AND.
+            Unlike C, the result for a && b is one of the operands
+            a, b rather than one of the numbers 0 and 1.
+            a && b is equivalent to a ? b : a, i.e. if a tests as
+            true, b is returned, otherwise a.  The effect in a
+            test like "if (a && b) ... " is the same as in C.
 
-    ==	!=  <=	>=  <  >
-	    Relations.
+    ==  !=  <=  >=  <  >
+            Relations.
 
     +  -
-	    Binary plus and minus and unary plus and minus when applied to
-	    a first or only term.
+            Binary plus and minus and unary plus and minus when applied to
+            a first or only term.
 
     *  /  //  %
-	    Multiply, divide, and modulo.
-	    Please Note: The '/' operator is a fractional divide,
-	    whereas the '//' is an integral divide.  Thus think of '/'
-	    as division of real numbers, and think of '//' as division
-	    of integers (e.g., 8 / 3 is 8/3 whereas 8 // 3 is 2).
-	    The '%' is integral or fractional modulus (e.g., 11%4 is 3,
-	    and 10%pi() is ~0.575222).
+            Multiply, divide, and modulo.
+            Please Note: The '/' operator is a fractional divide,
+            whereas the '//' is an integral divide.  Thus think of '/'
+            as division of real numbers, and think of '//' as division
+            of integers (e.g., 8 / 3 is 8/3 whereas 8 // 3 is 2).
+            The '%' is integral or fractional modulus (e.g., 11%4 is 3,
+            and 10%pi() is ~0.575222).
 
-    |	Bitwise OR.
-	    In a | b, both a and b are to be real integers;
-	    the signs of a and b are ignored, i.e.
-	    a | b = abs(a) | abs(b) and the result will
-	    be a non-negative integer.
+    |   Bitwise OR.
+            In a | b, both a and b are to be real integers;
+            the signs of a and b are ignored, i.e.
+            a | b = abs(a) | abs(b) and the result will
+            be a non-negative integer.
 
-    &	Bitwise AND.
-	    In a & b, both a and b are to be real integers;
-	    the signs of a and b are ignored as for a | b.
+    &   Bitwise AND.
+            In a & b, both a and b are to be real integers;
+            the signs of a and b are ignored as for a | b.
 
     ^  **  <<  >>
-	    Powers and shifts.
-	    The '^' and '**' are both exponentiation, e.g. 2^3
-	    returns 8, 2^-3 returns 0.125.  Note that in a^b, if
-	    'a' == 0 and 'b' is real, then is must be >= 0 as well.
-	    Also 0^0 and 0**0 return the value 1.
+            Powers and shifts.
+            The '^' and '**' are both exponentiation, e.g. 2^3
+            returns 8, 2^-3 returns 0.125.  Note that in a^b, if
+            'a' == 0 and 'b' is real, then is must be >= 0 as well.
+            Also 0^0 and 0**0 return the value 1.
 
-	    For the shift operators both arguments are to be
-	    integers, or if the first is complex, it is to have
-	    integral real and imaginary parts.	Changing the
-	    sign of the second argument reverses the shift, e.g.
-	    a >> -b = a << b.  The result has the same sign as
-	    the first argument except that a nonzero value is
-	    reduced to zero by a sufficiently long shift to the
-	    right.  These operators associate right to left,
-	    e.g.  a << b ^ c = a << (b ^ c).
+            For the shift operators both arguments are to be
+            integers, or if the first is complex, it is to have
+            integral real and imaginary parts.  Changing the
+            sign of the second argument reverses the shift, e.g.
+            a >> -b = a << b.  The result has the same sign as
+            the first argument except that a nonzero value is
+            reduced to zero by a sufficiently long shift to the
+            right.  These operators associate right to left,
+            e.g.  a << b ^ c = a << (b ^ c).
 
     +  -  !
-	    Plus (+) and minus (-) have their usual meanings as unary
-	    prefix operators at this level of precedence when applied to
-	    other than a first or only term.
+            Plus (+) and minus (-) have their usual meanings as unary
+            prefix operators at this level of precedence when applied to
+            other than a first or only term.
 
-	    As a prefix operator, '!' is the logical NOT: !a returns 0 if
-	    a tests as nonzero, and 1 if a tests as zero, i.e. it is
-	    equivalent to a ? 0 : 1.  Be careful about
-	    using this as the first character of a top level command,
-	    since it is also used for executing shell commands.
+            As a prefix operator, '!' is the logical NOT: !a returns 0 if
+            a tests as nonzero, and 1 if a tests as zero, i.e. it is
+            equivalent to a ? 0 : 1.  Be careful about
+            using this as the first character of a top level command,
+            since it is also used for executing shell commands.
 
-	    As a postfix operator ! gives the factorial function, i.e.
-	    a! = fact(a).
+            As a postfix operator ! gives the factorial function, i.e.
+            a! = fact(a).
 
-    ++	--
-	    Pre or post incrementing or decrementing.
-	    These are applicable only to variables.
+    ++  --
+            Pre or post incrementing or decrementing.
+            These are applicable only to variables.
 
-    [ ]	 [[ ]]	.  ( )
-	    Indexing, double-bracket indexing, element references,
-	    and function calls.	 Indexing can only be applied to matrices,
-	    element references can only be applied to objects, but
-	    double-bracket indexing can be applied to matrices, objects,
-	    or lists.
+    [ ]  [[ ]]  .  ( )
+            Indexing, double-bracket indexing, element references,
+            and function calls.  Indexing can only be applied to matrices,
+            element references can only be applied to objects, but
+            double-bracket indexing can be applied to matrices, objects,
+            or lists.
 
     variables  constants  .  ( )
-	    These are variable names and constants, the special '.' symbol,
-	    or a parenthesized expression.  Variable names begin with a
-	    letter, but then can contain letters, digits, or underscores.
-	    Constants are numbers in various formats, or strings inside
-	    either single or double quote marks.
+            These are variable names and constants, the special '.' symbol,
+            or a parenthesized expression.  Variable names begin with a
+            letter, but then can contain letters, digits, or underscores.
+            Constants are numbers in various formats, or strings inside
+            either single or double quote marks.
 
 
     The most significant difference from the order of precedence in
     C is that | and & have higher precedence than ==, +, -, *, / and %.
     For example, in C a == b | c * d is interpreted as:
 
-	    (a == b) | (c * d)
+            (a == b) | (c * d)
 
     and calc it is:
 
-	    a == ((b | c) * d)
+            a == ((b | c) * d)
 
 
     Most of the operators will accept any real or complex numbers
     as arguments.  The exceptions are:
 
     /  //  %
-	    Second argument must be nonzero.
+            Second argument must be nonzero.
 
     ^
-	    The exponent must be an integer.  When raising zero
-	    to a power, the exponent must be non-negative.
+            The exponent must be an integer.  When raising zero
+            to a power, the exponent must be non-negative.
 
     |  &
-	    Both both arguments must be integers.
+            Both both arguments must be integers.
 
-    <<	>>
-	    The shift amount must be an integer.  The value being
-	    shifted must be an integer or a complex number with
-	    integral real and imaginary parts.
+    <<  >>
+            The shift amount must be an integer.  The value being
+            shifted must be an integer or a complex number with
+            integral real and imaginary parts.
 
 
     See the 'unexpected' help file for a list of unexpected
@@ -217,7 +217,7 @@ operators
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -225,8 +225,8 @@ operators
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1991/07/21 04:37:23
-## File existed as early as:	1991
+## Under source code control:   1991/07/21 04:37:23
+## File existed as early as:    1991
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

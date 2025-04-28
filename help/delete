@@ -5,10 +5,10 @@ SYNOPSIS
     delete(lst, index)
 
 TYPES
-    lst		list
-    index	nonnegative integer less than the size of the list
+    lst         list
+    index       nonnegative integer less than the size of the list
 
-    return	type of the deleted element
+    return      type of the deleted element
 
 DESCRIPTION
      Deletes element at the specified index from list lst, and returns
@@ -24,7 +24,7 @@ EXAMPLE
       [[3]] = 5
 
     ; delete(lst, 2)
-	    4
+            4
     ; print lst
 
     list (3 elements, 3 nonzero):
@@ -50,7 +50,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -58,8 +58,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1994/03/19 03:13:18
-## File existed as early as:	1994
+## Under source code control:   1994/03/19 03:13:18
+## File existed as early as:    1994
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

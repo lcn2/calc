@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,29 +17,29 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1991/05/22 21:56:32
- * File existed as early as:	1991
+ * Under source code control:   1991/05/22 21:56:32
+ * File existed as early as:    1991
  *
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
 define bigprime(a, m, p)
 {
-	local n1, n;
+        local n1, n;
 
-	n1 = 2^m * p;
-	for (;;) {
-		m++;
-		n1 += n1;
-		n = n1 + 1;
-		if (isodd(m))
-			continue;
-		print m;
-		if (pmod(a, n1 / 2, n) != n1)
-			continue;
-		if (pmod(a, n1 / p, n) == 1)
-			continue;
-		print " " : n;
-	}
+        n1 = 2^m * p;
+        for (;;) {
+                m++;
+                n1 += n1;
+                n = n1 + 1;
+                if (isodd(m))
+                        continue;
+                print m;
+                if (pmod(a, n1 / 2, n) != n1)
+                        continue;
+                if (pmod(a, n1 / p, n) == 1)
+                        continue;
+                print " " : n;
+        }
 }

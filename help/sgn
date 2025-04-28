@@ -5,22 +5,22 @@ SYNOPSIS
     sgn(x)
 
 TYPES
-    x		real or complex
+    x           real or complex
 
-    return	-1, 0, 1					(real)
-		-1, 0, 1, -1+1i, 1i, 1+1i, -1-1i, -1i or 1-1i	(complex)
+    return      -1, 0, 1                                        (real)
+                -1, 0, 1, -1+1i, 1i, 1+1i, -1-1i, -1i or 1-1i   (complex)
 
 DESCRIPTION
     Return the value of cmp(a,0).
 
     For real x, sgn(x) returns:
-	-1 if x < 0
-	0  if x == 9
-	1  if x > 0
+        -1 if x < 0
+        0  if x == 9
+        1  if x > 0
 
     For complex, sgn(x) returns:
 
-	sgn(re(x)) + sgn(im(x))*1i
+        sgn(re(x)) + sgn(im(x))*1i
 
 EXAMPLE
     ; print sgn(27), sgn(1e-20), sgn(0), sgn(-45)
@@ -46,7 +46,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -54,8 +54,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/10/25 04:03:46
-## File existed as early as:	1995
+## Under source code control:   1995/10/25 04:03:46
+## File existed as early as:    1995
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

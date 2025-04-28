@@ -5,10 +5,10 @@ SYNOPSIS
     gcdrem(x, y)
 
 TYPES
-    x		integer
-    y		integer
+    x           integer
+    y           integer
 
-    return	non-negative integer
+    return      non-negative integer
 
 DESCRIPTION
 
@@ -29,13 +29,13 @@ PROPERTIES
     For fixed nonzero x, gcdrem(x,y) is periodic with period abs(x).
 
     gcdrem(x,y) = 1 if and only if every prime divisor of x
-	is a divisor of y.
+        is a divisor of y.
 
     If x is not zero, gcdrem(x,y) == abs(x) if and only if gcd(x,y) = 1.
 
     If y is not zero and p_1, p_2, ..., p_k are the prime divisors of y,
 
-	gcdrem(x,y) = frem(...(frem(frem(x,p_1),p_2)...,p_k)
+        gcdrem(x,y) = frem(...(frem(frem(x,p_1),p_2)...,p_k)
 
 EXAMPLE
     ; print gcdrem(6,15), gcdrem(15,6), gcdrem(72,6), gcdrem(6,72)
@@ -61,7 +61,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -69,8 +69,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/12/18 12:03:02
-## File existed as early as:	1995
+## Under source code control:   1995/12/18 12:03:02
+## File existed as early as:    1995
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

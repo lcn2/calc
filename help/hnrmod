@@ -5,23 +5,23 @@ SYNOPSIS
     hnrmod(v, h, n, r)
 
 TYPES
-    v		integer
-    h		integer
-    n		integer
-    r		integer
+    v           integer
+    h           integer
+    n           integer
+    r           integer
 
-    return	integer
+    return      integer
 
 DESCRIPTION
     Compute the value:
 
-	v % (h * 2^n +r)
+        v % (h * 2^n +r)
 
     where:
 
-	h > 0
-	n > 0
-	r == -1, 0 or 1
+        h > 0
+        n > 0
+        r == -1, 0 or 1
 
     This builtin in faster than the standard mod in that is makes use
     of shifts and additions when h == 1.  When h > 1, a division by h
@@ -50,7 +50,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -58,8 +58,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1997/07/02 07:10:43
-## File existed as early as:	1997
+## Under source code control:   1997/07/02 07:10:43
+## File existed as early as:    1997
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

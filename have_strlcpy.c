@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,25 +17,25 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	2021/03/08 20:34:13
- * File existed as early as:	2021
+ * Under source code control:   2021/03/08 20:34:13
+ * File existed as early as:    2021
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 /*
  * usage:
- *	have_strlcpy
+ *      have_strlcpy
  *
  * Not all systems have the strlcpy() function, so this may not
  * compile on your system.
  *
  * This prog outputs several defines:
  *
- *	HAVE_STRLCPY
- *		defined ==> use strlcpy()
- *		undefined ==> do not or cannot call strlcpy()
+ *      HAVE_STRLCPY
+ *              defined ==> use strlcpy()
+ *              undefined ==> do not or cannot call strlcpy()
  */
 
 #include <stdio.h>
@@ -45,7 +45,7 @@
 #endif
 
 
-#include "banned.h"	/* include after system header <> includes */
+#include "banned.h"     /* include after system header <> includes */
 
 
 #define BUF_SIZ (sizeof("abcde")-1)
@@ -58,17 +58,17 @@ main(void)
 {
 #if defined(HAVE_NO_STRLCPY)
 
-	printf("#undef HAVE_STRLCPY /* no */\n");
+        printf("#undef HAVE_STRLCPY /* no */\n");
 
 #else /* HAVE_NO_STRLCPY */
-	char dst[BUF_SIZ+1];
+        char dst[BUF_SIZ+1];
 
-	(void) strlcpy(dst, src, sizeof(dst));
+        (void) strlcpy(dst, src, sizeof(dst));
 
-	printf("#define HAVE_STRLCPY /* yes */\n");
+        printf("#define HAVE_STRLCPY /* yes */\n");
 
 #endif /* HAVE_NO_STRLCPY */
 
-	/* exit(0); */
-	return 0;
+        /* exit(0); */
+        return 0;
 }

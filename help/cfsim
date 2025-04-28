@@ -5,10 +5,10 @@ SYNOPSIS
     cfsim(x [,rnd])
 
 TYPES
-    x		real
-    rnd		integer, defaults to config("cfsim")
+    x           real
+    rnd         integer, defaults to config("cfsim")
 
-    return	real
+    return      real
 
 DESCRIPTION
     If x is not an integer, cfsim(x, rnd) returns either the nearest
@@ -20,23 +20,23 @@ DESCRIPTION
     For 0 <= rnd < 4, the sign of the remainder x - cfsim(x, rnd) is
     as follows:
 
-		rnd		sign of x - cfsim(x, rnd)
+                rnd             sign of x - cfsim(x, rnd)
 
-		0		+, as if rounding down
-		1		-. as if rounding up
-		2		sgn(x), as if rounding to zero
-		3		-sgn(x), as if rounding from zero
+                0               +, as if rounding down
+                1               -. as if rounding up
+                2               sgn(x), as if rounding to zero
+                3               -sgn(x), as if rounding from zero
 
     This corresponds to the use of rnd for functions like round(x, n, rnd).
 
     If bit 3 or 4 of rnd is set, the lower order bits are ignored; bit 3
-    is ignored if bit 4 is set.	 Thus, for rnd > 3, it sufficient to
+    is ignored if bit 4 is set.  Thus, for rnd > 3, it sufficient to
     consider the two cases rnd = 8 and rnd = 16.
 
     If den(x) > 2, cfsim(x, 8) returns the value of the penultimate simple
     continued-fraction approximate to x, i.e. if:
 
-	x = a_0 + 1/(a_1 + 1/(a_2 + ... + 1/a_n) ...)),
+        x = a_0 + 1/(a_1 + 1/(a_2 + ... + 1/a_n) ...)),
 
     where a_0 is an integer, a_1, ..., a_n are positive integers,
     and a_n >= 2, the value returned is that of the continued fraction
@@ -53,10 +53,10 @@ DESCRIPTION
 
     In summary, for cfsim(x, rnd) when rnd = 8 or 16, the results are:
 
-	rnd		integer x	half-integer x		den(x) > 2
+        rnd             integer x       half-integer x          den(x) > 2
 
-	 8		0		x - sgn(x)/2		approximate
-	16		x - sgn(x)	x + sgn(x)/2		nearest
+         8              0               x - sgn(x)/2            approximate
+        16              x - sgn(x)      x + sgn(x)/2            nearest
 
      From either cfsim(x, 0) and cfsim(x, 1), the other is easily
      determined: if one of them has value w, the other has value
@@ -72,7 +72,7 @@ DESCRIPTION
      Iteration of cfsim(x,8) until an integer is obtained gives a sequence of
      "good" approximations to x with decreasing denominators and
      correspondingly decreasing accuracy; each denominator is less than half
-     the preceding denominator.	 (Unlike the "forward" sequence of
+     the preceding denominator.  (Unlike the "forward" sequence of
      continued-fraction approximates these are not necessarily alternately
      greater than and less than x.)
 
@@ -80,19 +80,19 @@ DESCRIPTION
 
      For rnd = 0 or 1 and any x, or rnd = 8 or 16 and x with den(x) > 2:
 
-		cfsim(n + x, rnd) = n + cfsim(x, rnd).
+                cfsim(n + x, rnd) = n + cfsim(x, rnd).
 
      This equation also holds for the other values of rnd if n + x and x
      have the same sign.
 
      For rnd = 2, 3, 8 or 16, and any x:
 
-		cfsim(-x, rnd) = -cfsim(x, rnd).
+                cfsim(-x, rnd) = -cfsim(x, rnd).
 
      If rnd = 8 or 16, except for integer x or 1/x for rnd = 8, and
      zero x for rnd = 16:
 
-		cfsim(1/x, rnd) = 1/cfsim(x, rnd).
+                cfsim(1/x, rnd) = 1/cfsim(x, rnd).
 
 EXAMPLE
     ; c = config("mode", "frac");
@@ -121,7 +121,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -129,8 +129,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1994/09/30 01:29:45
-## File existed as early as:	1994
+## Under source code control:   1994/09/30 01:29:45
+## File existed as early as:    1994
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

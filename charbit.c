@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,22 +17,22 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	2021/12/07 20:57:50
- * File existed as early as:	2021
+ * Under source code control:   2021/12/07 20:57:50
+ * File existed as early as:    2021
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 /*
  * usage:
- *	charbit
+ *      charbit
  *
  * This prog outputs several defines:
  *
- *	CALC_CHARBIT
- *		after including have_limits.h and perhaps <limits.h>,
- *		output CALC_CHARBIT as CHAR_BIT (from <limits.h>, or as 8.
+ *      CALC_CHARBIT
+ *              after including have_limits.h and perhaps <limits.h>,
+ *              output CALC_CHARBIT as CHAR_BIT (from <limits.h>, or as 8.
  */
 
 #include <stdio.h>
@@ -42,26 +42,26 @@
 #endif
 
 
-#include "banned.h"	/* include after system header <> includes */
+#include "banned.h"     /* include after system header <> includes */
 
 
 int
 main(void)
 {
-	printf("#include \"have_limits.h\"\n");
-	printf("#if defined(HAVE_LIMITS_H)\n");
-	printf("#include <limits.h>\n");
-	printf("#endif\n\n");
+        printf("#include \"have_limits.h\"\n");
+        printf("#if defined(HAVE_LIMITS_H)\n");
+        printf("#include <limits.h>\n");
+        printf("#endif\n\n");
 #if defined(CHAR_BIT)
 
-	printf("#define CALC_CHARBIT (CHAR_BIT) /* from <limits.h> */\n");
+        printf("#define CALC_CHARBIT (CHAR_BIT) /* from <limits.h> */\n");
 
 #else /* CHAR_BIT */
 
-	printf("#define CALC_CHARBIT (8) /* no CHAR_BIT, assume 8 */\n");
+        printf("#define CALC_CHARBIT (8) /* no CHAR_BIT, assume 8 */\n");
 
 #endif /* CHAR_BIT */
 
-	/* exit(0); */
-	return 0;
+        /* exit(0); */
+        return 0;
 }

@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,11 +17,11 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	2001/03/27 14:10:11
- * File existed as early as:	2001
+ * Under source code control:   2001/03/27 14:10:11
+ * File existed as early as:    2001
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -29,20 +29,20 @@
  * Z(x)
  *
  * From Handbook of Mathematical Functions
- *	10th printing, Dec 1972 with corrections
- *	National Bureau of Standards
+ *      10th printing, Dec 1972 with corrections
+ *      National Bureau of Standards
  *
  * Section 26.2.1, p931.
  */
 define Z(x, eps_term)
 {
-    local eps;		/* error term */
+    local eps;          /* error term */
 
     /* obtain the error term */
     if (isnull(eps_term)) {
-	eps = epsilon();
+        eps = epsilon();
     } else {
-	eps = eps_term;
+        eps = eps_term;
     }
 
     /* compute Z(x) value */
@@ -56,46 +56,46 @@ define Z(x, eps_term)
  * NOTE: If eps is omitted, the stored epsilon value is used.
  *
  * From Handbook of Mathematical Functions
- *	10th printing, Dec 1972 with corrections
- *	National Bureau of Standards
+ *      10th printing, Dec 1972 with corrections
+ *      National Bureau of Standards
  *
  * 26.2.11, p932:
  *
- *	P(x) = 1/2 + Z(x) * sum(n=0; n < infinity){x^(2*n+1)/(1*3*5*...(2*n+1)};
+ *      P(x) = 1/2 + Z(x) * sum(n=0; n < infinity){x^(2*n+1)/(1*3*5*...(2*n+1)};
  *
  * We continue the fraction until it is less than epsilon error term.
  *
  * Also note 26.2.5:
  *
- *	P(x) + Q(x) = 1
+ *      P(x) + Q(x) = 1
  */
 define P(x, eps_term)
 {
-    local eps;		/* error term */
-    local s;		/* sum */
-    local x2;		/* x^2 */
-    local x_term;	/* x^(2*r+1) */
-    local odd_prod;	/* 1*3*5* ... */
-    local odd_term;	/* next odd value to multiply into odd_prod */
-    local term;		/* the recent term added to the sum */
+    local eps;          /* error term */
+    local s;            /* sum */
+    local x2;           /* x^2 */
+    local x_term;       /* x^(2*r+1) */
+    local odd_prod;     /* 1*3*5* ... */
+    local odd_term;     /* next odd value to multiply into odd_prod */
+    local term;         /* the recent term added to the sum */
 
     /* obtain the error term */
     if (isnull(eps_term)) {
-	eps = epsilon();
+        eps = epsilon();
     } else {
-	eps = eps_term;
+        eps = eps_term;
     }
 
     /* firewall */
     if (x <= 0) {
-	if (x == 0) {
-	    return 0;	/* hack */
-	} else {
-	    quit "Q(x[,eps]) 1st argument must be >= 0";
-	}
+        if (x == 0) {
+            return 0;   /* hack */
+        } else {
+            quit "Q(x[,eps]) 1st argument must be >= 0";
+        }
     }
     if (eps <= 0) {
-	quit "Q(x[,eps]) 2nd argument must be > 0";
+        quit "Q(x[,eps]) 2nd argument must be > 0";
     }
 
     /*
@@ -103,17 +103,17 @@ define P(x, eps_term)
      */
     x2 = x*x;
     x_term = x;
-    s = x_term;	/* 1st term */
+    s = x_term; /* 1st term */
     odd_term = 1;
     odd_prod = 1;
     do {
 
-	/* compute the term */
-	odd_term += 2;
-	odd_prod *= odd_term;
-	x_term *= x2;
-	term = x_term / odd_prod;
-	s += term;
+        /* compute the term */
+        odd_term += 2;
+        odd_prod *= odd_term;
+        x_term *= x2;
+        term = x_term / odd_prod;
+        s += term;
 
     } while (term >= eps);
 
@@ -133,68 +133,68 @@ define P(x, eps_term)
  *    a sufficiently small error term as the degrees gets large (>100).
  *
  * NOTE: This function does not work well with odd degrees of freedom.
- *	 Can somebody help / find a bug / provide a better method of
- *	 this odd degrees of freedom case?
+ *       Can somebody help / find a bug / provide a better method of
+ *       this odd degrees of freedom case?
  *
  * NOTE: This function works well with even degrees of freedom.  However
- *	 when the even degrees gets large (say, as you approach 100), you
- *	 need to increase your error term.
+ *       when the even degrees gets large (say, as you approach 100), you
+ *       need to increase your error term.
  *
  * From Handbook of Mathematical Functions
- *	10th printing, Dec 1972 with corrections
- *	National Bureau of Standards
+ *      10th printing, Dec 1972 with corrections
+ *      National Bureau of Standards
  *
  * Section 26.4.4, p941:
  *
  *   For odd v:
  *
- *	Q(chi_sq, v) = 2*Q(chi) + 2*Z(chi) * (
- *		     sum(r=1, r<=(r-1)/2) {(chi_sq^r/chi) / (1*3*5*...(2*r-1)});
+ *      Q(chi_sq, v) = 2*Q(chi) + 2*Z(chi) * (
+ *                   sum(r=1, r<=(r-1)/2) {(chi_sq^r/chi) / (1*3*5*...(2*r-1)});
  *
- *	chi = sqrt(chi_sq)
+ *      chi = sqrt(chi_sq)
  *
- *	NOTE: Q(x) = 1-P(x)
+ *      NOTE: Q(x) = 1-P(x)
  *
  * Section 26.4.5, p941.
  *
  *   For even v:
  *
- *	Q(chi_sq, v) = sqrt(2*pi()) * Z(chi) * ( 1 +
- *		       sum(r=1, r=((v-2)/2)) { chi_sq^r / (2*4*...*(2r)) } );
+ *      Q(chi_sq, v) = sqrt(2*pi()) * Z(chi) * ( 1 +
+ *                     sum(r=1, r=((v-2)/2)) { chi_sq^r / (2*4*...*(2r)) } );
  *
- *	chi = sqrt(chi_sq)
+ *      chi = sqrt(chi_sq)
  *
  * Observe that:
  *
- *	Z(x) = exp(-x*x/2) / sqrt(2*pi());	(Section 26.2.1, p931)
+ *      Z(x) = exp(-x*x/2) / sqrt(2*pi());      (Section 26.2.1, p931)
  *
  * and thus:
  *
- *	sqrt(2*pi()) * Z(chi) =
- *	sqrt(2*pi()) * Z(sqrt(chi_sq)) =
- *	sqrt(2*pi()) * exp(-sqrt(chi_sq)*sqrt(chi_sq)/2) / sqrt(2*pi()) =
- *	exp(-sqrt(chi_sq)*sqrt(chi_sq)/2) =
- *	exp(-sqrt(-chi_sq/2)
+ *      sqrt(2*pi()) * Z(chi) =
+ *      sqrt(2*pi()) * Z(sqrt(chi_sq)) =
+ *      sqrt(2*pi()) * exp(-sqrt(chi_sq)*sqrt(chi_sq)/2) / sqrt(2*pi()) =
+ *      exp(-sqrt(chi_sq)*sqrt(chi_sq)/2) =
+ *      exp(-sqrt(-chi_sq/2)
  *
  * So:
  *
- *	Q(chi_sq, v) = exp(-sqrt(-chi_sq/2) * ( 1 + sum(....){...} );
+ *      Q(chi_sq, v) = exp(-sqrt(-chi_sq/2) * ( 1 + sum(....){...} );
  */
 define chi_prob(chi_sq, v, eps_term)
 {
-    local eps;		/* error term */
-    local r;		/* index in finite sum */
-    local r_lim;	/* limit value for r */
-    local s;		/* sum */
-    local d;		/* denominator (2*4*6*... or 1*3*5...) */
-    local chi_term;	/* chi_sq^r */
-    local ret;		/* return value */
+    local eps;          /* error term */
+    local r;            /* index in finite sum */
+    local r_lim;        /* limit value for r */
+    local s;            /* sum */
+    local d;            /* denominator (2*4*6*... or 1*3*5...) */
+    local chi_term;     /* chi_sq^r */
+    local ret;          /* return value */
 
     /* obtain the error term */
     if (isnull(eps_term)) {
-	eps = epsilon();
+        eps = epsilon();
     } else {
-	eps = eps_term;
+        eps = eps_term;
     }
 
     /*
@@ -202,45 +202,45 @@ define chi_prob(chi_sq, v, eps_term)
      */
     if (isodd(v)) {
 
-	local chi;		/* sqrt(chi_sq) */
+        local chi;              /* sqrt(chi_sq) */
 
-	/* setup for sum */
-	s = 1;
-	d = 1;
-	chi = sqrt(abs(chi_sq), eps);
-	chi_term = chi;
-	r_lim = (v-1)/2;
+        /* setup for sum */
+        s = 1;
+        d = 1;
+        chi = sqrt(abs(chi_sq), eps);
+        chi_term = chi;
+        r_lim = (v-1)/2;
 
-	/* compute sum(r=1, r=((v-1)/2)) {(chi_sq^r/chi) / (1*3*5...*(2r-1))} */
-	for (r=2; r <= r_lim; ++r) {
-	    chi_term *= chi_sq;
-	    d *= (2*r)-1;
-	    s += chi_term/d;
-	}
+        /* compute sum(r=1, r=((v-1)/2)) {(chi_sq^r/chi) / (1*3*5...*(2r-1))} */
+        for (r=2; r <= r_lim; ++r) {
+            chi_term *= chi_sq;
+            d *= (2*r)-1;
+            s += chi_term/d;
+        }
 
-	/* apply term and factor, Q(x) = 1-P(x) */
-	ret = 2*(1-P(chi)) + 2*Z(chi)*s;
+        /* apply term and factor, Q(x) = 1-P(x) */
+        ret = 2*(1-P(chi)) + 2*Z(chi)*s;
 
     /*
      * even degrees of freedom
      */
     } else {
 
-	/* setup for sum */
-	s =1;
-	d = 1;
-	chi_term = 1;
-	r_lim = (v-2)/2;
+        /* setup for sum */
+        s =1;
+        d = 1;
+        chi_term = 1;
+        r_lim = (v-2)/2;
 
-	/* compute sum(r=1, r=((v-2)/2)) { chi_sq^r / (2*4*...*(2r)) } */
-	for (r=1; r <= r_lim; ++r) {
-	    chi_term *= chi_sq;
-	    d *= r*2;
-	    s += chi_term/d;
-	}
+        /* compute sum(r=1, r=((v-2)/2)) { chi_sq^r / (2*4*...*(2r)) } */
+        for (r=1; r <= r_lim; ++r) {
+            chi_term *= chi_sq;
+            d *= r*2;
+            s += chi_term/d;
+        }
 
-	/* apply factor - see observation in the main comment above */
-	ret = exp(-chi_sq/2, eps) * s;
+        /* apply factor - see observation in the main comment above */
+        ret = exp(-chi_sq/2, eps) * s;
     }
 
     return ret;

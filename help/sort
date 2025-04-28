@@ -5,9 +5,9 @@ SYNOPSIS
     sort(x)
 
 TYPES
-    x		list or matrix
+    x           list or matrix
 
-    return	same type as x
+    return      same type as x
 
 DESCRIPTION
     For a list or matrix x, sort(x) returns a list or
@@ -23,22 +23,22 @@ DESCRIPTION
     If x is a matrix, the matrix returned by sort(x) has the same
     dimension and index limits as x, but for the sorting, x is treated
     as a one-dimensional array indexed only by the double- bracket
-    notation.	Then for both lists and matrices, if x has size n, it
+    notation.   Then for both lists and matrices, if x has size n, it
     may be identified with the array:
 
-		(x[[0]], x[[1]], ..., x[[n-1]])
+                (x[[0]], x[[1]], ..., x[[n-1]])
 
     which we will here display as:
 
-		(x_0, x_1, ..., x_n-1).
+                (x_0, x_1, ..., x_n-1).
 
     The value y = sort(x) will similarly be identified with:
 
-		(y_0, y_1, ..., x_n-1),
+                (y_0, y_1, ..., x_n-1),
 
     where, for some permutation p() of the integers (0, 1, ..., n-1):
 
-		y_p(i) = x_i.
+                y_p(i) = x_i.
 
     In the following i1 and i2 will be taken to refer to different
     indices for x, and j1 and j2 will denote p(i1) and p(i2).
@@ -49,7 +49,7 @@ DESCRIPTION
     with earlier values b using the integer-valued function precedes();
     if precedes(a,b) is nonzero, which we may consider as "true",
     a is "moved" to just before b; if precedes(a,b) is zero, i.e. "false",
-    a remains after b.	Until the sorting is completed, other similar
+    a remains after b.  Until the sorting is completed, other similar
     pairs (a,b) are compared and if and only if precedes(a,b) is true,
     a is moved to before b or b is moved to after a.  We may
     say that the intention of precedes(a,b) being nonzero is that a should
@@ -83,7 +83,7 @@ DESCRIPTION
     result satisfying the intentions of nonzero and zero values of
     precedes() as described above.  For example, consider:
 
-		precedes(a,b) = a is a proper divisor of b,
+                precedes(a,b) = a is a proper divisor of b,
 
     and x = list(4, 3, 2).  The only pair for which precedes(a,b) is
     nonzero is (2,4),  but x cannot be rearranged so that 2 is before
@@ -95,44 +95,44 @@ DESCRIPTION
     not y_j1 precedes or follows y_j2 will be determined by the
     sorting algorithm by methods that are difficult to describe;
     such a situation may be acceptable to a user not concerned with
-    the order of occurrences of a and b in the result.	To permit
+    the order of occurrences of a and b in the result.  To permit
     this, we may now describe the role of precedes(a,b) by the rules:
 
-	precedes(a,b) && !precedes(b,a):  a is to precede b;
+        precedes(a,b) && !precedes(b,a):  a is to precede b;
 
-	!precedes(a,b) && !precedes(b,a):  order of a and b not to be changed;
+        !precedes(a,b) && !precedes(b,a):  order of a and b not to be changed;
 
-	precedes(a,b) && precedes(b,a):	 order of a and b may be changed.
+        precedes(a,b) && precedes(b,a):  order of a and b may be changed.
 
     Under the condition (1), the result of sort(x) will accord with these rules.
 
     Default precedes():
 
-	If precedes(a,b) has not been defined by a define command,
-	the effect is as if precedes(a,b) were determined by:
+        If precedes(a,b) has not been defined by a define command,
+        the effect is as if precedes(a,b) were determined by:
 
-	If a and b are are not of the same type, they are ordered by
+        If a and b are are not of the same type, they are ordered by
 
-		null values < numbers < strings < objects.
+                null values < numbers < strings < objects.
 
-	If a and b are of the same type, this type being
-	null, numbers or strings, precedes(a,b) is given by (a < b).
-	(If a and b are both null, they are considered to be equal, so
-	a < b then returns zero.)  For null values, numbers and
-	strings, this definition has the properties (1) and (2)
-	discussed above.
+        If a and b are of the same type, this type being
+        null, numbers or strings, precedes(a,b) is given by (a < b).
+        (If a and b are both null, they are considered to be equal, so
+        a < b then returns zero.)  For null values, numbers and
+        strings, this definition has the properties (1) and (2)
+        discussed above.
 
-	If a and b are both xx-objects, a < b is defined to mean
-	xx_rel(a,b) < 0; such a definition does not
-	necessarily give < the properties usually expected -
-	transitivity and antisymmetry.	In such cases, sort(x)
-	may not give the results expected by the "intentions" of
-	the comparisons expressed by "a < b".
+        If a and b are both xx-objects, a < b is defined to mean
+        xx_rel(a,b) < 0; such a definition does not
+        necessarily give < the properties usually expected -
+        transitivity and antisymmetry.  In such cases, sort(x)
+        may not give the results expected by the "intentions" of
+        the comparisons expressed by "a < b".
 
     In many sorting applications, appropriate precedes() functions
     have definitions equivalent to:
 
-		define precedes(a,b) = (key(a) < key(b))
+                define precedes(a,b) = (key(a) < key(b))
 
     where key() maps possible values to a set totally ordered by <.
     Such a precedes() function has the properties (1) and (2),
@@ -144,14 +144,14 @@ DESCRIPTION
     key1() and elements with equal key1-values then sorted by key2(),
     an appropriate precedes() function is given by:
 
-	define precedes(a,b) = (key(a) < key(b)) ||
-			(key(a) == key(b)) && (key2(a) < key2(b)).
+        define precedes(a,b) = (key(a) < key(b)) ||
+                        (key(a) == key(b)) && (key2(a) < key2(b)).
 
     When precedes(a.b) is called, the addresses of a and b rather
     than their values are passed to the function.  This permits
     a and b to be changed when they are being compared, as in:
 
-	define precedes(a,b) = ((a = round(a)) < (b = round(b)));
+        define precedes(a,b) = ((a = round(a)) < (b = round(b)));
 
     (A more efficient way of achieving the same result would be to
     use sort(round(x)).)
@@ -159,86 +159,86 @@ DESCRIPTION
     Examples of effects of various precedes functions for sorting
     lists of integers:
 
-	a > b			Sorts into non-increasing order.
+        a > b                   Sorts into non-increasing order.
 
-	abs(a) < abs(b)		Sorts into nondecreasing order of
-				absolute values, numbers with the
-				same absolute value retaining
-				their order.
+        abs(a) < abs(b)         Sorts into nondecreasing order of
+                                absolute values, numbers with the
+                                same absolute value retaining
+                                their order.
 
-	abs(a) <= abs(b)	Sorts into nondecreasing order of
-				absolute values, possibly
-				changing the order of numbers
-				with the same absolute value.
+        abs(a) <= abs(b)        Sorts into nondecreasing order of
+                                absolute values, possibly
+                                changing the order of numbers
+                                with the same absolute value.
 
-	abs(a) < abs(b) || abs(a) == abs(b) && a < b
-				Sorts into nondecreasing order of
-				absolute values, numbers with the
-				same absolute value being in
-				nondecreasing order.
+        abs(a) < abs(b) || abs(a) == abs(b) && a < b
+                                Sorts into nondecreasing order of
+                                absolute values, numbers with the
+                                same absolute value being in
+                                nondecreasing order.
 
-	iseven(a)		Even numbers in possibly changed order
-				before odd numbers in unchanged order.
+        iseven(a)               Even numbers in possibly changed order
+                                before odd numbers in unchanged order.
 
-	iseven(a) && isoddd(b)	Even numbers in unchanged order before
-				odd numbers in unchanged order.
+        iseven(a) && isoddd(b)  Even numbers in unchanged order before
+                                odd numbers in unchanged order.
 
-	iseven(a) ? iseven(b) ? a < b : 1 : 0
-				Even numbers in nondecreasing order
-				before odd numbers in unchanged order.
+        iseven(a) ? iseven(b) ? a < b : 1 : 0
+                                Even numbers in nondecreasing order
+                                before odd numbers in unchanged order.
 
-	a < b && a < 10		Numbers less than 10 in nondecreasing
-				order before numbers not less than 10
-				in unchanged order.
+        a < b && a < 10         Numbers less than 10 in nondecreasing
+                                order before numbers not less than 10
+                                in unchanged order.
 
-	!ismult(a,b)		Divisors d of any integer i for which
-				i is not also a divisor of d will
-				precede occurrences of i; the order of
-				integers which divide each other will
-				remain the same; the order of pairs of
-				integers neither of which divides the
-				other may be changed.  Thus occurrences
-				of 1 and -1 will precede all other
-				integers; 2 and -2 will precede all
-				even integers; the order of occurrences
-				of 2 and 3 may change; occurrences of 0
-				will follow all other integers.
+        !ismult(a,b)            Divisors d of any integer i for which
+                                i is not also a divisor of d will
+                                precede occurrences of i; the order of
+                                integers which divide each other will
+                                remain the same; the order of pairs of
+                                integers neither of which divides the
+                                other may be changed.  Thus occurrences
+                                of 1 and -1 will precede all other
+                                integers; 2 and -2 will precede all
+                                even integers; the order of occurrences
+                                of 2 and 3 may change; occurrences of 0
+                                will follow all other integers.
 
-	1			The order of the elements is reversed
+        1                       The order of the elements is reversed
 
 EXAMPLE
     ; A = list(1, 7, 2, 4, 2)
     ; print sort(A)
 
     list (5 elements, 5 nonzero):
-	  [[0]] = 1
-	  [[1]] = 2
-	  [[2]] = 2
-	  [[3]] = 4
-	  [[4]] = 7
+          [[0]] = 1
+          [[1]] = 2
+          [[2]] = 2
+          [[3]] = 4
+          [[4]] = 7
 
     ; B = list("pear", 2, null(), -3, "orange", null(), "apple", 0)
     ; print sort(B)
 
     list (8 elements, 7 nonzero):
-	  [[0]] = NULL
-	  [[1]] = NULL
-	  [[2]] = -3
-	  [[3]] = 0
-	  [[4]] = 2
-	  [[5]] = "apple"
-	  [[6]] = "orange"
-	  [[7]] = "pear"
+          [[0]] = NULL
+          [[1]] = NULL
+          [[2]] = -3
+          [[3]] = 0
+          [[4]] = 2
+          [[5]] = "apple"
+          [[6]] = "orange"
+          [[7]] = "pear"
 
     ; define precedes(a,b) = (iseven(a) && isodd(b))
     ; print sort(A)
 
     list (5 elements, 5 nonzero):
-	  [[0]] = 2
-	  [[1]] = 4
-	  [[2]] = 2
-	  [[3]] = 1
-	  [[4]] = 7
+          [[0]] = 2
+          [[1]] = 4
+          [[2]] = 2
+          [[3]] = 1
+          [[4]] = 7
 
 LIMITS
     none
@@ -257,7 +257,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -265,8 +265,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/07/09 19:41:26
-## File existed as early as:	1995
+## Under source code control:   1995/07/09 19:41:26
+## File existed as early as:    1995
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

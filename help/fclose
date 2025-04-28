@@ -5,15 +5,15 @@ SYNOPSIS
     fclose(fd)
 
 TYPES
-    fd		file
+    fd          file
 
-    return	nul or int
+    return      nul or int
 
 DESCRIPTION
     This function closes the open file associated with the descriptor fd.
     When this is done, the file value associated with the file remains
     a file value, but appears 'closed', and cannot be used in further
-    file-related calls (except fclose) without causing errors.	This same
+    file-related calls (except fclose) without causing errors.  This same
     action occurs to all copies of the file value.  You do not need to
     explicitly close all the copies of a file value.
 
@@ -26,7 +26,7 @@ DESCRIPTION
     there had been an error using the file, or the null value if
     there was no error.
 
-    Closing a closed file is permitted.	 Fclose returns null in
+    Closing a closed file is permitted.  Fclose returns null in
     this case.
 
 EXAMPLE
@@ -59,7 +59,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -67,8 +67,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1994/10/27 03:04:16
-## File existed as early as:	1994
+## Under source code control:   1994/10/27 03:04:16
+## File existed as early as:    1994
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

@@ -9,8 +9,8 @@
  * and cos() (trigonometric cosine) are correct.  We can reasonably
  * assume this because of the calc regression test suite:
  *
- *	(such as test 34dd and in particular cal/test3400.trig.cal and
- *	 such as test 89dd and in particular cal/test8900.special.cal)
+ *      (such as test 34dd and in particular cal/test3400.trig.cal and
+ *       such as test 89dd and in particular cal/test8900.special.cal)
  *
  * will test such those function beforehand.
  *
@@ -30,7 +30,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -38,10 +38,10 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	2023/09/10 14:33:06
- * File existed as early as:	2023
+ * Under source code control:   2023/09/10 14:33:06
+ * File existed as early as:    2023
  *
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -55,22 +55,22 @@
  * NOTE: There is no reason to sort these values other than ascetics. :-)
  */
 static base_tval = list(
-	1/12,	/* ~ 0.08333333333333333333 */
-	1/8,	/*   0.12500000000000000000 */
-	1/6,	/* ~ 0.16666666666666666667 */
-	1/5,	/*   0.20000000000000000000 */
-	1/4,	/*   0.25000000000000000000 */
-	1/3,	/* ~ 0.33333333333333333333 */
-	3/8,	/*   0.37500000000000000000 */
-	5/12,	/* ~ 0.41666666666666666667 */
-	1/2,	/*   0.50000000000000000000 */
-	2/3,	/* ~ 0.66666666666666666667 */
-	3/4,	/*   0.75000000000000000000 */
-	4/5,	/*   0.80000000000000000000 */
-	5/6,	/* ~ 0.83333333333333333333 */
-	7/8,	/*   0.87500000000000000000 */
-	11/12,	/* ~ 0.91666666666666666667 */
-	1	/*   1.00000000000000000000 */
+        1/12,   /* ~ 0.08333333333333333333 */
+        1/8,    /*   0.12500000000000000000 */
+        1/6,    /* ~ 0.16666666666666666667 */
+        1/5,    /*   0.20000000000000000000 */
+        1/4,    /*   0.25000000000000000000 */
+        1/3,    /* ~ 0.33333333333333333333 */
+        3/8,    /*   0.37500000000000000000 */
+        5/12,   /* ~ 0.41666666666666666667 */
+        1/2,    /*   0.50000000000000000000 */
+        2/3,    /* ~ 0.66666666666666666667 */
+        3/4,    /*   0.75000000000000000000 */
+        4/5,    /*   0.80000000000000000000 */
+        5/6,    /* ~ 0.83333333333333333333 */
+        7/8,    /*   0.87500000000000000000 */
+        11/12,  /* ~ 0.91666666666666666667 */
+        1       /*   1.00000000000000000000 */
 );
 
 
@@ -94,8 +94,8 @@ tval = list();
  * The precompute_trig() function will fill out these lists.
  * They will be the same size as size as the full test list.
  */
-sin_tval = list();	/* trigonometric sine of each test test value */
-cos_tval = list();	/* trigonometric cosine of each test test value */
+sin_tval = list();      /* trigonometric sine of each test test value */
+cos_tval = list();      /* trigonometric cosine of each test test value */
 
 
 /*
@@ -109,26 +109,26 @@ cos_tval = list();	/* trigonometric cosine of each test test value */
  * Blum-Blum-Shub pseudo-random number generator was seeded with the
  * following 160-bit SHA1 hash of 3 calls to seed():
  *
- *	sha1(sha1(seed(), seed()<<64, seed()<<128)) == 0x732fda50b1bf6e34b604b7c75b993e5c37a4ad97
+ *      sha1(sha1(seed(), seed()<<64, seed()<<128)) == 0x732fda50b1bf6e34b604b7c75b993e5c37a4ad97
  *
  * This produced the following 160-bit value that was used to seed
  * the Blum-Blum-Shub pseudo-random number:
  *
- *	srandom(0x732fda50b1bf6e34b604b7c75b993e5c37a4ad97)
+ *      srandom(0x732fda50b1bf6e34b604b7c75b993e5c37a4ad97)
  *
  * The seeded Blum-Blum-Shub pseudo-random number generator was then
  * used to generate a 128-bit value:
  *
- *	randombit(128) == 0x37301cf47204f7fababc2f32e39ab338
+ *      randombit(128) == 0x37301cf47204f7fababc2f32e39ab338
  *
  * We seed the subtractive 100 shuffle pseudo-random number generator
  * with the above mentioned 128-bit value:
  *
- *	srand(0x37301cf47204f7fababc2f32e39ab338)
+ *      srand(0x37301cf47204f7fababc2f32e39ab338)
  */
 define seed_rand()
 {
-	return srand(0x37301cf47204f7fababc2f32e39ab338);
+        return srand(0x37301cf47204f7fababc2f32e39ab338);
 }
 
 
@@ -157,27 +157,27 @@ static epsilon_norm = norm(epsilon());
  */
 define random_rational_value()
 {
-	local a;	/* epsilon_bits pseudo-random integer > 0 */
-	local b;	/* epsilon_bits pseudo-random integer > 0 */
+        local a;        /* epsilon_bits pseudo-random integer > 0 */
+        local b;        /* epsilon_bits pseudo-random integer > 0 */
 
-	/*
-	 * compute 1st non-zero pseudo-random epsilon_bits integer
-	 */
-	do {
-		a = randbit(epsilon_bits);
-	} while (a == 0);
+        /*
+         * compute 1st non-zero pseudo-random epsilon_bits integer
+         */
+        do {
+                a = randbit(epsilon_bits);
+        } while (a == 0);
 
-	/*
-	 * compute 2nd non-zero pseudo-random epsilon_bits integer also != a
-	 */
-	do {
-		b = randbit(epsilon_bits);
-	} while (b == 0 || a == b);
+        /*
+         * compute 2nd non-zero pseudo-random epsilon_bits integer also != a
+         */
+        do {
+                b = randbit(epsilon_bits);
+        } while (b == 0 || a == b);
 
-	/*
-	 * return the min(a,b) / max(a,b): a value > 0 and < 1
-	 */
-	return min(a,b) / max(a,b);
+        /*
+         * return the min(a,b) / max(a,b): a value > 0 and < 1
+         */
+        return min(a,b) / max(a,b);
 }
 
 
@@ -188,28 +188,28 @@ define random_rational_value()
  *
  * From the test set starts with 16 values from the base_tval[] list:
  *
- *	tval = base_tval;
+ *      tval = base_tval;
  *
  * We form a list of 32 values by appending all of the above with:
  *
- *	tval[i] + 1
+ *      tval[i] + 1
  *
  * We form a list of 64 values by appending all of the above with:
  *
- *	-tval[i]
+ *      -tval[i]
  *
  * We form a list of 128 values by appending all of the above with:
  *
- *	For values >= 0:	tval[i] + random_rational_value
- *	For values < 0:		tval[i] - random_rational_value
+ *      For values >= 0:        tval[i] + random_rational_value
+ *      For values < 0:         tval[i] - random_rational_value
  *
  * We form a list of 256 values by appending all of the above with:
  *
- *	tval[i] * pi()
+ *      tval[i] * pi()
  *
  * We form a list of 512 values by appending all of the above with:
  *
- *	tval[i] * 1i
+ *      tval[i] * 1i
  *
  * We for a list of 1024 values by appending new complex values where the
  * real part is a randomly selected real value (from the first 256 list values), and the
@@ -219,87 +219,87 @@ define random_rational_value()
  */
 define form_tval()
 {
-	local tval_len;		/* current length of the tval[] array */
-	local real_cnt;		/* number of real values in tval[] array */
-	local imag_cnt;		/* number of imaginary values in tval[] array */
-	local i;
+        local tval_len;         /* current length of the tval[] array */
+        local real_cnt;         /* number of real values in tval[] array */
+        local imag_cnt;         /* number of imaginary values in tval[] array */
+        local i;
 
-	/*
-	 * seed the subtractive 100 shuffle pseudo-random number generator
-	 */
-	seed_rand();
+        /*
+         * seed the subtractive 100 shuffle pseudo-random number generator
+         */
+        seed_rand();
 
-	/*
-	 * load base_tval[] array into tval[] array
-	 */
-	tval = base_tval;
+        /*
+         * load base_tval[] array into tval[] array
+         */
+        tval = base_tval;
 
-	/*
-	 * expand all tval with tval+1
-	 */
-	tval_len = size(tval);
-	for (i=0; i < tval_len; ++i) {
-		append(tval, tval[i] + 1);
-	}
+        /*
+         * expand all tval with tval+1
+         */
+        tval_len = size(tval);
+        for (i=0; i < tval_len; ++i) {
+                append(tval, tval[i] + 1);
+        }
 
-	/*
-	 * expand all tval with -tval
-	 */
-	tval_len = size(tval);
-	for (i=0; i < tval_len; ++i) {
-		append(tval, -tval[i]);
-	}
+        /*
+         * expand all tval with -tval
+         */
+        tval_len = size(tval);
+        for (i=0; i < tval_len; ++i) {
+                append(tval, -tval[i]);
+        }
 
-	/*
-	 * expand all tval with tval +/- random_rational_value
-	 *
-	 * For values we add random_rational_value if > 0
-	 *   or we subtract crandom_rational_value if < 0.
-	 */
-	tval_len = size(tval);
-	for (i=0; i < tval_len; ++i) {
+        /*
+         * expand all tval with tval +/- random_rational_value
+         *
+         * For values we add random_rational_value if > 0
+         *   or we subtract crandom_rational_value if < 0.
+         */
+        tval_len = size(tval);
+        for (i=0; i < tval_len; ++i) {
 
-		/* use the sign to determine if we add or subtract */
-		if (tval[i] >= 0) {
-			append(tval, tval[i] + random_rational_value());
-		} else {
-			append(tval, tval[i] - random_rational_value());
-		}
-	}
+                /* use the sign to determine if we add or subtract */
+                if (tval[i] >= 0) {
+                        append(tval, tval[i] + random_rational_value());
+                } else {
+                        append(tval, tval[i] - random_rational_value());
+                }
+        }
 
-	/*
-	 * expand all tval with tval * pi()
-	 */
-	tval_len = size(tval);
-	for (i=0; i < tval_len; ++i) {
-		append(tval, tval[i] * pi());
-	}
+        /*
+         * expand all tval with tval * pi()
+         */
+        tval_len = size(tval);
+        for (i=0; i < tval_len; ++i) {
+                append(tval, tval[i] * pi());
+        }
 
-	/*
-	 * expand all tval with tval * 1i
-	 */
-	tval_len = size(tval);
-	/* tval[0] thru tval[real_cnt-1] are real values */
-	real_cnt = tval_len;
-	for (i=0; i < tval_len; ++i) {
-		append(tval, tval[i] * 1i);
-	}
+        /*
+         * expand all tval with tval * 1i
+         */
+        tval_len = size(tval);
+        /* tval[0] thru tval[real_cnt-1] are real values */
+        real_cnt = tval_len;
+        for (i=0; i < tval_len; ++i) {
+                append(tval, tval[i] * 1i);
+        }
 
-	/*
-	 * expand tval with randomly selected real value
-	 * plus randomly selected complex value.
-	 */
-	tval_len = size(tval);
-	/* tval[real_cnt] thru tval[real_cnt+imag_cnt-1] are complex values */
-	imag_cnt = tval_len - real_cnt;
-	for (i=0; i < tval_len; ++i) {
-		append(tval, tval[rand(0,real_cnt)] + tval[real_cnt + rand(0,imag_cnt)]);
-	}
+        /*
+         * expand tval with randomly selected real value
+         * plus randomly selected complex value.
+         */
+        tval_len = size(tval);
+        /* tval[real_cnt] thru tval[real_cnt+imag_cnt-1] are complex values */
+        imag_cnt = tval_len - real_cnt;
+        for (i=0; i < tval_len; ++i) {
+                append(tval, tval[rand(0,real_cnt)] + tval[real_cnt + rand(0,imag_cnt)]);
+        }
 
-	/*
-	 * last, append our final 0 value
-	 */
-	append(tval, 0);
+        /*
+         * last, append our final 0 value
+         */
+        append(tval, 0);
 }
 
 
@@ -308,41 +308,41 @@ define form_tval()
  */
 define precompute_trig()
 {
-	local tval_len;		/* current length of the tval[] array */
-	local i;
+        local tval_len;         /* current length of the tval[] array */
+        local i;
 
-	/*
-	 * firewall - be sure tval list is setup
-	 */
-	if (size(tval) <= 0) {
-		form_tval();
-	}
-	tval_len = size(tval);
-	if (tval_len <= 0) {
-		quit "FATAL: tval_len is empty";
-	}
+        /*
+         * firewall - be sure tval list is setup
+         */
+        if (size(tval) <= 0) {
+                form_tval();
+        }
+        tval_len = size(tval);
+        if (tval_len <= 0) {
+                quit "FATAL: tval_len is empty";
+        }
 
-	/*
-	 * compute trigonometric sine of the tval full test list
-	 */
-	for (i=0; i < tval_len; ++i) {
-		append(sin_tval, sin(tval[i]));
-	}
-	if (size(tval) != size(sin_tval)) {
-		print "****: size(tval):", size(tval), "!= size(sin_tval)", size(sin_tval);
-		quit "FATAL: sin_tval not same size as tval_len";
-	}
+        /*
+         * compute trigonometric sine of the tval full test list
+         */
+        for (i=0; i < tval_len; ++i) {
+                append(sin_tval, sin(tval[i]));
+        }
+        if (size(tval) != size(sin_tval)) {
+                print "****: size(tval):", size(tval), "!= size(sin_tval)", size(sin_tval);
+                quit "FATAL: sin_tval not same size as tval_len";
+        }
 
-	/*
-	 * compute trigonometric cosine of the tval full test list
-	 */
-	for (i=0; i < tval_len; ++i) {
-		append(cos_tval, cos(tval[i]));
-	}
-	if (size(tval) != size(cos_tval)) {
-		print "****: size(tval):", size(tval), "!= size(cos_tval)", size(cos_tval);
-		quit "FATAL: cos_tval not same size as tval_len";
-	}
+        /*
+         * compute trigonometric cosine of the tval full test list
+         */
+        for (i=0; i < tval_len; ++i) {
+                append(cos_tval, cos(tval[i]));
+        }
+        if (size(tval) != size(cos_tval)) {
+                print "****: size(tval):", size(tval), "!= size(cos_tval)", size(cos_tval);
+                quit "FATAL: cos_tval not same size as tval_len";
+        }
 }
 
 
@@ -350,46 +350,46 @@ define precompute_trig()
  * compare - compare the trigonometric identity and the trigonometric function value
  *
  * given:
- *	ident_val	computed trig value trigonometric identity
- *	trig_val	computed value from the trigonometric function
- *	name		trig function name
- *	index		test index value
- *	testnum		regression test number being performed
+ *      ident_val       computed trig value trigonometric identity
+ *      trig_val        computed value from the trigonometric function
+ *      name            trig function name
+ *      index           test index value
+ *      testnum         regression test number being performed
  *
  * returns:
- *	0 ==> trigonometric identity and the trigonometric function value match
- *	1 ==> trigonometric identity and the trigonometric function value do NOT match
+ *      0 ==> trigonometric identity and the trigonometric function value match
+ *      1 ==> trigonometric identity and the trigonometric function value do NOT match
  */
 define compare(ident_val, trig_val, name, index, testnum)
 {
-	local abs_diff;		/* absolute difference between ident_val and trig_val */
+        local abs_diff;         /* absolute difference between ident_val and trig_val */
 
-	/*
-	 * firewall
-	 */
-	if (!isnum(trig_val)) {
-		printf("**** trig test %d-%d failed: %s(tval[%d]): ",
-		       testnum, index, name, index);
-		printf("%d returned a non-numeric value\n", trig_val);
-		return 1;
-	}
+        /*
+         * firewall
+         */
+        if (!isnum(trig_val)) {
+                printf("**** trig test %d-%d failed: %s(tval[%d]): ",
+                       testnum, index, name, index);
+                printf("%d returned a non-numeric value\n", trig_val);
+                return 1;
+        }
 
-	/*
-	 * compute absolute difference
-	 */
-	abs_diff = abs(ident_val - trig_val);
+        /*
+         * compute absolute difference
+         */
+        abs_diff = abs(ident_val - trig_val);
 
-	/*
-	 * determine if ident_val within epsilon of trig_val
-	 */
-	if (near(norm(abs_diff), epsilon_norm) > 0) {
-		printf("**** trig test %d-%d failed: %s(tval[%d]): ",
-		       testnum, index, name, index);
-		printf("%d is not near trig identity value: %d\n",
-		       trig_val, ident_val);
-		return 1;
-	}
-	return 0;
+        /*
+         * determine if ident_val within epsilon of trig_val
+         */
+        if (near(norm(abs_diff), epsilon_norm) > 0) {
+                printf("**** trig test %d-%d failed: %s(tval[%d]): ",
+                       testnum, index, name, index);
+                printf("%d is not near trig identity value: %d\n",
+                       trig_val, ident_val);
+                return 1;
+        }
+        return 0;
 }
 
 
@@ -397,21 +397,21 @@ define compare(ident_val, trig_val, name, index, testnum)
  * not_near_zero - determine if a value is within epsilon() of 0
  *
  * given:
- *	value	real or complex value
+ *      value   real or complex value
  *
  * returns:
- *	1 ==> value is farther from 0 than epsilon (not near zero)
- *	0 ==> value is within epsilon of 0 (near zero)
+ *      1 ==> value is farther from 0 than epsilon (not near zero)
+ *      0 ==> value is within epsilon of 0 (near zero)
  */
 define not_near_zero(value)
 {
-	if (near(norm(value), epsilon_norm) > 0) {
-		/* value is farther from 0 than epsilon */
-		return 1;
-	}
+        if (near(norm(value), epsilon_norm) > 0) {
+                /* value is farther from 0 than epsilon */
+                return 1;
+        }
 
-	/* value is within epsilon of 0 */
-	return 0;
+        /* value is within epsilon of 0 */
+        return 0;
 }
 
 
@@ -420,59 +420,59 @@ define not_near_zero(value)
  *
  * We use the following trigonometric identity:
  *
- *	tan(x) = sin(x) / cos(x)
+ *      tan(x) = sin(x) / cos(x)
  *
  * given:
- *	testnum		regression test number being performed
+ *      testnum         regression test number being performed
  *
  * returns:
- *	number of tests that failed
+ *      number of tests that failed
  */
 define verify_tan(testnum)
 {
-	local tval_len;		/* current length of the tval[] array */
-	local ident_val;	/* computed trig value trigonometric identity */
-	local trig_val;		/* computed value from the trigonometric function */
-	local error_count;	/* number of compare errors detected */
-	local i;
+        local tval_len;         /* current length of the tval[] array */
+        local ident_val;        /* computed trig value trigonometric identity */
+        local trig_val;         /* computed value from the trigonometric function */
+        local error_count;      /* number of compare errors detected */
+        local i;
 
-	/*
-	 * firewall
-	 */
-	if (size(sin_tval) <= 0 || size(cos_tval) <= 0) {
-		precompute_trig();
-	}
+        /*
+         * firewall
+         */
+        if (size(sin_tval) <= 0 || size(cos_tval) <= 0) {
+                precompute_trig();
+        }
 
-	/*
-	 * for each test value, verify the trigonometric identity within epsilon
-	 */
-	error_count = 0;
-	tval_len = size(tval);
-	for (i=0; i < tval_len; ++i) {
+        /*
+         * for each test value, verify the trigonometric identity within epsilon
+         */
+        error_count = 0;
+        tval_len = size(tval);
+        for (i=0; i < tval_len; ++i) {
 
-		/* skip test when cos(x) within epsilon of 0 */
-		if (not_near_zero(cos_tval[i])) {
+                /* skip test when cos(x) within epsilon of 0 */
+                if (not_near_zero(cos_tval[i])) {
 
-			/* compute trigonometric identity */
-			ident_val = sin_tval[i] / cos_tval[i];
+                        /* compute trigonometric identity */
+                        ident_val = sin_tval[i] / cos_tval[i];
 
-			/* compute trigonometric function */
-			trig_val = tan(tval[i]);
+                        /* compute trigonometric function */
+                        trig_val = tan(tval[i]);
 
-			/* compare trigonometric identity with trigonometric function value */
-			if (compare(ident_val, trig_val, "tan", i, testnum)) {
-				++error_count;
-			}
-		}
-	}
+                        /* compare trigonometric identity with trigonometric function value */
+                        if (compare(ident_val, trig_val, "tan", i, testnum)) {
+                                ++error_count;
+                        }
+                }
+        }
 
-	/*
-	 * report test results
-	 */
-	if (error_count != 0) {
-		print '**** test', testnum : ': tan test failure count:', error_count;
-	}
-	return error_count;
+        /*
+         * report test results
+         */
+        if (error_count != 0) {
+                print '**** test', testnum : ': tan test failure count:', error_count;
+        }
+        return error_count;
 }
 
 
@@ -481,58 +481,58 @@ define verify_tan(testnum)
  *
  * We use the following trigonometric identity:
  *
- *	cot(x) = cos(x) / sin(x)
+ *      cot(x) = cos(x) / sin(x)
  *
  * given:
- *	testnum		regression test number being performed
+ *      testnum         regression test number being performed
  *
  * returns:
- *	number of tests that failed
+ *      number of tests that failed
  */
 define verify_cot(testnum)
 {
-	local tval_len;		/* current length of the tval[] array */
-	local ident_val;	/* computed trig value trigonometric identity */
-	local trig_val;		/* computed value from the trigonometric function */
-	local error_count;	/* number of compare errors detected */
-	local i;
+        local tval_len;         /* current length of the tval[] array */
+        local ident_val;        /* computed trig value trigonometric identity */
+        local trig_val;         /* computed value from the trigonometric function */
+        local error_count;      /* number of compare errors detected */
+        local i;
 
-	/*
-	 * firewall
-	 */
-	if (size(sin_tval) <= 0 || size(cos_tval) <= 0) {
-		precompute_trig();
-	}
+        /*
+         * firewall
+         */
+        if (size(sin_tval) <= 0 || size(cos_tval) <= 0) {
+                precompute_trig();
+        }
 
-	/*
-	 * for each test value, verify the trigonometric identity within epsilon
-	 */
-	tval_len = size(tval);
-	for (i=0; i < tval_len; ++i) {
+        /*
+         * for each test value, verify the trigonometric identity within epsilon
+         */
+        tval_len = size(tval);
+        for (i=0; i < tval_len; ++i) {
 
-		/* skip test when sin(x) within epsilon of 0 */
-		if (not_near_zero(sin_tval[i])) {
+                /* skip test when sin(x) within epsilon of 0 */
+                if (not_near_zero(sin_tval[i])) {
 
-			/* compute trigonometric identity */
-			ident_val = cos_tval[i] / sin_tval[i];
+                        /* compute trigonometric identity */
+                        ident_val = cos_tval[i] / sin_tval[i];
 
-			/* compute trigonometric function */
-			trig_val = cot(tval[i]);
+                        /* compute trigonometric function */
+                        trig_val = cot(tval[i]);
 
-			/* compare trigonometric identity with trigonometric function value */
-			if (compare(ident_val, trig_val, "cot", i, testnum)) {
-				++error_count;
-			}
-		}
-	}
+                        /* compare trigonometric identity with trigonometric function value */
+                        if (compare(ident_val, trig_val, "cot", i, testnum)) {
+                                ++error_count;
+                        }
+                }
+        }
 
-	/*
-	 * report test results
-	 */
-	if (error_count != 0) {
-		print '**** test', testnum : ': cot test failure count:', error_count;
-	}
-	return error_count;
+        /*
+         * report test results
+         */
+        if (error_count != 0) {
+                print '**** test', testnum : ': cot test failure count:', error_count;
+        }
+        return error_count;
 }
 
 
@@ -541,58 +541,58 @@ define verify_cot(testnum)
  *
  * We use the following trigonometric identity:
  *
- *	sec(x) = 1 / cos(x)
+ *      sec(x) = 1 / cos(x)
  *
  * given:
- *	testnum		regression test number being performed
+ *      testnum         regression test number being performed
  *
  * returns:
- *	number of tests that failed
+ *      number of tests that failed
  */
 define verify_sec(testnum)
 {
-	local tval_len;		/* current length of the tval[] array */
-	local ident_val;	/* computed trig value trigonometric identity */
-	local trig_val;		/* computed value from the trigonometric function */
-	local error_count;	/* number of compare errors detected */
-	local i;
+        local tval_len;         /* current length of the tval[] array */
+        local ident_val;        /* computed trig value trigonometric identity */
+        local trig_val;         /* computed value from the trigonometric function */
+        local error_count;      /* number of compare errors detected */
+        local i;
 
-	/*
-	 * firewall
-	 */
-	if (size(cos_tval) <= 0) {
-		precompute_trig();
-	}
+        /*
+         * firewall
+         */
+        if (size(cos_tval) <= 0) {
+                precompute_trig();
+        }
 
-	/*
-	 * for each test value, verify the trigonometric identity within epsilon
-	 */
-	tval_len = size(tval);
-	for (i=0; i < tval_len; ++i) {
+        /*
+         * for each test value, verify the trigonometric identity within epsilon
+         */
+        tval_len = size(tval);
+        for (i=0; i < tval_len; ++i) {
 
-		/* skip test when cos(x) within epsilon of 0 */
-		if (not_near_zero(cos_tval[i])) {
+                /* skip test when cos(x) within epsilon of 0 */
+                if (not_near_zero(cos_tval[i])) {
 
-			/* compute trigonometric identity */
-			ident_val = 1 / cos_tval[i];
+                        /* compute trigonometric identity */
+                        ident_val = 1 / cos_tval[i];
 
-			/* compute trigonometric function */
-			trig_val = sec(tval[i]);
+                        /* compute trigonometric function */
+                        trig_val = sec(tval[i]);
 
-			/* compare trigonometric identity with trigonometric function value */
-			if (compare(ident_val, trig_val, "sec", i, testnum)) {
-				++error_count;
-			}
-		}
-	}
+                        /* compare trigonometric identity with trigonometric function value */
+                        if (compare(ident_val, trig_val, "sec", i, testnum)) {
+                                ++error_count;
+                        }
+                }
+        }
 
-	/*
-	 * report test results
-	 */
-	if (error_count != 0) {
-		print '**** test', testnum : ': sec test failure count:', error_count;
-	}
-	return error_count;
+        /*
+         * report test results
+         */
+        if (error_count != 0) {
+                print '**** test', testnum : ': sec test failure count:', error_count;
+        }
+        return error_count;
 }
 
 
@@ -601,58 +601,58 @@ define verify_sec(testnum)
  *
  * We use the following trigonometric identity:
  *
- *	csc(x) = 1 / sin(x)
+ *      csc(x) = 1 / sin(x)
  *
  * given:
- *	testnum		regression test number being performed
+ *      testnum         regression test number being performed
  *
  * returns:
- *	number of tests that failed
+ *      number of tests that failed
  */
 define verify_csc(testnum)
 {
-	local tval_len;		/* current length of the tval[] array */
-	local ident_val;	/* computed trig value trigonometric identity */
-	local trig_val;		/* computed value from the trigonometric function */
-	local error_count;	/* number of compare errors detected */
-	local i;
+        local tval_len;         /* current length of the tval[] array */
+        local ident_val;        /* computed trig value trigonometric identity */
+        local trig_val;         /* computed value from the trigonometric function */
+        local error_count;      /* number of compare errors detected */
+        local i;
 
-	/*
-	 * firewall
-	 */
-	if (size(sin_tval) <= 0) {
-		precompute_trig();
-	}
+        /*
+         * firewall
+         */
+        if (size(sin_tval) <= 0) {
+                precompute_trig();
+        }
 
-	/*
-	 * for each test value, verify the trigonometric identity within epsilon
-	 */
-	tval_len = size(tval);
-	for (i=0; i < tval_len; ++i) {
+        /*
+         * for each test value, verify the trigonometric identity within epsilon
+         */
+        tval_len = size(tval);
+        for (i=0; i < tval_len; ++i) {
 
-		/* skip test when sin(x) within epsilon of 0 */
-		if (not_near_zero(sin_tval[i])) {
+                /* skip test when sin(x) within epsilon of 0 */
+                if (not_near_zero(sin_tval[i])) {
 
-			/* compute trigonometric identity */
-			ident_val = 1 / sin_tval[i];
+                        /* compute trigonometric identity */
+                        ident_val = 1 / sin_tval[i];
 
-			/* compute trigonometric function */
-			trig_val = csc(tval[i]);
+                        /* compute trigonometric function */
+                        trig_val = csc(tval[i]);
 
-			/* compare trigonometric identity with trigonometric function value */
-			if (compare(ident_val, trig_val, "csc", i, testnum)) {
-				++error_count;
-			}
-		}
-	}
+                        /* compare trigonometric identity with trigonometric function value */
+                        if (compare(ident_val, trig_val, "csc", i, testnum)) {
+                                ++error_count;
+                        }
+                }
+        }
 
-	/*
-	 * report test results
-	 */
-	if (error_count != 0) {
-		print '**** test', testnum : ': csc test failure count:', error_count;
-	}
-	return error_count;
+        /*
+         * report test results
+         */
+        if (error_count != 0) {
+                print '**** test', testnum : ': csc test failure count:', error_count;
+        }
+        return error_count;
 }
 
 
@@ -661,58 +661,58 @@ define verify_csc(testnum)
  *
  * We use the following trigonometric identity:
  *
- *	versin(x) = 1 - cos(x)
+ *      versin(x) = 1 - cos(x)
  *
  * given:
- *	testnum		regression test number being performed
+ *      testnum         regression test number being performed
  *
  * returns:
- *	number of tests that failed
+ *      number of tests that failed
  */
 define verify_versin(testnum)
 {
-	local tval_len;		/* current length of the tval[] array */
-	local ident_val;	/* computed trig value trigonometric identity */
-	local trig_val;		/* computed value from the trigonometric function */
-	local error_count;	/* number of compare errors detected */
-	local i;
+        local tval_len;         /* current length of the tval[] array */
+        local ident_val;        /* computed trig value trigonometric identity */
+        local trig_val;         /* computed value from the trigonometric function */
+        local error_count;      /* number of compare errors detected */
+        local i;
 
-	/*
-	 * firewall
-	 */
-	if (size(cos_tval) <= 0) {
-		precompute_trig();
-	}
+        /*
+         * firewall
+         */
+        if (size(cos_tval) <= 0) {
+                precompute_trig();
+        }
 
-	/*
-	 * for each test value, verify the trigonometric identity within epsilon
-	 */
-	tval_len = size(tval);
-	for (i=0; i < tval_len; ++i) {
+        /*
+         * for each test value, verify the trigonometric identity within epsilon
+         */
+        tval_len = size(tval);
+        for (i=0; i < tval_len; ++i) {
 
-		/* skip test when cos(x) within epsilon of 0 */
-		if (not_near_zero(cos_tval[i])) {
+                /* skip test when cos(x) within epsilon of 0 */
+                if (not_near_zero(cos_tval[i])) {
 
-			/* compute trigonometric identity */
-			ident_val = 1 - cos_tval[i];
+                        /* compute trigonometric identity */
+                        ident_val = 1 - cos_tval[i];
 
-			/* compute trigonometric function */
-			trig_val = versin(tval[i]);
+                        /* compute trigonometric function */
+                        trig_val = versin(tval[i]);
 
-			/* compare trigonometric identity with trigonometric function value */
-			if (compare(ident_val, trig_val, "versin", i, testnum)) {
-				++error_count;
-			}
-		}
-	}
+                        /* compare trigonometric identity with trigonometric function value */
+                        if (compare(ident_val, trig_val, "versin", i, testnum)) {
+                                ++error_count;
+                        }
+                }
+        }
 
-	/*
-	 * report test results
-	 */
-	if (error_count != 0) {
-		print '**** test', testnum : ': versin test failure count:', error_count;
-	}
-	return error_count;
+        /*
+         * report test results
+         */
+        if (error_count != 0) {
+                print '**** test', testnum : ': versin test failure count:', error_count;
+        }
+        return error_count;
 }
 
 
@@ -721,58 +721,58 @@ define verify_versin(testnum)
  *
  * We use the following trigonometric identity:
  *
- *	coversin(x) = 1 - sin(x)
+ *      coversin(x) = 1 - sin(x)
  *
  * given:
- *	testnum		regression test number being performed
+ *      testnum         regression test number being performed
  *
  * returns:
- *	number of tests that failed
+ *      number of tests that failed
  */
 define verify_coversin(testnum)
 {
-	local tval_len;		/* current length of the tval[] array */
-	local ident_val;	/* computed trig value trigonometric identity */
-	local trig_val;		/* computed value from the trigonometric function */
-	local error_count;	/* number of compare errors detected */
-	local i;
+        local tval_len;         /* current length of the tval[] array */
+        local ident_val;        /* computed trig value trigonometric identity */
+        local trig_val;         /* computed value from the trigonometric function */
+        local error_count;      /* number of compare errors detected */
+        local i;
 
-	/*
-	 * firewall
-	 */
-	if (size(sin_tval) <= 0) {
-		precompute_trig();
-	}
+        /*
+         * firewall
+         */
+        if (size(sin_tval) <= 0) {
+                precompute_trig();
+        }
 
-	/*
-	 * for each test value, verify the trigonometric identity within epsilon
-	 */
-	tval_len = size(tval);
-	for (i=0; i < tval_len; ++i) {
+        /*
+         * for each test value, verify the trigonometric identity within epsilon
+         */
+        tval_len = size(tval);
+        for (i=0; i < tval_len; ++i) {
 
-		/* skip test when sin(x) within epsilon of 0 */
-		if (not_near_zero(sin_tval[i])) {
+                /* skip test when sin(x) within epsilon of 0 */
+                if (not_near_zero(sin_tval[i])) {
 
-			/* compute trigonometric identity */
-			ident_val = 1 - sin_tval[i];
+                        /* compute trigonometric identity */
+                        ident_val = 1 - sin_tval[i];
 
-			/* compute trigonometric function */
-			trig_val = coversin(tval[i]);
+                        /* compute trigonometric function */
+                        trig_val = coversin(tval[i]);
 
-			/* compare trigonometric identity with trigonometric function value */
-			if (compare(ident_val, trig_val, "coversin", i, testnum)) {
-				++error_count;
-			}
-		}
-	}
+                        /* compare trigonometric identity with trigonometric function value */
+                        if (compare(ident_val, trig_val, "coversin", i, testnum)) {
+                                ++error_count;
+                        }
+                }
+        }
 
-	/*
-	 * report test results
-	 */
-	if (error_count != 0) {
-		print '**** test', testnum : ': coversin test failure count:', error_count;
-	}
-	return error_count;
+        /*
+         * report test results
+         */
+        if (error_count != 0) {
+                print '**** test', testnum : ': coversin test failure count:', error_count;
+        }
+        return error_count;
 }
 
 
@@ -781,58 +781,58 @@ define verify_coversin(testnum)
  *
  * We use the following trigonometric identity:
  *
- *	vercos(x) = 1 + cos(x)
+ *      vercos(x) = 1 + cos(x)
  *
  * given:
- *	testnum		regression test number being performed
+ *      testnum         regression test number being performed
  *
  * returns:
- *	number of tests that failed
+ *      number of tests that failed
  */
 define verify_vercos(testnum)
 {
-	local tval_len;		/* current length of the tval[] array */
-	local ident_val;	/* computed trig value trigonometric identity */
-	local trig_val;		/* computed value from the trigonometric function */
-	local error_count;	/* number of compare errors detected */
-	local i;
+        local tval_len;         /* current length of the tval[] array */
+        local ident_val;        /* computed trig value trigonometric identity */
+        local trig_val;         /* computed value from the trigonometric function */
+        local error_count;      /* number of compare errors detected */
+        local i;
 
-	/*
-	 * firewall
-	 */
-	if (size(cos_tval) <= 0) {
-		precompute_trig();
-	}
+        /*
+         * firewall
+         */
+        if (size(cos_tval) <= 0) {
+                precompute_trig();
+        }
 
-	/*
-	 * for each test value, verify the trigonometric identity within epsilon
-	 */
-	tval_len = size(tval);
-	for (i=0; i < tval_len; ++i) {
+        /*
+         * for each test value, verify the trigonometric identity within epsilon
+         */
+        tval_len = size(tval);
+        for (i=0; i < tval_len; ++i) {
 
-		/* skip test when cos(x) within epsilon of 0 */
-		if (not_near_zero(cos_tval[i])) {
+                /* skip test when cos(x) within epsilon of 0 */
+                if (not_near_zero(cos_tval[i])) {
 
-			/* compute trigonometric identity */
-			ident_val = 1 + cos_tval[i];
+                        /* compute trigonometric identity */
+                        ident_val = 1 + cos_tval[i];
 
-			/* compute trigonometric function */
-			trig_val = vercos(tval[i]);
+                        /* compute trigonometric function */
+                        trig_val = vercos(tval[i]);
 
-			/* compare trigonometric identity with trigonometric function value */
-			if (compare(ident_val, trig_val, "vercos", i, testnum)) {
-				++error_count;
-			}
-		}
-	}
+                        /* compare trigonometric identity with trigonometric function value */
+                        if (compare(ident_val, trig_val, "vercos", i, testnum)) {
+                                ++error_count;
+                        }
+                }
+        }
 
-	/*
-	 * report test results
-	 */
-	if (error_count != 0) {
-		print '**** test', testnum : ': vercos test failure count:', error_count;
-	}
-	return error_count;
+        /*
+         * report test results
+         */
+        if (error_count != 0) {
+                print '**** test', testnum : ': vercos test failure count:', error_count;
+        }
+        return error_count;
 }
 
 
@@ -841,58 +841,58 @@ define verify_vercos(testnum)
  *
  * We use the following trigonometric identity:
  *
- *	covercos(x) = 1 + sin(x)
+ *      covercos(x) = 1 + sin(x)
  *
  * given:
- *	testnum		regression test number being performed
+ *      testnum         regression test number being performed
  *
  * returns:
- *	number of tests that failed
+ *      number of tests that failed
  */
 define verify_covercos(testnum)
 {
-	local tval_len;		/* current length of the tval[] array */
-	local ident_val;	/* computed trig value trigonometric identity */
-	local trig_val;		/* computed value from the trigonometric function */
-	local error_count;	/* number of compare errors detected */
-	local i;
+        local tval_len;         /* current length of the tval[] array */
+        local ident_val;        /* computed trig value trigonometric identity */
+        local trig_val;         /* computed value from the trigonometric function */
+        local error_count;      /* number of compare errors detected */
+        local i;
 
-	/*
-	 * firewall
-	 */
-	if (size(sin_tval) <= 0) {
-		precompute_trig();
-	}
+        /*
+         * firewall
+         */
+        if (size(sin_tval) <= 0) {
+                precompute_trig();
+        }
 
-	/*
-	 * for each test value, verify the trigonometric identity within epsilon
-	 */
-	tval_len = size(tval);
-	for (i=0; i < tval_len; ++i) {
+        /*
+         * for each test value, verify the trigonometric identity within epsilon
+         */
+        tval_len = size(tval);
+        for (i=0; i < tval_len; ++i) {
 
-		/* skip test when sin(x) within epsilon of 0 */
-		if (not_near_zero(sin_tval[i])) {
+                /* skip test when sin(x) within epsilon of 0 */
+                if (not_near_zero(sin_tval[i])) {
 
-			/* compute trigonometric identity */
-			ident_val = 1 + sin_tval[i];
+                        /* compute trigonometric identity */
+                        ident_val = 1 + sin_tval[i];
 
-			/* compute trigonometric function */
-			trig_val = covercos(tval[i]);
+                        /* compute trigonometric function */
+                        trig_val = covercos(tval[i]);
 
-			/* compare trigonometric identity with trigonometric function value */
-			if (compare(ident_val, trig_val, "covercos", i, testnum)) {
-				++error_count;
-			}
-		}
-	}
+                        /* compare trigonometric identity with trigonometric function value */
+                        if (compare(ident_val, trig_val, "covercos", i, testnum)) {
+                                ++error_count;
+                        }
+                }
+        }
 
-	/*
-	 * report test results
-	 */
-	if (error_count != 0) {
-		print '**** test', testnum : ': covercos test failure count:', error_count;
-	}
-	return error_count;
+        /*
+         * report test results
+         */
+        if (error_count != 0) {
+                print '**** test', testnum : ': covercos test failure count:', error_count;
+        }
+        return error_count;
 }
 
 
@@ -901,58 +901,58 @@ define verify_covercos(testnum)
  *
  * We use the following trigonometric identity:
  *
- *	haversin(x) = versin(x) / 2 = (1 - cos(x)) / 2
+ *      haversin(x) = versin(x) / 2 = (1 - cos(x)) / 2
  *
  * given:
- *	testnum		regression test number being performed
+ *      testnum         regression test number being performed
  *
  * returns:
- *	number of tests that failed
+ *      number of tests that failed
  */
 define verify_haversin(testnum)
 {
-	local tval_len;		/* current length of the tval[] array */
-	local ident_val;	/* computed trig value trigonometric identity */
-	local trig_val;		/* computed value from the trigonometric function */
-	local error_count;	/* number of compare errors detected */
-	local i;
+        local tval_len;         /* current length of the tval[] array */
+        local ident_val;        /* computed trig value trigonometric identity */
+        local trig_val;         /* computed value from the trigonometric function */
+        local error_count;      /* number of compare errors detected */
+        local i;
 
-	/*
-	 * firewall
-	 */
-	if (size(cos_tval) <= 0) {
-		precompute_trig();
-	}
+        /*
+         * firewall
+         */
+        if (size(cos_tval) <= 0) {
+                precompute_trig();
+        }
 
-	/*
-	 * for each test value, verify the trigonometric identity within epsilon
-	 */
-	tval_len = size(tval);
-	for (i=0; i < tval_len; ++i) {
+        /*
+         * for each test value, verify the trigonometric identity within epsilon
+         */
+        tval_len = size(tval);
+        for (i=0; i < tval_len; ++i) {
 
-		/* skip test when cos(x) within epsilon of 0 */
-		if (not_near_zero(cos_tval[i])) {
+                /* skip test when cos(x) within epsilon of 0 */
+                if (not_near_zero(cos_tval[i])) {
 
-			/* compute trigonometric identity */
-			ident_val = (1 - cos_tval[i]) / 2;
+                        /* compute trigonometric identity */
+                        ident_val = (1 - cos_tval[i]) / 2;
 
-			/* compute trigonometric function */
-			trig_val = haversin(tval[i]);
+                        /* compute trigonometric function */
+                        trig_val = haversin(tval[i]);
 
-			/* compare trigonometric identity with trigonometric function value */
-			if (compare(ident_val, trig_val, "haversin", i, testnum)) {
-				++error_count;
-			}
-		}
-	}
+                        /* compare trigonometric identity with trigonometric function value */
+                        if (compare(ident_val, trig_val, "haversin", i, testnum)) {
+                                ++error_count;
+                        }
+                }
+        }
 
-	/*
-	 * report test results
-	 */
-	if (error_count != 0) {
-		print '**** test', testnum : ': haversin test failure count:', error_count;
-	}
-	return error_count;
+        /*
+         * report test results
+         */
+        if (error_count != 0) {
+                print '**** test', testnum : ': haversin test failure count:', error_count;
+        }
+        return error_count;
 }
 
 
@@ -961,58 +961,58 @@ define verify_haversin(testnum)
  *
  * We use the following trigonometric identity:
  *
- *	hacoversin(x) = coversin(x) / 2 = (1 - sin(x)) / 2
+ *      hacoversin(x) = coversin(x) / 2 = (1 - sin(x)) / 2
  *
  * given:
- *	testnum		regression test number being performed
+ *      testnum         regression test number being performed
  *
  * returns:
- *	number of tests that failed
+ *      number of tests that failed
  */
 define verify_hacoversin(testnum)
 {
-	local tval_len;		/* current length of the tval[] array */
-	local ident_val;	/* computed trig value trigonometric identity */
-	local trig_val;		/* computed value from the trigonometric function */
-	local error_count;	/* number of compare errors detected */
-	local i;
+        local tval_len;         /* current length of the tval[] array */
+        local ident_val;        /* computed trig value trigonometric identity */
+        local trig_val;         /* computed value from the trigonometric function */
+        local error_count;      /* number of compare errors detected */
+        local i;
 
-	/*
-	 * firewall
-	 */
-	if (size(sin_tval) <= 0) {
-		precompute_trig();
-	}
+        /*
+         * firewall
+         */
+        if (size(sin_tval) <= 0) {
+                precompute_trig();
+        }
 
-	/*
-	 * for each test value, verify the trigonometric identity within epsilon
-	 */
-	tval_len = size(tval);
-	for (i=0; i < tval_len; ++i) {
+        /*
+         * for each test value, verify the trigonometric identity within epsilon
+         */
+        tval_len = size(tval);
+        for (i=0; i < tval_len; ++i) {
 
-		/* skip test when cos(x) within epsilon of 0 */
-		if (not_near_zero(sin_tval[i])) {
+                /* skip test when cos(x) within epsilon of 0 */
+                if (not_near_zero(sin_tval[i])) {
 
-			/* compute trigonometric identity */
-			ident_val = (1 - sin_tval[i]) / 2;
+                        /* compute trigonometric identity */
+                        ident_val = (1 - sin_tval[i]) / 2;
 
-			/* compute trigonometric function */
-			trig_val = hacoversin(tval[i]);
+                        /* compute trigonometric function */
+                        trig_val = hacoversin(tval[i]);
 
-			/* compare trigonometric identity with trigonometric function value */
-			if (compare(ident_val, trig_val, "hacoversin", i, testnum)) {
-				++error_count;
-			}
-		}
-	}
+                        /* compare trigonometric identity with trigonometric function value */
+                        if (compare(ident_val, trig_val, "hacoversin", i, testnum)) {
+                                ++error_count;
+                        }
+                }
+        }
 
-	/*
-	 * report test results
-	 */
-	if (error_count != 0) {
-		print '**** test', testnum : ': hacoversin test failure count:', error_count;
-	}
-	return error_count;
+        /*
+         * report test results
+         */
+        if (error_count != 0) {
+                print '**** test', testnum : ': hacoversin test failure count:', error_count;
+        }
+        return error_count;
 }
 
 
@@ -1021,58 +1021,58 @@ define verify_hacoversin(testnum)
  *
  * We use the following trigonometric identity:
  *
- *	havercos(x) = vercos(x) / 2 = (1 + cos(x)) / 2
+ *      havercos(x) = vercos(x) / 2 = (1 + cos(x)) / 2
  *
  * given:
- *	testnum		regression test number being performed
+ *      testnum         regression test number being performed
  *
  * returns:
- *	number of tests that failed
+ *      number of tests that failed
  */
 define verify_havercos(testnum)
 {
-	local tval_len;		/* current length of the tval[] array */
-	local ident_val;	/* computed trig value trigonometric identity */
-	local trig_val;		/* computed value from the trigonometric function */
-	local error_count;	/* number of compare errors detected */
-	local i;
+        local tval_len;         /* current length of the tval[] array */
+        local ident_val;        /* computed trig value trigonometric identity */
+        local trig_val;         /* computed value from the trigonometric function */
+        local error_count;      /* number of compare errors detected */
+        local i;
 
-	/*
-	 * firewall
-	 */
-	if (size(cos_tval) <= 0) {
-		precompute_trig();
-	}
+        /*
+         * firewall
+         */
+        if (size(cos_tval) <= 0) {
+                precompute_trig();
+        }
 
-	/*
-	 * for each test value, verify the trigonometric identity within epsilon
-	 */
-	tval_len = size(tval);
-	for (i=0; i < tval_len; ++i) {
+        /*
+         * for each test value, verify the trigonometric identity within epsilon
+         */
+        tval_len = size(tval);
+        for (i=0; i < tval_len; ++i) {
 
-		/* skip test when cos(x) within epsilon of 0 */
-		if (not_near_zero(cos_tval[i])) {
+                /* skip test when cos(x) within epsilon of 0 */
+                if (not_near_zero(cos_tval[i])) {
 
-			/* compute trigonometric identity */
-			ident_val = (1 + cos_tval[i]) / 2;
+                        /* compute trigonometric identity */
+                        ident_val = (1 + cos_tval[i]) / 2;
 
-			/* compute trigonometric function */
-			trig_val = havercos(tval[i]);
+                        /* compute trigonometric function */
+                        trig_val = havercos(tval[i]);
 
-			/* compare trigonometric identity with trigonometric function value */
-			if (compare(ident_val, trig_val, "havercos", i, testnum)) {
-				++error_count;
-			}
-		}
-	}
+                        /* compare trigonometric identity with trigonometric function value */
+                        if (compare(ident_val, trig_val, "havercos", i, testnum)) {
+                                ++error_count;
+                        }
+                }
+        }
 
-	/*
-	 * report test results
-	 */
-	if (error_count != 0) {
-		print '**** test', testnum : ': havercos test failure count:', error_count;
-	}
-	return error_count;
+        /*
+         * report test results
+         */
+        if (error_count != 0) {
+                print '**** test', testnum : ': havercos test failure count:', error_count;
+        }
+        return error_count;
 }
 
 
@@ -1081,58 +1081,58 @@ define verify_havercos(testnum)
  *
  * We use the following trigonometric identity:
  *
- *	hacovercos(x) = covercos(x) / 2 = (1 + sin(x)) / 2
+ *      hacovercos(x) = covercos(x) / 2 = (1 + sin(x)) / 2
  *
  * given:
- *	testnum		regression test number being performed
+ *      testnum         regression test number being performed
  *
  * returns:
- *	number of tests that failed
+ *      number of tests that failed
  */
 define verify_hacovercos(testnum)
 {
-	local tval_len;		/* current length of the tval[] array */
-	local ident_val;	/* computed trig value trigonometric identity */
-	local trig_val;		/* computed value from the trigonometric function */
-	local error_count;	/* number of compare errors detected */
-	local i;
+        local tval_len;         /* current length of the tval[] array */
+        local ident_val;        /* computed trig value trigonometric identity */
+        local trig_val;         /* computed value from the trigonometric function */
+        local error_count;      /* number of compare errors detected */
+        local i;
 
-	/*
-	 * firewall
-	 */
-	if (size(sin_tval) <= 0) {
-		precompute_trig();
-	}
+        /*
+         * firewall
+         */
+        if (size(sin_tval) <= 0) {
+                precompute_trig();
+        }
 
-	/*
-	 * for each test value, verify the trigonometric identity within epsilon
-	 */
-	tval_len = size(tval);
-	for (i=0; i < tval_len; ++i) {
+        /*
+         * for each test value, verify the trigonometric identity within epsilon
+         */
+        tval_len = size(tval);
+        for (i=0; i < tval_len; ++i) {
 
-		/* skip test when sin(x) within epsilon of 0 */
-		if (not_near_zero(sin_tval[i])) {
+                /* skip test when sin(x) within epsilon of 0 */
+                if (not_near_zero(sin_tval[i])) {
 
-			/* compute trigonometric identity */
-			ident_val = (1 + sin_tval[i]) / 2;
+                        /* compute trigonometric identity */
+                        ident_val = (1 + sin_tval[i]) / 2;
 
-			/* compute trigonometric function */
-			trig_val = hacovercos(tval[i]);
+                        /* compute trigonometric function */
+                        trig_val = hacovercos(tval[i]);
 
-			/* compare trigonometric identity with trigonometric function value */
-			if (compare(ident_val, trig_val, "hacovercos", i, testnum)) {
-				++error_count;
-			}
-		}
-	}
+                        /* compare trigonometric identity with trigonometric function value */
+                        if (compare(ident_val, trig_val, "hacovercos", i, testnum)) {
+                                ++error_count;
+                        }
+                }
+        }
 
-	/*
-	 * report test results
-	 */
-	if (error_count != 0) {
-		print '**** test', testnum : ': hacovercos test failure count:', error_count;
-	}
-	return error_count;
+        /*
+         * report test results
+         */
+        if (error_count != 0) {
+                print '**** test', testnum : ': hacovercos test failure count:', error_count;
+        }
+        return error_count;
 }
 
 
@@ -1141,58 +1141,58 @@ define verify_hacovercos(testnum)
  *
  * We use the following trigonometric identity:
  *
- *	exsec(x) = sec(x) - 1 = (1 / cos(x)) - 1
+ *      exsec(x) = sec(x) - 1 = (1 / cos(x)) - 1
  *
  * given:
- *	testnum		regression test number being performed
+ *      testnum         regression test number being performed
  *
  * returns:
- *	number of tests that failed
+ *      number of tests that failed
  */
 define verify_exsec(testnum)
 {
-	local tval_len;		/* current length of the tval[] array */
-	local ident_val;	/* computed trig value trigonometric identity */
-	local trig_val;		/* computed value from the trigonometric function */
-	local error_count;	/* number of compare errors detected */
-	local i;
+        local tval_len;         /* current length of the tval[] array */
+        local ident_val;        /* computed trig value trigonometric identity */
+        local trig_val;         /* computed value from the trigonometric function */
+        local error_count;      /* number of compare errors detected */
+        local i;
 
-	/*
-	 * firewall
-	 */
-	if (size(cos_tval) <= 0) {
-		precompute_trig();
-	}
+        /*
+         * firewall
+         */
+        if (size(cos_tval) <= 0) {
+                precompute_trig();
+        }
 
-	/*
-	 * for each test value, verify the trigonometric identity within epsilon
-	 */
-	tval_len = size(tval);
-	for (i=0; i < tval_len; ++i) {
+        /*
+         * for each test value, verify the trigonometric identity within epsilon
+         */
+        tval_len = size(tval);
+        for (i=0; i < tval_len; ++i) {
 
-		/* skip test when cos(x) within epsilon of 0 */
-		if (not_near_zero(cos_tval[i])) {
+                /* skip test when cos(x) within epsilon of 0 */
+                if (not_near_zero(cos_tval[i])) {
 
-			/* compute trigonometric identity */
-			ident_val = (1 / cos_tval[i]) - 1;
+                        /* compute trigonometric identity */
+                        ident_val = (1 / cos_tval[i]) - 1;
 
-			/* compute trigonometric function */
-			trig_val = exsec(tval[i]);
+                        /* compute trigonometric function */
+                        trig_val = exsec(tval[i]);
 
-			/* compare trigonometric identity with trigonometric function value */
-			if (compare(ident_val, trig_val, "exsec", i, testnum)) {
-				++error_count;
-			}
-		}
-	}
+                        /* compare trigonometric identity with trigonometric function value */
+                        if (compare(ident_val, trig_val, "exsec", i, testnum)) {
+                                ++error_count;
+                        }
+                }
+        }
 
-	/*
-	 * report test results
-	 */
-	if (error_count != 0) {
-		print '**** test', testnum : ': exsec test failure count:', error_count;
-	}
-	return error_count;
+        /*
+         * report test results
+         */
+        if (error_count != 0) {
+                print '**** test', testnum : ': exsec test failure count:', error_count;
+        }
+        return error_count;
 }
 
 
@@ -1201,58 +1201,58 @@ define verify_exsec(testnum)
  *
  * We use the following trigonometric identity:
  *
- *	excsc(x) = csc(x) - 1 = (1 / sin(x)) - 1
+ *      excsc(x) = csc(x) - 1 = (1 / sin(x)) - 1
  *
  * given:
- *	testnum		regression test number being performed
+ *      testnum         regression test number being performed
  *
  * returns:
- *	number of tests that failed
+ *      number of tests that failed
  */
 define verify_excsc(testnum)
 {
-	local tval_len;		/* current length of the tval[] array */
-	local ident_val;	/* computed trig value trigonometric identity */
-	local trig_val;		/* computed value from the trigonometric function */
-	local error_count;	/* number of compare errors detected */
-	local i;
+        local tval_len;         /* current length of the tval[] array */
+        local ident_val;        /* computed trig value trigonometric identity */
+        local trig_val;         /* computed value from the trigonometric function */
+        local error_count;      /* number of compare errors detected */
+        local i;
 
-	/*
-	 * firewall
-	 */
-	if (size(sin_tval) <= 0) {
-		precompute_trig();
-	}
+        /*
+         * firewall
+         */
+        if (size(sin_tval) <= 0) {
+                precompute_trig();
+        }
 
-	/*
-	 * for each test value, verify the trigonometric identity within epsilon
-	 */
-	tval_len = size(tval);
-	for (i=0; i < tval_len; ++i) {
+        /*
+         * for each test value, verify the trigonometric identity within epsilon
+         */
+        tval_len = size(tval);
+        for (i=0; i < tval_len; ++i) {
 
-		/* skip test when sin(x) within epsilon of 0 */
-		if (not_near_zero(sin_tval[i])) {
+                /* skip test when sin(x) within epsilon of 0 */
+                if (not_near_zero(sin_tval[i])) {
 
-			/* compute trigonometric identity */
-			ident_val = (1 / sin_tval[i]) - 1;
+                        /* compute trigonometric identity */
+                        ident_val = (1 / sin_tval[i]) - 1;
 
-			/* compute trigonometric function */
-			trig_val = excsc(tval[i]);
+                        /* compute trigonometric function */
+                        trig_val = excsc(tval[i]);
 
-			/* compare trigonometric identity with trigonometric function value */
-			if (compare(ident_val, trig_val, "excsc", i, testnum)) {
-				++error_count;
-			}
-		}
-	}
+                        /* compare trigonometric identity with trigonometric function value */
+                        if (compare(ident_val, trig_val, "excsc", i, testnum)) {
+                                ++error_count;
+                        }
+                }
+        }
 
-	/*
-	 * report test results
-	 */
-	if (error_count != 0) {
-		print '**** test', testnum : ': excsc test failure count:', error_count;
-	}
-	return error_count;
+        /*
+         * report test results
+         */
+        if (error_count != 0) {
+                print '**** test', testnum : ': excsc test failure count:', error_count;
+        }
+        return error_count;
 }
 
 
@@ -1261,56 +1261,56 @@ define verify_excsc(testnum)
  *
  * We use the following trigonometric identity:
  *
- *	crd(x) = 2 * sin(x / 2)
+ *      crd(x) = 2 * sin(x / 2)
  *
  * given:
- *	testnum		regression test number being performed
+ *      testnum         regression test number being performed
  *
  * returns:
- *	number of tests that failed
+ *      number of tests that failed
  */
 define verify_crd(testnum)
 {
-	local tval_len;		/* current length of the tval[] array */
-	local ident_val;	/* computed trig value trigonometric identity */
-	local trig_val;		/* computed value from the trigonometric function */
-	local error_count;	/* number of compare errors detected */
-	local i;
+        local tval_len;         /* current length of the tval[] array */
+        local ident_val;        /* computed trig value trigonometric identity */
+        local trig_val;         /* computed value from the trigonometric function */
+        local error_count;      /* number of compare errors detected */
+        local i;
 
-	/*
-	 * firewall
-	 */
-	if (size(sin_tval) <= 0) {
-		precompute_trig();
-	}
+        /*
+         * firewall
+         */
+        if (size(sin_tval) <= 0) {
+                precompute_trig();
+        }
 
-	/*
-	 * for each test value, verify the trigonometric identity within epsilon
-	 */
-	tval_len = size(tval);
-	for (i=0; i < tval_len; ++i) {
+        /*
+         * for each test value, verify the trigonometric identity within epsilon
+         */
+        tval_len = size(tval);
+        for (i=0; i < tval_len; ++i) {
 
-		/* NOTE: We actually check the identity: crd(x*2) = 2 * sin(x) */
+                /* NOTE: We actually check the identity: crd(x*2) = 2 * sin(x) */
 
-		/* compute trigonometric identity */
-		ident_val = 2 * sin_tval[i];
+                /* compute trigonometric identity */
+                ident_val = 2 * sin_tval[i];
 
-		/* compute trigonometric function */
-		trig_val = crd(tval[i] * 2);
+                /* compute trigonometric function */
+                trig_val = crd(tval[i] * 2);
 
-		/* compare trigonometric identity with trigonometric function value */
-		if (compare(ident_val, trig_val, "crd", i, testnum)) {
-			++error_count;
-		}
-	}
+                /* compare trigonometric identity with trigonometric function value */
+                if (compare(ident_val, trig_val, "crd", i, testnum)) {
+                        ++error_count;
+                }
+        }
 
-	/*
-	 * report test results
-	 */
-	if (error_count != 0) {
-		print '**** test', testnum : ': crd test failure count:', error_count;
-	}
-	return error_count;
+        /*
+         * report test results
+         */
+        if (error_count != 0) {
+                print '**** test', testnum : ': crd test failure count:', error_count;
+        }
+        return error_count;
 }
 
 
@@ -1319,57 +1319,57 @@ define verify_crd(testnum)
  *
  * We use the following trigonometric identity:
  *
- *	cas(x) = cos(x) + sin(x)
+ *      cas(x) = cos(x) + sin(x)
  *
  * given:
- *	testnum		regression test number being performed
+ *      testnum         regression test number being performed
  *
  * returns:
- *	number of tests that failed
+ *      number of tests that failed
  */
 define verify_cas(testnum)
 {
-	local tval_len;		/* current length of the tval[] array */
-	local ident_val;	/* computed trig value trigonometric identity */
-	local trig_val;		/* computed value from the trigonometric function */
-	local error_count;	/* number of compare errors detected */
-	local i;
+        local tval_len;         /* current length of the tval[] array */
+        local ident_val;        /* computed trig value trigonometric identity */
+        local trig_val;         /* computed value from the trigonometric function */
+        local error_count;      /* number of compare errors detected */
+        local i;
 
-	/*
-	 * firewall
-	 */
-	if (size(sin_tval) <= 0) {
-		precompute_trig();
-	}
-	if (size(cos_tval) <= 0) {
-		precompute_trig();
-	}
+        /*
+         * firewall
+         */
+        if (size(sin_tval) <= 0) {
+                precompute_trig();
+        }
+        if (size(cos_tval) <= 0) {
+                precompute_trig();
+        }
 
-	/*
-	 * for each test value, verify the trigonometric identity within epsilon
-	 */
-	tval_len = size(tval);
-	for (i=0; i < tval_len; ++i) {
+        /*
+         * for each test value, verify the trigonometric identity within epsilon
+         */
+        tval_len = size(tval);
+        for (i=0; i < tval_len; ++i) {
 
-		/* compute trigonometric identity */
-		ident_val = cos_tval[i] + sin_tval[i];
+                /* compute trigonometric identity */
+                ident_val = cos_tval[i] + sin_tval[i];
 
-		/* compute trigonometric function */
-		trig_val = cas(tval[i]);
+                /* compute trigonometric function */
+                trig_val = cas(tval[i]);
 
-		/* compare trigonometric identity with trigonometric function value */
-		if (compare(ident_val, trig_val, "cas", i, testnum)) {
-			++error_count;
-		}
-	}
+                /* compare trigonometric identity with trigonometric function value */
+                if (compare(ident_val, trig_val, "cas", i, testnum)) {
+                        ++error_count;
+                }
+        }
 
-	/*
-	 * report test results
-	 */
-	if (error_count != 0) {
-		print '**** test', testnum : ': cas test failure count:', error_count;
-	}
-	return error_count;
+        /*
+         * report test results
+         */
+        if (error_count != 0) {
+                print '**** test', testnum : ': cas test failure count:', error_count;
+        }
+        return error_count;
 }
 
 
@@ -1378,56 +1378,56 @@ define verify_cas(testnum)
  *
  * We use the following trigonometric identity:
  *
- *	cis(x) = cos(x) + i*sin(x)
- *	cis(x) = exp(1i * x)
+ *      cis(x) = cos(x) + i*sin(x)
+ *      cis(x) = exp(1i * x)
  *
  * given:
- *	testnum		regression test number being performed
+ *      testnum         regression test number being performed
  *
  * returns:
- *	number of tests that failed
+ *      number of tests that failed
  */
 define verify_cis(testnum)
 {
-	local tval_len;		/* current length of the tval[] array */
-	local ident_val;	/* computed trig value trigonometric identity */
-	local trig_val;		/* computed value from the trigonometric function */
-	local error_count;	/* number of compare errors detected */
-	local i;
+        local tval_len;         /* current length of the tval[] array */
+        local ident_val;        /* computed trig value trigonometric identity */
+        local trig_val;         /* computed value from the trigonometric function */
+        local error_count;      /* number of compare errors detected */
+        local i;
 
-	/*
-	 * firewall
-	 */
-	if (size(sin_tval) <= 0) {
-		precompute_trig();
-	}
-	if (size(cos_tval) <= 0) {
-		precompute_trig();
-	}
+        /*
+         * firewall
+         */
+        if (size(sin_tval) <= 0) {
+                precompute_trig();
+        }
+        if (size(cos_tval) <= 0) {
+                precompute_trig();
+        }
 
-	/*
-	 * for each test value, verify the trigonometric identity within epsilon
-	 */
-	tval_len = size(tval);
-	for (i=0; i < tval_len; ++i) {
+        /*
+         * for each test value, verify the trigonometric identity within epsilon
+         */
+        tval_len = size(tval);
+        for (i=0; i < tval_len; ++i) {
 
-		/* compute trigonometric identity */
-		ident_val = cos_tval[i] + 1i*sin_tval[i];
+                /* compute trigonometric identity */
+                ident_val = cos_tval[i] + 1i*sin_tval[i];
 
-		/* compute trigonometric function */
-		trig_val = cis(tval[i]);
+                /* compute trigonometric function */
+                trig_val = cis(tval[i]);
 
-		/* compare trigonometric identity with trigonometric function value */
-		if (compare(ident_val, trig_val, "cis", i, testnum)) {
-			++error_count;
-		}
-	}
+                /* compare trigonometric identity with trigonometric function value */
+                if (compare(ident_val, trig_val, "cis", i, testnum)) {
+                        ++error_count;
+                }
+        }
 
-	/*
-	 * report test results
-	 */
-	if (error_count != 0) {
-		print '**** test', testnum : ': cis test failure count:', error_count;
-	}
-	return error_count;
+        /*
+         * report test results
+         */
+        if (error_count != 0) {
+                print '**** test', testnum : ': cis test failure count:', error_count;
+        }
+        return error_count;
 }

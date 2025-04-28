@@ -22,11 +22,11 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# Under source code control:	2021/12/12 15:32:43
-# File existed as early as:	2021
+# Under source code control:    2021/12/12 15:32:43
+# File existed as early as:     2021
 #
-# chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-# Share and enjoy!  :-)		http://www.isthe.com/chongo/tech/comp/calc/
+# chongo <was here> /\oo/\      http://www.isthe.com/chongo/
+# Share and enjoy!  :-)         http://www.isthe.com/chongo/tech/comp/calc/
 
 # setup
 #
@@ -41,22 +41,22 @@ MK_SET1="Makefile.config"
 check_primary() {
     echo "check for primary Makefiles: $MK_SET1"
     for i in $MK_SET1; do
-	if [[ ! -f $i ]]; then
-	    echo "$0: FATAL: Missing critical: $i" 1>&2
-	fi
-	if [[ ! -s $i ]]; then
-	    echo "$0: FATAL: empty: $i" 1>&2
-	fi
+        if [[ ! -f $i ]]; then
+            echo "$0: FATAL: Missing critical: $i" 1>&2
+        fi
+        if [[ ! -s $i ]]; then
+            echo "$0: FATAL: empty: $i" 1>&2
+        fi
     done
     for i in $MK_SET1; do
-	if [[ ! -f $i ]]; then
-	    echo "$0: FATAL: exit 1"
-	    exit 1
-	fi
-	if [[ ! -s $i ]]; then
-	    echo "$0: FATAL: exit 2"
-	    exit 2
-	fi
+        if [[ ! -f $i ]]; then
+            echo "$0: FATAL: exit 1"
+            exit 1
+        fi
+        if [[ ! -s $i ]]; then
+            echo "$0: FATAL: exit 2"
+            exit 2
+        fi
     done
 }
 
@@ -64,17 +64,17 @@ check_primary() {
 #
 no_bak() {
     for i in $MK_SET1; do
-	if [[ -f $i.bak ]]; then
-	    echo "$0: FATAL: bak copy found: $i.bak" 1>&2
-	    echo "$0: FATAL: try: diff -u $i.bak $i" 1>&2
-	    echo "$0: FATAL: consider: rm -f $i.bak" 1>&2
-	fi
+        if [[ -f $i.bak ]]; then
+            echo "$0: FATAL: bak copy found: $i.bak" 1>&2
+            echo "$0: FATAL: try: diff -u $i.bak $i" 1>&2
+            echo "$0: FATAL: consider: rm -f $i.bak" 1>&2
+        fi
     done
     for i in $MK_SET1; do
-	if [[ -f $i.bak ]]; then
-	    echo "$0: FATAL: exit 5"
-	    exit 5
-	fi
+        if [[ -f $i.bak ]]; then
+            echo "$0: FATAL: exit 5"
+            exit 5
+        fi
     done
 }
 
@@ -127,8 +127,8 @@ echo "about to modify: $MK_SET1"
 echo "changing version line to use VERSION= $CALC_VERSION"
 echo "changing major version line to use VER= $CALC_VER"
 perl -p -i -e \
-	's/^VERSION= .*/VERSION= '"$CALC_VERSION"'/; s/^VER= .*/VER= '"$CALC_VER"'/' \
-	$MK_SET1
+        's/^VERSION= .*/VERSION= '"$CALC_VERSION"'/; s/^VER= .*/VER= '"$CALC_VER"'/' \
+        $MK_SET1
 status="$?"
 if [[ $status -ne 0 ]]; then
     echo "$0: FATAL: perl version change for non-zero exit code: $status" 1>&2
@@ -144,10 +144,10 @@ export VERSION_ERR=
 for i in $MK_SET1; do
     VERSION_STRING=$(egrep '^VERSION= [1-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*$' "$i")
     if [[ -z $VERSION_STRING ]]; then
-	echo "$0: FATAL: cannot find VERSION= in $i"
-	VERSION_ERR="$i"
+        echo "$0: FATAL: cannot find VERSION= in $i"
+        VERSION_ERR="$i"
     else
-	echo "$i: $VERSION_STRING"
+        echo "$i: $VERSION_STRING"
     fi
 done
 if [[ -n $VERSION_ERR ]]; then
@@ -163,10 +163,10 @@ export VER_ERR=
 for i in $MK_SET1; do
     VER_STRING=$(egrep '^VER= [1-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*$' "$i")
     if [[ -z $VER_STRING ]]; then
-	echo "$0: FATAL: cannot find VER= in $i"
-	VER_ERR="$i"
+        echo "$0: FATAL: cannot find VER= in $i"
+        VER_ERR="$i"
     else
-	echo "$i: $VER_STRING"
+        echo "$i: $VER_STRING"
     fi
 done
 echo

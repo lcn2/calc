@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,55 +17,55 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1997/03/08 20:51:32
- * File existed as early as:	1997
+ * Under source code control:   1997/03/08 20:51:32
+ * File existed as early as:    1997
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 /*
  * This file is part of the custom sample calc files.
  *
  * NOTE: You must use a calc that was compiled with ALLOW_CUSTOM= -DCUSTOM
- *	 and run with a -C arg.
+ *       and run with a -C arg.
  */
 if (config("compile_custom") == 0) {
-	quit "calc compiled without -DCUSTOM";
+        quit "calc compiled without -DCUSTOM";
 } else if (config("allow_custom") == 0) {
-	quit "calc was run without the -D command line option";
+        quit "calc was run without the -D command line option";
 }
 
 
 define halflen(num)
 {
-	local baseb;	    /* bit len of a HALF */
+        local baseb;        /* bit len of a HALF */
 
-	/*
-	 * firewall
-	 */
-	if (!isnum(num)) {
-		return newerror("halflen only works on numeric values");
-	}
+        /*
+         * firewall
+         */
+        if (!isnum(num)) {
+                return newerror("halflen only works on numeric values");
+        }
 
-	/*
-	 * determine baseb
-	 */
-	baseb = custom("sysinfo","BASEB");
+        /*
+         * determine baseb
+         */
+        baseb = custom("sysinfo","BASEB");
 
-	/*
-	 * determine the HALF length of a numeric value
-	 */
-	if (num == 0) {
-		/* consider 0 to be 1 HALF long */
-		return 1;
-	} else if (isint(num)) {
-		return (highbit(num)+baseb-1)/baseb;
-	} else if (isreal(num)) {
-		return halflen(num(num)) + halflen(den(num));
-	} else if (isnum(num)) {
-		return halflen(re(num)) + halflen(im(num));
-	} else {
-		return newerror("halflen only works on numeric values");
-	}
+        /*
+         * determine the HALF length of a numeric value
+         */
+        if (num == 0) {
+                /* consider 0 to be 1 HALF long */
+                return 1;
+        } else if (isint(num)) {
+                return (highbit(num)+baseb-1)/baseb;
+        } else if (isreal(num)) {
+                return halflen(num(num)) + halflen(den(num));
+        } else if (isnum(num)) {
+                return halflen(re(num)) + halflen(im(num));
+        } else {
+                return newerror("halflen only works on numeric values");
+        }
 }

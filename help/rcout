@@ -5,30 +5,30 @@ SYNOPSIS
     rcout(x, m)
 
 TYPES
-    x		integer
-    m		odd positive integer
+    x           integer
+    m           odd positive integer
 
-    return	integer v, 0 <= v < m.
+    return      integer v, 0 <= v < m.
 
 DESCRIPTION
     Let B be the base calc uses for representing integers internally
     (B = 2^16 for 32-bit machines, 2^32 for 64-bit machines) and N the
-    number of words (base-B digits) in the representation of m.	 Then
+    number of words (base-B digits) in the representation of m.  Then
     rcout(x,m) returns the value of B^-N * x % m, where the inverse
     implicit in B^-N is modulo m and the modulus operator % gives the
-    least non-negative residue.	 The functions rcin() and rcout() are
+    least non-negative residue.  The functions rcin() and rcout() are
     inverses of each other for all x:
 
-	    rcout(rcin(x,m), m) = rcin(rcout(x,m),m) = x % m.
+            rcout(rcin(x,m), m) = rcin(rcout(x,m),m) = x % m.
 
     The normal use of rcout() may be said to be that of decoding
     values encoded by rcin() and REDC functions, as in:
 
-	    x * y % m = rcout(rcmul(rcin(x,m),rcin(y,m),m),m),
+            x * y % m = rcout(rcmul(rcin(x,m),rcin(y,m),m),m),
 
-	    x^2 % m = rcout(rcsq(rcin(x,m),m),m),
+            x^2 % m = rcout(rcsq(rcin(x,m),m),m),
 
-	    x ^ k % m = rcout(rcpow(rcin(x,m),k,m),m).
+            x ^ k % m = rcout(rcpow(rcin(x,m),k,m),m).
 
 RUNTIME
     If the value of m in rcout(x,m) is being used for the first time in
@@ -71,7 +71,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -79,8 +79,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1996/02/25 02:22:21
-## File existed as early as:	1996
+## Under source code control:   1996/02/25 02:22:21
+## File existed as early as:    1996
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,11 +17,11 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1994/11/05 03:19:52
- * File existed as early as:	1994
+ * Under source code control:   1994/11/05 03:19:52
+ * File existed as early as:    1994
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 /*
@@ -34,26 +34,26 @@
 #include <stdio.h>
 
 
-#include "banned.h"	/* include after system header <> includes */
+#include "banned.h"     /* include after system header <> includes */
 
 
 int
 main(void)
 {
 #if !defined(HAVE_NO_FGETSETPOS)
-	fpos_t pos;		/* file position */
+        fpos_t pos;             /* file position */
 
-	/* get the current position */
-	(void) fgetpos(stdin, &pos);
+        /* get the current position */
+        (void) fgetpos(stdin, &pos);
 
-	/* set the current position */
-	(void) fsetpos(stdin, &pos);
+        /* set the current position */
+        (void) fsetpos(stdin, &pos);
 
-	/* print a have_fgetsetpos.h body that says we have the functions */
-	printf("#undef HAVE_FGETSETPOS\n");
-	printf("#define HAVE_FGETSETPOS 1  /* yes */\n\n");
-	printf("typedef fpos_t FILEPOS;\n");
+        /* print a have_fgetsetpos.h body that says we have the functions */
+        printf("#undef HAVE_FGETSETPOS\n");
+        printf("#define HAVE_FGETSETPOS 1  /* yes */\n\n");
+        printf("typedef fpos_t FILEPOS;\n");
 #endif
-	/* exit(0); */
-	return 0;
+        /* exit(0); */
+        return 0;
 }

@@ -1,4 +1,4 @@
-		calc - arbitrary precision calculator
+                calc - arbitrary precision calculator
 
 This file is Copyrighted
 ------------------------
@@ -6,11 +6,11 @@ This file is Copyrighted
     This file is not covered under version 2.1 of the GNU LGPL.
     This file is covered under the following Copyright:
 
-	Copyright (C) 1999-2023  Landon Curt Noll
-	All rights reserved.
+        Copyright (C) 1999-2023  Landon Curt Noll
+        All rights reserved.
 
-	Everyone is permitted to copy and distribute verbatim copies
-	of this license document, but changing it is not allowed.
+        Everyone is permitted to copy and distribute verbatim copies
+        of this license document, but changing it is not allowed.
 
 -=-
 
@@ -33,21 +33,21 @@ Calc is covered by the GNU Lesser General Public License
     A copy of the GNU Lesser General Public License is distributed with
     calc under the filename:
 
-	    COPYING-LGPL
+            COPYING-LGPL
 
-    You may display this file by the calc command:	help copying
+    You may display this file by the calc command:      help copying
 
     You may display the GNU Lesser General
-    Public License by the calc command:			help copying-lgpl
+    Public License by the calc command:                 help copying-lgpl
 
     You should have received a copy of the version 2.1 GNU Lesser General
     Public License with calc; if not, write to the following address:
 
-	    Free Software Foundation, Inc.
-	    51 Franklin Street
-	    Fifth Floor
-	    Boston, MA  02110-1301
-	    USA
+            Free Software Foundation, Inc.
+            51 Franklin Street
+            Fifth Floor
+            Boston, MA  02110-1301
+            USA
 
 Calc's relationship to the GNU Lesser General Public License
 ------------------------------------------------------------
@@ -55,22 +55,22 @@ Calc's relationship to the GNU Lesser General Public License
     In section 0 of the GNU Lesser General Public License, one finds
     the following definition:
 
-	The "Library", below, refers to any such software library or
-	work which has been distributed under these terms.
+        The "Library", below, refers to any such software library or
+        work which has been distributed under these terms.
 
     Calc is distributed under the terms of the GNU Lesser
     General Public License.
 
     In the same section 0, one also find the following:
 
-	For a library, complete source code means all the source code
-	for all modules it contains, plus any associated interface
-	definition files, plus the scripts used to control compilation
-	and installation of the library.
+        For a library, complete source code means all the source code
+        for all modules it contains, plus any associated interface
+        definition files, plus the scripts used to control compilation
+        and installation of the library.
 
     There are at least two calc binary link libraries found in calc:
 
-	libcalc.a	libcustcalc.a
+        libcalc.a       libcustcalc.a
 
     Clearly all files that go into the creation of those binary link
     libraries are covered under the License.
@@ -78,26 +78,26 @@ Calc's relationship to the GNU Lesser General Public License
     The "scripts used to control compilation and installation of the
     of the library" include:
 
-	* Makefiles
-	* source files created by the Makefiles
-	* source code used in the creation of intermediate source files
+        * Makefiles
+        * source files created by the Makefiles
+        * source code used in the creation of intermediate source files
 
      All of those files are covered under the License.
 
      The "associated interface definition files" are those files that:
 
-	* show how the calc binary link libraries are used
-	* test the validity of the binary link libraries
-	* document routines found in the binary link libraries
-	* show how one can interactively use the binary link libraries
+        * show how the calc binary link libraries are used
+        * test the validity of the binary link libraries
+        * document routines found in the binary link libraries
+        * show how one can interactively use the binary link libraries
 
      Calc provides an extensive set of files that perform the above
      functions.
 
-	* files under the sample sub-directory
-	* files under the help sub-directory
-	* files under the lib sub-directory
-	* the main calc.c file
+        * files under the sample sub-directory
+        * files under the help sub-directory
+        * files under the lib sub-directory
+        * the main calc.c file
 
      The "complete source code" includes ALL files shipped with calc,
      except for the exception files explicitly listed in the "Calc
@@ -111,22 +111,22 @@ Calc copyrights and exception files
     With the exception of the files listed below, Calc is covered under
     the following GNU Lesser General Public License Copyrights:
 
-	Copyright (C) year  David I. Bell
-	Copyright (C) year  David I. Bell and Landon Curt Noll
-	Copyright (C) year  David I. Bell and Ernest Bowen
-	Copyright (C) year  David I. Bell, Landon Curt Noll and Ernest Bowen
-	Copyright (C) year  Landon Curt Noll
-	Copyright (C) year  Ernest Bowen and Landon Curt Noll
-	Copyright (C) year  Ernest Bowen
-	Copyright (C) year  Petteri Kettunen and Landon Curt Noll
-	Copyright (C) year  Christoph Zurnieden
-	Copyright (C) year  Landon Curt Noll and Thomas Jones-Low
-	Copyright (C) year  Klaus Alexander Seistrup and Landon Curt Noll
+        Copyright (C) year  David I. Bell
+        Copyright (C) year  David I. Bell and Landon Curt Noll
+        Copyright (C) year  David I. Bell and Ernest Bowen
+        Copyright (C) year  David I. Bell, Landon Curt Noll and Ernest Bowen
+        Copyright (C) year  Landon Curt Noll
+        Copyright (C) year  Ernest Bowen and Landon Curt Noll
+        Copyright (C) year  Ernest Bowen
+        Copyright (C) year  Petteri Kettunen and Landon Curt Noll
+        Copyright (C) year  Christoph Zurnieden
+        Copyright (C) year  Landon Curt Noll and Thomas Jones-Low
+        Copyright (C) year  Klaus Alexander Seistrup and Landon Curt Noll
 
     These files are not covered under one of the Copyrights listed above:
 
-	    sha1.c		sha1.h		COPYING
-	    COPYING-LGPL	cal/screen.cal
+            sha1.c              sha1.h          COPYING
+            COPYING-LGPL        cal/screen.cal
 
     The file COPYING-LGPL, which contains a copy of the version 2.1
     GNU Lesser General Public License, is itself Copyrighted by the
@@ -140,37 +140,37 @@ Calc copyrights and exception files
 
     These files are covered under "The Unlicense":
 
-	    sha1.c
-	    sha1.h
-	    cal/dotest.cal
-	    cal/screen.cal
+            sha1.c
+            sha1.h
+            cal/dotest.cal
+            cal/screen.cal
 
     "The Unlicense" is as follows:
 
-	This is free and unencumbered software released into the public domain.
+        This is free and unencumbered software released into the public domain.
 
-	Anyone is free to copy, modify, publish, use, compile, sell, or
-	distribute this software, either in source code form or as a compiled
-	binary, for any purpose, commercial or non-commercial, and by any
-	means.
+        Anyone is free to copy, modify, publish, use, compile, sell, or
+        distribute this software, either in source code form or as a compiled
+        binary, for any purpose, commercial or non-commercial, and by any
+        means.
 
-	In jurisdictions that recognize copyright laws, the author or authors
-	of this software dedicate any and all copyright interest in the
-	software to the public domain. We make this dedication for the benefit
-	of the public at large and to the detriment of our heirs and
-	successors. We intend this dedication to be an overt act of
-	relinquishment in perpetuity of all present and future rights to this
-	software under copyright law.
+        In jurisdictions that recognize copyright laws, the author or authors
+        of this software dedicate any and all copyright interest in the
+        software to the public domain. We make this dedication for the benefit
+        of the public at large and to the detriment of our heirs and
+        successors. We intend this dedication to be an overt act of
+        relinquishment in perpetuity of all present and future rights to this
+        software under copyright law.
 
-	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-	EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-	MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-	IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
-	OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-	ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-	OTHER DEALINGS IN THE SOFTWARE.
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+        EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+        MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+        IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+        OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+        ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+        OTHER DEALINGS IN THE SOFTWARE.
 
-	For more information, please refer to <http://unlicense.org/>
+        For more information, please refer to <http://unlicense.org/>
 
     In all cases one may use and distribute these exception files freely.
     And because one may freely distribute the LGPL covered files, the
@@ -183,12 +183,12 @@ General Copyleft and License info
 
     For general information on Copylefts, see:
 
-	http://www.gnu.org/copyleft/
+        http://www.gnu.org/copyleft/
 
     For information on GNU Lesser General Public Licenses, see:
 
-	http://www.gnu.org/copyleft/lesser.html
-	http://www.gnu.org/copyleft/lesser.txt
+        http://www.gnu.org/copyleft/lesser.html
+        http://www.gnu.org/copyleft/lesser.txt
 
 -=-
 
@@ -198,10 +198,10 @@ Why calc did not use the GNU General Public License
     It has been suggested that one should consider using the GNU General
     Public License instead of the GNU Lesser General Public License:
 
-	http://www.gnu.org/philosophy/why-not-lgpl.html
+        http://www.gnu.org/philosophy/why-not-lgpl.html
 
     As you can read in the above URL, there are times where a library
-    cannot give free software any particular advantage.	 One of those
+    cannot give free software any particular advantage.  One of those
     times is when there is significantly similar versions available
     that are not covered under a Copyleft such as the GNU General Public
     License.

@@ -26,9 +26,9 @@ Executing the resource file will cause several functions to be defined.
 Executing the lucas function:
 
     ; lucas(149,60)
-	    1
+            1
     ; lucas(146,61)
-	    0
+            0
 
 shows that 149*2^60-1 is prime whereas 146*2^61-1 is not.
 
@@ -41,8 +41,8 @@ be useful!
 =-=
 
 By convention, a resource file only defines and/or initializes functions,
-objects and variables.	(The regress.cal and testxxx.cal regression test
-suite is an exception.)	 Also by convention, an additional usage message
+objects and variables.  (The regress.cal and testxxx.cal regression test
+suite is an exception.)  Also by convention, an additional usage message
 regarding important object and functions is printed.
 
 If a resource file needs to load another resource file, it should use
@@ -62,21 +62,21 @@ Zero value of config("resource_debug") means that no such information
 is displayed.  For other values, the non-zero bits which currently
 have meanings are as follows:
 
-    n		Meaning of bit n of config("resource_debug")
+    n           Meaning of bit n of config("resource_debug")
 
-    0	When a function is defined, redefined or undefined at
-	interactive level, a message saying what has been done
-	is displayed.
+    0   When a function is defined, redefined or undefined at
+        interactive level, a message saying what has been done
+        is displayed.
 
-    1	When a function is defined, redefined or undefined during
-	the reading of a file, a message saying what has been done
-	is displayed.
+    1   When a function is defined, redefined or undefined during
+        the reading of a file, a message saying what has been done
+        is displayed.
 
-    2	Show func will display more information about a functions
-	arguments as well as more argument summary information.
+    2   Show func will display more information about a functions
+        arguments as well as more argument summary information.
 
-    3	During execution, allow calc standard resource files
-	to output additional debugging information.
+    3   During execution, allow calc standard resource files
+        to output additional debugging information.
 
 The value for config("resource_debug") in both oldstd and newstd is 3,
 but if calc is invoked with the -d flag, its initial value is zero.
@@ -87,27 +87,27 @@ either interactively or during the reading of a file.
 Sometimes the information printed is not enough.  In addition to the
 standard information, one might want to print:
 
-	* useful obj definitions
-	* functions with optional args
-	* functions with optional args where the param() interface is used
+        * useful obj definitions
+        * functions with optional args
+        * functions with optional args where the param() interface is used
 
 For these cases we suggest that you place at the bottom of your code
 something that prints extra information if config("resource_debug") has
 either of the bottom 2 bits set:
 
-	if (config("resource_debug") & 3) {
-		print "obj xyz defined";
-		print "funcA([val1 [, val2]]) defined";
-		print "funcB(size, mass, ...) defined";
-	}
+        if (config("resource_debug") & 3) {
+                print "obj xyz defined";
+                print "funcA([val1 [, val2]]) defined";
+                print "funcB(size, mass, ...) defined";
+        }
 
 If your the resource file needs to output special debugging information,
 we recommend that you check for bit 3 of the config("resource_debug")
 before printing the debug statement:
 
-	if (config("resource_debug") & 8) {
-		print "DEBUG: This a sample debug statement";
-	}
+        if (config("resource_debug") & 8) {
+                print "DEBUG: This a sample debug statement";
+        }
 
 =-=
 
@@ -146,11 +146,11 @@ alg_config.cal
 
     Here is a suggested way to use this resource file:
 
-	; read alg_config
-	; config("user_debug",2),;
-	; best_mul2(); best_sq2(); best_pow2();
-	; best_mul2(); best_sq2(); best_pow2();
-	; best_mul2(); best_sq2(); best_pow2();
+        ; read alg_config
+        ; config("user_debug",2),;
+        ; best_mul2(); best_sq2(); best_pow2();
+        ; best_mul2(); best_sq2(); best_pow2();
+        ; best_mul2(); best_sq2(); best_pow2();
 
     NOTE: It is perfectly normal for the optimal value returned to differ
     slightly from run to run.  Slight variations due to inaccuracy in
@@ -161,9 +161,9 @@ alg_config.cal
     config("mul2"), config("sq2"), and config("pow2").  For example one
     can place into ~/.calcrc these lines:
 
-	config("mul2", 1780),;
-	config("sq2", 3388),;
-	config("pow2", 176),;
+        config("mul2", 1780),;
+        config("sq2", 3388),;
+        config("pow2", 176),;
 
     to automatically and silently change these config values.
     See help/config and CALCRC in help/environment for more information.
@@ -174,7 +174,7 @@ beer.cal
     This calc resource is calc's contribution to the 99 Bottles of Beer
     web page:
 
-	http://www.ionet.net/~timtroyr/funhouse/beer.html#calc
+        http://www.ionet.net/~timtroyr/funhouse/beer.html#calc
 
      NOTE: This resource produces a lot of output.  :-)
 
@@ -186,8 +186,8 @@ bernoulli.cal
     Calculate the nth Bernoulli number.
 
     NOTE: There is now a bernoulli() builtin function.  This file is
-	  left here for backward compatibility and now simply returns
-	  the builtin function.
+          left here for backward compatibility and now simply returns
+          the builtin function.
 
 
 bernpoly.cal
@@ -272,53 +272,53 @@ comma.cal
 
     str_comma(x, [group, [decimal]])
 
-	Convert x into a string.
+        Convert x into a string.
 
-	If group is given and is a string, group will be used as
-	the 3-digit group separator, otherwise the default 3-digit
-	group separator will be used.
+        If group is given and is a string, group will be used as
+        the 3-digit group separator, otherwise the default 3-digit
+        group separator will be used.
 
-	If decimal is given and is a string, group will be used as
-	the integer-fraction separator, otherwise the default
-	integer-fraction separator will be used.
+        If decimal is given and is a string, group will be used as
+        the integer-fraction separator, otherwise the default
+        integer-fraction separator will be used.
 
-	The decimal and group arguments are optional.
+        The decimal and group arguments are optional.
 
     set_default_group_separator(group)
 
-	Change the default 3-digit group separator if group is a string,
-	otherwise the default 3-digit group separator will not be
-	changed.  Return the old 3-digit group separator.
+        Change the default 3-digit group separator if group is a string,
+        otherwise the default 3-digit group separator will not be
+        changed.  Return the old 3-digit group separator.
 
     set_default_decimal_separator(decimal)
 
-	Change the default 3-digit group separator if decimal is a
-	string, otherwise the default integer-fraction separator
-	will not be changed.  Return the old integer-fraction separator.
+        Change the default 3-digit group separator if decimal is a
+        string, otherwise the default integer-fraction separator
+        will not be changed.  Return the old integer-fraction separator.
 
     print_comma(x, [group, [decimal]])
 
-	Print the value produced by str_comma(x, [group, [decimal]])
-	followed by a newline.
+        Print the value produced by str_comma(x, [group, [decimal]])
+        followed by a newline.
 
-	If the str_comma() does not return a string, nothing is printed.
+        If the str_comma() does not return a string, nothing is printed.
 
-	The decimal and group arguments are optional.
+        The decimal and group arguments are optional.
 
-	The value produced by str_comma() is returned.
+        The value produced by str_comma() is returned.
 
     fprint_comma(fd, x, [group, [decimal]])
 
-	Print the value produced by str_comma(x, [group, [decimal]]),
-	without a trailing newline, on file fd.
+        Print the value produced by str_comma(x, [group, [decimal]]),
+        without a trailing newline, on file fd.
 
-	If the str_comma() does not return a string, nothing is printed.
+        If the str_comma() does not return a string, nothing is printed.
 
-	If fd is not an open file, nothing is printed.
+        If fd is not an open file, nothing is printed.
 
-	The decimal and group arguments are optional.
+        The decimal and group arguments are optional.
 
-	The value produced by str_comma() is returned.
+        The value produced by str_comma() is returned.
 
 
 deg.cal
@@ -362,30 +362,30 @@ dotest.cal
 
     dotest_file
 
-	Search along CALCPATH for dotest_file, which contains lines that
-	should evaluate to 1.  Comment lines and empty lines are ignored.
-	Comment lines should use ## instead of the multi like /* ... */
-	because lines are evaluated one line at a time.
+        Search along CALCPATH for dotest_file, which contains lines that
+        should evaluate to 1.  Comment lines and empty lines are ignored.
+        Comment lines should use ## instead of the multi like /* ... */
+        because lines are evaluated one line at a time.
 
     dotest_code
 
-	Assign the code number that is to be printed at the start of
-	each non-error line and after **** in each error line.
-	The default code number is 999.
+        Assign the code number that is to be printed at the start of
+        each non-error line and after **** in each error line.
+        The default code number is 999.
 
     dotest_maxcond
 
-	The maximum number of error conditions that may be detected.
-	An error condition is not a sign of a problem, in some cases
-	a line deliberately forces an error condition.	A value of -1,
-	the default, implies a maximum of 2147483647.
+        The maximum number of error conditions that may be detected.
+        An error condition is not a sign of a problem, in some cases
+        a line deliberately forces an error condition.  A value of -1,
+        the default, implies a maximum of 2147483647.
 
     Global variables and functions must be declared ahead of time because
     the dotest scope of evaluation is a line at a time.  For example:
 
-	read dotest.cal
-	read set8700.cal
-	dotest("set8700.line");
+        read dotest.cal
+        read set8700.cal
+        dotest("set8700.line");
 
 
 ellip.cal
@@ -403,7 +403,7 @@ factorial.cal
 
     See:
 
-	http://en.wikipedia.org/wiki/Factorial
+        http://en.wikipedia.org/wiki/Factorial
 
     for information on the factorial. This function depends on the script
     toomcook.cal.
@@ -416,7 +416,7 @@ factorial.cal
     the next lower prime is taking as the end point b. The end point b must
     not exceed 4294967291.  See:
 
-	http://en.wikipedia.org/wiki/Primorial
+        http://en.wikipedia.org/wiki/Primorial
 
     for information on the primorial.
 
@@ -566,54 +566,54 @@ fnv_util.cal
 
     find_fnv_prime(bits)
 
-	If bits == null(), this function will attempt to prompt stdin
-	for a value and provide commends on the value of bits.
+        If bits == null(), this function will attempt to prompt stdin
+        for a value and provide commends on the value of bits.
 
-	given:
-	    bits	number of bits in the hash, null() ==> prompt for value
+        given:
+            bits        number of bits in the hash, null() ==> prompt for value
 
-	returns:
-	    0 ==> no FNV prime found
-	    >0 ==> FNV prime
+        returns:
+            0 ==> no FNV prime found
+            >0 ==> FNV prime
 
     deprecated_fnv0(bits, fnv_prime, string)
 
-	If fnv_prime == null(), this function will try to compute the FNV prime
-	for a hash of size bits.
+        If fnv_prime == null(), this function will try to compute the FNV prime
+        for a hash of size bits.
 
-	given:
-	    bits	number of bits in FNV hash
-	    fnv_prime	FNV prime, null() ==> generate suitable FNV prime if possible
-	    string	string to hash
+        given:
+            bits        number of bits in FNV hash
+            fnv_prime   FNV prime, null() ==> generate suitable FNV prime if possible
+            string      string to hash
 
-	returns:
-	    FNV-0 hash, for size bytes, of string
+        returns:
+            FNV-0 hash, for size bytes, of string
 
-	NOTE: This function does NOT attempt to determine that fnv_prime is prime.
+        NOTE: This function does NOT attempt to determine that fnv_prime is prime.
 
     fnv_offset_basis(bits, fnv_prime)
 
-	given:
-	    bits	number of bits in FNV hash
-	    fnv_prime	FNV prime, null() ==> generate suitable FNV prime if possible
+        given:
+            bits        number of bits in FNV hash
+            fnv_prime   FNV prime, null() ==> generate suitable FNV prime if possible
 
-	returns:
-	    FNV offset basis for a hash size of bits and an FNV prime of fnv_prime
+        returns:
+            FNV offset basis for a hash size of bits and an FNV prime of fnv_prime
 
-	NOTE: This function does NOT attempt to determine that fnv_prime is prime.
+        NOTE: This function does NOT attempt to determine that fnv_prime is prime.
 
     fnv1a_style_hash(bits, fnv_prime, prev_hash, string)
 
-	given:
-	    bits	number of bits in FNV hash
-	    fnv_prime	FNV prime, null() ==> generate suitable FNV prime if possible
-	    prev_hash	previous hash value, null() ==> generate FNV offset basis
-	    string	string to hash
+        given:
+            bits        number of bits in FNV hash
+            fnv_prime   FNV prime, null() ==> generate suitable FNV prime if possible
+            prev_hash   previous hash value, null() ==> generate FNV offset basis
+            string      string to hash
 
-	returns:
-	    "FNV-style" hash of bits
+        returns:
+            "FNV-style" hash of bits
 
-	NOTE: This function does NOT attempt to determine that fnv_prime is prime.
+        NOTE: This function does NOT attempt to determine that fnv_prime is prime.
 
 gvec.cal
 
@@ -626,8 +626,8 @@ hello.cal
 
     Calc's contribution to the Hello World! page:
 
-	http://www.latech.edu/~acm/HelloWorld.shtml
-	http://www.latech.edu/~acm/helloworld/calc.html
+        http://www.latech.edu/~acm/HelloWorld.shtml
+        http://www.latech.edu/~acm/helloworld/calc.html
 
      NOTE: This resource produces a lot of output.  :-)
 
@@ -671,27 +671,27 @@ intfile.cal
 
     file2be(filename)
 
-	Read filename and return an integer that is built from the
-	octets in that file in Big Endian order.  The first octets
-	of the file become the most significant bits of the integer.
+        Read filename and return an integer that is built from the
+        octets in that file in Big Endian order.  The first octets
+        of the file become the most significant bits of the integer.
 
     file2le(filename)
 
-	Read filename and return an integer that is built from the
-	octets in that file in Little Endian order.  The first octets
-	of the file become the most significant bits of the integer.
+        Read filename and return an integer that is built from the
+        octets in that file in Little Endian order.  The first octets
+        of the file become the most significant bits of the integer.
 
     be2file(v, filename)
 
-	Write the absolute value of v into filename in Big Endian order.
-	The v argument must be on integer.  The most significant bits
-	of the integer become the first octets of the file.
+        Write the absolute value of v into filename in Big Endian order.
+        The v argument must be on integer.  The most significant bits
+        of the integer become the first octets of the file.
 
     le2file(v, filename)
 
-	Write the absolute value of v into filename in Little Endian order.
-	The v argument must be on integer.  The least significant bits
-	of the integer become the last octets of the file.
+        Write the absolute value of v into filename in Little Endian order.
+        The v argument must be on integer.  The least significant bits
+        of the integer become the last octets of the file.
 
 
 intnum.cal
@@ -733,9 +733,9 @@ intnum.cal
         ; define f(x){return sin(x);}
         f(x) defined
         ; quadts(0,pi())  -  2
-	    0.00000000000000000000
+            0.00000000000000000000
         ; quadgl(0,pi())  -  2
-	    0.00000000000000000000
+            0.00000000000000000000
 
     Sometimes rounding errors accumulate, it might be a good idea to crank up
     the working precision a notch or two.
@@ -743,39 +743,39 @@ intnum.cal
         ; define f(x){ return exp(-x^2);}
         f(x) redefined
         ; quadts(0,pinf())  - pi()
-	    0.00000000000000000000
+            0.00000000000000000000
         ; quadgl(0,pinf())  - pi()
-	    0.00000000000000000001
+            0.00000000000000000001
 
         ; define f(x){ return exp(-x^2);}
         f(x) redefined
         ; quadgl(ninf(),pinf()) - sqrt(pi())
-	    0.00000000000000000000
+            0.00000000000000000000
         ; quadts(ninf(),pinf()) - sqrt(pi())
-	   -0.00000000000000000000
+           -0.00000000000000000000
 
     Using the "points" parameter is a bit tricky
 
         ; define f(x){ return 1/x;  }
         f(x) redefined
         ; quadts(1,1,mat[3]={1i,-1,-1i})  -  2i*pi()
-	    0.00000000000000000001i
+            0.00000000000000000001i
         ; quadgl(1,1,mat[3]={1i,-1,-1i})  -  2i*pi()
-	    0.00000000000000000001i
+            0.00000000000000000001i
 
     The make* functions make it a bit simpler
 
         ; quadts(1,1,makepoints(1i,-1,-1i))  -  2i*pi()
-	    0.00000000000000000001i
+            0.00000000000000000001i
         ; quadgl(1,1,makepoints(1i,-1,-1i))  -  2i*pi()
-	    0.00000000000000000001i
+            0.00000000000000000001i
 
         ; define f(x){ return abs(sin(x));}
         f(x) redefined
         ; quadts(0,2*pi(),makepoints(pi()))  - 4
-	    0.00000000000000000000
+            0.00000000000000000000
         ; quadgl(0,2*pi(),makepoints(pi()))  - 4
-	    0.00000000000000000000
+            0.00000000000000000000
 
     The quad*core functions do not offer anything fancy but the third parameter
     controls the so called "order" which is just the number of nodes computed.
@@ -785,34 +785,34 @@ intnum.cal
         ; define f(x){ return exp(x);}
         f(x) redefined
         ; s=usertime();quadglcore(-3,3)- (exp(3)-exp(-3));e=usertime();e-s
-	    0.00000000000000000001
-	    2.632164
+            0.00000000000000000001
+            2.632164
         ; s=usertime();quadglcore(-3,3)- (exp(3)-exp(-3));e=usertime();e-s
-	    0.00000000000000000001
-	    0.016001
+            0.00000000000000000001
+            0.016001
         ; quadgldeletenodes()
         ; s=usertime();quadglcore(-3,3,14)- (exp(3)-exp(-3));e=usertime();e-s
-	   -0.00000000000000000000
-	    0.024001
+           -0.00000000000000000000
+            0.024001
         ; s=usertime();quadglcore(-3,3,14)- (exp(3)-exp(-3));e=usertime();e-s
-	   -0.00000000000000000000
-	    0
+           -0.00000000000000000000
+            0
 
     It is not much but can sum up. The tanh-sinh algorithm is not optimizable
     as much as the Gauss-Legendre algorithm but is per se much faster.
 
         ; s=usertime();quadtscore(-3,3)- (exp(3)-exp(-3));e=usertime();e-s
-	    -0.00000000000000000001
-	     0.128008
+            -0.00000000000000000001
+             0.128008
         ; s=usertime();quadtscore(-3,3)- (exp(3)-exp(-3));e=usertime();e-s
-	    -0.00000000000000000001
-	     0.036002
+            -0.00000000000000000001
+             0.036002
         ; s=usertime();quadtscore(-3,3,49)- (exp(3)-exp(-3));e=usertime();e-s
-	    -0.00000000000000000000
-	     0.036002
+            -0.00000000000000000000
+             0.036002
         ; s=usertime();quadtscore(-3,3,49)- (exp(3)-exp(-3));e=usertime();e-s
-	    -0.00000000000000000000
-	     0.01200
+            -0.00000000000000000000
+             0.01200
 
 
 lambertw.cal
@@ -885,7 +885,7 @@ lucas.cal
     prove that h*2^n-1 is prime or not prime.
 
     NOTE: Some call this term u(0).  The function gen_u0(h, n, v1)
-	  simply calls gen_u2(h, n, v1) for such people.  :-)
+          simply calls gen_u2(h, n, v1) for such people.  :-)
 
     gen_v1(h, v)
 
@@ -925,7 +925,7 @@ mfactor.cal
     By default, start_k == 1, rept_loop = 10000 and p_elim = 17.
 
     The p_elim == 17 overhead takes ~3 minutes on an 200 MHz r4k CPU and
-    requires about ~13 Megs of memory.	The p_elim == 13 overhead
+    requires about ~13 Megs of memory.  The p_elim == 13 overhead
     takes about 3 seconds and requires ~1.5 Megs of memory.
 
     The value p_elim == 17 is best for long factorizations.  It is the
@@ -1014,19 +1014,19 @@ palindrome.cal
 
     Important functions are:
 
-	Find the next / previous palindrome:
+        Find the next / previous palindrome:
 
-	    nextpal(val)
-	    prevpal(val)
+            nextpal(val)
+            prevpal(val)
 
-	Test if a value is a palindrome:
+        Test if a value is a palindrome:
 
-	    ispal(val)
+            ispal(val)
 
-	Find the next / previous palindrome that is a (highly probable) prime:
+        Find the next / previous palindrome that is a (highly probable) prime:
 
-	    nextprimepal(val)
-	    prevprimepal(val)
+            nextprimepal(val)
+            prevprimepal(val)
 
 
 pell.cal
@@ -1073,7 +1073,7 @@ pollard.cal
 
 poly.cal
 
-    Calculate with polynomials of one variable.	 There are many functions.
+    Calculate with polynomials of one variable.  There are many functions.
     Read the documentation in the resource file.
 
 
@@ -1117,7 +1117,7 @@ quat.cal
     quat_scale(a, b)
     quat_shift(a, b)
 
-    Calculate using quaternions of the form: a + bi + cj + dk.	In these
+    Calculate using quaternions of the form: a + bi + cj + dk.  In these
     functions, quaternions are manipulated in the form: s + v, where
     s is a scalar and v is a vector of size 3.
 
@@ -1199,17 +1199,17 @@ regress.cal
 screen.cal
 
     up
-    CUU	/* same as up */
+    CUU /* same as up */
     down = CUD
-    CUD	/* same as down */
+    CUD /* same as down */
     forward
-    CUF	/* same as forward */
+    CUF /* same as forward */
     back = CUB
-    CUB	/* same as back */
+    CUB /* same as back */
     save
-    SCP	/* same as save */
+    SCP /* same as save */
     restore
-    RCP	/* same as restore */
+    RCP /* same as restore */
     cls
     home
     eraseline
@@ -1246,8 +1246,8 @@ screen.cal
 
     For example:
 
-	read screen
-	print green:"This is green. ":red:"This is red.":black
+        read screen
+        print green:"This is green. ":red:"This is red.":black
 
 
 seedrandom.cal
@@ -1255,13 +1255,13 @@ seedrandom.cal
     seedrandom(seed1, seed2, bitsize [,trials])
 
     Given:
-	seed1 - a large random value (at least 10^20 and perhaps < 10^93)
-	seed2 - a large random value (at least 10^20 and perhaps < 10^93)
-	size - min Blum modulus as a power of 2 (at least 100, perhaps > 1024)
-	trials - number of ptest() trials (default 25) (optional arg)
+        seed1 - a large random value (at least 10^20 and perhaps < 10^93)
+        seed2 - a large random value (at least 10^20 and perhaps < 10^93)
+        size - min Blum modulus as a power of 2 (at least 100, perhaps > 1024)
+        trials - number of ptest() trials (default 25) (optional arg)
 
     Returns:
-	the previous random state
+        the previous random state
 
     Seed the cryptographically strong Blum generator.  This functions allows
     one to use the raw srandom() without the burden of finding appropriate
@@ -1299,7 +1299,7 @@ specialfunctions.cal
 
     Calculates the value of the beta function.  See:
 
-	https://en.wikipedia.org/wiki/Beta_function
+        https://en.wikipedia.org/wiki/Beta_function
         http://mathworld.wolfram.com/BetaFunction.html
         http://dlmf.nist.gov/5.12
 
@@ -1310,7 +1310,7 @@ specialfunctions.cal
 
     Calculates the value of the regularized incomplete beta function.  See:
 
-	https://en.wikipedia.org/wiki/Beta_function
+        https://en.wikipedia.org/wiki/Beta_function
         http://mathworld.wolfram.com/RegularizedBetaFunction.html
         http://dlmf.nist.gov/8.17
 
@@ -1322,7 +1322,7 @@ specialfunctions.cal
     Calculates the value of the exponential integral Ei(z) function at z.
     See:
 
-	http://en.wikipedia.org/wiki/Exponential_integral
+        http://en.wikipedia.org/wiki/Exponential_integral
         http://www.cs.utah.edu/~vpegorar/research/2011_JGT/
 
     for information on the exponential integral Ei(z) function.
@@ -1332,7 +1332,7 @@ specialfunctions.cal
 
     Calculates the value of the error function at z.  See:
 
-	http://en.wikipedia.org/wiki/Error_function
+        http://en.wikipedia.org/wiki/Error_function
 
     for information on the error function function.
 
@@ -1341,7 +1341,7 @@ specialfunctions.cal
 
     Calculates the value of the complementary error function at z.  See:
 
-	http://en.wikipedia.org/wiki/Error_function
+        http://en.wikipedia.org/wiki/Error_function
 
     for information on the complementary error function function.
 
@@ -1350,7 +1350,7 @@ specialfunctions.cal
 
     Calculates the value of the imaginary error function at z.  See:
 
-	http://en.wikipedia.org/wiki/Error_function
+        http://en.wikipedia.org/wiki/Error_function
 
     for information on the imaginary error function function.
 
@@ -1359,7 +1359,7 @@ specialfunctions.cal
 
     Calculates the inverse of the error function at x.  See:
 
-	http://en.wikipedia.org/wiki/Error_function
+        http://en.wikipedia.org/wiki/Error_function
 
     for information on the inverse of the error function function.
 
@@ -1368,7 +1368,7 @@ specialfunctions.cal
 
     Calculates the value of the complex error function at z.  See:
 
-	http://en.wikipedia.org/wiki/Faddeeva_function
+        http://en.wikipedia.org/wiki/Faddeeva_function
 
     for information on the complex error function function.
 
@@ -1377,7 +1377,7 @@ specialfunctions.cal
 
     Calculates the value of the Euler gamma function at z.  See:
 
-	http://en.wikipedia.org/wiki/Gamma_function
+        http://en.wikipedia.org/wiki/Gamma_function
         http://dlmf.nist.gov/5
 
     for information on the Euler gamma function.
@@ -1388,7 +1388,7 @@ specialfunctions.cal
     Calculates the value of the lower incomplete gamma function for
     arbitrary a, z.  See:
 
-	http://en.wikipedia.org/wiki/Incomplete_gamma_function
+        http://en.wikipedia.org/wiki/Incomplete_gamma_function
 
     for information on the lower incomplete gamma function.
 
@@ -1397,7 +1397,7 @@ specialfunctions.cal
     Calculates the value of the regularized lower incomplete gamma
     function for a, z with a not in -N.  See:
 
-	http://en.wikipedia.org/wiki/Incomplete_gamma_function
+        http://en.wikipedia.org/wiki/Incomplete_gamma_function
 
     for information on the regularized lower incomplete gamma function.
 
@@ -1406,7 +1406,7 @@ specialfunctions.cal
     Calculates the value of the regularized upper incomplete gamma
     function for a, z with a not in -N.  See:
 
-	http://en.wikipedia.org/wiki/Incomplete_gamma_function
+        http://en.wikipedia.org/wiki/Incomplete_gamma_function
 
     for information on the regularized upper incomplete gamma function.
 
@@ -1420,7 +1420,7 @@ specialfunctions.cal
 
     Calculates partial values of the harmonic series up to limit.  See:
 
-	http://en.wikipedia.org/wiki/Harmonic_series_(mathematics)
+        http://en.wikipedia.org/wiki/Harmonic_series_(mathematics)
         http://mathworld.wolfram.com/HarmonicSeries.html
 
     for information on the harmonic series.
@@ -1430,7 +1430,7 @@ specialfunctions.cal
 
     Calculates the natural logarithm of the beta function.  See:
 
-	https://en.wikipedia.org/wiki/Beta_function
+        https://en.wikipedia.org/wiki/Beta_function
         http://mathworld.wolfram.com/BetaFunction.html
         http://dlmf.nist.gov/5.12
 
@@ -1441,7 +1441,7 @@ specialfunctions.cal
     Calculates the value of the logarithm of the Euler gamma function
     at z.  See:
 
-	http://en.wikipedia.org/wiki/Gamma_function
+        http://en.wikipedia.org/wiki/Gamma_function
         http://dlmf.nist.gov/5.15
 
     for information on the derivatives of the the Euler gamma function.
@@ -1452,7 +1452,7 @@ specialfunctions.cal
     Calculates the value of the m-th derivative of the Euler gamma
     function at z.  See:
 
-	http://en.wikipedia.org/wiki/Polygamma
+        http://en.wikipedia.org/wiki/Polygamma
         http://dlmf.nist.gov/5
 
     for information on the n-th derivative of the Euler gamma function. This
@@ -1464,7 +1464,7 @@ specialfunctions.cal
     Calculates the value of the first derivative of the Euler gamma
     function at z.  See:
 
-	http://en.wikipedia.org/wiki/Digamma_function
+        http://en.wikipedia.org/wiki/Digamma_function
         http://dlmf.nist.gov/5
 
     for information on the first derivative of the Euler gamma function.
@@ -1474,7 +1474,7 @@ specialfunctions.cal
 
     Calculates the value of the Riemann Zeta function at s.  See:
 
-	http://en.wikipedia.org/wiki/Riemann_zeta_function
+        http://en.wikipedia.org/wiki/Riemann_zeta_function
         http://dlmf.nist.gov/25.2
 
     for information on the Riemann zeta function. This function depends
@@ -1492,7 +1492,7 @@ splitbits.cal
 
     The number of elements in the returned list is:
 
-	ceil((highbit(x) + 1) / b)
+        ceil((highbit(x) + 1) / b)
 
     If x == 0, then a list of 1 element containing 0 is returned.
 
@@ -1502,17 +1502,17 @@ splitbits.cal
     the integer converted as if the integer was a two's compliment
     value.  For example:
 
-	; L = splitbits(-1, 8);
-	; print L[[0]]
-	255
+        ; L = splitbits(-1, 8);
+        ; print L[[0]]
+        255
 
-	; L = splitbits(-2, 8);
-	; print L[[0]]
-	254
+        ; L = splitbits(-2, 8);
+        ; print L[[0]]
+        254
 
-	; L = splitbits(-3, 8);
-	; print L[[0]]
-	253
+        ; L = splitbits(-3, 8);
+        ; print L[[0]]
+        253
 
     The first element of the list contains the lowest order bits
     of x.  The last element of the list contains the highest number
@@ -1520,19 +1520,19 @@ splitbits.cal
 
     For example:
 
-	; x = 2^23209-1
-	; L = splitbits(x, 16);
-	; print size(L), L[[0]]
+        ; x = 2^23209-1
+        ; L = splitbits(x, 16);
+        ; print size(L), L[[0]]
 
-	; print istype(2, 3i), istype(2, "2"), istype(2, null())
-	0 0 0
+        ; print istype(2, 3i), istype(2, "2"), istype(2, null())
+        0 0 0
 
-	; mat a[2]
-	; b = list(1,2,3)
-	; c = assoc()
-	; obj chongo {was, here} d;
-	; print istype(a,b), istype(b,c), istype(c,d)
-	0 0 0
+        ; mat a[2]
+        ; b = list(1,2,3)
+        ; c = assoc()
+        ; obj chongo {was, here} d;
+        ; print istype(a,b), istype(b,c), istype(c,d)
+        0 0 0
 
 
 statistics.cal
@@ -1596,8 +1596,8 @@ strings.cal
           functions in calc.
 
    WARNING: If the remaining functions in this calc resource file become
-	    calc builtin functions, then strings.cal may be removed in
-	    a future release.
+            calc builtin functions, then strings.cal may be removed in
+            a future release.
 
 
 sumsq.cal
@@ -1627,7 +1627,7 @@ sumtimes.cal
     the list or matrix to use.  The doalltimes() function will run
     all of the sumtimes tests.  For example:
 
-	doalltimes(1e6);
+        doalltimes(1e6);
 
 
 surd.cal
@@ -1883,17 +1883,17 @@ test8900.special.cal
     This function tests a number of calc resource functions contributed
     by Christoph Zurnieden.  These include:
 
-	bernpoly.cal
-	brentsolve.cal
-	constants.cal
-	factorial2.cal
-	factorial.cal
-	lambertw.cal
-	lnseries.cal
-	specialfunctions.cal
-	statistics.cal
-	toomcook.cal
-	zeta2.cal
+        bernpoly.cal
+        brentsolve.cal
+        constants.cal
+        factorial2.cal
+        factorial.cal
+        lambertw.cal
+        lnseries.cal
+        specialfunctions.cal
+        statistics.cal
+        toomcook.cal
+        zeta2.cal
 
 
 test9300.frem.cal
@@ -1920,14 +1920,14 @@ toomcook.cal
     Toom-Cook multiplication algorithm.  Multiply two integers a,b by
     way of the Toom-Cook algorithm.  See:
 
-	http://en.wikipedia.org/wiki/Toom%E2%80%93Cook_multiplication
+        http://en.wikipedia.org/wiki/Toom%E2%80%93Cook_multiplication
 
     toomcook3square(a)
     toomcook4square(a)
 
     Square the integer a by way of the Toom-Cook algorithm.  See:
 
-	http://en.wikipedia.org/wiki/Toom%E2%80%93Cook_multiplication
+        http://en.wikipedia.org/wiki/Toom%E2%80%93Cook_multiplication
 
     The function toomCook4(a,b) calls the function toomCook3(a,b) which
     calls built-in multiplication at a specific cut-off point. The
@@ -1981,7 +1981,7 @@ zeta2.cal
 
     Calculate the value of the Hurwitz Zeta function.  See:
 
-	http://en.wikipedia.org/wiki/Hurwitz_zeta_function
+        http://en.wikipedia.org/wiki/Hurwitz_zeta_function
         http://dlmf.nist.gov/25.11
 
     for information on this special zeta function.
@@ -1997,7 +1997,7 @@ zeta2.cal
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -2005,8 +2005,8 @@ zeta2.cal
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1990/02/15 01:50:32
-## File existed as early as:	before 1990
+## Under source code control:   1990/02/15 01:50:32
+## File existed as early as:    before 1990
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

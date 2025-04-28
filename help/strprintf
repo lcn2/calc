@@ -5,10 +5,10 @@ SYNOPSIS
     strprintf(fmt, x_1, x_2, ...)
 
 TYPES
-    fmt			string
-    x_1, x_2, ...	any
+    fmt                 string
+    x_1, x_2, ...       any
 
-    return		string
+    return              string
 
 DESCRIPTION
     This function returns the string formed from the characters that
@@ -16,7 +16,7 @@ DESCRIPTION
 
 EXAMPLE
     ; strprintf("h=%d, i=%d", 2, 3);
-	    "h=2, i=3"
+            "h=2, i=3"
 
     ; config("epsilon", 1e-6),;
     ; config("display", 6),;
@@ -26,13 +26,13 @@ EXAMPLE
     ; fmt = "%f,%10f,%-10f,%10.4f,%.4f,%.f.\n";
     ; a = sqrt(3);
     ; strprintf(fmt,a,a,a,a,a,a);
-	    "1.732051,	1.732051,1.732051  ,   ~1.7320,~1.7320,~1.
+            "1.732051,  1.732051,1.732051  ,   ~1.7320,~1.7320,~1.
     "
 
     ; config("display", 50),;
     ; fmt2 = "%g %g\n%g %g\n"
     ; strprintf(fmt2, 1e5, 1e49, 1e50, 1e500);
-	    "100000 100000000000000000000000000000000000000000000000000
+            "100000 100000000000000000000000000000000000000000000000000
     1e50 1e500
     "
 
@@ -103,7 +103,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -111,8 +111,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1996/03/12 22:50:41
-## File existed as early as:	1996
+## Under source code control:   1996/03/12 22:50:41
+## File existed as early as:    1996
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

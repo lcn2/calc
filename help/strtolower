@@ -18,7 +18,7 @@ DESCRIPTION
 
 EXAMPLE
     ; strtolower(" GNU Lesser General Public License");
-	" gnu lesser general public license"
+        " gnu lesser general public license"
 
 LIMITS
     none.

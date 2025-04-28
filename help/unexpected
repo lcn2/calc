@@ -1,7 +1,7 @@
 Unexpected
 
     While calc is C-like, users of C will find some unexpected
-    surprises in calc syntax and usage.	 Persons familiar with C should
+    surprises in calc syntax and usage.  Persons familiar with C should
     review this file.
 
     Persons familiar with shell scripting may want to review this file
@@ -16,26 +16,26 @@ Unexpected
     expressions and for separation of expressions to be used for
     arguments or values in function calls or initialization lists.  The
     precedence order of these different uses is:  continuation,
-    separator, comma operator.	For example, assuming the variables a,
+    separator, comma operator.  For example, assuming the variables a,
     b, c, d, e, and object type xx have been defined, the arguments
     passed to f in:
 
-	    f(a, b, c, obj xx d, e)
+            f(a, b, c, obj xx d, e)
 
     are a, b, c, and e, with e having the value of a newly created xx
     object.  In:
 
-	    f((a, b), c, (obj xx d), e)
+            f((a, b), c, (obj xx d), e)
 
     the arguments of f are b, c, d, e, with only d being a newly
     created xx object.
 
     In combination with other operators, the continuation use of the
     comma has the same precedence as [] and ., the separator use the
-    same as the comma operator.	 For example, assuming xx.mul() has
+    same as the comma operator.  For example, assuming xx.mul() has
     been defined:
 
-	    f(a = b, obj xx c, d = {1,2} * obj xx e = {3,4})
+            f(a = b, obj xx c, d = {1,2} * obj xx e = {3,4})
 
     passes two arguments: a (with value b) and the product d * e of two
     initialized xx objects.
@@ -47,45 +47,45 @@ Unexpected
 
     In C, ^ is the xor operator. The expression:
 
-	    a ^ b
+            a ^ b
 
     yields "a to the b power", NOT "a xor b".
 
     Unlike in C, calc evaluates the expression:
 
-	    a ** b
+            a ** b
 
     also yields "a to the b power".
 
     Here "a" and "b" can be a real value or a complex value:
 
-	2^3			3i^4
-	2.5 ^ 3.5		0.5i ^ 0.25
-	2.5 ^ 2.718i		3.13145i ^ 0.30103i
+        2^3                     3i^4
+        2.5 ^ 3.5               0.5i ^ 0.25
+        2.5 ^ 2.718i            3.13145i ^ 0.30103i
 
     In addition, "a" can be matrix.  In this case "b" must be an integer:
 
-	mat a[2,2] = {1,2,3,4};
-	a^3
+        mat a[2,2] = {1,2,3,4};
+        a^3
 
     Note that 'a' == 0 and 'b' is real, then is must be >= 0 as well.
     Also 0^0 and 0**0 return the value 1.
 
     Be careful about the precedence of operators.  Note that:
 
-	-1 ^ 0.5 == -1
+        -1 ^ 0.5 == -1
 
     whereas:
 
-	(-1) ^ 0.5 == 1i
+        (-1) ^ 0.5 == 1i
 
     because the above expression in parsed as:
 
-	-(1 ^ 0.5) == -1
+        -(1 ^ 0.5) == -1
 
     whereas:
 
-	(-1) ^ 0.5 == 1i
+        (-1) ^ 0.5 == 1i
 
 
     op= operators associate left to right
@@ -93,24 +93,24 @@ Unexpected
 
     Operator-with-assignments:
 
-	    +=	-=  *=	/=  %=	//=  &=	 |=  <<=  >>=  ^=  **=
+            +=  -=  *=  /=  %=  //=  &=  |=  <<=  >>=  ^=  **=
 
     associate from left to right instead of right to left as in C.
     For example:
 
-	    a += b *= c
+            a += b *= c
 
     has the effect of:
 
-	    a = (a + b) * c
+            a = (a + b) * c
 
-    where only 'a' is required to be an lvalue.	 For the effect of:
+    where only 'a' is required to be an lvalue.  For the effect of:
 
-	    b *= c; a += b
+            b *= c; a += b
 
     when both 'a' and 'b' are lvalues, use:
 
-	    a += (b *= c)
+            a += (b *= c)
 
 
     || yields values other than 0 or 1
@@ -118,13 +118,13 @@ Unexpected
 
     In C:
 
-	    a || b
+            a || b
 
     will produce 0 or 1 depending on the logical evaluation
-    of the expression.	In calc, this expression will produce
+    of the expression.  In calc, this expression will produce
     either 'a' or 'b' and is equivalent to the expression:
 
-	    a ? a : b
+            a ? a : b
 
     In other words, if 'a' is true, then 'a' is returned, otherwise
     'b' is returned.
@@ -135,13 +135,13 @@ Unexpected
 
     In C:
 
-	    a && b
+            a && b
 
     will produce 0 or 1 depending on the logical evaluation
-    of the expression.	In calc, this expression will produce
+    of the expression.  In calc, this expression will produce
     either 'a' or 'b' and is equivalent to the expression:
 
-	    a ? b : a
+            a ? b : a
 
     In other words, if 'a' is true, then 'b' is returned, otherwise
     'a' is returned.
@@ -152,18 +152,18 @@ Unexpected
 
     In C:
 
-	    x/y
+            x/y
 
     performs integer division when 'x' and 'y' are integer types.
     In calc, this expression yields a rational number.
 
     Calc uses:
 
-	    x//y
+            x//y
 
     to perform division with integer truncation and is the equivalent to:
 
-	    int(x/y)
+            int(x/y)
 
 
     | and & have higher precedence than ==, +, -, *, / and %
@@ -171,15 +171,15 @@ Unexpected
 
     Is C:
 
-	    a == b | c * d
+            a == b | c * d
 
     is interpreted as:
 
-	    (a == b) | (c * d)
+            (a == b) | (c * d)
 
     and calc it is interpreted as:
 
-	    a == ((b | c) * d)
+            a == ((b | c) * d)
 
 
     calc always evaluates terms from left to right
@@ -192,41 +192,41 @@ Unexpected
 
     Consider, for example:
 
-	    A * B + C * D
+            A * B + C * D
 
     In calc above expression is evaluated in the following order:
 
-	    A
-	    B
-	    A * B
-	    C
-	    D
-	    C * D
-	    A * B + C * D
+            A
+            B
+            A * B
+            C
+            D
+            C * D
+            A * B + C * D
 
     This order of evaluation is significant if evaluation of a
     term changes a variable on which a later term depends.  For example:
 
-	    x++ * x++ + x++ * x++
+            x++ * x++ + x++ * x++
 
     in calc returns the value:
 
-	    x * (x + 1) + (x + 2) * (x + 3)
+            x * (x + 1) + (x + 2) * (x + 3)
 
     and increments x as if by x += 4.  Similarly, for functions f, g,
     the expression:
 
-	    f(x++, x++) + g(x++)
+            f(x++, x++) + g(x++)
 
     evaluates to:
 
-	    f(x, x + 1) + g(x + 2)
+            f(x, x + 1) + g(x + 2)
 
     and increments x three times.
 
     In an other example, this expression:
 
-	1<<8/2
+        1<<8/2
 
     evaluates to 128, not 16, because <<8 is performed before the /2.
 
@@ -256,13 +256,13 @@ Unexpected
 
     Along the same lines:
 
-	    undefine *
+            undefine *
 
     undefines all current user-defined functions.  After executing
     all the above freeing functions (and if necessary free(.) to free
     the current "old value"), the only remaining numbers as displayed by
 
-	    show numbers
+            show numbers
 
     should be those associated with epsilon(), and if it has been
     called, qpi().
@@ -277,23 +277,23 @@ Unexpected
     A single # is an calc operator, not a comment.  However two or more
     ##'s in a row is a comment.  See "help pound" for more information.
 
-	#!/usr/local/src/bin/calc/calc -q -f
+        #!/usr/local/src/bin/calc/calc -q -f
 
-	/* a correct comment */
-	## another correct comment
-	### two or more together is also a comment
-	/*
-	 * another correct comment
-	 */
-	print "2+2 =", 2+2;	## yet another comment
+        /* a correct comment */
+        ## another correct comment
+        ### two or more together is also a comment
+        /*
+         * another correct comment
+         */
+        print "2+2 =", 2+2;     ## yet another comment
 
     This next example is WRONG:
 
-	#!/usr/local/src/bin/calc/calc -q -f
+        #!/usr/local/src/bin/calc/calc -q -f
 
-	# This is not a calc calc comment because it has only a single #
-	# You must to start comments with ## or /*
-	print "This example has invalid comments"
+        # This is not a calc calc comment because it has only a single #
+        # You must to start comments with ## or /*
+        print "This example has invalid comments"
 
     See "help cscript" and "help usage" for more information.
 
@@ -306,38 +306,38 @@ Unexpected
 
     This works as expected:
 
-	if (expr) {
-	    ...
-	}
+        if (expr) {
+            ...
+        }
 
     However this WILL NOT WORK AS EXPECTED:
 
-	if (expr)
-	{
-	    ...
-	}
+        if (expr)
+        {
+            ...
+        }
 
     because calc will parse the if being terminated by
     an empty statement followed by { ... }.  As in:
 
-	if (expr) ;
-	{
-	    ...
-	}
+        if (expr) ;
+        {
+            ...
+        }
 
     In the same way, use these forms:
 
-	for (optionalexpr ; optionalexpr ; optionalexpr) {
-		...
-	}
+        for (optionalexpr ; optionalexpr ; optionalexpr) {
+                ...
+        }
 
-	while (expr) {
-		...
-	}
+        while (expr) {
+                ...
+        }
 
-	do {
-		...
-	while (expr);
+        do {
+                ...
+        while (expr);
 
     where the initial { is on the SAME LINE as the if, while,
     for or do keyword.
@@ -350,7 +350,7 @@ Unexpected
 
     In most interactive shells:
 
-	calc 2 * 3
+        calc 2 * 3
 
     will frequently produce a "Missing operator" error because the '*' is
     evaluated as a "shell glob".  To avoid this you must quote or escape
@@ -358,11 +358,11 @@ Unexpected
 
     For example, bash / ksh / sh shell users should use:
 
-	calc '2 * 3'
+        calc '2 * 3'
 
     or:
 
-	calc 2 \* 3
+        calc 2 \* 3
 
     or some other form of shell meta-character escaping.
 
@@ -372,19 +372,19 @@ Unexpected
 
     The shell command:
 
-	seq 5 | while read i; do calc "($i+3)^2"; done
+        seq 5 | while read i; do calc "($i+3)^2"; done
 
-	FYI: The command "seq 5" will write 1 through 5 on separate
-	     lines on standard output, while read i sets $i to
-	     the value of each line that is read from stdin.
+        FYI: The command "seq 5" will write 1 through 5 on separate
+             lines on standard output, while read i sets $i to
+             the value of each line that is read from stdin.
 
     will produce:
 
         16
-	2
-	3
-	4
-	5
+        2
+        3
+        4
+        5
 
     The reason why the last 4 lines of output are 2 through 5 is
     that after calc evaluates the first line and prints (1+3)^2
@@ -393,15 +393,15 @@ Unexpected
 
     To avoid this problem, use:
 
-	seq 5 | while read i; do calc "($i+3)^2" </dev/null; done
+        seq 5 | while read i; do calc "($i+3)^2" </dev/null; done
 
     which produces the expected results:
 
-	16
-	25
-	36
-	49
-	64
+        16
+        25
+        36
+        49
+        64
 
 
     display() will limit the number of digits printed after decimal point
@@ -412,20 +412,20 @@ Unexpected
 
     For example, while the following will calculate e to 50 digits:
 
-	; e = exp(1,1e-50);
+        ; e = exp(1,1e-50);
 
      the value of display() (defaults to 20) will limit the number of
      digits printed after the decimal point:
 
-	; e
-		~2.71828182845904523536
+        ; e
+                ~2.71828182845904523536
 
      To print many digits after the decimal point, one needs to change
      the value of display():
 
-	; display(100),;
-	; e
-		2.71828182845904523536028747135266249775724709369996
+        ; display(100),;
+        ; e
+                2.71828182845904523536028747135266249775724709369996
 
      Printing a leading ~ (unless disabled by config("tilde", 0)) is
      your indication that the computed value has been rounded
@@ -434,16 +434,16 @@ Unexpected
      For example, if display(49) is used for that value if e,
      the output will be rounded:
 
-	; display(49);
-		50
-	; e
-		~2.7182818284590452353602874713526624977572470937000
+        ; display(49);
+                50
+        ; e
+                ~2.7182818284590452353602874713526624977572470937000
 
     See also:
 
-	; help display
-	; help config
-	; help epsilon
+        ; help display
+        ; help config
+        ; help epsilon
 
 
     %d will format after the decimal point for non-integer numeric values
@@ -453,8 +453,8 @@ Unexpected
     config("mode").  Therefore this will print the entire
     "1.2345" value:
 
-	; printf("%d\n", 1.2345);
-	1.2345
+        ; printf("%d\n", 1.2345);
+        1.2345
 
 
     assuming printing of 4 or more digits is allowed by the current
@@ -462,9 +462,9 @@ Unexpected
 
     See also:
 
-	; help printf
-	; help display
-	; help mode
+        ; help printf
+        ; help display
+        ; help mode
 
 
     %x will format as fractions for non-integer numeric values
@@ -475,14 +475,14 @@ Unexpected
     in %x format, both the numerator and denominator are printed
     as is mode("fraction"):
 
-	; printf("%x\n", 1.2345);
-	0x9a5/0x7d0
+        ; printf("%x\n", 1.2345);
+        0x9a5/0x7d0
 
     See also:
 
-	; help printf
-	; help display
-	; help mode
+        ; help printf
+        ; help display
+        ; help mode
 
 
     fprintf(fd, "%d\n", huge_value) may need fflush(fd) to finish
@@ -490,9 +490,9 @@ Unexpected
 
     When printing a small value such as:
 
-	; fd = fopen("/tmp/test.txt", "w+");
-	; i = 20;
-	; fprintf(fd, "%d\n", i);
+        ; fd = fopen("/tmp/test.txt", "w+");
+        ; i = 20;
+        ; fprintf(fd, "%d\n", i);
 
     The resulting string will almost always be printed in full.
 
@@ -500,33 +500,33 @@ Unexpected
     people may be surprised when this does not print the entire
     value of M(23209):
 
-	fprintf(fd, "%d\n", 2^23209-1);
-	/* the entire value may not be printed yet */
+        fprintf(fd, "%d\n", 2^23209-1);
+        /* the entire value may not be printed yet */
 
     Because I/O is usually buffered to files, the above fprintf()
     may print only the initial 4096 characters.  One needs to also
     flush (or close the stream) to be sure that the entire
     value as been printed to the file:
 
-	; fflush(fd);
+        ; fflush(fd);
 
     A similar problem an arise when printing many digits after
     the decimal point:
 
-	; display(10000),;
-	; fprintf(fd, "%d\n", pi(1e-10000));
-	; fflush(fd);
+        ; display(10000),;
+        ; fprintf(fd, "%d\n", pi(1e-10000));
+        ; fflush(fd);
 
     The buffer will also be flushed during a call to fclose():
 
-	; fclose(fd);
+        ; fclose(fd);
 
     See also:
 
-	; help fprintf
-	; help fflush
-	; help fopen
-	; help fclose
+        ; help fprintf
+        ; help fflush
+        ; help fopen
+        ; help fclose
 
 
     trig functions use only radians
@@ -534,34 +534,34 @@ Unexpected
 
     Some might be surprised to discover that all of the trigonometric in calc:
 
-	sin, cos, tan, cot, sec, csc
-	asin, acos, atan, acot, asec, acsc
-	versin, coversin, vercos, covercos
-	aversin, acoversin, avercos, acovercos
-	haversin, hacoversin, havercos, hacovercos
-	ahaversin, hacoversin, havercos, ahacovercos
-	exsec, aexsec, excsc, aexcsc
-	crd, acrd
-	cas, cis
+        sin, cos, tan, cot, sec, csc
+        asin, acos, atan, acot, asec, acsc
+        versin, coversin, vercos, covercos
+        aversin, acoversin, avercos, acovercos
+        haversin, hacoversin, havercos, hacovercos
+        ahaversin, hacoversin, havercos, ahacovercos
+        exsec, aexsec, excsc, aexcsc
+        crd, acrd
+        cas, cis
 
     work in only radians.
 
     Calc as builtin functions to convert between degrees, radians and gradians:
 
-	d2r(deg)	- given degrees returns radians
-	g2r(grad)	- given gradians returns radians
+        d2r(deg)        - given degrees returns radians
+        g2r(grad)       - given gradians returns radians
 
-	r2d(rad)	- given radians returns degrees
-	g2d(grad)	- given gradians returns degrees
+        r2d(rad)        - given radians returns degrees
+        g2d(grad)       - given gradians returns degrees
 
-	r2g(rad)	- given radians returns gradians
-	d2g(deg)	- given degrees returns gradians
+        r2g(rad)        - given radians returns gradians
+        d2g(deg)        - given degrees returns gradians
 
     For example, if you want to take the sin of 30 degrees, convert
     the 30 degrees into radians and pass the result to sin():
 
-	; print sin(d2r(30))
-	0.5
+        ; print sin(d2r(30))
+        0.5
 
 
     * operator has has a higher precedence than <<
@@ -583,27 +583,27 @@ Unexpected
     The following shell script will always print "got null" because
     stdin will be closed by calc during startup:
 
-	#!/usr/bin/calc -q -f
+        #!/usr/bin/calc -q -f
 
-	n = prompt("Test> ");
-	if (isnull(n)) {
-	  print("got null");
-	} else {
-	  print("got " + n);
-	}
+        n = prompt("Test> ");
+        if (isnull(n)) {
+          print("got null");
+        } else {
+          print("got " + n);
+        }
 
      However the following shell script (note the -p before the -f in
      the 1st line) will be interactive, prompt with "Test> " and print
      the "got" result as expected:
 
-	#!/usr/bin/calc -q -p -f
+        #!/usr/bin/calc -q -p -f
 
-	n = prompt("Test> ");
-	if (isnull(n)) {
-	  print("got null");
-	} else {
-	  print("got " + n);
-	}
+        n = prompt("Test> ");
+        if (isnull(n)) {
+          print("got null");
+        } else {
+          print("got " + n);
+        }
 
     Note in the example above, the -p flag must be given before the
     final -f command line flag.
@@ -622,7 +622,7 @@ Unexpected
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -630,8 +630,8 @@ Unexpected
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1997/03/21 13:15:18
-## File existed as early as:	1997
+## Under source code control:   1997/03/21 13:15:18
+## File existed as early as:    1997
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

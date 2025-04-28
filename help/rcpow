@@ -5,16 +5,16 @@ SYNOPSIS
     rcpow(x, k, m)
 
 TYPES
-    x		integer
-    k		nonnegative integer
-    m		odd positive integer
+    x           integer
+    k           nonnegative integer
+    m           odd positive integer
 
-    return	integer v, 0 <= v < m.
+    return      integer v, 0 <= v < m.
 
 DESCRIPTION
     Let B be the base calc uses for representing integers internally
     (B = 2^16 for 32-bit machines, 2^32 for 64-bit machines) and N the
-    number of words (base-B digits) in the representation of m.	 Then
+    number of words (base-B digits) in the representation of m.  Then
     rcpow(x,k,m) returns the value of B^-N * (B^N * x)^k % m, w here
     the inverse implicit in B^-N is modulo m and the modulus operator %
     gives the least nonnegative residue.  Note that rcpow(x,0,m) =
@@ -23,27 +23,27 @@ DESCRIPTION
     The normal use of rcpow() may be said to be that of finding the
     encoded value of the k-th power of an integer modulo m:
 
-	    rcin(x^k, m) = rcpow(rcin(x,m), k, m),
+            rcin(x^k, m) = rcpow(rcin(x,m), k, m),
 
     from which one gets:
 
-	    x^k % m  = rcout(rcpow(rcin(x,m), k, m), m).
+            x^k % m  = rcout(rcpow(rcin(x,m), k, m), m).
 
     If x^k % m is to be evaluated for the same k and m and several
     values of x, it may be worth while to first evaluate:
 
-	    a = minv(rcpow(1, k, m), m);
+            a = minv(rcpow(1, k, m), m);
 
     and use:
 
-	x^k % m = a * rcpow(x, k, m) % m.
+        x^k % m = a * rcpow(x, k, m) % m.
 
 RUNTIME
     If the value of m in rcpow(x,k,m) is being used for the first time
     in a REDC function, the information required for the REDC
     algorithms is calculated and stored for future use, possibly
     replacing an already stored valued, in a table covering up to 5
-    (i.e. MAXREDC) values of m.	 The runtime required for this is about
+    (i.e. MAXREDC) values of m.  The runtime required for this is about
     two times that required for multiplying two N-word integers.
 
     Two algorithms are available for evaluating rcpow(x,k,m), the one
@@ -80,7 +80,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -88,8 +88,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1996/02/25 02:22:21
-## File existed as early as:	1996
+## Under source code control:   1996/02/25 02:22:21
+## File existed as early as:    1996
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

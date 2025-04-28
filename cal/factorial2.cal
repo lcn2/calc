@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	2013/08/11 01:31:28
- * File existed as early as:	2013
+ * Under source code control:   2013/08/11 01:31:28
+ * File existed as early as:    2013
  */
 
 
@@ -56,7 +56,7 @@ define __CZ__factor_factorial(n,start){
   if(start){
     if(!isint(start) && start < 0 && start > n)
       return newerror("__CZ__factor_factorial(n,start): value of "
-		      "parameter 'start' out of range");
+                      "parameter 'start' out of range");
     if(start == n && isprime(n)){
       prime_list = mat[1 , 2];
       prime_list[0,0] = n;
@@ -64,7 +64,7 @@ define __CZ__factor_factorial(n,start){
     }
     else if(!isprime(start) && nextprime(start) >n)
       return newerror("__CZ__factor_factorial(n,start): value of parameter "
-		      "'start' out of range");
+                      "'start' out of range");
     else{
       if(!isprime(start))  prime = nextprime(start);
       else prime = start;
@@ -168,34 +168,34 @@ define __CZ__add_factored_factorials(matrix_2n,matrix_n){
 
 
                    timings
-                   this		  comb	    comb-this     rel. k/n
+                   this           comb      comb-this     rel. k/n
 ;  benchmark_binomial(10,13)
-n=2^13 k=2^10 	 0.064004 	 0.016001	+ 	0.76923076923076923077
-n=2^13 k=2^11 	 0.064004 	 0.048003	+ 	0.84615384615384615385
-n=2^13 k=2^12 	 0.068004 	 0.124008	- 	0.92307692307692307692
+n=2^13 k=2^10    0.064004        0.016001       +       0.76923076923076923077
+n=2^13 k=2^11    0.064004        0.048003       +       0.84615384615384615385
+n=2^13 k=2^12    0.068004        0.124008       -       0.92307692307692307692
 ;  benchmark_binomial(10,15)
-n=2^15 k=2^10 	 0.216014 	 0.024001	+ 	0.66666666666666666667
-n=2^15 k=2^11 	 0.220014 	 0.064004	+ 	0.73333333333333333333
-n=2^15 k=2^12 	 0.228014 	 0.212014	+ 	0.8
-n=2^15 k=2^13 	 0.216013 	 0.664042	- 	0.86666666666666666667
-n=2^15 k=2^14 	 0.240015 	 1.868117	- 	0.93333333333333333333
+n=2^15 k=2^10    0.216014        0.024001       +       0.66666666666666666667
+n=2^15 k=2^11    0.220014        0.064004       +       0.73333333333333333333
+n=2^15 k=2^12    0.228014        0.212014       +       0.8
+n=2^15 k=2^13    0.216013        0.664042       -       0.86666666666666666667
+n=2^15 k=2^14    0.240015        1.868117       -       0.93333333333333333333
 ;  benchmark_binomial(11,15)
-n=2^15 k=2^11 	 0.216014 	 0.068004	+ 	0.73333333333333333333
-n=2^15 k=2^12 	 0.236015 	 0.212013	+ 	0.8
-n=2^15 k=2^13 	 0.216013 	 0.656041	- 	0.86666666666666666667
-n=2^15 k=2^14 	 0.244016 	 1.872117	- 	0.93333333333333333333
+n=2^15 k=2^11    0.216014        0.068004       +       0.73333333333333333333
+n=2^15 k=2^12    0.236015        0.212013       +       0.8
+n=2^15 k=2^13    0.216013        0.656041       -       0.86666666666666666667
+n=2^15 k=2^14    0.244016        1.872117       -       0.93333333333333333333
 ;  benchmark_binomial(11,18)
-n=2^18 k=2^11 	 1.652103 	 0.100006	+ 	0.61111111111111111111
-n=2^18 k=2^12 	 1.608101 	 0.336021	+ 	0.66666666666666666667
-n=2^18 k=2^13 	 1.700106 	 1.140071	+ 	0.72222222222222222222
-n=2^18 k=2^14 	 1.756109 	 3.924245	- 	0.77777777777777777778
-n=2^18 k=2^15 	 2.036127 	 13.156822	- 	0.83333333333333333333
-n=2^18 k=2^16 	 2.172135 	 41.974624	- 	0.88888888888888888889
-n=2^18 k=2^17 	 2.528158 	 121.523594	- 	0.94444444444444444444
+n=2^18 k=2^11    1.652103        0.100006       +       0.61111111111111111111
+n=2^18 k=2^12    1.608101        0.336021       +       0.66666666666666666667
+n=2^18 k=2^13    1.700106        1.140071       +       0.72222222222222222222
+n=2^18 k=2^14    1.756109        3.924245       -       0.77777777777777777778
+n=2^18 k=2^15    2.036127        13.156822      -       0.83333333333333333333
+n=2^18 k=2^16    2.172135        41.974624      -       0.88888888888888888889
+n=2^18 k=2^17    2.528158        121.523594     -       0.94444444444444444444
 ;  benchmark_binomial(15,25)
-n=2^25 k=2^15 	 303.790985 	 38.266392	+ 	0.6
+n=2^25 k=2^15    303.790985      38.266392      +       0.6
 ;  benchmark_binomial(17,25)
-n=2^25 k=2^17 	 319.127944 	 529.025062	- 	0.68
+n=2^25 k=2^17    319.127944      529.025062     -       0.68
 */
 
 define benchmark_binomial(s,limit){
@@ -207,7 +207,7 @@ define benchmark_binomial(s,limit){
    T1 = end-start;
    start=usertime();B=comb(N,K);end=usertime();
    T2 = end-start;
-   print "n=2^"limit,"k=2^"k,"	",T1,"	",T2,T1<T2?"-":"+","	"k/limit;
+   print "n=2^"limit,"k=2^"k,"  ",T1,"  ",T2,T1<T2?"-":"+","    "k/limit;
    if(A!=B){
      print "false";
     break;
@@ -225,11 +225,11 @@ define __CZ__multiply_factored_factorial(matrix,stop){
 
   if(!ismat(matrix))
    return newerror("__CZ__multiply_factored_factorial(matrix): "
-		   "argument matrix not a matrix ");
+                   "argument matrix not a matrix ");
   if(!matrix[0,0])
     return
       newerror("__CZ__multiply_factored_factorial(matrix): "
-	       "matrix[0,0] is null/0");
+               "matrix[0,0] is null/0");
 
   if(!isnull(stop))
     pix = stop;
@@ -328,7 +328,7 @@ define binomial(n,k){
   do {
     prime_list[K  ,0] = prime;
     diff = __CZ__prime_divisors(n,prime)-
-	   ( __CZ__prime_divisors(n-k,prime)+__CZ__prime_divisors(k,prime));
+           ( __CZ__prime_divisors(n-k,prime)+__CZ__prime_divisors(k,prime));
     if(diff != 0)
       prime_list[K++,1] = diff;
     prime          = nextprime(prime);
@@ -376,7 +376,7 @@ define bigcatalan(n){
 
 /*
   df(-111) = -1/3472059605858239446587523014902616804783337112829102414124928
-		7753332469144201839599609375
+                7753332469144201839599609375
 
  df(-3+1i) = 0.12532538977287649201-0.0502372106177184607i
  df(2n + 1) = (2*n)!/(n!*2^n)
@@ -427,7 +427,7 @@ define doublefactorial(n){
         */
        eps=epsilon(epsilon()*1e-2);
        ret =  2^(n/2-1/4 * cos(pi()* n)+1/4) * pi()^(1/4 *
-	      cos(pi()* n)-1/4)* gamma(n/2+1);
+              cos(pi()* n)-1/4)* gamma(n/2+1);
        epsilon(eps);
        return ret;
     }

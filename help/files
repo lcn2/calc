@@ -5,9 +5,9 @@ SYNOPSIS
     files([fnum])
 
 TYPES
-    fnum	int
+    fnum        int
 
-    return	files, int or null
+    return      files, int or null
 
 DESCRIPTION
     This function, when given the argument fnum, will use it as an
@@ -25,28 +25,28 @@ DESCRIPTION
     files are already open by the calculator and cannot be closed.
 
     When calc starts up, it scans for open file descriptors above
-    stderr (2) and below MAXFILES (20).	 Any open descriptor found
+    stderr (2) and below MAXFILES (20).  Any open descriptor found
     is assumed to be an open file opened in an unknown mode.  Calc
     will try to read and write to this file when directed.
 
     Consider the following commands shell commands:
 
-	echo "A line of text in the file on descriptor 5" > datafile
-	calc 5<datafile
+        echo "A line of text in the file on descriptor 5" > datafile
+        calc 5<datafile
 
     then one could do the following:
 
-	; files(5)
-		FILE 5 "descriptor[5]" (unknown_mode, pos 0)
-	; fgetline(files(5))
-		"A line of text in the file on descriptor 5"
+        ; files(5)
+                FILE 5 "descriptor[5]" (unknown_mode, pos 0)
+        ; fgetline(files(5))
+                "A line of text in the file on descriptor 5"
 
 EXAMPLE
     ; fd = fopen("/etc/motd", "r")
     ; fd
-	    FILE 3 "/etc/motd" (reading, pos 0)
+            FILE 3 "/etc/motd" (reading, pos 0)
     ; files(3)
-	    FILE 3 "/etc/motd" (reading, pos 0)
+            FILE 3 "/etc/motd" (reading, pos 0)
 
     ; if (isnull(files(4))) print "not open"
     not open
@@ -76,7 +76,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -84,8 +84,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/03/04 11:33:19
-## File existed as early as:	1995
+## Under source code control:   1995/03/04 11:33:19
+## File existed as early as:    1995
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

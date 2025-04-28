@@ -6,11 +6,11 @@ SYNOPSIS
     blk(val [, len, chunk]);
 
 TYPES
-    len		null or integer
-    chunk	null or integer
-    val		non-null string, block, or named block
+    len         null or integer
+    chunk       null or integer
+    val         non-null string, block, or named block
 
-    return	block or named block
+    return      block or named block
 
 DESCRIPTION
     With only integer arguments, blk(len, chunk) attempts to
@@ -26,23 +26,23 @@ DESCRIPTION
     ... , B[len-1], these all initially having zero value.
 
     The octets B[i] for i >= len always have zero value.  If B[i] with
-    some i >= len is referenced, size(B) is increased to i + 1.	For example:
+    some i >= len is referenced, size(B) is increased to i + 1. For example:
 
-			B[i] = x
+                        B[i] = x
 
     has an effect like that of two operations on a file stream fs:
 
-			fseek(fs, pos);
-			fputc(fs, x).
+                        fseek(fs, pos);
+                        fputc(fs, x).
 
     Similarly:
 
-			x = B[i]
+                        x = B[i]
 
     is like:
 
-			fseek(fs, pos);
-			x = fgetc(fs).
+                        fseek(fs, pos);
+                        x = fgetc(fs).
 
     The value of chunk is stored as the "chunksize" for B.
 
@@ -51,7 +51,7 @@ DESCRIPTION
     value.  Also size(B) is analogous to the length of a file stream in that
     if size(B) < sizeof(B):
 
-			B[size(B)] = x
+                        B[size(B)] = x
 
     will append one octet to B and increment size(B).
 
@@ -70,14 +70,14 @@ DESCRIPTION
     If a block value B created by B = blk(len, chunk) is assigned to
     another variable by C = B, a new block of the same structure as B
     is created to become the value of C, and the octets in B are copied
-    to this new block.	A block with possibly different length or
+    to this new block.  A block with possibly different length or
     chunksize is created by C = blk(B, newlen, newchunk), only the first
     min(len, newlen) octets being copied from B; later octets are
     assigned zero value.  If omitted, newlen and newchunk default to
     the current datalen and chunk-size for B.  The current datalen,
     chunksize and number of allocated octets for B may be changed by:
 
-			B = blk(B, newlen, newchunk).
+                        B = blk(B, newlen, newchunk).
 
     No data is lost if newlen is greater than or equal to the old
     size(B).
@@ -99,38 +99,38 @@ DESCRIPTION
     is that in assignments, a named block is not copied.  Thus, if a
     block A has been created by:
 
-			A = blk("foo")
+                        A = blk("foo")
     any subsequent:
-			B = A
+                        B = A
     or:
-			B = blk("foo")
+                        B = blk("foo")
 
     will give a second variable B referring to the same block as A.
     Either  A[i] = x  or  B[i] = x  may then be used to assign a value
     to an octet in the block.  Its length or chunksize may be changed by
     instructions like:
 
-			blk(A, len, chunk);
+                        blk(A, len, chunk);
 
-			A = blk(A, len, chunk);
+                        A = blk(A, len, chunk);
 
-			null(blk(A, len, chunk)).
+                        null(blk(A, len, chunk)).
 
     These have the same effect on A; when working interactively, the
     last two avoid printing of the new value for A.
 
     Named blocks are assigned index numbers 0, 1, 2, ..., in the order
-    of their creation.	The block with index id is returned by blocks(id).
+    of their creation.  The block with index id is returned by blocks(id).
     With no argument, blocks() returns the number of current unfreed
     named blocks.
 
     The memory allocated to a named block is freed by the blkfree()
     function with argument the named block, its name, or its id number.
     The block remains in existence but with a null data pointer,
-    its length and size being reduced to zero.	A new block of memory
+    its length and size being reduced to zero.  A new block of memory
     may be allocated to it, with possibly new length and chunksize by:
 
-			blk(val [, len, chunk])
+                        blk(val [, len, chunk])
 
     where val is either the named block or its name.
 
@@ -141,7 +141,7 @@ DESCRIPTION
 
     The identifying numbers and names of the current named blocks are
     displayed by:
-			show blocks
+                        show blocks
 
     If A and B are named blocks, A == B will be true only if they refer
     to the same block of memory.  Thus, blocks with the same data and
@@ -158,13 +158,13 @@ EXAMPLE
 
     ; B[7] = 0xff
     ; B
-	chunksize = 10, maxsize = 20, datalen = 15
-	00000000000000ff00000000000000
+        chunksize = 10, maxsize = 20, datalen = 15
+        00000000000000ff00000000000000
 
     ; B[18] = 127
     ; B
-	chunksize = 10, maxsize = 20, datalen = 18
-	00000000000000ff0000000000000000007f
+        chunksize = 10, maxsize = 20, datalen = 18
+        00000000000000ff0000000000000000007f
 
     ; B[20] = 2
     Index out of bounds for block
@@ -174,38 +174,38 @@ EXAMPLE
 
     ; B = blk(B, 100, 20)
     ; B
-	chunksize = 20, maxsize = 120, datalen = 100
-	00000000000000ff0000000000000000007f000000000000000000000000...
+        chunksize = 20, maxsize = 120, datalen = 100
+        00000000000000ff0000000000000000007f000000000000000000000000...
 
     ; C = blk(B, 10} = {1,2,3}
     ; C
-	chunksize = 20, maxsize = 20, datalen = 10
-	01020300000000ff0000
+        chunksize = 20, maxsize = 20, datalen = 10
+        01020300000000ff0000
 
     ; A1 = blk("alpha")
     ; A1
-	block 0: alpha
-	chunksize = 256, maxsize = 256, datalen = 0
+        block 0: alpha
+        chunksize = 256, maxsize = 256, datalen = 0
 
     ; A1[7] = 0xff
     ; A2 = A1
     ; A2[17] = 127
     ; A1
-	block 0: alpha
-	chunksize = 256, maxsize = 256, datalen = 18
-	00000000000000ff0000000000000000007f
+        block 0: alpha
+        chunksize = 256, maxsize = 256, datalen = 18
+        00000000000000ff0000000000000000007f
 
     ; A1 = blk(A1, 1000)
     ; A1
-	block 0: alpha
-	chunksize = 256, maxsize = 1024, datalen = 1000
-	00000000000000ff0000000000000000007f000000000000000000000000...
+        block 0: alpha
+        chunksize = 256, maxsize = 1024, datalen = 1000
+        00000000000000ff0000000000000000007f000000000000000000000000...
 
     ; A1 = blk(A1, , 16)
     ; A1
-	block 0: alpha
-	chunksize = 16, maxsize = 1008, datalen = 1000
-	00000000000000ff0000000000000000007f000000000000000000000000...
+        block 0: alpha
+        chunksize = 16, maxsize = 1008, datalen = 1000
+        00000000000000ff0000000000000000007f000000000000000000000000...
 
 LIMITS
     0 <= len < 2^31
@@ -241,7 +241,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -249,8 +249,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1997/04/05 13:07:13
-## File existed as early as:	1997
+## Under source code control:   1997/04/05 13:07:13
+## File existed as early as:    1997
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

@@ -5,9 +5,9 @@ SYNOPSIS
     join(x, y, ...)
 
 TYPES
-    x, y, ...	lists
+    x, y, ...   lists
 
-    return	list or null
+    return      list or null
 
 DESCRIPTION
     For lists x, y, ..., join(x, y, ...) returns the list whose length
@@ -23,11 +23,11 @@ EXAMPLE
     ; join(A, B)
 
     list (5 elements, 5 nonzero):
-	  [[0]] = 1
-	  [[1]] = 2
-	  [[2]] = 3
-	  [[3]] = 4
-	  [[4]] = 5
+          [[0]] = 1
+          [[1]] = 2
+          [[2]] = 3
+          [[3]] = 4
+          [[4]] = 5
 
 LIMITS
     none
@@ -46,7 +46,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -54,8 +54,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/07/09 19:41:40
-## File existed as early as:	1995
+## Under source code control:   1995/07/09 19:41:40
+## File existed as early as:    1995
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

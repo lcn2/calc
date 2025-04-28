@@ -7,13 +7,13 @@ SYNOPSIS
 TYPES
     x1, x2, ... lists or values for which required operations are defined
 
-    return	as determined by the operations on x1, x2, ...
+    return      as determined by the operations on x1, x2, ...
 
 DESCRIPTION
     Null values are ignored; ssq() returns the null value.
     If no argument is a list, returns x1^2 + x2^2 + ...
     If an argument = list(t1, t2, ...) it contributes ssq(t1, t2, ...)
-	to the result.
+        to the result.
 EXAMPLE
     ; print ssq(1,2,3), ssq(1+2i, 3-4i, 5 +6i)
     14 -21+40i
@@ -28,12 +28,12 @@ EXAMPLE
       [1,1] = 352
 
     ; ssq(list(2,3,5),7)
-	87
+        87
 
     ; ssq(1,2,3,4,5,6,7,8)
-	204
+        204
     ; ssq(1,2, list(3,4,list(5,6)), list(), 7, 8)
-	204
+        204
 
 LIMITS
     The number of arguments is not to exceed 1024.
@@ -52,7 +52,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -60,8 +60,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/10/25 04:03:46
-## File existed as early as:	1995
+## Under source code control:   1995/10/25 04:03:46
+## File existed as early as:    1995
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

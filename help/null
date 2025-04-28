@@ -5,8 +5,8 @@ SYNOPSIS
     null([v_1, v_2,...])
 
 TYPES
-    v_1, v_2,...	any
-    return		null
+    v_1, v_2,...        any
+    return              null
 
 DESCRIPTION
     After evaluating in order any arguments it may have, null(...)
@@ -27,9 +27,9 @@ DESCRIPTION
 
     Missing expressions in argument lists are assigned the null value.
     For example, after
-		define f(a,b,c) = ...
+                define f(a,b,c) = ...
     calling
-		f(1,2)
+                f(1,2)
     is as if c == null().  Similarly, f(1,,2) is as if b == null().
     (Note that this does not occur in initialization lists; missing
     expressions there indicate no change.)
@@ -54,16 +54,16 @@ EXAMPLE
     ; print L
 
     list (5 elements, 5 nonzero):
-	[[0]] = NULL
-	[[1]] = 1
-	[[2]] = NULL
-	[[3]] = 2
-	[[4]] = NULL
+        [[0]] = NULL
+        [[1]] = 1
+        [[2]] = NULL
+        [[3]] = 2
+        [[4]] = NULL
 
     ; a = 27
     ; null(pi = pi(1e-1000))
     ; .
-	27
+        27
 
 LIMITS
     The number of arguments is not to exceed 1024.
@@ -82,7 +82,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -90,8 +90,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1996/03/12 23:10:01
-## File existed as early as:	1996
+## Under source code control:   1996/03/12 23:10:01
+## File existed as early as:    1996
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

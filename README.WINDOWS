@@ -23,7 +23,7 @@ BTW: While we are unable to use Windows 11, we welcome Windows 11
      virtual machine).  If you are able to compile Windows 11 natively,
      we would welcome GitHub pull requests showing any needed modifications:
 
-	https://github.com/lcn2/calc/pulls
+        https://github.com/lcn2/calc/pulls
 
 We were given this advice from a Windows 11 developer:
 
@@ -32,9 +32,9 @@ We were given this advice from a Windows 11 developer:
         https://cygwin.com/install.html
 
     IMPORTANT: While installing Cygwin, and during Cygwin Setup, be sure to
-	       select all the MinGW64 packages relating to gcc.
+               select all the MinGW64 packages relating to gcc.
 
-	       See the "Compiling with Cygwin" section below.
+               See the "Compiling with Cygwin" section below.
 
 NOTE: Compiling calc under Windows 11 is work in progress.  If you run into
       problems, consider the "Compiling with Cygwin" section below.
@@ -79,11 +79,11 @@ compilation steps that GitHub user @Leoongithub recommends:
 0. Install the latest version of cygwin (https://cygwin.com/install.html).
 
     NOTE: In addition to the default packages, you also need to check these
-	  three packages: gcc-core, make, and libreadline-devel. The version
-	  of these packages does not matter. Just choose the latest version.
+          three packages: gcc-core, make, and libreadline-devel. The version
+          of these packages does not matter. Just choose the latest version.
 
     NOTE: The addition of "target=Cygwin" to make commands below
-	  is done just in case the target is not set properly by make.
+          is done just in case the target is not set properly by make.
 
 1. Change (cd) into the top of the source code directory of calc.
 
@@ -92,35 +92,35 @@ compilation steps that GitHub user @Leoongithub recommends:
 2. make clobber target=Cygwin
 
    NOTE: This helps ensure that you are starting from a so-called "clean slate",
-	 and that you have nothing hanging around from previous attempts to compile.
+         and that you have nothing hanging around from previous attempts to compile.
 
 3. make all target=Cygwin
 
    NOTE: If successful, you should have a calc executable.  However that executable
-	 may not be working properly.  Advance to step (4) to test.
+         may not be working properly.  Advance to step (4) to test.
 
 4. make chk target=Cygwin
 
    NOTE: If you want this command be be verbose, try:
 
-	    make check target=Cygwin
+            make check target=Cygwin
 
    NOTE: This will run calc with the regress.cal regression suite.  This step could take
-	 for a while to run, depending on the speed/performance of your machine.
-	 If all is well (all regression tests pass), you will see at the end:
+         for a while to run, depending on the speed/performance of your machine.
+         If all is well (all regression tests pass), you will see at the end:
 
-	    chk OK
+            chk OK
 
          Otherwise you may see calc exit non-zero after it prints some lines with '****'
-	 error messages followed by a line including a final error count of the form:
+         error messages followed by a line including a final error count of the form:
 
-	   **** 2 error(s) found  \/++\/
+           **** 2 error(s) found  \/++\/
 
          If you see some errors that may relate to files and I/O, all may not be lost.
-	 It could simply mean that your Windows environment is not conforming to standard
-	 I/O and file operations.  The calc mathematical engine may be just fine.  On the
-	 other hand if you see mathematical related regression test failures, this is
-	 bad sign that your calc executable under Windows is not usable.
+         It could simply mean that your Windows environment is not conforming to standard
+         I/O and file operations.  The calc mathematical engine may be just fine.  On the
+         other hand if you see mathematical related regression test failures, this is
+         bad sign that your calc executable under Windows is not usable.
 
 5. make install target=Cygwin
 
@@ -136,7 +136,7 @@ We would prefer a Windows 11 solution that does not require a Windows 11
 developer to install a Linux virtual machine.  Nevertheless, a Windows 11
 user might want to use the Microsoft Windows Subsystem (WSL) for Linux:
 
-	https://docs.microsoft.com/en-us/windows/wsl/
+        https://docs.microsoft.com/en-us/windows/wsl/
 
     We have been told that you will need to turn on virtualization
     to use this WSL subsystem.
@@ -168,7 +168,7 @@ NOTE: The use of calc under Windows 10 has been deprecated in favor of one
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -176,8 +176,8 @@ NOTE: The use of calc under Windows 10 has been deprecated in favor of one
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	2001/02/25 14:00:05
-## File existed as early as:	2001
+## Under source code control:   2001/02/25 14:00:05
+## File existed as early as:    2001
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

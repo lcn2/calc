@@ -5,16 +5,16 @@ SYNOPSIS
     avg(x_1, x_2, ...)
 
 TYPES
-    x_1, ...	arithmetic or list
+    x_1, ...    arithmetic or list
 
-    return	as determined by types of items averaged
+    return      as determined by types of items averaged
 
 DESCRIPTION
     If there are n non-list arguments x_1, x_2, ..., x_n,
     for which the required additions and division by n are defined,
     avg(x_1, x_2, ..., x_n) returns the value of:
 
-	(x_1 + x_2 + ... + x_n)/n.
+        (x_1 + x_2 + ... + x_n)/n.
 
     If the x_i are real, the result will be a real number; if the
     x_i are real or complex numbers, the result will be a real or complex
@@ -35,10 +35,10 @@ EXAMPLE
     ; avg(x,y)
 
     mat [2,2] (4 elements, 4 nonzero):
-	[0,0] = 1
-	[0,1] = 2
-	[1,0] = 3.5
-	[1,1] = 6
+        [0,0] = 1
+        [0,1] = 2
+        [1,0] = 3.5
+        [1,1] = 6
 
 LIMITS
    The number of arguments is not to exceed 1024.
@@ -57,7 +57,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -65,8 +65,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1994/09/25 20:22:31
-## File existed as early as:	1994
+## Under source code control:   1994/09/25 20:22:31
+## File existed as early as:    1994
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

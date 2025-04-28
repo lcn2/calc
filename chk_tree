@@ -20,11 +20,11 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# Under source code control:	2023/10/04 21:04:44
-# File existed as early as:	2023
+# Under source code control:    2023/10/04 21:04:44
+# File existed as early as:     2023
 #
-# chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-# Share and enjoy!  :-)		http://www.isthe.com/chongo/tech/comp/calc/
+# chongo <was here> /\oo/\      http://www.isthe.com/chongo/
+# Share and enjoy!  :-)         http://www.isthe.com/chongo/tech/comp/calc/
 
 # setup
 #
@@ -59,10 +59,10 @@ fi
 #
 declare -a FINDDIR
 mapfile -t FINDDIR < <(find . -type d \
-	! -path './NOTES/*' ! -name NOTES \
-	! -path './.git/*' ! -name .git \
-	! -path './.github/*' ! -name .github | \
-	sed -e 's/^\.\///' | sort -u)
+        ! -path './NOTES/*' ! -name NOTES \
+        ! -path './.git/*' ! -name .git \
+        ! -path './.github/*' ! -name .github | \
+        sed -e 's/^\.\///' | sort -u)
 if [[ ${#FINDDIR[@]} -le 0 ]]; then
     echo "$0: ERROR: find dir is empty" 1>&2
     EXIT_CODE=12
@@ -73,7 +73,7 @@ fi
 #
 declare -a DIFF_DISTDIR_FINDDIR
 mapfile -t DIFF_DISTDIR_FINDDIR < <(printf '%s\n' "${DISTDIR[@]}" "${FINDDIR[@]}" |
-				    tr ' ' '\n' | sort | uniq -u)
+                                    tr ' ' '\n' | sort | uniq -u)
 if [[ ${#DIFF_DISTDIR_FINDDIR[@]} -ne 0 ]]; then
 
     # report that DISTDIR and FINDDIR differ
@@ -81,15 +81,15 @@ if [[ ${#DIFF_DISTDIR_FINDDIR[@]} -ne 0 ]]; then
     echo "$0: ERROR: distdir and find dir differ for critical directories" 1>&2
     declare -a ONLY_FINDDIR
     mapfile -t ONLY_FINDDIR < <(printf '%s\n' "${DISTDIR[@]}" "${DISTDIR[@]}" "${FINDDIR[@]}" |
-				tr ' ' '\n' | sort | uniq -u)
+                                tr ' ' '\n' | sort | uniq -u)
     if [[ ${#ONLY_FINDDIR[@]} -ne 0 ]]; then
-	echo "$0: ERROR: found only in find dir: ${ONLY_FINDDIR[*]}" 1>&2
+        echo "$0: ERROR: found only in find dir: ${ONLY_FINDDIR[*]}" 1>&2
     fi
     declare -a ONLY_DISTDIR
     mapfile -t ONLY_DISTDIR < <(printf '%s\n' "${FINDDIR[@]}" "${FINDDIR[@]}" "${DISTDIR[@]}" |
-				tr ' ' '\n' | sort | uniq -u)
+                                tr ' ' '\n' | sort | uniq -u)
     if [[ ${#ONLY_DISTDIR[@]} -ne 0 ]]; then
-	echo "$0: ERROR: found only in distdir: ${ONLY_DISTDIR[*]}" 1>&2
+        echo "$0: ERROR: found only in distdir: ${ONLY_DISTDIR[*]}" 1>&2
     fi
     EXIT_CODE=13
     echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
@@ -129,57 +129,57 @@ if [[ -d .git ]]; then
     #
     declare -a GITLS
     mapfile -t GITLS < <(git ls |
-	grep -v -E '^\.github/|^\.gitignore$|^CODE_OF_CONDUCT\.md$|^CONTRIBUTING\.md$|^SECURITY\.md$' |
-	sort -u)
+        grep -v -E '^\.github/|^\.gitignore$|^CODE_OF_CONDUCT\.md$|^CONTRIBUTING\.md$|^SECURITY\.md$' |
+        sort -u)
     if [[ ${#GITLS[@]} -le 0 ]]; then
-	echo "$0: ERROR: git ls is empty" 1>&2
-	EXIT_CODE=16
-	echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
+        echo "$0: ERROR: git ls is empty" 1>&2
+        EXIT_CODE=16
+        echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
     fi
 
     # compare DISTLIST and GITLS
     #
     declare -a DIFF_DISTLIST_GITLS
     mapfile -t DIFF_DISTLIST_GITLS < <(printf '%s\n' "${DISTLIST[@]}" "${GITLS[@]}" |
-				       tr ' ' '\n' | sort | uniq -u)
+                                       tr ' ' '\n' | sort | uniq -u)
     if [[ ${#DIFF_DISTLIST_GITLS[@]} -ne 0 ]]; then
 
-	# report that DISTLIST and GITLS differ
-	#
-	echo "$0: ERROR: distlist and git ls differ for critical files" 1>&2
-	declare -a ONLY_GITLS
-	mapfile -t ONLY_GITLS < <(printf '%s\n' "${DISTLIST[@]}" "${DISTLIST[@]}" "${GITLS[@]}" |
-				  tr ' ' '\n' | sort | uniq -u)
-	if [[ ${#ONLY_GITLS[@]} -ne 0 ]]; then
-	    echo "$0: ERROR: found only in git ls: ${ONLY_GITLS[*]}" 1>&2
-	fi
-	declare -a ONLY_DISTLIST
-	mapfile -t ONLY_DISTLIST < <(printf '%s\n' "${GITLS[@]}" "${GITLS[@]}" "${DISTLIST[@]}" |
-				     tr ' ' '\n' | sort | uniq -u)
-	if [[ ${#ONLY_DISTLIST[@]} -ne 0 ]]; then
-	    echo "$0: ERROR: found only in distlist: ${ONLY_DISTLIST[*]}" 1>&2
-	fi
-	EXIT_CODE=17
-	echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
+        # report that DISTLIST and GITLS differ
+        #
+        echo "$0: ERROR: distlist and git ls differ for critical files" 1>&2
+        declare -a ONLY_GITLS
+        mapfile -t ONLY_GITLS < <(printf '%s\n' "${DISTLIST[@]}" "${DISTLIST[@]}" "${GITLS[@]}" |
+                                  tr ' ' '\n' | sort | uniq -u)
+        if [[ ${#ONLY_GITLS[@]} -ne 0 ]]; then
+            echo "$0: ERROR: found only in git ls: ${ONLY_GITLS[*]}" 1>&2
+        fi
+        declare -a ONLY_DISTLIST
+        mapfile -t ONLY_DISTLIST < <(printf '%s\n' "${GITLS[@]}" "${GITLS[@]}" "${DISTLIST[@]}" |
+                                     tr ' ' '\n' | sort | uniq -u)
+        if [[ ${#ONLY_DISTLIST[@]} -ne 0 ]]; then
+            echo "$0: ERROR: found only in distlist: ${ONLY_DISTLIST[*]}" 1>&2
+        fi
+        EXIT_CODE=17
+        echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
     fi
 
     # verify that there are no staged uncommitted changes under git
     #
     GIT_STATUS=$(git status --untracked-files=no --porcelain 2>&1)
     if [[ -n $GIT_STATUS ]] || ! git diff --cached --quiet --exit-code; then
-	echo "$0: ERROR: there are staged uncommitted changes" 1>&2
-	git status --short
-	EXIT_CODE=18
-	echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
+        echo "$0: ERROR: there are staged uncommitted changes" 1>&2
+        git status --short
+        EXIT_CODE=18
+        echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
     fi
 
     # verify that there are no uncommitted changes under git
     #
     if ! git diff --quiet --exit-code; then
-	echo "$0: ERROR: there are unstaged changes" 1>&2
-	git status --untracked-files=no --porcelain --short
-	EXIT_CODE=19
-	echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
+        echo "$0: ERROR: there are unstaged changes" 1>&2
+        git status --untracked-files=no --porcelain --short
+        EXIT_CODE=19
+        echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
     fi
 
     # verify that master branch is not ahead of 'origin/master'
@@ -187,15 +187,15 @@ if [[ -d .git ]]; then
     GIT_MASTER=$(git rev-list --count master)
     GIT_ORIGIN_MASTER=$(git rev-list --count origin/master)
     if [[ $GIT_MASTER -gt $GIT_ORIGIN_MASTER ]]; then
-	echo "$0: ERROR: master branch is behind of origin/master" 1>&2
-	git status master
-	EXIT_CODE=20
-	echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
+        echo "$0: ERROR: master branch is behind of origin/master" 1>&2
+        git status master
+        EXIT_CODE=20
+        echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
     elif [[ $GIT_MASTER -lt $GIT_ORIGIN_MASTER ]]; then
-	echo "$0: ERROR: master branch is ahead of origin/master" 1>&2
-	git status master
-	EXIT_CODE=21
-	echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
+        echo "$0: ERROR: master branch is ahead of origin/master" 1>&2
+        git status master
+        EXIT_CODE=21
+        echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
     fi
 
     # verify that branch is not ahead of 'origin/HEAD'
@@ -203,15 +203,15 @@ if [[ -d .git ]]; then
     GIT_HEAD=$(git rev-list --count HEAD)
     GIT_ORIGIN_HEAD=$(git rev-list --count origin/HEAD)
     if [[ $GIT_HEAD -gt $GIT_ORIGIN_HEAD ]]; then
-	echo "$0: ERROR: HEAD is behind of origin/HEAD" 1>&2
-	git status HEAD
-	EXIT_CODE=22
-	echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
+        echo "$0: ERROR: HEAD is behind of origin/HEAD" 1>&2
+        git status HEAD
+        EXIT_CODE=22
+        echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
     elif [[ $GIT_HEAD -lt $GIT_ORIGIN_HEAD ]]; then
-	echo "$0: ERROR: HEAD is ahead of origin/HEAD" 1>&2
-	git status HEAD
-	EXIT_CODE=23
-	echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
+        echo "$0: ERROR: HEAD is ahead of origin/HEAD" 1>&2
+        git status HEAD
+        EXIT_CODE=23
+        echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
     fi
 fi
 
@@ -238,9 +238,9 @@ done
 declare -a DISTLIST_ALSO_IN_BUILDLIST
 mapfile -t DISTLIST_ALSO_IN_BUILDLIST < <(
     for i in "${DISTLIST_A[@]}"; do
-	if [[ -n "${BUILDLIST_A[$i]}" ]]; then
-	    echo "$i";
-	fi
+        if [[ -n "${BUILDLIST_A[$i]}" ]]; then
+            echo "$i";
+        fi
     done
 )
 if [[ ${#DISTLIST_ALSO_IN_BUILDLIST[@]} -ne 0 ]]; then
@@ -262,18 +262,18 @@ fi
 # We ignore single letter files as they are used for temporary files.
 # We ignore files containing the any of the following in any letter case:
 #
-#	foo bar baz curds whey rmme
+#       foo bar baz curds whey rmme
 #
 declare -a FINDFILE
 mapfile -t FINDFILE < <(find . -type f \
-	! -path './NOTES/*' ! -name NOTES \
-	! -path './.git/*' ! -name .git \
-	! -path './.github/*' ! -name .github \
-	! -name 'CODE_OF_CONDUCT.md' ! -name 'CONTRIBUTING.md' ! -name '.gitignore' ! -name 'SECURITY.md'  \
-	! -name '*.swp' ! -name '?' ! -iname '*.out*' \
-	! -iname '*foo*' ! -iname '*bar*' ! -iname '*baz*' \
-	! -iname '*curds*' ! -iname '*whey*' ! -iname '*rmmee' -print |
-	sed -e 's/^\.\///' | sort -u)
+        ! -path './NOTES/*' ! -name NOTES \
+        ! -path './.git/*' ! -name .git \
+        ! -path './.github/*' ! -name .github \
+        ! -name 'CODE_OF_CONDUCT.md' ! -name 'CONTRIBUTING.md' ! -name '.gitignore' ! -name 'SECURITY.md'  \
+        ! -name '*.swp' ! -name '?' ! -iname '*.out*' \
+        ! -iname '*foo*' ! -iname '*bar*' ! -iname '*baz*' \
+        ! -iname '*curds*' ! -iname '*whey*' ! -iname '*rmmee' -print |
+        sed -e 's/^\.\///' | sort -u)
 if [[ ${#FINDFILE[@]} -le 0 ]]; then
     echo "$0: ERROR: find file is empty" 1>&2
     EXIT_CODE=26
@@ -294,21 +294,21 @@ declare -a UNKNOWN_FILE
 mapfile -t UNKNOWN_FILE < <(
     for i in "${FINDFILE[@]}"; do
 
-	# skip if this is a file that is result of building calc
-	#
-	if [[ -n ${BUILDLIST_A["$i"]} ]]; then
-	    continue
-	fi
+        # skip if this is a file that is result of building calc
+        #
+        if [[ -n ${BUILDLIST_A["$i"]} ]]; then
+            continue
+        fi
 
-	# skip if this is a file that is calc distribution list
-	#
-	if [[ -n ${DISTLIST_A["$i"]} ]]; then
-	    continue
-	fi
+        # skip if this is a file that is calc distribution list
+        #
+        if [[ -n ${DISTLIST_A["$i"]} ]]; then
+            continue
+        fi
 
-	# print the file of unknown status
-	#
-	echo "$i"
+        # print the file of unknown status
+        #
+        echo "$i"
     done
 )
 if [[ ${#UNKNOWN_FILE[@]} -ne 0 ]]; then
@@ -327,15 +327,15 @@ fi
 # that end in .out, and files  containing the any of the following
 # in any letter case:
 #
-#	foo bar baz curds whey rmme
+#       foo bar baz curds whey rmme
 #
 # So we will object is any distlist file is one of these ignored filenames.
 #
 INVALID_DISTLIST=$(printf '%s\n' "${DISTLIST[@]}" | \
-		   tr '[:upper:]' '[:lower:]' | \
-		   sed -n -e '/^.$/p' -e '/.*foo.*/p' -e '/.*bar.*/p' -e '/.*baz.*/p' \
-			  -e '/.*curds.*/p' -e '/.*whey.*/p' -e '/.*rmme.*/p' |
-		   tr '\n' ' ')
+                   tr '[:upper:]' '[:lower:]' | \
+                   sed -n -e '/^.$/p' -e '/.*foo.*/p' -e '/.*bar.*/p' -e '/.*baz.*/p' \
+                          -e '/.*curds.*/p' -e '/.*whey.*/p' -e '/.*rmme.*/p' |
+                   tr '\n' ' ')
 if [[ -n $INVALID_DISTLIST ]]; then
     echo "$0: ERROR: distlist contains invalid filename(s): $INVALID_DISTLIST" 1>&2
     EXIT_CODE=28

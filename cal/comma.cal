@@ -7,53 +7,53 @@
  *
  * str_comma(x, [group, [decimal]])
  *
- *	Convert x into a string.
+ *      Convert x into a string.
  *
- *	If group is given and is a string, group will be used as
- *	the 3-digit group separator, otherwise the default 3-digit
- *	group separator will be used.
+ *      If group is given and is a string, group will be used as
+ *      the 3-digit group separator, otherwise the default 3-digit
+ *      group separator will be used.
  *
- *	If decimal is given and is a string, group will be used as
- *	the integer-fraction separator, otherwise the default
- *	integer-fraction separator will be used.
+ *      If decimal is given and is a string, group will be used as
+ *      the integer-fraction separator, otherwise the default
+ *      integer-fraction separator will be used.
  *
- *	The decimal and group arguments are optional.
+ *      The decimal and group arguments are optional.
  *
  * set_default_group_separator(group)
  *
- *	Change the default 3-digit group separator if group is a string,
- *	otherwise the default 3-digit group separator will not be
- *	changed.  Return the old 3-digit group separator.
+ *      Change the default 3-digit group separator if group is a string,
+ *      otherwise the default 3-digit group separator will not be
+ *      changed.  Return the old 3-digit group separator.
  *
  * set_default_decimal_separator(decimal)
  *
- *	Change the default 3-digit group separator if decimal is a
- *	string, otherwise the default integer-fraction separator
- *	will not be changed.  Return the old integer-fraction separator.
+ *      Change the default 3-digit group separator if decimal is a
+ *      string, otherwise the default integer-fraction separator
+ *      will not be changed.  Return the old integer-fraction separator.
  *
  * print_comma(x, [group, [decimal]])
  *
- *	Print the value produced by str_comma(x, [group, [decimal]])
- *	followed by a newline.
+ *      Print the value produced by str_comma(x, [group, [decimal]])
+ *      followed by a newline.
  *
- *	If the str_comma() does not return a string, nothing is printed.
+ *      If the str_comma() does not return a string, nothing is printed.
  *
- *	The decimal and group arguments are optional.
+ *      The decimal and group arguments are optional.
  *
- *	The value produced by str_comma() is returned.
+ *      The value produced by str_comma() is returned.
  *
  * fprint_comma(fd, x, [group, [decimal]])
  *
- *	Print the value produced by str_comma(x, [group, [decimal]]),
- *	without a trailing newline, on file fd.
+ *      Print the value produced by str_comma(x, [group, [decimal]]),
+ *      without a trailing newline, on file fd.
  *
- *	If the str_comma() does not return a string, nothing is printed.
+ *      If the str_comma() does not return a string, nothing is printed.
  *
- *	If fd is not an open file, nothing is printed.
+ *      If fd is not an open file, nothing is printed.
  *
- *	The decimal and group arguments are optional.
+ *      The decimal and group arguments are optional.
  *
- *	The value produced by str_comma() is returned.
+ *      The value produced by str_comma() is returned.
  *
  * Copyright (C) 2022  Landon Curt Noll
  *
@@ -78,8 +78,8 @@
  */
 
 
-static default_group_separator = ",";	/* default 3-digit group separator */
-static default_decimal_separator = ".";	/* default integer-fraction separator */
+static default_group_separator = ",";   /* default 3-digit group separator */
+static default_decimal_separator = "."; /* default integer-fraction separator */
 
 
 /*
@@ -92,9 +92,9 @@ static default_decimal_separator = ".";	/* default integer-fraction separator */
  *
  * For example:
  *
- *	string = str_comma(x);
- *	string = str_comma(x), " ", ".");
- *	string = str_comma(x), ".", ",");
+ *      string = str_comma(x);
+ *      string = str_comma(x), " ", ".");
+ *      string = str_comma(x), ".", ",");
  *
  * Internally the function calls:
  *
@@ -109,37 +109,37 @@ static default_decimal_separator = ".";	/* default integer-fraction separator */
  *
  * given:
  *
- *	x		number to convert
+ *      x               number to convert
  *
  * optional args:
  *
- *	group		use this 3-digit group separator
- *	decimal		use this integer-fraction separator
+ *      group           use this 3-digit group separator
+ *      decimal         use this integer-fraction separator
  *
  * returns:
  *
- *	string containing the base 10 digits with group and decimal separators, OR
- *	null() if x is not a number, OR
- *	null() if group is neither null() (not given) nor a string, OR
- *	null() if group is null() (not given) AND default_group_separator is not a string, OR
- *	null() if decimal is neither null() (not given) nor a string, OR
- *	null() if decimal is null() (not given) AND default_decimal_separator is not a string.
+ *      string containing the base 10 digits with group and decimal separators, OR
+ *      null() if x is not a number, OR
+ *      null() if group is neither null() (not given) nor a string, OR
+ *      null() if group is null() (not given) AND default_group_separator is not a string, OR
+ *      null() if decimal is neither null() (not given) nor a string, OR
+ *      null() if decimal is null() (not given) AND default_decimal_separator is not a string.
  */
 define str_comma(x, group, decimal)
 {
-    local group_separator;	/* 3-digit group separator */
-    local decimal_separator;	/* separator between decimal integer and decimal fraction */
-    local sign_str;		/* leading - if x < 0 or empty if x >= 0 */
-    local integer;		/* integer part of absolute value of x */
-    local int_str;		/* integer as a string */
-    local int_len;		/* number of digits in int_str */
-    local first_group_len;	/* length of 1st group before the 1st 3-digit group separator */
-    local fraction;		/* factional part of absolute value of x */
-    local frac_str;		/* fraction as a string */
-    local frac_len;		/* number of digits in frac_str including leading 0. */
-    local ret;			/* string to return */
-    local config_leadzero;	/* config("leadzero") to restore */
-    local config_tilde;		/* config("tilde") to restore */
+    local group_separator;      /* 3-digit group separator */
+    local decimal_separator;    /* separator between decimal integer and decimal fraction */
+    local sign_str;             /* leading - if x < 0 or empty if x >= 0 */
+    local integer;              /* integer part of absolute value of x */
+    local int_str;              /* integer as a string */
+    local int_len;              /* number of digits in int_str */
+    local first_group_len;      /* length of 1st group before the 1st 3-digit group separator */
+    local fraction;             /* factional part of absolute value of x */
+    local frac_str;             /* fraction as a string */
+    local frac_len;             /* number of digits in frac_str including leading 0. */
+    local ret;                  /* string to return */
+    local config_leadzero;      /* config("leadzero") to restore */
+    local config_tilde;         /* config("tilde") to restore */
     local i;
 
     /*
@@ -148,28 +148,28 @@ define str_comma(x, group, decimal)
      * Return null() if args or conditions are bogus.
      */
     if (!isreal(x)) {
-	return null();
+        return null();
     }
     group_separator = isnull(group) ? default_group_separator : group;
     decimal_separator = isnull(decimal) ? default_decimal_separator : decimal;
     if (!isstr(group_separator)) {
-	return null();
+        return null();
     }
     if (!isstr(decimal_separator)) {
-	return null();
+        return null();
     }
 
     /*
      * split number
      */
     if (x < 0) {
-	sign_str = "-";
-	integer = int(-x);
-	fraction = frac(-x);
+        sign_str = "-";
+        integer = int(-x);
+        fraction = frac(-x);
     } else {
-	sign_str = "";
-	integer = int(x);
-	fraction = frac(x);
+        sign_str = "";
+        integer = int(x);
+        fraction = frac(x);
     }
     ret = sign_str;
 
@@ -199,32 +199,32 @@ define str_comma(x, group, decimal)
      * case: integer is 3 or fewer digits
      */
     if (integer < 1000) {
-	ret += int_str;
+        ret += int_str;
 
     /*
      * case: integer is 4 or more digits
      */
     } else {
 
-	/*
-	 * form a decimal string using group separators
-	 */
+        /*
+         * form a decimal string using group separators
+         */
 
-	/*
-	 * form the initial leading digits before 1st group separator
-	 */
-	first_group_len = int_len % 3;
-	if (first_group_len == 0) {
-	    first_group_len = 3;
-	}
-	ret += substr(int_str, 1, first_group_len);
+        /*
+         * form the initial leading digits before 1st group separator
+         */
+        first_group_len = int_len % 3;
+        if (first_group_len == 0) {
+            first_group_len = 3;
+        }
+        ret += substr(int_str, 1, first_group_len);
 
-	/*
-	 * until end of digits, print group separator followed by 3 more digits
-	 */
-	for (i = first_group_len+1; i < int_len; i += 3) {
-	    ret += group_separator + substr(int_str, i, 3);
-	}
+        /*
+         * until end of digits, print group separator followed by 3 more digits
+         */
+        for (i = first_group_len+1; i < int_len; i += 3) {
+            ret += group_separator + substr(int_str, i, 3);
+        }
     }
 
     /*
@@ -236,24 +236,24 @@ define str_comma(x, group, decimal)
      */
     if (fraction == 0) {
 
-	/* no fraction, nothing more to do */
+        /* no fraction, nothing more to do */
 
     /*
      * case: x is not an integer
      */
     } else {
 
-	/*
-	 * add integer-fraction separator
-	 */
-	ret += decimal_separator;
+        /*
+         * add integer-fraction separator
+         */
+        ret += decimal_separator;
 
-	/*
-	 * add remaining digits
-	 *
-	 * Skip over the leading 0. in frac_str
-	 */
-	ret += substr(frac_str, 2, frac_len-1);
+        /*
+         * add remaining digits
+         *
+         * Skip over the leading 0. in frac_str
+         */
+        ret += substr(frac_str, 2, frac_len-1);
     }
 
     /*
@@ -269,19 +269,19 @@ define str_comma(x, group, decimal)
  * If group is not a string, then the default 3-digit group separator
  * is not changed.  Thus, this will only return the default 3-digit group separator:
  *
- *	set_default_group_separator(null());
+ *      set_default_group_separator(null());
  *
  * given:
  *
- *	group		3-digit group separator
+ *      group           3-digit group separator
  *
  * returns:
  *
- *	previous 3-digit group separator value
+ *      previous 3-digit group separator value
  */
 define set_default_group_separator(group)
 {
-    local old_default_group_separator;		/* previous default 3-digit group separator to return */
+    local old_default_group_separator;          /* previous default 3-digit group separator to return */
 
     /*
      * save current 3-digit group separator
@@ -292,7 +292,7 @@ define set_default_group_separator(group)
      * change 3-digit group separator if group is a string
      */
     if (isstr(group)) {
-	default_group_separator = group;
+        default_group_separator = group;
     }
     return old_default_group_separator;
 }
@@ -304,19 +304,19 @@ define set_default_group_separator(group)
  * If decimal is not a string, then the default integer-fraction separator
  * is not changed.  Thus, this will only return the integer-fraction separator:
  *
- *	set_default_decimal_separator(null());
+ *      set_default_decimal_separator(null());
  *
  * given:
  *
- *	decimal		separator between decimal integer and decimal fraction (def: ".")
+ *      decimal         separator between decimal integer and decimal fraction (def: ".")
  *
  * returns:
  *
- *	previous integer-fraction separator value
+ *      previous integer-fraction separator value
  */
 define set_default_decimal_separator(decimal)
 {
-    local old_default_decimal_separator;	/* previous default integer-fraction separator */
+    local old_default_decimal_separator;        /* previous default integer-fraction separator */
 
     /*
      * save current integer-fraction separator
@@ -327,7 +327,7 @@ define set_default_decimal_separator(decimal)
      * change 3-digit decimal integer-fraction if decimal is a string
      */
     if (isstr(decimal)) {
-	default_decimal_separator = decimal;
+        default_decimal_separator = decimal;
     }
     return old_default_decimal_separator;
 }
@@ -339,34 +339,34 @@ define set_default_decimal_separator(decimal)
  * This function prints the result of str_comma(x, group, decimal) followed by a newline.
  * For example:
  *
- *	print_comma(x);
- *	print_comma(x), " ", ".");
- *	print_comma(x), ".", ",");
+ *      print_comma(x);
+ *      print_comma(x), " ", ".");
+ *      print_comma(x), ".", ",");
  *
  * If str_comma() does not return a string, this function prints nothing.
  *
  * NOTE: To print without a newline, use fprint_comma(fd, x, group, decimal).
  *
  * given:
- *	x		number to convert
+ *      x               number to convert
  *
  * optional args:
  *
- *	group		use this 3-digit group separator
- *	decimal		use this integer-fraction separator
+ *      group           use this 3-digit group separator
+ *      decimal         use this integer-fraction separator
  *
  * returns:
  *
- *	string containing the base 10 digits with group and decimal separators, OR
- *	null() if x is not a number, OR
- *	null() if group is neither null() (not given) nor a string, OR
- *	null() if group is null() (not given) AND default_group_separator is not a string, OR
- *	null() if decimal is neither null() (not given) nor a string, OR
- *	null() if decimal is null() (not given) AND default_decimal_separator is not a string.
+ *      string containing the base 10 digits with group and decimal separators, OR
+ *      null() if x is not a number, OR
+ *      null() if group is neither null() (not given) nor a string, OR
+ *      null() if group is null() (not given) AND default_group_separator is not a string, OR
+ *      null() if decimal is neither null() (not given) nor a string, OR
+ *      null() if decimal is null() (not given) AND default_decimal_separator is not a string.
  */
 define print_comma(x, group, decimal)
 {
-    local ret;		/* base 10 string with 3-digit group and integer-fraction separators */
+    local ret;          /* base 10 string with 3-digit group and integer-fraction separators */
 
     /*
      * convert to string
@@ -377,7 +377,7 @@ define print_comma(x, group, decimal)
      * print converted string
      */
     if (isstr(ret)) {
-	printf("%s\n", ret);
+        printf("%s\n", ret);
     }
     return ret;
 }
@@ -389,9 +389,9 @@ define print_comma(x, group, decimal)
  * This function prints the result of str_comma(x, group, decimal) on an open file, without a trailing newline.
  * For example:
  *
- *	fprint_comma(files(1), x);
- *	fprint_comma(fd, x), " ", ".");
- *	fprint_comma(files(2), x), ".", ",");
+ *      fprint_comma(files(1), x);
+ *      fprint_comma(fd, x), " ", ".");
+ *      fprint_comma(files(2), x), ".", ",");
  *
  * If str_comma() does not return a string, this function prints nothing.
  *
@@ -400,26 +400,26 @@ define print_comma(x, group, decimal)
  * NOTE: To print with a newline, use print_comma(x, group, decimal).
  *
  * given:
- *	fd		open file
- *	x		number to convert
+ *      fd              open file
+ *      x               number to convert
  *
  * optional args:
  *
- *	group		use this 3-digit group separator
- *	decimal		use this integer-fraction separator
+ *      group           use this 3-digit group separator
+ *      decimal         use this integer-fraction separator
  *
  * returns:
  *
- *	string containing the base 10 digits with group and integer-fraction separators, OR
- *	null() if x is not a number, OR
- *	null() if group is neither null() (not given) nor a string, OR
- *	null() if group is null() (not given) AND default_group_separator is not a string, OR
- *	null() if decimal is neither null() (not given) nor a string, OR
- *	null() if decimal is null() (not given) AND default_decimal_separator is not a string.
+ *      string containing the base 10 digits with group and integer-fraction separators, OR
+ *      null() if x is not a number, OR
+ *      null() if group is neither null() (not given) nor a string, OR
+ *      null() if group is null() (not given) AND default_group_separator is not a string, OR
+ *      null() if decimal is neither null() (not given) nor a string, OR
+ *      null() if decimal is null() (not given) AND default_decimal_separator is not a string.
  */
 define fprint_comma(fd, x, group, decimal)
 {
-    local ret;		/* base 10 string with 3-digit group and integer-fraction separators */
+    local ret;          /* base 10 string with 3-digit group and integer-fraction separators */
 
     /*
      * convert to string
@@ -430,8 +430,8 @@ define fprint_comma(fd, x, group, decimal)
      * print converted string
      */
     if (isstr(ret) && isfile(fd)) {
-	fprintf(fd, "%s", ret);
-	fflush(fd);
+        fprintf(fd, "%s", ret);
+        fflush(fd);
     }
     return ret;
 }

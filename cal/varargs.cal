@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,10 +17,10 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1991/05/22 21:56:34
- * File existed as early as:	1991
+ * Under source code control:   1991/05/22 21:56:34
+ * File existed as early as:    1991
  *
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 /*
@@ -32,17 +32,17 @@
 
 define sc()
 {
-	local s, i;
+        local s, i;
 
-	s = 0;
-	for (i = 1; i <= param(0); i++) {
-		if (!isnum(param(i))) {
-			print "parameter",i,"is not a number";
-			continue;
-		}
-		s += param(i)^3;
-	}
-	return s;
+        s = 0;
+        for (i = 1; i <= param(0); i++) {
+                if (!isnum(param(i))) {
+                        print "parameter",i,"is not a number";
+                        continue;
+                }
+                s += param(i)^3;
+        }
+        return s;
 }
 
 if (config("resource_debug") & 3) {

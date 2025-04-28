@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,25 +17,25 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1999/11/09 12:46:54
- * File existed as early as:	1999
+ * Under source code control:   1999/11/09 12:46:54
+ * File existed as early as:    1999
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 /*
  * usage:
- *	have_strdup
+ *      have_strdup
  *
  * Not all systems have the strdup() function, so this may not
  * compile on your system.
  *
  * This prog outputs several defines:
  *
- *	HAVE_STRDUP
- *		defined ==> use strdup()
- *		undefined ==> do not call or cannot call strdup()
+ *      HAVE_STRDUP
+ *              defined ==> use strdup()
+ *              undefined ==> do not call or cannot call strdup()
  */
 
 #include <stdio.h>
@@ -45,7 +45,7 @@
 #endif
 
 
-#include "banned.h"	/* include after system header <> includes */
+#include "banned.h"     /* include after system header <> includes */
 
 
 int
@@ -53,19 +53,19 @@ main(void)
 {
 #if defined(HAVE_NO_STRDUP)
 
-	printf("#undef HAVE_STRDUP /* no */\n");
+        printf("#undef HAVE_STRDUP /* no */\n");
 
 #else /* HAVE_NO_STRDUP */
 
-	char *p;
+        char *p;
 
-	p = strdup("#define HAVE_STRDUP /* yes */");
-	if (p != NULL) {
-		printf("%s\n", p);
-	}
+        p = strdup("#define HAVE_STRDUP /* yes */");
+        if (p != NULL) {
+                printf("%s\n", p);
+        }
 
 #endif /* HAVE_NO_STRDUP */
 
-	/* exit(0); */
-	return 0;
+        /* exit(0); */
+        return 0;
 }

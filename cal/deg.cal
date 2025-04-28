@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,10 +17,10 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1990/02/15 01:50:33
- * File existed as early as:	before 1990
+ * Under source code control:   1990/02/15 01:50:33
+ * File existed as early as:    before 1990
  *
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -28,105 +28,105 @@ obj deg {deg, min, sec};
 
 define deg(deg, min, sec)
 {
-	local ans;
+        local ans;
 
-	if (isnull(sec))
-		sec = 0;
-	if (isnull(min))
-		min = 0;
-	obj deg ans;
-	ans.deg = deg;
-	ans.min = min;
-	ans.sec = sec;
-	fixdeg(ans);
-	return ans;
+        if (isnull(sec))
+                sec = 0;
+        if (isnull(min))
+                min = 0;
+        obj deg ans;
+        ans.deg = deg;
+        ans.min = min;
+        ans.sec = sec;
+        fixdeg(ans);
+        return ans;
 }
 
 
 define deg_add(a, b)
 {
-	local obj deg	ans;
+        local obj deg   ans;
 
-	ans.deg = 0;
-	ans.min = 0;
-	ans.sec = 0;
-	if (istype(a, ans)) {
-		ans.deg += a.deg;
-		ans.min += a.min;
-		ans.sec += a.sec;
-	} else
-		ans.deg += a;
-	if (istype(b, ans)) {
-		ans.deg += b.deg;
-		ans.min += b.min;
-		ans.sec += b.sec;
-	} else
-		ans.deg += b;
-	fixdeg(ans);
-	return ans;
+        ans.deg = 0;
+        ans.min = 0;
+        ans.sec = 0;
+        if (istype(a, ans)) {
+                ans.deg += a.deg;
+                ans.min += a.min;
+                ans.sec += a.sec;
+        } else
+                ans.deg += a;
+        if (istype(b, ans)) {
+                ans.deg += b.deg;
+                ans.min += b.min;
+                ans.sec += b.sec;
+        } else
+                ans.deg += b;
+        fixdeg(ans);
+        return ans;
 }
 
 
 define deg_neg(a)
 {
-	local obj deg	ans;
+        local obj deg   ans;
 
-	ans.deg = -a.deg;
-	ans.min = -a.min;
-	ans.sec = -a.sec;
-	return ans;
+        ans.deg = -a.deg;
+        ans.min = -a.min;
+        ans.sec = -a.sec;
+        return ans;
 }
 
 
 define deg_sub(a, b)
 {
-	return a - b;
+        return a - b;
 }
 
 
 define deg_mul(a, b)
 {
-	local obj deg	ans;
+        local obj deg   ans;
 
-	if (istype(a, ans) && istype(b, ans))
-		quit "Cannot multiply degrees together";
-	if (istype(a, ans)) {
-		ans.deg = a.deg * b;
-		ans.min = a.min * b;
-		ans.sec = a.sec * b;
-	} else {
-		ans.deg = b.deg * a;
-		ans.min = b.min * a;
-		ans.sec = b.sec * a;
-	}
-	fixdeg(ans);
-	return ans;
+        if (istype(a, ans) && istype(b, ans))
+                quit "Cannot multiply degrees together";
+        if (istype(a, ans)) {
+                ans.deg = a.deg * b;
+                ans.min = a.min * b;
+                ans.sec = a.sec * b;
+        } else {
+                ans.deg = b.deg * a;
+                ans.min = b.min * a;
+                ans.sec = b.sec * a;
+        }
+        fixdeg(ans);
+        return ans;
 }
 
 
 define deg_print(a)
 {
-	print a.deg : 'd' : a.min : 'm' : a.sec : 's' :;
+        print a.deg : 'd' : a.min : 'm' : a.sec : 's' :;
 }
 
 
 define deg_abs(a)
 {
-	return a.deg + a.min / 60 + a.sec / 3600;
+        return a.deg + a.min / 60 + a.sec / 3600;
 }
 
 
 define fixdeg(a)
 {
-	a.min += frac(a.deg) * 60;
-	a.deg = int(a.deg);
-	a.sec += frac(a.min) * 60;
-	a.min = int(a.min);
-	a.min += a.sec // 60;
-	a.sec %= 60;
-	a.deg += a.min // 60;
-	a.min %= 60;
-	a.deg %= 360;
+        a.min += frac(a.deg) * 60;
+        a.deg = int(a.deg);
+        a.sec += frac(a.min) * 60;
+        a.min = int(a.min);
+        a.min += a.sec // 60;
+        a.sec %= 60;
+        a.deg += a.min // 60;
+        a.min %= 60;
+        a.deg %= 360;
 }
 
 if (config("resource_debug") & 3) {

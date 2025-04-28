@@ -5,11 +5,11 @@ SYNOPSIS
     fpathopen(filename, mode [,searchpath])
 
 TYPES
-    filename	string
-    mode	string
-    searchpath	string
+    filename    string
+    mode        string
+    searchpath  string
 
-    return	file
+    return      file
 
 DESCRIPTION
     This function opens the file named filename, potentially searching
@@ -21,24 +21,24 @@ DESCRIPTION
     Absolute filenames, and filenames with an implied path are files
     that begin with:
 
-	/	# absolute path
-	./	# implied path through the current working directory
-	../	# implied path through the current working directory parent
-	~	# absolute path going through a home directory
+        /       # absolute path
+        ./      # implied path through the current working directory
+        ../     # implied path through the current working directory parent
+        ~       # absolute path going through a home directory
 
     A search path is a :-separated list of directories used to search for
     a filename.  For example:
 
-	fpathopen("whey", "r", ".:/tmp:/var/tmp:~chongo/pub:~/tmp");
+        fpathopen("whey", "r", ".:/tmp:/var/tmp:~chongo/pub:~/tmp");
 
     will cause this function to open the first readable file it
     files while searching through these paths in order:
 
-	./whey
-	/tmp/whey
-	/var/tmp/whey
-	~chongo/pub/whey
-	~/tmp/whey
+        ./whey
+        /tmp/whey
+        /var/tmp/whey
+        ~chongo/pub/whey
+        ~/tmp/whey
 
     IMPORTANT NOTE:
 
@@ -49,13 +49,13 @@ DESCRIPTION
     This call open "./fizzbin" for writing if the current directory is
     writable, even if "./fizzbin" did not previously exist:
 
-	fpathopen("fizzbin", "r", ".:/tmp:/var/tmp:~chongo/pub:~/tmp");
+        fpathopen("fizzbin", "r", ".:/tmp:/var/tmp:~chongo/pub:~/tmp");
 
     This call will likely open (and create if needed) for appending,
     the file "/tmp/log" assuming that the user is not allowed to
     create files in the previous system directories:
 
-	fpathopen("log", "a", "/:/etc:/bin:/usr/bin:/tmp");
+        fpathopen("log", "a", "/:/etc:/bin:/usr/bin:/tmp");
 
     The CALCPATH search path is taken from the $CALCPATH environment
     variable or if no such variable exists, a compiled in default search
@@ -69,49 +69,49 @@ DESCRIPTION
     A file can be opened for either reading, writing, or appending.
     The mode is controlled by the mode flag as follows:
 
-		 allow	  allow    file is   positioned	  file(*)
-       mode	reading	 writing  truncated      at	  mode
-       ----	-------  -------  ---------  ---------	  ----
-	r	   Y	    N	      N      beginning	  text
-	rb	   Y	    N	      N      beginning	  binary
-	r+	   Y	    N	      N      beginning	  text
-	r+b	   Y	    N	      N      beginning	  binary
-	rb+	   Y	    N	      N      beginning	  binary
+                 allow    allow    file is   positioned   file(*)
+       mode     reading  writing  truncated      at       mode
+       ----     -------  -------  ---------  ---------    ----
+        r          Y        N         N      beginning    text
+        rb         Y        N         N      beginning    binary
+        r+         Y        N         N      beginning    text
+        r+b        Y        N         N      beginning    binary
+        rb+        Y        N         N      beginning    binary
 
-	w	   N	    Y	      Y      beginning	  text
-	wb	   N	    Y	      Y      beginning	  binary
-	w+	   Y	    Y	      Y      beginning	  text
-	w+b	   Y	    Y	      Y      beginning	  binary
-	wb+	   Y	    Y	      Y      beginning	  binary
+        w          N        Y         Y      beginning    text
+        wb         N        Y         Y      beginning    binary
+        w+         Y        Y         Y      beginning    text
+        w+b        Y        Y         Y      beginning    binary
+        wb+        Y        Y         Y      beginning    binary
 
-	a	   N	    Y	      Y         end	  text
-	ab	   N	    Y	      Y         end	  binary
-	a+	   Y	    Y	      Y         end	  text
-	a+b	   Y	    Y	      Y         end	  binary
-	ab+	   Y	    Y	      Y         end	  binary
+        a          N        Y         Y         end       text
+        ab         N        Y         Y         end       binary
+        a+         Y        Y         Y         end       text
+        a+b        Y        Y         Y         end       binary
+        ab+        Y        Y         Y         end       binary
 
     (*) NOTE on 'b' / binary/text mode:
 
-	The 'b' or fopen binary mode has no effect on POSIX / Linux
-	/ Un*x-like systems.  On those systems a text file is the
-	same as a binary file (as it should be for any modern-day
-	operating system).  Adding 'b' to an fopen has no effect
-	and is ignored.
+        The 'b' or fopen binary mode has no effect on POSIX / Linux
+        / Un*x-like systems.  On those systems a text file is the
+        same as a binary file (as it should be for any modern-day
+        operating system).  Adding 'b' to an fopen has no effect
+        and is ignored.
 
-	Some non-POSIX systems such as MS Windows treat text files
-	and binary files differently.  In text mode MS Windows consider
-	"\r\n" an end-of-line character.  On an Apple MAC, the
-	text mode end-of-line character is "\r".
+        Some non-POSIX systems such as MS Windows treat text files
+        and binary files differently.  In text mode MS Windows consider
+        "\r\n" an end-of-line character.  On an Apple MAC, the
+        text mode end-of-line character is "\r".
 
     Names of files are subject to ~ expansion just like the C or
-    Korn shell.	 For example, the file name:
+    Korn shell.  For example, the file name:
 
-	~/lib/fizbin
+        ~/lib/fizbin
 
     refers to the file 'fizbin' under the directory lib located
     in your home directory.  The file name:
 
-	~chongo/was_here
+        ~chongo/was_here
 
     refers to the a file 'was_here' under the home directory of
     the user 'chongo'.
@@ -136,25 +136,25 @@ EXAMPLE
     ; print fd
     "/etc/motd"
     ; fd
-	    FILE 3 "/etc/motd" (reading, pos 0)
+            FILE 3 "/etc/motd" (reading, pos 0)
 
     ; fd2 = fpathopen("lucas.cal", "r")
     ; print fd2
     "/usr/share/calc/lucas.cal"
     ; fd2
-	    FILE 4 "/usr/share/calc/lucas.cal" (reading, pos 0)
+            FILE 4 "/usr/share/calc/lucas.cal" (reading, pos 0)
 
     ; fd3 = fpathopen("randmprime.cal", "r", calcpath())
     ; print fd3
     "/usr/share/calc/randmprime.cal"
     ; fd3
-	    FILE 5 "/usr/share/calc/randmprime.cal" (reading, pos 0)
+            FILE 5 "/usr/share/calc/randmprime.cal" (reading, pos 0)
 
     ; fd4 = fpathopen("output", "w", "~/tmp:/tmp:/var/tmp")
     ; print fd4
     "/home/chongo/tmp/output"
     ; fd4
-	    FILE 6 "/home/chongo/tmp/output" (writing, pos 0)
+            FILE 6 "/home/chongo/tmp/output" (writing, pos 0)
 
     ; !mkdir -p /tmp/log
     ; !touch /tmp/log/file
@@ -162,7 +162,7 @@ EXAMPLE
     ; print logfile
     "/tmp/log/file"
     ; logfile
-	    FILE 7 "/home/chongo/tmp/output" (writing, pos 0)
+            FILE 7 "/home/chongo/tmp/output" (writing, pos 0)
 
     ; badfile = fpathopen("no_such_file", "r")
     ; if (!isfile(badfile)) print "error #" errno(badfile) : \
@@ -188,7 +188,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -196,8 +196,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	2006/05/07 23:56:04
-## File existed as early as:	2006
+## Under source code control:   2006/05/07 23:56:04
+## File existed as early as:    2006
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,10 +17,10 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	2010/09/01 17:14:55
- * File existed as early as:	2010
+ * Under source code control:   2010/09/01 17:14:55
+ * File existed as early as:    2010
  *
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -28,14 +28,14 @@ obj hms {hour, min, sec};
 
 define hms(hour, min, sec)
 {
-    local obj hms ans;		/* return value */
+    local obj hms ans;          /* return value */
 
     /* default missing args to 0 */
     if (isnull(sec)) {
-	sec = 0;
+        sec = 0;
     }
     if (isnull(min)) {
-	min = 0;
+        min = 0;
     }
 
     /* load object */
@@ -51,30 +51,30 @@ define hms(hour, min, sec)
 
 define hms_add(a, b)
 {
-    local obj hms ans;		/* return value */
+    local obj hms ans;          /* return value */
 
     /* initialize value to 1st arg */
     if (istype(a, ans)) {
-	/* 1st arg is hms object, load it */
-	ans.hour = a.hour;
-	ans.min = a.min;
-	ans.sec = a.sec;
+        /* 1st arg is hms object, load it */
+        ans.hour = a.hour;
+        ans.min = a.min;
+        ans.sec = a.sec;
     } else {
-	/* 1st arg is not hms, assume scalar hours */
-	ans.hour = a;
-	ans.min = 0;
-	ans.sec = 0;
+        /* 1st arg is not hms, assume scalar hours */
+        ans.hour = a;
+        ans.min = 0;
+        ans.sec = 0;
     }
 
     /* add value of 2nd arg */
     if (istype(b, ans)) {
-	/* 2nd arg is hms object, add it */
-	ans.hour += b.hour;
-	ans.min += b.min;
-	ans.sec += b.sec;
+        /* 2nd arg is hms object, add it */
+        ans.hour += b.hour;
+        ans.min += b.min;
+        ans.sec += b.sec;
     } else {
-	/* 2nd arg is not hms, add scalar hours */
-	ans.hour += b;
+        /* 2nd arg is not hms, add scalar hours */
+        ans.hour += b;
     }
 
     /* return normalized result */
@@ -85,19 +85,19 @@ define hms_add(a, b)
 
 define hms_neg(a)
 {
-    local obj hms ans;		/* return value */
+    local obj hms ans;          /* return value */
 
     /* negate argument */
     if (istype(a, ans)) {
-	/* 1st arg is hms object, load it */
-	ans.hour = -a.hour;
-	ans.min = -a.min;
-	ans.sec = -a.sec;
+        /* 1st arg is hms object, load it */
+        ans.hour = -a.hour;
+        ans.min = -a.min;
+        ans.sec = -a.sec;
     } else {
-	/* 2nd arg is not hms, negate scalar hours */
-	ans.hour = -a;
-	ans.min = 0;
-	ans.sec = 0;
+        /* 2nd arg is not hms, negate scalar hours */
+        ans.hour = -a;
+        ans.min = 0;
+        ans.sec = 0;
     }
 
     /* return normalized result */
@@ -108,30 +108,30 @@ define hms_neg(a)
 
 define hms_sub(a, b)
 {
-    local obj hms ans;		/* return value */
+    local obj hms ans;          /* return value */
 
     /* initialize value to 1st arg */
     if (istype(a, ans)) {
-	/* 1st arg is hms object, load it */
-	ans.hour = a.hour;
-	ans.min = a.min;
-	ans.sec = a.sec;
+        /* 1st arg is hms object, load it */
+        ans.hour = a.hour;
+        ans.min = a.min;
+        ans.sec = a.sec;
     } else {
-	/* 1st arg is not hms, assume scalar hours */
-	ans.hour = a;
-	ans.min = 0;
-	ans.sec = 0;
+        /* 1st arg is not hms, assume scalar hours */
+        ans.hour = a;
+        ans.min = 0;
+        ans.sec = 0;
     }
 
     /* subtract value of 2nd arg */
     if (istype(b, ans)) {
-	/* 2nd arg is hms object, subtract it */
-	ans.hour -= b.hour;
-	ans.min -= b.min;
-	ans.sec -= b.sec;
+        /* 2nd arg is hms object, subtract it */
+        ans.hour -= b.hour;
+        ans.min -= b.min;
+        ans.sec -= b.sec;
     } else {
-	/* 2nd arg is not hms, subtract scalar hours */
-	ans.hour -= b;
+        /* 2nd arg is not hms, subtract scalar hours */
+        ans.hour -= b;
     }
 
     /* return normalized result */
@@ -142,23 +142,23 @@ define hms_sub(a, b)
 
 define hms_mul(a, b)
 {
-    local obj hms ans;		/* return value */
+    local obj hms ans;          /* return value */
 
     /* hms object multiplication */
     if (istype(a, ans) && istype(b, ans)) {
-	ans.hour = hms_abs(a) * hms_abs(b);
-	ans.min = 0;
-	ans.sec = 0;
+        ans.hour = hms_abs(a) * hms_abs(b);
+        ans.min = 0;
+        ans.sec = 0;
 
     /* scalar multiplication */
     } else if (istype(a, ans)) {
-	ans.hour = a.hour * b;
-	ans.min = a.min * b;
-	ans.sec = a.sec * b;
+        ans.hour = a.hour * b;
+        ans.min = a.min * b;
+        ans.sec = a.sec * b;
     } else {
-	ans.hour = b.hour * a;
-	ans.min = b.min * a;
-	ans.sec = b.sec * a;
+        ans.hour = b.hour * a;
+        ans.min = b.min * a;
+        ans.sec = b.sec * a;
     }
 
     /* return normalized result */
@@ -169,11 +169,11 @@ define hms_mul(a, b)
 
 define hms_print(a)
 {
-    local obj hms ans;		/* temp object for hms type testing */
+    local obj hms ans;          /* temp object for hms type testing */
 
     /* firewall - arg must be a hms object */
     if (! istype(a, ans)) {
-	quit "hms_print called with non hms object";
+        quit "hms_print called with non hms object";
     }
 
     /* print in hms form */
@@ -183,12 +183,12 @@ define hms_print(a)
 
 define hms_abs(a)
 {
-    local obj hms ans;		/* temp object for hms type testing */
-    local hour;			/* return scalar value */
+    local obj hms ans;          /* temp object for hms type testing */
+    local hour;                 /* return scalar value */
 
     /* firewall - just absolute value non hms objects */
     if (! istype(a, ans)) {
-	return abs(a);
+        return abs(a);
     }
 
     /* compute hours */
@@ -201,12 +201,12 @@ define hms_abs(a)
 
 define hms_norm(a)
 {
-    local obj hms ans;		/* temp object for hms type testing */
-    local hour;			/* hours */
+    local obj hms ans;          /* temp object for hms type testing */
+    local hour;                 /* hours */
 
     /* firewall - arg must be a hms object */
     if (! istype(a, ans)) {
-	quit "hms_norm called with non hms object";
+        quit "hms_norm called with non hms object";
     }
 
     /* square hours (norm is the square of absolute value */
@@ -219,18 +219,18 @@ define hms_norm(a)
 
 define hms_test(a)
 {
-    local obj hms ans;		/* temp value */
+    local obj hms ans;          /* temp value */
 
     /* firewall - arg must be a hms object */
     if (! istype(a, ans)) {
-	quit "hms_test called with non hms object";
+        quit "hms_test called with non hms object";
     }
 
     /* return false of non-zero */
     ans = fixhms(a);
     if (ans.hour == 0 && ans.min == 0 && ans.sec == 0) {
-	/* false */
-	return 0;
+        /* false */
+        return 0;
     }
     /* true */
     return 1;
@@ -239,11 +239,11 @@ define hms_test(a)
 
 define hms_int(a)
 {
-    local obj hms ans;		/* return value */
+    local obj hms ans;          /* return value */
 
     /* firewall - arg must be a hms object */
     if (! istype(a, ans)) {
-	quit "hms_int called with non hms object";
+        quit "hms_int called with non hms object";
     }
 
     /* normalize the argument */
@@ -259,11 +259,11 @@ define hms_int(a)
 
 define hms_frac(a)
 {
-    local obj hms ans;		/* return value */
+    local obj hms ans;          /* return value */
 
     /* firewall - arg must be a hms object */
     if (! istype(a, ans)) {
-	quit "hms_frac called with non hms object";
+        quit "hms_frac called with non hms object";
     }
 
     /* normalize the argument */
@@ -281,7 +281,7 @@ define hms_frac(a)
 
 define hms_rel(a,b)
 {
-    local abs_a, abs_b;		/* scalars of the arguments */
+    local abs_a, abs_b;         /* scalars of the arguments */
 
     /* compute scalars of the arguments */
     abs_a = hms_abs(a);
@@ -294,7 +294,7 @@ define hms_rel(a,b)
 
 define hms_cmp(a,b)
 {
-    local abs_a, abs_b;		/* scalars of the arguments */
+    local abs_a, abs_b;         /* scalars of the arguments */
 
     /* compute scalars of the arguments */
     abs_a = hms_abs(a);
@@ -307,16 +307,16 @@ define hms_cmp(a,b)
 
 define hms_inc(a)
 {
-    local obj hms ans;		/* return value */
+    local obj hms ans;          /* return value */
 
     /* increment a hms object */
     if (istype(a, ans)) {
-	ans = a;
-	++ans.sec;
+        ans = a;
+        ++ans.sec;
 
-	/* return normalized result */
-	ans = fixhms(ans);
-	return ans;
+        /* return normalized result */
+        ans = fixhms(ans);
+        return ans;
     }
 
     /* increment a scalar */
@@ -326,16 +326,16 @@ define hms_inc(a)
 
 define hms_dec(a)
 {
-    local obj hms ans;		/* return value */
+    local obj hms ans;          /* return value */
 
     /* decrement a hms object */
     if (istype(a, ans)) {
-	ans = a;
-	--ans.sec;
+        ans = a;
+        --ans.sec;
 
-	/* return normalized result */
-	ans = fixhms(ans);
-	return ans;
+        /* return normalized result */
+        ans = fixhms(ans);
+        return ans;
     }
 
     /* decrement a scalar */
@@ -345,11 +345,11 @@ define hms_dec(a)
 
 define fixhms(a)
 {
-    local obj hms ans;		/* temp value */
+    local obj hms ans;          /* temp value */
 
     /* firewall */
     if (! istype(a, ans)) {
-	quit "attempt to fix a non hms object";
+        quit "attempt to fix a non hms object";
     }
 
     /* use builtin h2hms function */

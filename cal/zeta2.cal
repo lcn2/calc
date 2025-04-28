@@ -15,8 +15,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	2013/08/11 01:31:28
- * File existed as early as:	2013
+ * Under source code control:   2013/08/11 01:31:28
+ * File existed as early as:    2013
  */
 
 
@@ -72,7 +72,7 @@ define hurwitzzeta(s,a){
   limit=(precision*ln(10)-re((s-.5)*result)+(1.*realpart_a)*ln(2.*pi()))/2;
   limit=max(2,ceil(max(limit,abs(s*1.)/2)));
   limit_function=ceil(sqrt((limit+realpart_a/2-.25)^2+(imagpart_s*1.)^2/4)/
-		      pi());
+                      pi());
   if (config("user_debug") > 0) {
      print "limit_function = " limit_function;
      print "limit = " limit;

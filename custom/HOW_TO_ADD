@@ -7,7 +7,7 @@ Step 0: Determine if is should it be done?
     multi-precision calculations in a C-like environment.  You should
     consider implementing algorithms in the calc language as a first
     choice.  Sometimes an algorithm requires use of special hardware, a
-    non-portable OS or pre-compiled C library.	In these cases a custom
+    non-portable OS or pre-compiled C library.  In these cases a custom
     interface may be needed.
 
     The custom function interface is intended to make is easy for
@@ -18,16 +18,16 @@ Step 0: Determine if is should it be done?
 
     So before you go to step 1, ask yourself:
 
-	+ Can I implement this as a calc resource file or calc shell script?
+        + Can I implement this as a calc resource file or calc shell script?
 
-	    If Yes, write the shell script or resource file and be done with it.
-	    If No, continue to the next question ...
+            If Yes, write the shell script or resource file and be done with it.
+            If No, continue to the next question ...
 
-	+ Does it require the use of non-portable features,
-	  OS specific support or special hardware?
+        + Does it require the use of non-portable features,
+          OS specific support or special hardware?
 
-	    If No, write it as a regular builtin function.
-	    If Yes, continue to step 1 ...
+            If No, write it as a regular builtin function.
+            If Yes, continue to step 1 ...
 
 
 Step 1: Do some background work
@@ -39,18 +39,18 @@ Step 1: Do some background work
     you look at some examples of custom functions.  Look at the
     the following source files:
 
-	custom.c
-	custom.h
-	custom/custtbl.c
-	custom/c_*.[ch]
-	custom/*.cal
-	help/custom		(or run:  calc help custom)
+        custom.c
+        custom.h
+        custom/custtbl.c
+        custom/c_*.[ch]
+        custom/*.cal
+        help/custom             (or run:  calc help custom)
 
     You would be well advised to look at a more recent calc source
     such as one available in from the calc version archive.
     See the following for more details:
 
-	help/archive		(or run:  calc help archive)
+        help/archive            (or run:  calc help archive)
 
 
 Step 2: Name your custom function
@@ -84,16 +84,16 @@ Step 3: Document your custom function
 
     Take a look at one of the example custom help files:
 
-	custom/devnull
-	custom/argv
-	custom/help
-	custom/sysinfo
+        custom/devnull
+        custom/argv
+        custom/help
+        custom/sysinfo
 
     You can save time by using one of the custom help files
     as a template.  Copy one of these files to your own help file:
 
-	cd custom
-	cp sysinfo curds
+        cd custom
+        cp sysinfo curds
 
     and edit it accordingly.
 
@@ -113,24 +113,24 @@ Step 4: Write your test code
 
     You can use one of the following as a template:
 
-	custom/argv.cal
-	custom/halflen.cal
+        custom/argv.cal
+        custom/halflen.cal
 
     Copy one of these to your own file:
 
-	cd custom
-	cp halflen.cal curds.cal
+        cd custom
+        cp halflen.cal curds.cal
 
     and exit it accordingly.  In particular you will want to:
 
-	remove our header disclaimer (or put your own on)
+        remove our header disclaimer (or put your own on)
 
-	change the name from halflen() to curds()
+        change the name from halflen() to curds()
 
-	change the comment from 'halflen - determine the length ...' to
-	'curds - brief description about ...'
+        change the comment from 'halflen - determine the length ...' to
+        'curds - brief description about ...'
 
-	change other code as needed.
+        change other code as needed.
 
 
 Step 5: Write your custom function
@@ -138,145 +138,145 @@ Step 5: Write your custom function
     By convention, the files we ship that contain custom function
     interface code in filenames of the form:
 
-	c_*.c
+        c_*.c
 
     We suggest that you use filenames of the form:
 
-	u_*.c
+        u_*.c
 
     to avoid filename conflicts.
 
     We recommend that you use one of the c_*.c files as a template.
     Copy an appropriate file to your file:
 
-	cd custom
-	cp c_argv.c u_curds.c
+        cd custom
+        cp c_argv.c u_curds.c
 
     Before you edit it, you should note that there are several important
     features of this file.
 
-	a) All of the code in the file is found between #if ... #endif:
+        a) All of the code in the file is found between #if ... #endif:
 
-		/*
-		 * only comments and blank lines at the top
-		 */
+                /*
+                 * only comments and blank lines at the top
+                 */
 
-		#if defined(CUSTOM)
+                #if defined(CUSTOM)
 
-		... all code, #includes, #defines etc.
+                ... all code, #includes, #defines etc.
 
-		#endif /* CUSTOM */
+                #endif /* CUSTOM */
 
-	   This allows this code to 'go away' when the upper Makefile
-	   disables the custom code when CUSTOM is not defined.
+           This allows this code to 'go away' when the upper Makefile
+           disables the custom code when CUSTOM is not defined.
 
-	b) The function type must be:
+        b) The function type must be:
 
-		/*ARGSUSED*/
-		VALUE
-		u_curds(char *name, int count, VALUE **vals)
+                /*ARGSUSED*/
+                VALUE
+                u_curds(char *name, int count, VALUE **vals)
 
-	   The 3 args are passed in by the custom interface
-	   and have the following meaning:
+           The 3 args are passed in by the custom interface
+           and have the following meaning:
 
-		name	The name of the custom function that
-			was called.  In particular, this is the first
-			string arg that was given to the custom()
-			builtin.  This is the equivalent of argv[0] for
-			main() in C programming.
+                name    The name of the custom function that
+                        was called.  In particular, this is the first
+                        string arg that was given to the custom()
+                        builtin.  This is the equivalent of argv[0] for
+                        main() in C programming.
 
-			The same code can be used for multiple custom
-			functions by processing off of this value.
+                        The same code can be used for multiple custom
+                        functions by processing off of this value.
 
-		count	This is the number of additional args that
-			was given to the custom() builtin.  Note
-			that count does NOT include the name arg.
-			This is similar to argc except that count
-			is one less than the main() argc interface.
+                count   This is the number of additional args that
+                        was given to the custom() builtin.  Note
+                        that count does NOT include the name arg.
+                        This is similar to argc except that count
+                        is one less than the main() argc interface.
 
-			For example, a call of:
+                        For example, a call of:
 
-			    custom("curds", a, b, c)
+                            custom("curds", a, b, c)
 
-			would cause count to be passed as 3.
+                        would cause count to be passed as 3.
 
-		vals	This is a pointer to an array of VALUEs.
-			This is the equivalent of argv+1 for
-			main() in C programming.  The difference
-			here is that vals[0] refers to the 1st
-			parameter AFTER the same.
+                vals    This is a pointer to an array of VALUEs.
+                        This is the equivalent of argv+1 for
+                        main() in C programming.  The difference
+                        here is that vals[0] refers to the 1st
+                        parameter AFTER the same.
 
-			For example, a call of:
+                        For example, a call of:
 
-			    custom("curds", a, b, c)
+                            custom("curds", a, b, c)
 
-			would cause vals to point to the following array:
+                        would cause vals to point to the following array:
 
-			    vals[0]  points to	a
-			    vals[1]  points to	b
-			    vals[2]  points to	c
+                            vals[0]  points to  a
+                            vals[1]  points to  b
+                            vals[2]  points to  c
 
-	   NOTE: If you do not use any of the 3 function parameters,
-	   then you should declare that function parameter to be UNUSED.
-	   For example, if the count and vals parameters were not used
-	   in your custom function, then your declaration should be:
+           NOTE: If you do not use any of the 3 function parameters,
+           then you should declare that function parameter to be UNUSED.
+           For example, if the count and vals parameters were not used
+           in your custom function, then your declaration should be:
 
-		/*ARGSUSED*/
-		VALUE
-		u_curds(char *name, int UNUSED count, VALUE UNUSED **vals)
+                /*ARGSUSED*/
+                VALUE
+                u_curds(char *name, int UNUSED count, VALUE UNUSED **vals)
 
-	c) The return value is the function must be a VALUE.
+        c) The return value is the function must be a VALUE.
 
-	   The typical way to form a VALUE to return is by declaring
-	   the following local variable:
+           The typical way to form a VALUE to return is by declaring
+           the following local variable:
 
-		VALUE result;	/* what we will return */
+                VALUE result;   /* what we will return */
 
-	d) You will need to include:
+        d) You will need to include:
 
-		#if defined(CUSTOM)
+                #if defined(CUSTOM)
 
-		/* any #include <foobar.h> here */
+                /* any #include <foobar.h> here */
 
-		#include "../have_const.h"
-		#include "../value.h"
-		#include "custom.h"
+                #include "../have_const.h"
+                #include "../value.h"
+                #include "custom.h"
 
-		#include "../have_unused.h"
+                #include "../have_unused.h"
 
-	    Typically these will be included just below any system
-	    includes and just below the #if defined(CUSTOM) line.
+            Typically these will be included just below any system
+            includes and just below the #if defined(CUSTOM) line.
 
     To better understand the VALUE type, read:
 
-	../value.h
+        ../value.h
 
     The VALUE is a union of major value types found inside calc.
     The v_type VALUE element determines which union element is
-    being used.	  Assume that we have:
+    being used.   Assume that we have:
 
-	VALUE *vp;
+        VALUE *vp;
 
     Then the value is determined according to v_type:
 
-	vp->v_type	the value is	which is a	type defined in
-	----------	------------	----------	---------------
-	V_NULL		(none)		n/a		n/a
-	V_INT		vp->v_int	long		n/a
-	V_NUM		vp->v_num	NUMBER *	../qmath.h
-	V_COM		vp->v_com	COMPLEX *	../cmath.h
-	V_ADDR		vp->v_addr	VALUE *		../value.h
-	V_STR		vp->v_str	char *		n/a
-	V_MAT		vp->v_mat	MATRIX *	../value.h
-	V_LIST		vp->v_list	LIST *		../value.h
-	V_ASSOC		vp->v_assoc	ASSOC *		../value.h
-	V_OBJ		vp->v_obj	OBJECT *	../value.h
-	V_FILE		vp->v_file	FILEID		../value.h
-	V_RAND		vp->v_rand	RAND *		../zrand.h
-	V_RANDOM	vp->v_random	RANDOM *	../zrandom.h
-	V_CONFIG	vp->v_config	CONFIG *	../config.h
-	V_HASH		vp->v_hash	HASH *		../hash.h
-	V_BLOCK		vp->v_block	BLOCK *		../block.h
+        vp->v_type      the value is    which is a      type defined in
+        ----------      ------------    ----------      ---------------
+        V_NULL          (none)          n/a             n/a
+        V_INT           vp->v_int       long            n/a
+        V_NUM           vp->v_num       NUMBER *        ../qmath.h
+        V_COM           vp->v_com       COMPLEX *       ../cmath.h
+        V_ADDR          vp->v_addr      VALUE *         ../value.h
+        V_STR           vp->v_str       char *          n/a
+        V_MAT           vp->v_mat       MATRIX *        ../value.h
+        V_LIST          vp->v_list      LIST *          ../value.h
+        V_ASSOC         vp->v_assoc     ASSOC *         ../value.h
+        V_OBJ           vp->v_obj       OBJECT *        ../value.h
+        V_FILE          vp->v_file      FILEID          ../value.h
+        V_RAND          vp->v_rand      RAND *          ../zrand.h
+        V_RANDOM        vp->v_random    RANDOM *        ../zrandom.h
+        V_CONFIG        vp->v_config    CONFIG *        ../config.h
+        V_HASH          vp->v_hash      HASH *          ../hash.h
+        V_BLOCK         vp->v_block     BLOCK *         ../block.h
 
     The V_OCTET is under review and should not be used at this time.
 
@@ -285,100 +285,100 @@ Step 5: Write your custom function
     you might also want to read the following to understand
     some of the numerical types of ZVALUE, NUMBER and COMPLEX:
 
-	../zmath.h
-	../qmath.h
-	../cmath.h
+        ../zmath.h
+        ../qmath.h
+        ../cmath.h
 
     While we cannot go into full detail here are some cookbook
     code for manipulating VALUEs.  For these examples assume
     that we will manipulate the return value:
 
-	VALUE result;	/* what we will return */
+        VALUE result;   /* what we will return */
 
     To return NULL:
 
-	result.v_type = V_NULL;
-	return result;
+        result.v_type = V_NULL;
+        return result;
 
     To return a long you need to convert it to a NUMBER:
 
-	long variable;
+        long variable;
 
-	result.v_type = V_NUM;
-	result.v_num = itoq(variable);		/* see ../qmath.c */
-	return result;
+        result.v_type = V_NUM;
+        result.v_num = itoq(variable);          /* see ../qmath.c */
+        return result;
 
     To return a FULL you need to convert it to a NUMBER:
 
-	FULL variable;
+        FULL variable;
 
-	result.v_type = V_NUM;
-	result.v_num = utoq(variable);		/* see ../qmath.c */
-	return result;
+        result.v_type = V_NUM;
+        result.v_num = utoq(variable);          /* see ../qmath.c */
+        return result;
 
     To convert a ZVALUE to a NUMBER*:
 
-	ZVALUE variable;
+        ZVALUE variable;
 
-	result.v_type = V_NUM;
-	result.v_num = qalloc();		/* see ../qmath.c */
-	result.v_num->num = variable;
-	return result;
+        result.v_type = V_NUM;
+        result.v_num = qalloc();                /* see ../qmath.c */
+        result.v_num->num = variable;
+        return result;
 
     To convert a small NUMBER* into a long:
 
-	NUMBER *num;
-	long variable;
+        NUMBER *num;
+        long variable;
 
-	variable = qtoi(num);
+        variable = qtoi(num);
 
     To obtain a ZVALUE from a NUMBER*, extract the numerator:
 
-	NUMBER *num;
-	ZVALUE z_variable;
+        NUMBER *num;
+        ZVALUE z_variable;
 
-	if (qisint(num)) {
-		z_variable = num->num;
-	}
+        if (qisint(num)) {
+                z_variable = num->num;
+        }
 
     To be sure that the value will fit, use the ZVALUE test macros:
 
-	ZVALUE z_num;
-	long variable;
-	unsigned long u_variable;
-	FULL f_variable;
-	short very_tiny_variable;
+        ZVALUE z_num;
+        long variable;
+        unsigned long u_variable;
+        FULL f_variable;
+        short very_tiny_variable;
 
-	if (zgtmaxlong(z_num)) {			/* see ../zmath.h */
-		variable = ztolong(z_num);
-	}
-	if (zgtmaxulong(z_num)) {
-		u_variable = ztoulong(z_num);
-	}
-	if (zgtmaxufull(z_num)) {
-		f_variable = ztofull(z_num);
-	}
-	if (zistiny(z_num)) {
-		very_tiny_variable = z1tol(z_num);
-	}
+        if (zgtmaxlong(z_num)) {                        /* see ../zmath.h */
+                variable = ztolong(z_num);
+        }
+        if (zgtmaxulong(z_num)) {
+                u_variable = ztoulong(z_num);
+        }
+        if (zgtmaxufull(z_num)) {
+                f_variable = ztofull(z_num);
+        }
+        if (zistiny(z_num)) {
+                very_tiny_variable = z1tol(z_num);
+        }
 
     You can (and should) add debugging statements to your custom code
     by examining bit 8 of the calc_debug config flag:
 
-	if (conf->calc_debug & CALCDBG_CUSTOM) {
-	    fprintf(stderr, "%ssome custom debug note: msg\n",
-		(conf->tab_ok ? "\t" : ""),
-		((msg == NULL) ? "((NULL))" : msg));
-	}
+        if (conf->calc_debug & CALCDBG_CUSTOM) {
+            fprintf(stderr, "%ssome custom debug note: msg\n",
+                (conf->tab_ok ? "\t" : ""),
+                ((msg == NULL) ? "((NULL))" : msg));
+        }
 
     One is able to set bit 8 by way of the calc command line:
 
-	calc -D 128
+        calc -D 128
 
     See the calc man page for details.  One may also set that bit
     while running calc by way of the config() builtin function:
 
-	config("calc_debug", 128);
+        config("calc_debug", 128);
 
     See the help/config file for details on calc_debug.
 
@@ -388,81 +388,81 @@ Step 6: Register the function in the custom interface table
     you need to add an entry into the CONST struct custom cust table
     found in custom/custtbl.c:
 
-	/*
-	 * custom interface table
-	 *
-	 * The order of the elements in struct custom are:
-	 *
-	 *	{ "xyz", "brief description of the xyz custom function",
-	 *	   minimum_args, maximum_args, c_xyz },
-	 *
-	 * where:
-	 *
-	 *	minimum_args	an int >= 0
-	 *	maximum_args	an int >= minimum_args and <= MAX_CUSTOM_ARGS
-	 *
-	 * Use MAX_CUSTOM_ARGS for maximum_args is the maximum number of args
-	 * is potentially 'unlimited'.
-	 *
-	 * If the brief description cannot fit on the same line as the name
-	 * without wrapping on a 80 col window, the description is probably
-	 * too long and will not look nice in the show custom output.
-	 */
-	CONST struct custom cust[] = {
+        /*
+         * custom interface table
+         *
+         * The order of the elements in struct custom are:
+         *
+         *      { "xyz", "brief description of the xyz custom function",
+         *         minimum_args, maximum_args, c_xyz },
+         *
+         * where:
+         *
+         *      minimum_args    an int >= 0
+         *      maximum_args    an int >= minimum_args and <= MAX_CUSTOM_ARGS
+         *
+         * Use MAX_CUSTOM_ARGS for maximum_args is the maximum number of args
+         * is potentially 'unlimited'.
+         *
+         * If the brief description cannot fit on the same line as the name
+         * without wrapping on a 80 col window, the description is probably
+         * too long and will not look nice in the show custom output.
+         */
+        CONST struct custom cust[] = {
 
-	#if defined(CUSTOM)
-
-
-		/*
-		 * add your own custom functions here
-		 *
-		 * We suggest that you sort the entries below by name
-		 * so that show custom will produce a nice sorted list.
-		 */
-
-		{ "argv", "information about its args, returns arg count",
-		 0, MAX_CUSTOM_ARGS, c_argv },
-
-		{ "devnull", "does nothing",
-		 0, MAX_CUSTOM_ARGS, c_devnull },
-
-		{ "help", "help for custom functions",
-		 1, 1, c_help },
-
-		{ "sysinfo", "return a calc #define value",
-		 0, 1, c_sysinfo },
+        #if defined(CUSTOM)
 
 
-	#endif /* CUSTOM */
+                /*
+                 * add your own custom functions here
+                 *
+                 * We suggest that you sort the entries below by name
+                 * so that show custom will produce a nice sorted list.
+                 */
 
-		/*
-		 * This must be at the end of this table!!!
-		 */
-		{NULL, NULL,
-		 0, 0, NULL}
-	};
+                { "argv", "information about its args, returns arg count",
+                 0, MAX_CUSTOM_ARGS, c_argv },
+
+                { "devnull", "does nothing",
+                 0, MAX_CUSTOM_ARGS, c_devnull },
+
+                { "help", "help for custom functions",
+                 1, 1, c_help },
+
+                { "sysinfo", "return a calc #define value",
+                 0, 1, c_sysinfo },
+
+
+        #endif /* CUSTOM */
+
+                /*
+                 * This must be at the end of this table!!!
+                 */
+                {NULL, NULL,
+                 0, 0, NULL}
+        };
 
     The definition of struct custom may be found in custom.h.
 
     It is important that your entry be placed inside the:
 
-	#if defined(CUSTOM) ... #endif /* CUSTOM */
+        #if defined(CUSTOM) ... #endif /* CUSTOM */
 
     lines so that when the custom interface is disabled by the upper
     level Makefile, one does not have unsatisfied symbols.
 
     The brief description should be brief so that 'show custom' looks well
-    formatted.	If the brief description cannot fit on the same line as
+    formatted.  If the brief description cannot fit on the same line as
     the name without wrapping on a 80 col window, the description is
     probably too long and will not look nice in the show custom output.
 
     The minargs places a lower bound on the number of args that
-    must be supplied to the interface.	This does NOT count
+    must be supplied to the interface.  This does NOT count
     the name argument given to custom().  So if minargs is 2:
 
-	custom("curds")		/* call blocked at high level interface */
-	custom("curds", a)	/* call blocked at high level interface */
-	custom("curds", a, b)	/* call passed down to "curds" interface */
+        custom("curds")         /* call blocked at high level interface */
+        custom("curds", a)      /* call blocked at high level interface */
+        custom("curds", a, b)   /* call passed down to "curds" interface */
 
     The maxargs sets a limit on the number of args that may be passed.
     If minargs == maxargs, then the call requires a fixed number of
@@ -471,39 +471,39 @@ Step 6: Register the function in the custom interface table
 
     Note that one must have:
 
-		0 <= minargs <= maxargs <= MAX_CUSTOM_ARGS
+                0 <= minargs <= maxargs <= MAX_CUSTOM_ARGS
 
     To allow the curds function to take at least 2 args and up
     to 5 args, one would add the following entry to cust[]:
 
-		{ "curds", "brief description about curds interface",
-		 2, 5, u_curds },
+                { "curds", "brief description about curds interface",
+                 2, 5, u_curds },
 
     It is recommended that the cust[] remain in alphabetical order,
     so one would place it before the "devnull" and after "argv".
 
     Last, you must forward declare the u_curds near the top of the file:
 
-	#if defined(CUSTOM)
+        #if defined(CUSTOM)
 
 
-	/*
-	 * add your forward custom function declarations here
-	 *
-	 * Declare custom functions as follows:
-	 *
-	 *	E_FUNC VALUE c_xyz(char*, int, VALUE**);
-	 *
-	 * We suggest that you sort the entries below by name.
-	 */
-	E_FUNC VALUE c_argv(char*, int, VALUE**);
-	E_FUNC VALUE c_devnull(char*, int, VALUE**);
-	E_FUNC VALUE c_help(char*, int, VALUE**);
-	E_FUNC VALUE c_sysinfo(char*, int, VALUE**);
+        /*
+         * add your forward custom function declarations here
+         *
+         * Declare custom functions as follows:
+         *
+         *      E_FUNC VALUE c_xyz(char*, int, VALUE**);
+         *
+         * We suggest that you sort the entries below by name.
+         */
+        E_FUNC VALUE c_argv(char*, int, VALUE**);
+        E_FUNC VALUE c_devnull(char*, int, VALUE**);
+        E_FUNC VALUE c_help(char*, int, VALUE**);
+        E_FUNC VALUE c_sysinfo(char*, int, VALUE**);
 
     For u_curds we would add the line:
 
-	E_FUNC VALUE u_curds(char*, int, VALUE**);
+        E_FUNC VALUE u_curds(char*, int, VALUE**);
 
 
 Step 7: Add the required information to the custom/Makefile.head
@@ -511,26 +511,26 @@ Step 7: Add the required information to the custom/Makefile.head
     The calc test script, curds.cal, should be added to the
     CUSTOM_CALC_FILES Makefile variable found in custom/Makefile.head:
 
-	CUSTOM_CALC_FILES= argv.cal halflen.cal curds.cal
+        CUSTOM_CALC_FILES= argv.cal halflen.cal curds.cal
 
     The help file, curds, should be added to the CUSTOM_HELP
     custom/Makefile.head variable:
 
-	CUSTOM_HELP= argv devnull help sysinfo curds
+        CUSTOM_HELP= argv devnull help sysinfo curds
 
     If you needed to create any .h files to support u_curds.c, these
     files should be added to the CUSTOM_H_SRC custom/Makefile.head variable:
 
-	CUSTOM_H_SRC= u_curds.h otherfile.h
+        CUSTOM_H_SRC= u_curds.h otherfile.h
 
     Your u_curds.c file MUST be added to the CUSTOM_SRC custom/Makefile.head
     variable:
 
-	CUSTOM_SRC= c_argv.c c_devnull.c c_help.c c_sysinfo.c u_curds.c
+        CUSTOM_SRC= c_argv.c c_devnull.c c_help.c c_sysinfo.c u_curds.c
 
     and so must the associated .o file:
 
-	CUSTOM_OBJ= c_argv.o c_devnull.o c_help.o c_sysinfo.o u_curds.o
+        CUSTOM_OBJ= c_argv.o c_devnull.o c_help.o c_sysinfo.o u_curds.o
 
 
 Step 8: Compile and link in your code
@@ -540,25 +540,25 @@ Step 8: Compile and link in your code
     the custom Makefile) should have the following Makefile
     variable defined:
 
-	ALLOW_CUSTOM= -DCUSTOM
+        ALLOW_CUSTOM= -DCUSTOM
 
     It is recommended that you build your code from the top level
     Makefile.  It saves having to sync the other Makefile values.
     To try and build the new libcustcalc.a that contains u_curds.c:
 
-	(cd ..; make custom/libcustcalc.a)
+        (cd ..; make custom/libcustcalc.a)
 
     Fix any compile and syntax errors as needed.  :-)
 
     Once libcustcalc.a successfully builds, compile calc:
 
-	cd ..
-	make calc
+        cd ..
+        make calc
 
     And check to be sure that the regression test suite still
     works without errors:
 
-	make check
+        make check
 
 
 Step 9: Add the Make dependency tools
@@ -567,66 +567,66 @@ Step 9: Add the Make dependency tools
     the Makefile.  Given the required include files, you will at least
     have the following entries placed at the bottom of the Makefile:
 
-	u_curds.o: ../alloc.h
-	u_curds.o: ../block.h
-	u_curds.o: ../byteswap.h
-	u_curds.o: ../cmath.h
-	u_curds.o: ../config.h
-	u_curds.o: ../endian_calc.h
-	u_curds.o: ../errsym.h
-	u_curds.o: ../hash.h
-	u_curds.o: ../have_const.h
-	u_curds.o: ../have_malloc.h
-	u_curds.o: ../have_newstr.h
-	u_curds.o: ../have_stdlib.h
-	u_curds.o: ../have_string.h
-	u_curds.o: ../longbits.h
-	u_curds.o: ../nametype.h
-	u_curds.o: ../qmath.h
-	u_curds.o: ../shs.h
-	u_curds.o: ../value.h
-	u_curds.o: ../zmath.h
-	u_curds.o: u_curds.c
-	u_curds.o: ../custom.h
+        u_curds.o: ../alloc.h
+        u_curds.o: ../block.h
+        u_curds.o: ../byteswap.h
+        u_curds.o: ../cmath.h
+        u_curds.o: ../config.h
+        u_curds.o: ../endian_calc.h
+        u_curds.o: ../errsym.h
+        u_curds.o: ../hash.h
+        u_curds.o: ../have_const.h
+        u_curds.o: ../have_malloc.h
+        u_curds.o: ../have_newstr.h
+        u_curds.o: ../have_stdlib.h
+        u_curds.o: ../have_string.h
+        u_curds.o: ../longbits.h
+        u_curds.o: ../nametype.h
+        u_curds.o: ../qmath.h
+        u_curds.o: ../shs.h
+        u_curds.o: ../value.h
+        u_curds.o: ../zmath.h
+        u_curds.o: u_curds.c
+        u_curds.o: ../custom.h
 
     If you have the makedepend tool from the X11 development environment
     (by Todd Brunhoff, Tektronix, Inc. and MIT Project Athena), you can
     use the following to update your dependencies:
 
-	# cd to the top level calc directory if you are not there already
+        # cd to the top level calc directory if you are not there already
 
-	rm -f Makefile.bak custom/Makefile.bak
-	make depend
+        rm -f Makefile.bak custom/Makefile.bak
+        make depend
 
-	diff -c Makefile.bak Makefile			# look at the changes
-	diff -c custom/Makefile.bak custom/Makefile	# look at the changes
+        diff -c Makefile.bak Makefile                   # look at the changes
+        diff -c custom/Makefile.bak custom/Makefile     # look at the changes
 
-	rm -f Makefile.bak custom/Makefile.bak		# cleanup
+        rm -f Makefile.bak custom/Makefile.bak          # cleanup
 
 Step 10: Test
 
     Now that you have built calc with your new custom function, test it:
 
-	./calc -C		# run the new calc with the -C arg
+        ./calc -C               # run the new calc with the -C arg
 
     And then try out our test suite:
 
-	C-style arbitrary precision calculator (version 2.10.3t5.1)
-	[Type "exit" to exit, or "help" for help.]
+        C-style arbitrary precision calculator (version 2.10.3t5.1)
+        [Type "exit" to exit, or "help" for help.]
 
-	> read custom/curds.cal
-	curds(a, b, [c, d, e]) defined
+        > read custom/curds.cal
+        curds(a, b, [c, d, e]) defined
 
-	> custom("curds", 2, 3, 4)
+        > custom("curds", 2, 3, 4)
 
 
 Step 11: Install
 
     Once you are satisfied that everything works, install the new code:
 
-	# cd to the top level calc directory if you are not there already
+        # cd to the top level calc directory if you are not there already
 
-	make install
+        make install
 
     Although calc does not run setuid, you may need to be root to install
     the directories into which calc installs may be write protected.
@@ -639,7 +639,7 @@ Step 12: Contribute
 
     Read the file:
 
-	help/contrib		(or run:  calc help contrib)
+        help/contrib            (or run:  calc help contrib)
 
     and consider submitting your custom function for possible
     inclusion in later versions of calc.
@@ -652,7 +652,7 @@ Step 12: Contribute
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -660,8 +660,8 @@ Step 12: Contribute
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1997/03/10 03:03:21
-## File existed as early as:	1997
+## Under source code control:   1997/03/10 03:03:21
+## File existed as early as:    1997
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
