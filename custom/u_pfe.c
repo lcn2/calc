@@ -35,7 +35,7 @@ int u_pfe_allowed = 0; /* CUSTOM undefined */
 
 #if defined(CUSTOM)
 
-    #include <sys/_types/_timeval.h>
+    #include <sys/time.h>
     #include <sys/errno.h>
     #include <sys/param.h> // MAXPATHLEN attow
     #include <sys/types.h>
