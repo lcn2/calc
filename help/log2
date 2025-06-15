@@ -1,5 +1,5 @@
 NAME
-    log2 -  base 10 logarithm
+    log2 -  base 2 logarithm
 
 SYNOPSIS
     log2(x [,eps])
