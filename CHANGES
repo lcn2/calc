@@ -5,6 +5,9 @@ The following are the changes from calc version 2.15.1.1 to date:
 
     Put full date range (1989-2025) of calc source into version.h.
 
+    Adding support for pipe/fork/exec via custom functions thanks
+    to a contribution by GitHub user @vike2000.
+
     Version 2.16.0.0 will form the basis for the calc v2 to calc v3 fork.
 
 
@@ -17,7 +20,6 @@ The following are the changes from calc version 2.15.0.7 to 2.15.1.0:
 
     Fixed trailblank.  It was pruning . in its find search.
     Added check for ASCII tabs is non-Makefiles.
-
 
 The following are the changes from calc version 2.15.0.6 to 2.15.0.7:
 
