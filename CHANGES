@@ -1,4 +1,4 @@
-The following are the changes from calc version 2.15.1.2 to date:
+The following are the changes from calc version 2.15.1.2 to 2.15.1.2:
 
     Removed use of HAVE_MEMMOVE as well have_memmv.c.  Removed the
     building and including of have_memmv.h.  Removed the memmove()
