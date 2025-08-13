@@ -29,13 +29,17 @@
 
 
 #if defined(CALC_SRC)   /* if we are building from the calc source tree */
+# include "decl.h"
 # include "have_newstr.h"
 # include "have_string.h"
 # include "have_memmv.h"
+# include "have_const.h"
 #else
+# include <calc/decl.h>
 # include <calc/have_newstr.h>
 # include <calc/have_string.h>
 # include <calc/have_memmv.h>
+# include <calc/have_const.h>
 #endif
 
 #ifdef HAVE_STRING_H
