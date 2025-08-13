@@ -1,7 +1,7 @@
 /*
  * fposval - Determine information about the file position type
  *
- * Copyright (C) 1999,2021,2023  Landon Curt Noll
+ * Copyright (C) 1999,2021,2023,2025  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -71,7 +71,6 @@
 #include "have_fpos_pos.h"
 #include "alloc.h"
 #include "have_unused.h"
-#include "have_memmv.h"
 #include "zmath.h"
 
 

@@ -1,4 +1,16 @@
-The following are the changes from calc version 2.15.1.1 to date:
+The following are the changes from calc version 2.15.1.2 to date:
+
+    Removed use of HAVE_MEMMOVE as well have_memmv.c.  Removed the
+    building and including of have_memmv.h.  Removed the memmove()
+    function in blkcpy.c, used when HAVE_MEMMOVE was NOT defined.
+    The libc memmove(3) function as defined by <string.h> is now
+    required to compile calc because the replacement code in
+    blkcpy.c q was problematic, especially when regions overlap.
+    The HAVE_MEMMOVE make symbol was removed from Makefile.config.
+    Thanks to GitHub user @skeeto for reporting this problem.
+
+
+The following are the changes from calc version 2.15.1.1 to 2.15.1.1:
 
     Change Makefile.config to, if not using not HomeBrew, then try to
     detect macports and/or using /opt/local/{lib,include}.

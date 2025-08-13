@@ -2,7 +2,7 @@
 #
 # custom - makefile for calc custom routines
 #
-# Copyright (C) 1999-2006,2014,2017-2018,2021,2023  Landon Curt Noll
+# Copyright (C) 1999-2006,2014,2017-2018,2021,2023,2025  Landon Curt Noll
 #
 # Suggestion: Read the ../HOWTO.INSTALL file.
 #
@@ -728,7 +728,6 @@ c_argv.o: ../hash.h
 c_argv.o: ../have_ban_pragma.h
 c_argv.o: ../have_const.h
 c_argv.o: ../have_limits.h
-c_argv.o: ../have_memmv.h
 c_argv.o: ../have_newstr.h
 c_argv.o: ../have_stdbool.h
 c_argv.o: ../have_stdlib.h
@@ -761,7 +760,6 @@ c_devnull.o: ../hash.h
 c_devnull.o: ../have_ban_pragma.h
 c_devnull.o: ../have_const.h
 c_devnull.o: ../have_limits.h
-c_devnull.o: ../have_memmv.h
 c_devnull.o: ../have_newstr.h
 c_devnull.o: ../have_stdbool.h
 c_devnull.o: ../have_stdlib.h
@@ -795,7 +793,6 @@ c_help.o: ../hash.h
 c_help.o: ../have_ban_pragma.h
 c_help.o: ../have_const.h
 c_help.o: ../have_limits.h
-c_help.o: ../have_memmv.h
 c_help.o: ../have_newstr.h
 c_help.o: ../have_stdbool.h
 c_help.o: ../have_stdlib.h
@@ -829,7 +826,6 @@ c_pmodm127.o: ../hash.h
 c_pmodm127.o: ../have_ban_pragma.h
 c_pmodm127.o: ../have_const.h
 c_pmodm127.o: ../have_limits.h
-c_pmodm127.o: ../have_memmv.h
 c_pmodm127.o: ../have_newstr.h
 c_pmodm127.o: ../have_stdbool.h
 c_pmodm127.o: ../have_stdlib.h
@@ -862,7 +858,6 @@ c_pzasusb8.o: ../hash.h
 c_pzasusb8.o: ../have_ban_pragma.h
 c_pzasusb8.o: ../have_const.h
 c_pzasusb8.o: ../have_limits.h
-c_pzasusb8.o: ../have_memmv.h
 c_pzasusb8.o: ../have_newstr.h
 c_pzasusb8.o: ../have_stdbool.h
 c_pzasusb8.o: ../have_stdlib.h
@@ -896,7 +891,6 @@ c_register.o: ../hash.h
 c_register.o: ../have_ban_pragma.h
 c_register.o: ../have_const.h
 c_register.o: ../have_limits.h
-c_register.o: ../have_memmv.h
 c_register.o: ../have_newstr.h
 c_register.o: ../have_stdbool.h
 c_register.o: ../have_stdlib.h
@@ -932,7 +926,6 @@ c_sysinfo.o: ../hash.h
 c_sysinfo.o: ../have_ban_pragma.h
 c_sysinfo.o: ../have_const.h
 c_sysinfo.o: ../have_limits.h
-c_sysinfo.o: ../have_memmv.h
 c_sysinfo.o: ../have_newstr.h
 c_sysinfo.o: ../have_stdbool.h
 c_sysinfo.o: ../have_stdlib.h
@@ -970,7 +963,6 @@ custtbl.o: ../hash.h
 custtbl.o: ../have_ban_pragma.h
 custtbl.o: ../have_const.h
 custtbl.o: ../have_limits.h
-custtbl.o: ../have_memmv.h
 custtbl.o: ../have_newstr.h
 custtbl.o: ../have_stdbool.h
 custtbl.o: ../have_stdlib.h

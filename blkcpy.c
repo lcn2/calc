@@ -1,7 +1,7 @@
 /*
  * blkcpy - general values and related routines used by the calculator
  *
- * Copyright (C) 1999-2007,2021-2023  Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023,2025  Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  Landon Curt Noll
  *
@@ -924,62 +924,6 @@ copyostr2blk(char *str,long ssi,long num,BLOCK *dblk,long dsi,bool noreloc)
                 dblk->datalen = newlen;
         return 0;
 }
-#if !defined(HAVE_MEMMOVE)
-/*
- * memmove - simulate the memory move function that deals with overlap
- *
- * Copying between objects that overlap will take place correctly.
- *
- * given:
- *      s1      destination
- *      s2      source
- *      n       octet count
- *
- * returns:
- *      s1
- */
-void *
-memmove(void *s1, CONST void *s2, MEMMOVE_SIZE_T n)
-{
-        /*
-         * firewall
-         */
-        if (s1 == NULL || s2 == NULL) {
-                math_error("bogus memmove NULL ptr");
-                not_reached();
-        }
-        if (n <= 0) {
-                /* neg or 0 count does nothing */
-                return s1;
-        }
-        if ((char *)s1 == (char *)s2) {
-                /* copy to same location does nothing */
-                return s1;
-        }
-
-        /*
-         * determine if we need to deal with overlap copy
-         */
-        if ((char *)s1 > (char *)s2 && (char *)s1 < (char *)s2+n) {
-
-                /*
-                 * we have to copy backwards ... slowly
-                 */
-                while (n-- > 0) {
-                        ((char *)s1)[n] = ((char *)s2)[n];
-                }
-
-        } else {
-
-                /*
-                 * safe ... no overlap problems
-                 */
-                (void) memcpy(s1, s2, n);
-
-        }
-        return s1;
-}
-#endif
 
 
 /*
