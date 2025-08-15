@@ -3207,7 +3207,7 @@ prep:
 	${Q}echo '=-=-=-=-=-= end of ${MAKE} chk =-=-=-=-=-='
 	${Q}echo
 	@${Q}if ! ./chk_tree >/dev/null 2>&1; then \
-	    echo almost satifactory except for chk_tree; \
+	    echo almost satisfactory except for chk_tree; \
 	else \
 	    echo All is OK; \
 	fi
