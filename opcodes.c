@@ -959,8 +959,8 @@ o_deref(FUNC *UNUSED(fp))
                 return;
         }
         if (stack->v_type != V_ADDR) {
-                math_error("Dereferencing a non-variable");
-                not_reached();
+                *stack = error_value(E_INVALID_DEREF);
+                return;
         }
         vp = vp->v_addr;
         switch (vp->v_type) {

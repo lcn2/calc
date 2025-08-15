@@ -66,5 +66,18 @@
 #define MAJOR_PATCH     1       /* level 3: major software version level */
 #define MINOR_PATCH     2       /* level 4: minor software version level */
 
+/*
+ * Defining PERMIT_DANGEROUS_ADDRESS_ARITHMETIC is NOT supported!
+ *
+ * If someone were to be a foolish as to permit dangerous address arithmetic, then we
+ * negate the major version to further "disavow" such a calc compile.
+ */
+#if defined(PERMIT_DANGEROUS_ADDRESS_ARITHMETIC)
+#  undef TEMP_MAJOR_VER
+#  define TEMP_MAJOR_VER MAJOR_VER
+#  undef MAJOR_VER
+#  define MAJOR_VER (-TEMP_MAJOR_VER)
+#  undef TEMP_MAJOR_VER
+#endif
 
 #endif /* !INCLUDE_VERSION_H*/

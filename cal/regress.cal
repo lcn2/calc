@@ -7916,7 +7916,7 @@ print '180: define g7500e(a,b) = *a = b'
  */
 define test_ptr()
 {
-        local a, b, c, A, B, B1, B2, M, L, p, q, p0, q0;
+        local a, b, c, A, B, B1, B2, M, L, p, q, r, p0, q0;
 
         print '7500: Beginning test_ptr';
 
@@ -8042,22 +8042,21 @@ define test_ptr()
         p = &M[0], *p = 5;
         print                           '7587: p = &M[0], *p = 5;';
         vrfy(M[0] == 5,                 '7588: M[0] == 5');
-        *++p = 6;
-        print                           '7589: *++p = 6;';
-        vrfy(M[1] == 6,                 '7590: M[1] == 6');
-        q = p++;
-        print                           '7591: q = p++;';
+        q = &M[1], *q = 6;
+        print                           '7589: q = &M[1], *q = 6;';
+        vrfy(M[1] == 6,                 '7588: M[1] == 6');
+        vrfy(M[0] == 5,                 '7588: M[0] == 5');
         vrfy(q == &M[1],                '7592: q == &M[1]');
-        vrfy(p == &M[2],                '7593: p == &M[2]');
+        vrfy(p == &M[0],                '7593: p == &M[0]');
         quomod(17,5,*q,*p);
         print                           '7594: quomod(17,5,*p,*q);';
-        vrfy(M[1] == 3 && M[2] == 2,    '7595: M[1] == 3 && M[2] == 2');
+        vrfy(M[1] == 3 && M[0] == 2,    '7595: M[1] == 3 && M[0] == 2');
         swap(*p, *q);
         print                           '7596: swap(*p, *q);';
-        vrfy(M[1] == 2 && M[2] == 3,    '7597: M[1] == 2 && M[2] == 3');
+        vrfy(M[1] == 2 && M[0] == 3,    '7597: M[1] == 2 && M[0] == 3');
         A = *M = {7,8};
         print                           '7598: A = *M = {7,8};';
-        vrfy(M == (mat[4] = {5,2,3,4}), '7599: M == (mat[4] = {5,2,3,4})');
+        vrfy(M == (mat[4] = {3,2,3,4}), '7599: M == (mat[4] = {3,2,3,4})');
         vrfy(A == (mat[4] = {7,8,3,4}), '7600: A == (mat[4] = {7,8,3,4})');
 
         /* Values which point to themselves */
@@ -8069,46 +8068,64 @@ define test_ptr()
         print                           '7603: A = &B, B = &A;';
         vrfy(**A == A && ***A == B,     '7604: **A == A && ***A == B');
 
-        /* Testing functions that return pointers */
+        /* verify arithmetic value address operation restrictions */
 
-        M[3] = 7;
-        print                           '7605: M[3] = 7;';
-        vrfy(*g7500b(&M[1], 2) == 7,    '7606: *g7500b(&M[1], 2) == 7');
-
-        *g7500b(&M[1], 2) = 8;
-        print                           '7607: *g7500b(&M[1], 2) = 8;';
-        vrfy(M[3] == 8,                 '7608: M[3] == 8');
-        M[3] = list(9,10);
-        print                           '7609: M[3] = list(9,10);';
-        vrfy((*g7500b(&M[1], 2))[[1]] == 10,
-                                '7610: (*g7500b(&M[1], 2))[[1]] == 10');
+        M = mat[10] = {0,1,2,3,4,5,6,7,8,9};
+        print                           '7605: M = mat[10] = {0,1,2,3,4,5,6,7,8,9};';
+        /* NOTE: The next set of tests will trigger 10 errors by design */
+        ecnt += 10;
+        print                           '7606: ecnt += 10';
+        p = &M[3];
+        print                           '7607: p = &M[3]';
+        ++p;
+        print                           '7608: ++p';
+        vrfy(p == error("E_INVALID_ADDR_OP"),
+                                    '7609: p == error("E_INVALID_ADDR_OP")');
+        p = &M[4];
+        print                           '7610: p = &M[4]';
+        p++;
+        print                           '7611: p++';
+        vrfy(p == error("E_INVALID_ADDR_OP"),
+                                    '7612: p == error("E_INVALID_ADDR_OP")');
+        p = &M[5];
+        print                           '7613: p = &M[5]';
+        q = &M[8];
+        print                           '7614: q = &M[8]';
+        vrfy(q+5 == error("E_INVALID_ADDR_OP"),
+                                    '7615: q+5 == error("E_INVALID_ADDR_OP")');
+        vrfy(q-7 == error("E_INVALID_ADDR_OP"),
+                                    '7616: q-7 == error("E_INVALID_ADDR_OP")');
+        vrfy(p+q == error("E_INVALID_ADDR_OP"),
+                                    '7617: p+q == error("E_INVALID_ADDR_OP")');
+        r = p-q;
+        print                           '7618: r = p-q;';
 
         /* Testing number and string pointers */
 
         a = 24, b = 4 * 6, c = 4!;
-        print                           '7611: a = 24, b = 4 * 6, c= 4!;';
-        vrfy(isptr(&*a) == 4,           '7612: isptr(&*a) == 4');
-        vrfy(&*a == &24,                '7613: &*a == &24');
-        vrfy(&*a == &*b,                '7614: &*a == &*b');
-        vrfy(&*a != &*c,                '7615: &*a != &*c');
+        print                           '7619: a = 24, b = 4 * 6, c= 4!;';
+        vrfy(isptr(&*a) == 4,           '7620: isptr(&*a) == 4');
+        vrfy(&*a == &24,                '7621: &*a == &24');
+        vrfy(&*a == &*b,                '7622: &*a == &*b');
+        vrfy(&*a != &*c,                '7623: &*a != &*c');
 
         a = b = "abc", c = strcat("a", "bc");
-        print                   '7616: a = b = "abc", c = strcat("a", "bc");';
-        vrfy(isptr(&*a) == 3,           '7617: isptr(&*a) == 3');
-        vrfy(&*a == &"abc",             '7618: &*a == &"abc"');
-        vrfy(&*a == &*b,                '7619: &*a == &*b');
-        vrfy(&*a != &*c,                '7620: &*a != &*c');
+        print                   '7624: a = b = "abc", c = strcat("a", "bc");';
+        vrfy(isptr(&*a) == 3,           '7625: isptr(&*a) == 3');
+        vrfy(&*a == &"abc",             '7626: &*a == &"abc"');
+        vrfy(&*a == &*b,                '7627: &*a == &*b');
+        vrfy(&*a != &*c,                '7628: &*a != &*c');
         a = c;
-        print                           '7621: a = c;';
-        vrfy(&*a == &*c,                '7622: &*a == &*c');
+        print                           '7629: a = c;';
+        vrfy(&*a == &*c,                '7630: &*a == &*c');
 
         /* Verifying null-ness of freed numbers */
 
         c = 4!, p = &*c, free(c);
-        print                           '7623: c = 4!, p = &*c, free(c)';
-        vrfy(isnull(*p),                '7624: isnull(*p)');
+        print                           '7631: c = 4!, p = &*c, free(c)';
+        vrfy(isnull(*p),                '7632: isnull(*p)');
 
-        print '7625: Ending test_ptr';
+        print '7633: Ending test_ptr';
 }
 print '181: parsed test_ptr()';
 
@@ -9165,8 +9182,8 @@ read -once "test8900.special";
 print '8902: about to run test8900(1,,8903)';
 testnum = test8900(1,,8903);
 print "8941: ecnt ==", ecnt;
-print '8942: ecnt = 214;'
-ecnt = 214;
+print '8942: ecnt = 224;'
+ecnt = 224;
 
 
 /*
