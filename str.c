@@ -1,7 +1,7 @@
 /*
  * str - string list routines
  *
- * Copyright (C) 1999-2007,2021-2023  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023,2025  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -42,7 +42,7 @@
 #include "banned.h"     /* include after system header <> includes */
 
 
-#define STR_TABLECHUNK  (1<<10) /* how often to reallocate string table */
+#define STR_TABLECHUNK  (1<<16) /* how often to reallocate string literal table */
 #define STR_CHUNK       (1<<16) /* size of string storage allocation */
 #define OCTET_VALUES    256     /* number of different values in a OCTET */
 #define STR_UNIQUE      (1<<7)  /* size of string to allocate separately */
@@ -97,6 +97,10 @@ initstr(STRINGHEAD *hp)
  * given:
  *      hp              header of string storage
  *      str             string to be added
+ *
+ * returns:
+ *      != NULL ==> pointer to newly added string
+ *      NULL    ==> unable to add string
  */
 char *
 addstr(STRINGHEAD *hp, char *str)
@@ -113,6 +117,10 @@ addstr(STRINGHEAD *hp, char *str)
                 /* alloc + 1 guard paranoia */
                 newsize = len + STR_CHUNK + hp->h_used + hp->h_avail + 1;
                 /* alloc + 1 guard paranoia */
+                /*
+                 * XXX - doing a realloc can cause problems if the larger list has to be
+                 *       relocated due the recalloc() call and stuff point to old location
+                 */
                 list = (char *)realloc(hp->h_list, newsize + 1);
                 if (list == NULL)
                         return NULL;
@@ -131,42 +139,17 @@ addstr(STRINGHEAD *hp, char *str)
 
 
 /*
- * Return a null-terminated string which consists of a single character.
- * The table is initialized on the first call.
- */
-char *
-charstr(int ch)
-{
-        char *cp;
-        int i;
-
-        if (chartable == NULL) {
-                /* alloc + 1 guard paranoia */
-                cp = (char *)malloc((OCTET_VALUES + 1)*2);
-                if (cp == NULL) {
-                        math_error("Cannot allocate character table");
-                        not_reached();
-                }
-                for (i = 0; i < OCTET_VALUES; i++) {
-                        *cp++ = (char)i;
-                        *cp++ = '\0';
-                }
-                chartable = cp - (OCTET_VALUES*2);
-                *cp++ = '\0';   /* guard paranoia */
-                *cp++ = '\0';   /* guard paranoia */
-        }
-        return &chartable[(ch & 0xff) * 2];
-}
-
-
-/*
  * Find a string with the specified name and return its number in the
  * string list.  The first string is numbered zero.  Minus one is returned
  * if the string is not found.
  *
  * given:
  *      hp              header of string storage
- *      str             string to be added
+ *      str             string to be searched for
+ *
+ * returns:
+ *      >= 0 ==> index of string
+ *      -1   ==> unable to find string
  */
 int
 findstr(STRINGHEAD *hp, char *str)
@@ -200,6 +183,10 @@ findstr(STRINGHEAD *hp, char *str)
  * given:
  *      hp              header of string storage
  *      n               string index
+ *
+ * returns:
+ *      non-empty string ==> string at index n
+ *      ""               ==> no strings or string at index n
  */
 char *
 namestr(STRINGHEAD *hp, long n)
@@ -219,36 +206,31 @@ namestr(STRINGHEAD *hp, long n)
 
 
 /*
- * Useful routine to return the index of one string within another one
- * which has the format:  "str1\000str2\000str3\000...strn\0\0".  Index starts
- * at one for the first string.  Returns zero if the string being checked
- * is not contained in the formatted string.
- *
- * Be sure to use \000 instead of \0.  ANSI-C compilers interpret "foo\0foo..."
- * as "foo\017oo...".
- *
- * given:
- *      format          string formatted into substrings
- *      test            string to be found in formatted string
+ * Return a null-terminated string which consists of a single character.
+ * The table is initialized on the first call.
  */
-long
-stringindex(char *format, char *test)
+S_FUNC char *
+charstr(int ch)
 {
-        long index;             /* found index */
-        size_t len;             /* length of current piece of string */
-        size_t testlen;         /* length of test string */
+        char *cp;
+        int i;
 
-        testlen = strlen(test);
-        index = 1;
-        while (*format) {
-                len = strlen(format);
-                if ((len == testlen) && (*format == *test) &&
-                        (strcmp(format, test) == 0))
-                                return index;
-                format += (len + 1);
-                index++;
+        if (chartable == NULL) {
+                /* alloc + 1 guard paranoia */
+                cp = (char *)malloc((OCTET_VALUES + 1)*2);
+                if (cp == NULL) {
+                        math_error("Cannot allocate character table");
+                        not_reached();
+                }
+                for (i = 0; i < OCTET_VALUES; i++) {
+                        *cp++ = (char)i;
+                        *cp++ = '\0';
+                }
+                chartable = cp - (OCTET_VALUES*2);
+                *cp++ = '\0';   /* guard paranoia */
+                *cp++ = '\0';   /* guard paranoia */
         }
-        return 0;
+        return &chartable[(ch & 0xff) * 2];
 }
 
 

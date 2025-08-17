@@ -1,7 +1,7 @@
 /*
  * str - string list routines
  *
- * Copyright (C) 1999-2007,2014  David I. Bell
+ * Copyright (C) 1999-2007,2014,2025  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -59,9 +59,7 @@ E_FUNC void initstr(STRINGHEAD *hp);
 E_FUNC char *addstr(STRINGHEAD *hp, char *str);
 E_FUNC char *namestr(STRINGHEAD *hp, long n);
 E_FUNC int findstr(STRINGHEAD *hp, char *str);
-E_FUNC char *charstr(int ch);
 E_FUNC char *addliteral(char *str);
-E_FUNC long stringindex(char *str1, char *str2);
 E_FUNC STRING *stralloc(void);
 E_FUNC long addstring(char *str, size_t len);
 E_FUNC STRING *charstring(int ch);

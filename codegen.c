@@ -1,7 +1,7 @@
 /*
  * codegen - module to generate opcodes from the input tokens
  *
- * Copyright (C) 1999-2007,2017,2021-2023  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2017,2021-2023,2025  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -2420,6 +2420,40 @@ getfilename(char *name, size_t namelen, bool *once)
                                 continue;
                 }
                 break;
+        }
+        return 0;
+}
+
+
+/*
+ * Useful routine to return the index of one string within another one
+ * which has the format:  "str1\000str2\000str3\000...strn\0\0".  Index starts
+ * at one for the first string.  Returns zero if the string being checked
+ * is not contained in the formatted string.
+ *
+ * Be sure to use \000 instead of \0.  ANSI-C compilers interpret "foo\0foo..."
+ * as "foo\017oo...".
+ *
+ * given:
+ *      format          string formatted into substrings
+ *      test            string to be found in formatted string
+ */
+S_FUNC long
+stringindex(char *format, char *test)
+{
+        long index;             /* found index */
+        size_t len;             /* length of current piece of string */
+        size_t testlen;         /* length of test string */
+
+        testlen = strlen(test);
+        index = 1;
+        while (*format) {
+                len = strlen(format);
+                if ((len == testlen) && (*format == *test) &&
+                        (strcmp(format, test) == 0))
+                                return index;
+                format += (len + 1);
+                index++;
         }
         return 0;
 }
