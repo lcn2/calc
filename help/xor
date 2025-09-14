@@ -7,7 +7,7 @@ SYNOPSIS
 TYPES
     x1, x2, ... integer
 
-    return	integer
+    return      integer
 
 DESCRIPTION
     Compute the bitwise exclusive or of a set of integers.
@@ -16,14 +16,14 @@ DESCRIPTION
     xor(x1,x2) returns the bitwise exclusive or of x1 and x2.
     For each bit pair:
 
-	0 0 xor returns 0
-	0 1 xor returns 1
-	1 0 xor returns 1
-	1 1 xor returns 0
+        0 0 xor returns 0
+        0 1 xor returns 1
+        1 0 xor returns 1
+        1 1 xor returns 0
 
     For more than two arguments, xor(x1,x2,x3, ..., xn) returns:
 
-	xor(...xor(xor(x1,x2), x3), ... xn)
+        xor(...xor(xor(x1,x2), x3), ... xn)
 
 EXAMPLE
     ; print xor(2), xor(5, 3, -7, 2, 9)
@@ -46,7 +46,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -54,8 +54,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/10/05 04:52:27
-## File existed as early as:	1995
+## Under source code control:   1995/10/05 04:52:27
+## File existed as early as:    1995
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

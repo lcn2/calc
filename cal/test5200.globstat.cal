@@ -11,7 +11,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -19,25 +19,25 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1997/02/07 02:48:10
- * File existed as early as:	1997
+ * Under source code control:   1997/02/07 02:48:10
+ * File existed as early as:    1997
  *
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
-defaultverbose = 1;	/* default verbose value */
+defaultverbose = 1;     /* default verbose value */
 
 /*
  * test the fix of a global/static bug
  *
  * Given the following:
  *
- *	global a = 10;
- *	static a = 20;
- *	define f(x) = a + x;
- *	define g(x) {global a = 30; return a + x;}
- *	define h(x) = a + x;
+ *      global a = 10;
+ *      static a = 20;
+ *      define f(x) = a + x;
+ *      define g(x) {global a = 30; return a + x;}
+ *      define h(x) = a + x;
  *
  * Older versions of
  */

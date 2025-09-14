@@ -6,7 +6,7 @@
  * This file is not covered under version 2.1 of the GNU LGPL.
  * This file is covered under "The unlicense":
  *
- *	https://unlicense.org
+ *      https://unlicense.org
  *
  * In particular:
  *
@@ -35,8 +35,8 @@
  *
  * For more information, please refer to <http://unlicense.org/>
  *
- * Under source code control:	2006/03/08 05:54:09
- * File existed as early as:	2006
+ * Under source code control:   2006/03/08 05:54:09
+ * File existed as early as:    2006
  */
 
 up = CUU ="\e[A";

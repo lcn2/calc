@@ -6,20 +6,20 @@ SYNOPSIS
     copy(src, dest [, [ssi [, num [, dsi]]])
 
 TYPES
-    src		block, file, string, matrix, or list
-    dest	block, file, matrix or list - compatible with src
+    src         block, file, string, matrix, or list
+    dest        block, file, matrix or list - compatible with src
 
-    ssi		nonnegative integer, defaults to zero
-    num		nonnegative integer, defaults to maximum possible
-    dsi		nonnegative integer, defaults to datalen for a block, filepos
-			for a file, zero for other structures
+    ssi         nonnegative integer, defaults to zero
+    num         nonnegative integer, defaults to maximum possible
+    dsi         nonnegative integer, defaults to datalen for a block, filepos
+                        for a file, zero for other structures
 
-    return	null if successful, error value otherwise
+    return      null if successful, error value otherwise
 
 DESCRIPTION
     A call to:
 
-	blkcpy(dst, src, num, dsi, ssi)
+        blkcpy(dst, src, num, dsi, ssi)
 
     attempts to copy 'num' consecutive items (octets or values) starting
     from the source item 'src' with index 'ssi'.  By default, 'num'
@@ -27,7 +27,7 @@ DESCRIPTION
 
     A call to:
 
-	copy(src, dst, ssi, num, dsi)
+        copy(src, dst, ssi, num, dsi)
 
     does the same thing, but with a different arg order.
 
@@ -40,30 +40,30 @@ DESCRIPTION
 
     The following pairs of source-type, destination-type are permitted:
 
-	block to
-		 int
-		 block
-		 matrix
-		 file
+        block to
+                 int
+                 block
+                 matrix
+                 file
 
-	matrix to
-		 block
-		 matrix
-		 list
+        matrix to
+                 block
+                 matrix
+                 list
 
-	string to
-		 block
-		 file
+        string to
+                 block
+                 file
 
-	list to
-		 list
-		 matrix
+        list to
+                 list
+                 matrix
 
-	file to
-		 block
+        file to
+                 block
 
-	int to
-		 block
+        int to
+                 block
 
     In the above table, int refers to integer values.  However if a
     rational value is supplied, only the numerator is copied.
@@ -79,18 +79,18 @@ DESCRIPTION
     sufficient memory allocated for the copying.  For example, to copy
     a matrix M of size 100 to a newly created list, one may use:
 
-	; L = makelist(100);
-	; copy(M, L);
+        ; L = makelist(100);
+        ; copy(M, L);
    or:
-	; L = makelist(100);
-	; blkcpy(L, M);
+        ; L = makelist(100);
+        ; blkcpy(L, M);
 
     For copying from a block B (named or unnamed), the total number of octets
     available for copying is taken to the datalen for that block,
     so that num can be at most size(B) - ssi.
 
     For copying to a block B (named or unnamed), reallocation will be
-    required if dsi + num > sizeof(B).	(This will not be permitted if
+    required if dsi + num > sizeof(B).  (This will not be permitted if
     protect(B) has bit 4 set.)
 
     For copying from a file stream fs, num can be at most size(fs) - ssi.
@@ -111,74 +111,74 @@ EXAMPLE
     ; B = blk()
     ; blkcpy(B,A)
     ; B
-	chunksize = 256, maxsize = 256, datalen = 4
-	01020304
+        chunksize = 256, maxsize = 256, datalen = 4
+        01020304
     ; blkcpy(B,A)
     ; B
-	chunksize = 256, maxsize = 256, datalen = 8
-	0102030401020304
+        chunksize = 256, maxsize = 256, datalen = 8
+        0102030401020304
     ; blkcpy(B, A, 2, 10)
     ; B
-	chunksize = 256, maxsize = 256, datalen = 12
-	010203040102030400000102
+        chunksize = 256, maxsize = 256, datalen = 12
+        010203040102030400000102
     ; blkcpy(B,32767)
     ; B
-	chunksize = 256, maxsize = 256, datalen = 16
-	010203040102030400000102ff7f0000
+        chunksize = 256, maxsize = 256, datalen = 16
+        010203040102030400000102ff7f0000
     ; mat M[2,2]
     ; blkcpy(M, A)
     ; M
-	mat [2,2] (4 elements, 4 nonzero):
-	  [0,0] = 1
-	  [0,1] = 2
-	  [1,0] = 3
-	  [1,1] = 4
+        mat [2,2] (4 elements, 4 nonzero):
+          [0,0] = 1
+          [0,1] = 2
+          [1,0] = 3
+          [1,1] = 4
     ; blkcpy(M, A, 2, 2)
     ; M
-	mat [2,2] (4 elements, 4 nonzero):
-	  [0,0] = 1
-	  [0,1] = 2
-	  [1,0] = 1
-	  [1,1] = 2
+        mat [2,2] (4 elements, 4 nonzero):
+          [0,0] = 1
+          [0,1] = 2
+          [1,0] = 1
+          [1,1] = 2
 
     ; A = blk() = {1,2,3,4}
     ; B = blk()
     ; copy(A,B)
     ; B
-	chunksize = 256, maxsize = 256, datalen = 4
-	01020304
+        chunksize = 256, maxsize = 256, datalen = 4
+        01020304
     ; copy(A,B)
     ; B
-	chunksize = 256, maxsize = 256, datalen = 8
-	0102030401020304
+        chunksize = 256, maxsize = 256, datalen = 8
+        0102030401020304
     ; copy(A,B,1,2)
     ; B
-	chunksize = 256, maxsize = 256, datalen = 10
-	01020304010203040203
+        chunksize = 256, maxsize = 256, datalen = 10
+        01020304010203040203
     ; mat M[2,2]
     ; copy(A,M)
     ; M
-	mat [2,2] (4 elements, 4 nonzero):
-	  [0,0] = 1
-	  [0,1] = 2
-	  [1,0] = 3
-	  [1,1] = 4
+        mat [2,2] (4 elements, 4 nonzero):
+          [0,0] = 1
+          [0,1] = 2
+          [1,0] = 3
+          [1,1] = 4
 
     ; copy(A,M,2)
     ; M
-	mat [2,2] (4 elements, 4 nonzero):
-	  [0,0] = 3
-	  [0,1] = 4
-	  [1,0] = 3
-	  [1,1] = 4
+        mat [2,2] (4 elements, 4 nonzero):
+          [0,0] = 3
+          [0,1] = 4
+          [1,0] = 3
+          [1,1] = 4
 
     ; copy(A,M,0,2,2)
     ; M
-	mat [2,2] (4 elements, 4 nonzero):
-	  [0,0] = 3
-	  [0,1] = 4
-	  [1,0] = 1
-	  [1,1] = 2
+        mat [2,2] (4 elements, 4 nonzero):
+          [0,0] = 3
+          [0,1] = 4
+          [1,0] = 1
+          [1,1] = 2
 
 LIMITS
     none
@@ -197,7 +197,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -205,8 +205,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1997/04/05 14:08:50
-## File existed as early as:	1997
+## Under source code control:   1997/04/05 14:08:50
+## File existed as early as:    1997
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

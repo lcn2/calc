@@ -5,21 +5,21 @@ SYNOPSIS
     dp(x, y)
 
 TYPES
-    x, y	1-dimensional matrices of the same size
+    x, y        1-dimensional matrices of the same size
 
-    return	depends on the nature of the elements of x and y
+    return      depends on the nature of the elements of x and y
 
 DESCRIPTION
     Compute the dot product of two 1-dimensional matrices.
 
     Let:
 
-	x = {x0, x1, ... xn}
-	y = {y0, y1, ... yn}
+        x = {x0, x1, ... xn}
+        y = {y0, y1, ... yn}
 
     Then dp(x,y) returns the result of the calculation:
 
-	x0*y0 + x1*y1 + ... + xn*yn
+        x0*y0 + x1*y1 + ... + xn*yn
 
 EXAMPLE
     ; mat x[3] = {2,3,4}
@@ -44,7 +44,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -52,8 +52,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/10/05 04:52:26
-## File existed as early as:	1995
+## Under source code control:   1995/10/05 04:52:26
+## File existed as early as:    1995
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

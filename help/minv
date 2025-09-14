@@ -5,10 +5,10 @@ SYNOPSIS
     minv(x, md)
 
 TYPES
-    x		integer
-    md		integer
+    x           integer
+    md          integer
 
-    return	integer
+    return      integer
 
 DESCRIPTION
     If x and md are not relatively prime, zero is returned.
@@ -17,16 +17,16 @@ DESCRIPTION
     residues modulo md are determined as follows by md and bits 0, 2
     and 4 of config("mod") (other bits are ignored).
 
-		config("mod")	  md > 0	      md < 0
+                config("mod")     md > 0              md < 0
 
-		    0		0 < v < md	   md < v < 0
-		    1	      -md < v < 0	    0 < v < -md
-		    4		0 < v < md	    0 < v < -md
-		    5	      -md < v < 0	   md < v < 0
-		   16	    -md/2 < v <= md/2	md/2 <= v < -md/2
-		   17	   -md/2 <= v < md/2	 md/2 < v <= -md/2
-		   20	    -md/2 < v <= md/2	 md/2 < v <= -md/2
-		   21	   -md/2 <= v < md/2	md/2 <= v < -md/2
+                    0           0 < v < md         md < v < 0
+                    1         -md < v < 0           0 < v < -md
+                    4           0 < v < md          0 < v < -md
+                    5         -md < v < 0          md < v < 0
+                   16       -md/2 < v <= md/2   md/2 <= v < -md/2
+                   17      -md/2 <= v < md/2     md/2 < v <= -md/2
+                   20       -md/2 < v <= md/2    md/2 < v <= -md/2
+                   21      -md/2 <= v < md/2    md/2 <= v < -md/2
 
 EXAMPLE
     ; c = config("mod", 0)
@@ -54,7 +54,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -62,8 +62,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/11/09 03:27:51
-## File existed as early as:	1995
+## Under source code control:   1995/11/09 03:27:51
+## File existed as early as:    1995
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

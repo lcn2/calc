@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,11 +17,11 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1997/03/09 05:25:41
- * File existed as early as:	1997
+ * Under source code control:   1997/03/09 05:25:41
+ * File existed as early as:    1997
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -30,9 +30,9 @@
  * so we declare a global variable whose value is based on if CUSTOM is defined.
  */
 #if defined(CUSTOM)
-int c_help_allowed = 1;		/* CUSTOM defined */
+int c_help_allowed = 1;         /* CUSTOM defined */
 #else /* CUSTOM */
-int c_help_allowed = 0;		/* CUSTOM undefined */
+int c_help_allowed = 0;         /* CUSTOM undefined */
 #endif /* CUSTOM */
 
 
@@ -51,7 +51,7 @@ int c_help_allowed = 0;		/* CUSTOM undefined */
 
 
 #include "../errtbl.h"
-#include "../banned.h"	/* include after system header <> includes */
+#include "../banned.h"  /* include after system header <> includes */
 
 
 /*
@@ -69,32 +69,32 @@ int c_help_allowed = 0;		/* CUSTOM undefined */
  * and HELPDIR file and work directly with the custom help file.
  *
  * given:
- *	vals[0]	   name of the custom help file to directly access
+ *      vals[0]    name of the custom help file to directly access
  */
 /*ARGSUSED*/
 VALUE
 c_help(char *UNUSED(name), int UNUSED(count), VALUE **vals)
 {
-	VALUE result;		/* what we will return */
+        VALUE result;           /* what we will return */
 
-	/*
-	 * parse args
-	 */
-	if (vals[0]->v_type != V_STR) {
-		math_error("custom help arg 1 must be a string");
-		not_reached();
-	}
+        /*
+         * parse args
+         */
+        if (vals[0]->v_type != V_STR) {
+                math_error("custom help arg 1 must be a string");
+                not_reached();
+        }
 
-	/*
-	 * give the help
-	 */
-	customhelp((char *)vals[0]->v_str->s_str);
+        /*
+         * give the help
+         */
+        customhelp((char *)vals[0]->v_str->s_str);
 
-	/*
-	 * return NULL
-	 */
-	result.v_type = V_NULL;
-	return result;
+        /*
+         * return NULL
+         */
+        result.v_type = V_NULL;
+        return result;
 }
 
 #endif /* CUSTOM */

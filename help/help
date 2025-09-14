@@ -1,63 +1,63 @@
 For more information while running calc, type  help  followed by one of the
 following topics:
 
-    topic		description
-    -----		-----------
-    intro		introduction to calc
-    overview		overview of calc
-    calc		calc man page, how to invoke the calc command
+    topic               description
+    -----               -----------
+    intro               introduction to calc
+    overview            overview of calc
+    calc                calc man page, how to invoke the calc command
 
-    assoc		using associations
-    builtin		builtin functions
-    command		top level commands
-    config		configuration parameters
-    custom		information about the custom builtin interface
-    define		how to define functions
-    environment		how environment variables affect calc
-    errorcodes		calc generated error codes
-    expression		expression sequences
-    file		using files
-    history		command history
-    interrupt		how interrupts are handled
-    list		using lists
-    mat			using matrices
-    obj			user defined data types
-    operator		math, relational, logic and variable access operators
-    resource		standard calc resource files
-    script		using calc shell scripts
-    statement		flow control and declaration statements
-    types		builtin data types
-    unexpected		unexpected syntax/usage surprises for C programmers
-    variable		variables and variable declarations
+    assoc               using associations
+    builtin             builtin functions
+    command             top level commands
+    config              configuration parameters
+    custom              information about the custom builtin interface
+    define              how to define functions
+    environment         how environment variables affect calc
+    errorcodes          calc generated error codes
+    expression          expression sequences
+    file                using files
+    history             command history
+    interrupt           how interrupts are handled
+    list                using lists
+    mat                 using matrices
+    obj                 user defined data types
+    operator            math, relational, logic and variable access operators
+    resource            standard calc resource files
+    script              using calc shell scripts
+    statement           flow control and declaration statements
+    types               builtin data types
+    unexpected          unexpected syntax/usage surprises for C programmers
+    variable            variables and variable declarations
 
-    bindings		input & history character bindings
-    custom_cal		information about custom calc resource files
-    libcalc		using the arbitrary precision routines in a C program
-    new_custom		information about how to add new custom functions
-    cscript		info on the calc shell scripts supplied with calc
+    bindings            input & history character bindings
+    custom_cal          information about custom calc resource files
+    libcalc             using the arbitrary precision routines in a C program
+    new_custom          information about how to add new custom functions
+    cscript             info on the calc shell scripts supplied with calc
 
-    archive		where to get the latest versions of calc
-    bugs		known bugs and mis-features
-    changes		recent changes to calc
-    contrib		how to contribute scripts, code or custom functions
-    todo		list of priority action items for calc
-    wishlist		wish list of future enhancements of calc
+    archive             where to get the latest versions of calc
+    bugs                known bugs and mis-features
+    changes             recent changes to calc
+    contrib             how to contribute scripts, code or custom functions
+    todo                list of priority action items for calc
+    wishlist            wish list of future enhancements of calc
 
-    credit		who wrote calc and who helped
-    copyright		calc copyright and the GNU LGPL
-    copying		details on the Calc GNU Lesser General Public License
-    copying-lgpl	calc GNU Lesser General Public License text
-    questions		how to ask simple general question about calc
-    release		on calc versions and releases
+    credit              who wrote calc and who helped
+    copyright           calc copyright and the GNU LGPL
+    copying             details on the Calc GNU Lesser General Public License
+    copying-lgpl        calc GNU Lesser General Public License text
+    questions           how to ask simple general question about calc
+    release             on calc versions and releases
 
-    help		this file
-    full		all of the above (in the above order)
+    help                this file
+    full                all of the above (in the above order)
 
 For example:
 
     help usage
 
-will print the calc command usage information.	One can obtain calc help
+will print the calc command usage information.  One can obtain calc help
 without invoking any startup code by running calc as follows:
 
     calc -q help topic
@@ -94,7 +94,7 @@ for details of the -m mode.
 
 The help command is able to display installed help files for custom builtin
 functions.  However, if the custom name is the same as a standard help
-file, the standard help file will be displayed instead.	 The custom help
+file, the standard help file will be displayed instead.  The custom help
 builtin should be used to directly access the custom help file.
 
 For example, the custom help builtin has the same name as the standard
@@ -133,7 +133,7 @@ calc help files.
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -141,8 +141,8 @@ calc help files.
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1991/07/21 04:37:20
-## File existed as early as:	1991
+## Under source code control:   1991/07/21 04:37:20
+## File existed as early as:    1991
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

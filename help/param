@@ -5,9 +5,9 @@ SYNOPSIS
     param([n])
 
 TYPES
-    n		nonnegative integer
+    n           nonnegative integer
 
-    return	any
+    return      any
 
 DESCRIPTION
     The function param(n) can be used only within the body of the
@@ -15,27 +15,27 @@ DESCRIPTION
 
     If that function is f()
 
-	[[ which may have been defined with named arguments as in f(x,y,z))
+        [[ which may have been defined with named arguments as in f(x,y,z))
 
     and either the number of arguments or the value of an argument
     in an anticipated call to f() is to be used, the number of
     arguments in that call will then be returned by:
 
-	param(0)
+        param(0)
 
     and the value of the n-th argument by:
 
-	param(n)
+        param(n)
 
     Note that unlike the argv() builtin, param(1) is the 1st parameter
     and param(param(0) is the last.
 
 EXAMPLE
     ; define f() {
-    ;;	local n, v = 0;
-    ;;	for (n = 1; n <= param(0); n++)
-    ;;		v += param(n)^2;
-    ;;	return v;
+    ;;  local n, v = 0;
+    ;;  for (n = 1; n <= param(0); n++)
+    ;;          v += param(n)^2;
+    ;;  return v;
     ;; }
 
     ; print f(), f(1), f(1,2), f(1,2,3)
@@ -58,7 +58,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -66,8 +66,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1996/03/12 23:10:01
-## File existed as early as:	1996
+## Under source code control:   1996/03/12 23:10:01
+## File existed as early as:    1996
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

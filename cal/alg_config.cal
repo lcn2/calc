@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,25 +17,25 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	2006/06/07 14:10:11
- * File existed as early as:	2006
+ * Under source code control:   2006/06/07 14:10:11
+ * File existed as early as:    2006
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-static test_time;	/* try for this many seconds in loop test */
+static test_time;       /* try for this many seconds in loop test */
 
 
 /*
  * close_to_one - set to 1 if the ratio is close enough to 1
  *
  * given:
- *	ratio	the ratio of time between two algorithms
+ *      ratio   the ratio of time between two algorithms
  *
  * returns:
- *	1	When ratio is near 1.0
- *	0	otherwise
+ *      1       When ratio is near 1.0
+ *      0       otherwise
  *
  * We consider the range [0.995, 1.005] to be close enough to 1 to be call unity
  * because of the precision of the CPU timing.
@@ -44,12 +44,12 @@ define close_to_one(ratio)
 {
     /* firewall */
     if (!isreal(ratio)) {
-	quit "close: 1st arg: must be a real number";
+        quit "close: 1st arg: must be a real number";
     }
 
     /* check if the ratio is far from unity */
     if ((ratio < 0.995) || (ratio > 1.005)) {
-	return 0;
+        return 0;
     }
 
     /* we are close to unity */
@@ -61,96 +61,96 @@ define close_to_one(ratio)
  * mul_loop - measure the CPU time to perform a set of multiply loops
  *
  * given:
- *	repeat	number of multiply loops to perform
- *	x	array of 5 values, each the same length in BASEB-bit words
+ *      repeat  number of multiply loops to perform
+ *      x       array of 5 values, each the same length in BASEB-bit words
  *
- *		NOTE: When their lengths are 1 BASEB-bit word, then a
- *		      dummy loop of simple constants are used.  Thus the
- *		      length == 1 is an approximation of loop overhead.
+ *              NOTE: When their lengths are 1 BASEB-bit word, then a
+ *                    dummy loop of simple constants are used.  Thus the
+ *                    length == 1 is an approximation of loop overhead.
  *
  * returns:
- *	approximate runtime to perform repeat the multiply loops
+ *      approximate runtime to perform repeat the multiply loops
  *
  * NOTE: This is an internal support function that is normally
- *	 not called directly from the command line.  Call the
- *	 function best_mul2() instead.
+ *       not called directly from the command line.  Call the
+ *       function best_mul2() instead.
  */
 define mul_loop(repeat, x)
 {
-    local start;	/* start of execution */
-    local end;		/* end of execution */
-    local answer;	/* multiplicand */
-    local len;		/* length of each element */
-    local baseb_bytes;	/* bytes in a BASEB-bit word */
+    local start;        /* start of execution */
+    local end;          /* end of execution */
+    local answer;       /* multiplicand */
+    local len;          /* length of each element */
+    local baseb_bytes;  /* bytes in a BASEB-bit word */
     local i;
 
     /* firewall */
     if (!isint(repeat) || repeat < 0) {
-	quit "mul_loop: 1st arg: repeat must be an integer > 0";
+        quit "mul_loop: 1st arg: repeat must be an integer > 0";
     }
     if (size(*x) != 5) {
-	quit "mul_loop: 2nd arg matrix does not have 5 elements";
+        quit "mul_loop: 2nd arg matrix does not have 5 elements";
     }
     if (matdim(*x) != 1) {
-	quit "mul_loop: 2nd arg matrix is not 1 dimensional";
+        quit "mul_loop: 2nd arg matrix is not 1 dimensional";
     }
     if (matmin(*x, 1) != 0) {
-	quit "mul_loop: 2nd arg matrix index range does not start with 0";
+        quit "mul_loop: 2nd arg matrix index range does not start with 0";
     }
     if (matmax(*x, 1) != 4) {
-	quit "mul_loop: 2nd arg matrix index range does not end with 4";
+        quit "mul_loop: 2nd arg matrix index range does not end with 4";
     }
 
     baseb_bytes = config("baseb") / 8;
     len = sizeof((*x)[0]) / baseb_bytes;
     for (i=1; i < 4; ++i) {
-	if ((sizeof((*x)[i]) / baseb_bytes) != len) {
-	    quit "mul_loop: 2nd arg matrix elements are not of "
-	         "equal BASEB-bit word length";
-	}
+        if ((sizeof((*x)[i]) / baseb_bytes) != len) {
+            quit "mul_loop: 2nd arg matrix elements are not of "
+                 "equal BASEB-bit word length";
+        }
     }
 
     /* multiply pairwise, all sets of a given length */
     start = usertime();
     for (i=0; i < repeat; ++i) {
 
-	if (len == 1) {
-	    /* we use len == 1 to test this tester loop overhead */
-	    answer = 0 * 0; answer = 0 * 0; answer = 0 * 0; answer = 0 * 0;
-	    /**/
-	    answer = 0 * 0; answer = 0 * 0; answer = 0 * 0; answer = 0 * 0;
-	    /**/
-	    answer = 0 * 0; answer = 0 * 0; answer = 0 * 0; answer = 0 * 0;
-	    /**/
-	    answer = 0 * 0; answer = 0 * 0; answer = 0 * 0; answer = 0 * 0;
-	    /**/
-	    answer = 0 * 0; answer = 0 * 0; answer = 0 * 0; answer = 0 * 0;
-	} else {
-	    answer = (*x)[0] * (*x)[1];
-	    answer = (*x)[0] * (*x)[2];
-	    answer = (*x)[0] * (*x)[3];
-	    answer = (*x)[0] * (*x)[4];
-	    /**/
-	    answer = (*x)[1] * (*x)[0];
-	    answer = (*x)[1] * (*x)[2];
-	    answer = (*x)[1] * (*x)[3];
-	    answer = (*x)[1] * (*x)[4];
-	    /**/
-	    answer = (*x)[2] * (*x)[0];
-	    answer = (*x)[2] * (*x)[1];
-	    answer = (*x)[2] * (*x)[3];
-	    answer = (*x)[2] * (*x)[4];
-	    /**/
-	    answer = (*x)[3] * (*x)[0];
-	    answer = (*x)[3] * (*x)[1];
-	    answer = (*x)[3] * (*x)[2];
-	    answer = (*x)[3] * (*x)[4];
-	    /**/
-	    answer = (*x)[4] * (*x)[0];
-	    answer = (*x)[4] * (*x)[1];
-	    answer = (*x)[4] * (*x)[2];
-	    answer = (*x)[4] * (*x)[3];
-	}
+        if (len == 1) {
+            /* we use len == 1 to test this tester loop overhead */
+            answer = 0 * 0; answer = 0 * 0; answer = 0 * 0; answer = 0 * 0;
+            /**/
+            answer = 0 * 0; answer = 0 * 0; answer = 0 * 0; answer = 0 * 0;
+            /**/
+            answer = 0 * 0; answer = 0 * 0; answer = 0 * 0; answer = 0 * 0;
+            /**/
+            answer = 0 * 0; answer = 0 * 0; answer = 0 * 0; answer = 0 * 0;
+            /**/
+            answer = 0 * 0; answer = 0 * 0; answer = 0 * 0; answer = 0 * 0;
+        } else {
+            answer = (*x)[0] * (*x)[1];
+            answer = (*x)[0] * (*x)[2];
+            answer = (*x)[0] * (*x)[3];
+            answer = (*x)[0] * (*x)[4];
+            /**/
+            answer = (*x)[1] * (*x)[0];
+            answer = (*x)[1] * (*x)[2];
+            answer = (*x)[1] * (*x)[3];
+            answer = (*x)[1] * (*x)[4];
+            /**/
+            answer = (*x)[2] * (*x)[0];
+            answer = (*x)[2] * (*x)[1];
+            answer = (*x)[2] * (*x)[3];
+            answer = (*x)[2] * (*x)[4];
+            /**/
+            answer = (*x)[3] * (*x)[0];
+            answer = (*x)[3] * (*x)[1];
+            answer = (*x)[3] * (*x)[2];
+            answer = (*x)[3] * (*x)[4];
+            /**/
+            answer = (*x)[4] * (*x)[0];
+            answer = (*x)[4] * (*x)[1];
+            answer = (*x)[4] * (*x)[2];
+            answer = (*x)[4] * (*x)[3];
+        }
     }
 
     /*
@@ -165,10 +165,10 @@ define mul_loop(repeat, x)
  * mul_ratio - ratio of rates of 1st and 2nd multiply algorithms
  *
  * given:
- *	len	length in BASEB-bit words to multiply
+ *      len     length in BASEB-bit words to multiply
  *
  * return:
- *	ratio of (1st / 2nd) algorithm rate.
+ *      ratio of (1st / 2nd) algorithm rate.
  *
  * When want to determine a rate to a precision of 1 part in 1000.
  * Most systems today return CPU time to at least 10 msec precision.
@@ -177,28 +177,28 @@ define mul_loop(repeat, x)
  * which usually requires timing of loops that last 10 seconds or more.
  *
  * NOTE: This is an internal support function that is normally
- *	 not called directly from the command line.  Call the
- *	 function best_mul2() instead.
+ *       not called directly from the command line.  Call the
+ *       function best_mul2() instead.
  */
 define mul_ratio(len)
 {
-    local mat x[5];		/* array of values for mul_loop to multiply */
-    local mat one[5];		/* array if single BASEB-bit values */
-    local baseb;		/* calc word size in bits */
-    local orig_cfg;		/* caller configuration */
-    local loops;		/* number of multiply loops to time */
-    local tlen;			/* time to perform some number of loops */
-    local tover;		/* est of time for loop overhead */
-    local alg1_rate;		/* loop rate of 1st algorithm */
-    local alg2_rate;		/* loop rate of 2nd algorithm */
-    local ret;			/* return ratio, or 1.0 */
+    local mat x[5];             /* array of values for mul_loop to multiply */
+    local mat one[5];           /* array if single BASEB-bit values */
+    local baseb;                /* calc word size in bits */
+    local orig_cfg;             /* caller configuration */
+    local loops;                /* number of multiply loops to time */
+    local tlen;                 /* time to perform some number of loops */
+    local tover;                /* est of time for loop overhead */
+    local alg1_rate;            /* loop rate of 1st algorithm */
+    local alg2_rate;            /* loop rate of 2nd algorithm */
+    local ret;                  /* return ratio, or 1.0 */
     local i;
 
     /*
      * firewall
      */
     if (!isint(len) || len < 2) {
-	quit "mul_ratio: 1st arg: len is not an integer > 1";
+        quit "mul_ratio: 1st arg: len is not an integer > 1";
     }
 
     /*
@@ -220,10 +220,10 @@ define mul_ratio(len)
     baseb = config("baseb");
     srand(sha1(sha1(baseb, config("version"))));
     for (i=0; i < 5; ++i) {
-	/* force the values to be a full len words long */
-	x[i] = ((1<<(((len-1) * baseb) + baseb-1)) |
-		    randbit(((len-1) * baseb) + baseb-2));
-	/* single BASEB-bit values */
+        /* force the values to be a full len words long */
+        x[i] = ((1<<(((len-1) * baseb) + baseb-1)) |
+                    randbit(((len-1) * baseb) + baseb-2));
+        /* single BASEB-bit values */
         one[i] = 1;
     }
 
@@ -233,11 +233,11 @@ define mul_ratio(len)
     config("mul2", 2^31-1),;
     loops = 1/2;
     do {
-	loops *= 2;
-	tlen = mul_loop(loops, &x);
-	if (config("user_debug") > 3) {
-	    printf("\t    alg1 loops %d took %.3f sec\n", loops, tlen);
-	}
+        loops *= 2;
+        tlen = mul_loop(loops, &x);
+        if (config("user_debug") > 3) {
+            printf("\t    alg1 loops %d took %.3f sec\n", loops, tlen);
+        }
     } while (tlen < 1.0);
 
     /*
@@ -245,32 +245,32 @@ define mul_ratio(len)
      */
     loops = max(1, ceil(loops * test_time / tlen));
     if (loops < 16) {
-	if (config("user_debug") > 1) {
-	    printf("    we must expand alg1 loop test time to about %d secs\n",
-		ceil(test_time * (16 / loops)));
-	}
-	loops = 16;
+        if (config("user_debug") > 1) {
+            printf("    we must expand alg1 loop test time to about %d secs\n",
+                ceil(test_time * (16 / loops)));
+        }
+        loops = 16;
     }
     if (config("user_debug") > 3) {
-	printf("\t    will try alg1 %d loops\n", loops);
+        printf("\t    will try alg1 %d loops\n", loops);
     }
     tlen = mul_loop(loops, &x);
     if (config("user_debug") > 3) {
-	printf("\t    alg1 time = %.3f secs\n", tlen);
+        printf("\t    alg1 time = %.3f secs\n", tlen);
     }
     tover = mul_loop(loops, &one);
     if (config("user_debug") > 3) {
-	printf("\t    alg1 overhead look %.3f secs\n", tover);
+        printf("\t    alg1 overhead look %.3f secs\n", tover);
     }
     if (tlen <= tover) {
-	quit "mul_ratio: overhead >= loop time";
+        quit "mul_ratio: overhead >= loop time";
     }
     alg1_rate = loops / (tlen - tover);
     if (config("user_debug") > 2) {
-	printf("\tmultiply alg1 rate = %.3f loopsets/sec\n", alg1_rate);
+        printf("\tmultiply alg1 rate = %.3f loopsets/sec\n", alg1_rate);
     }
     if (alg1_rate <= 0.0) {
-	quit "mul_ratio: alg1 rate was <= 0.0";
+        quit "mul_ratio: alg1 rate was <= 0.0";
     }
 
     /*
@@ -279,11 +279,11 @@ define mul_ratio(len)
     config("mul2", 2),;
     loops = 1/2;
     do {
-	loops *= 2;
-	tlen = mul_loop(loops, &x);
-	if (config("user_debug") > 3) {
-	    printf("\t    alg2 loops %d took %.3f sec\n", loops, tlen);
-	}
+        loops *= 2;
+        tlen = mul_loop(loops, &x);
+        if (config("user_debug") > 3) {
+            printf("\t    alg2 loops %d took %.3f sec\n", loops, tlen);
+        }
     } while (tlen < 1.0);
 
     /*
@@ -291,29 +291,29 @@ define mul_ratio(len)
      */
     loops = max(1, ceil(loops * test_time / tlen));
     if (loops < 16) {
-	if (config("user_debug") > 1) {
-	    printf("    we must expand alg2 loop test time to about %d secs\n",
-		ceil(test_time * (16 / loops)));
-	}
-	loops = 16;
+        if (config("user_debug") > 1) {
+            printf("    we must expand alg2 loop test time to about %d secs\n",
+                ceil(test_time * (16 / loops)));
+        }
+        loops = 16;
     }
     tlen = mul_loop(loops, &x);
     if (config("user_debug") > 3) {
-	printf("\t    alg2 time = %.3f secs\n", tlen);
+        printf("\t    alg2 time = %.3f secs\n", tlen);
     }
     tover = mul_loop(loops, &one);
     if (config("user_debug") > 3) {
-	printf("\t    alg2 overhead look %.3f secs\n", tover);
+        printf("\t    alg2 overhead look %.3f secs\n", tover);
     }
     if (tlen <= tover) {
-	quit "mul_ratio: overhead >= loop time";
+        quit "mul_ratio: overhead >= loop time";
     }
     alg2_rate = loops / (tlen - tover);
     if (config("user_debug") > 2) {
-	printf("\tmultiply alg2 rate = %.3f loopsets/sec\n", alg2_rate);
+        printf("\tmultiply alg2 rate = %.3f loopsets/sec\n", alg2_rate);
     }
     if (alg2_rate <= 0.0) {
-	quit "mul_ratio: alg2 rate was <= 0.0";
+        quit "mul_ratio: alg2 rate was <= 0.0";
     }
 
     /*
@@ -326,8 +326,8 @@ define mul_ratio(len)
      */
     ret = alg1_rate / alg2_rate;
     if (config("user_debug") > 2) {
-	printf("\tprecise ratio is: %.f mul_ratio will return: %.3f\n",
-		alg1_rate / alg2_rate, ret);
+        printf("\tprecise ratio is: %.f mul_ratio will return: %.3f\n",
+                alg1_rate / alg2_rate, ret);
     }
     return ret;
 }
@@ -337,25 +337,25 @@ define mul_ratio(len)
  * best_mul2 - determine the best config("mul2") parameter
  *
  * NOTE: Due to precision problems with CPU measurements, it is not
- *	 unusual for the output of this function to vary slightly
- *	 from run to run.
+ *       unusual for the output of this function to vary slightly
+ *       from run to run.
  *
  * NOTE: This function is designed to take a long time to run.
- *	  We recommend setting:
+ *        We recommend setting:
  *
- *		config("user_debug", 2)
+ *              config("user_debug", 2)
  *
- *	  so that yon can watch the progress of this function.
+ *        so that yon can watch the progress of this function.
  */
 define best_mul2()
 {
-    local ratio;	/* previously calculated alg1/alg2 ratio */
-    local low;		/* low loop value tested */
-    local high;		/* high loop value tested */
-    local mid;		/* between low and high */
-    local best_val;	/* value found with ratio closest to unity */
-    local best_ratio;	/* closest ratio found to unity */
-    local expand;	/* how fast to expand the length */
+    local ratio;        /* previously calculated alg1/alg2 ratio */
+    local low;          /* low loop value tested */
+    local high;         /* high loop value tested */
+    local mid;          /* between low and high */
+    local best_val;     /* value found with ratio closest to unity */
+    local best_ratio;   /* closest ratio found to unity */
+    local expand;       /* how fast to expand the length */
 
     /*
      * setup
@@ -365,8 +365,8 @@ define best_mul2()
     printf("The best_mul2() function will take a LONG time to run!\n");
     printf("It is important that best_mul2() run on an otherwise idle host!\n");
     if (config("user_debug") <= 0) {
-	printf("To monitor progress, set user_debug to 2: "
-	       "config(\"user_debug\", 2)\n");
+        printf("To monitor progress, set user_debug to 2: "
+               "config(\"user_debug\", 2)\n");
     }
     printf("Starting with loop test time of %d secs\n", test_time);
 
@@ -376,56 +376,56 @@ define best_mul2()
     high = 8;
     best_val = high;
     if (config("user_debug") > 0) {
-	printf("testing multiply alg1/alg2 ratio for len = %d\n", high);
+        printf("testing multiply alg1/alg2 ratio for len = %d\n", high);
     }
     ratio = mul_ratio(high);
     best_ratio = ratio;
     if (config("user_debug") > 1) {
-	printf("    multiply alg1/alg2 ratio = %.6f\n", ratio);
+        printf("    multiply alg1/alg2 ratio = %.6f\n", ratio);
     }
     if (ratio < 1.0) {
-	quit "best_mul2: tests imply mul2 should be < 16, which seems bogus";
+        quit "best_mul2: tests imply mul2 should be < 16, which seems bogus";
     }
 
     /*
      * expand lengths until the ratio flips
      */
     do {
-	/*
-	 * determine the parameters of the next ratio test
-	 *
-	 * We will multiplicatively expand our test level until
-	 * the ratio drops below 1.0.
-	 */
-	expand = 2;
-	low = high;
-	high *= expand;
-	if (config("user_debug") > 1) {
-	    printf("    expand the next test range by a factor of %d\n",
-	           expand);
-	}
+        /*
+         * determine the parameters of the next ratio test
+         *
+         * We will multiplicatively expand our test level until
+         * the ratio drops below 1.0.
+         */
+        expand = 2;
+        low = high;
+        high *= expand;
+        if (config("user_debug") > 1) {
+            printf("    expand the next test range by a factor of %d\n",
+                   expand);
+        }
 
-	/*
-	 * determine the alg1/alg2 test ratio for this new length
-	 */
-	if (high >= 2^31) {
-	    quit "best_mul2: test implies mul2 >= 2^31, which seems bogus";
-	}
-	if (config("user_debug") > 0) {
-	    printf("testing multiply alg1/alg2 ratio for len = %d\n", high);
-	}
-	ratio = mul_ratio(high);
-	if (abs(ratio - 1.0) < abs(best_ratio - 1.0)) {
-	    best_val = high;
-	    best_ratio = ratio;
-	    if (config("user_debug") > 1) {
-		printf("    len %d has a new closest ratio to unity: %.6f\n",
-		       best_val, best_ratio);
-	    }
-	}
-	if (config("user_debug") > 1) {
-	    printf("    multiply alg1/alg2 ratio = %.6f\n", ratio);
-	}
+        /*
+         * determine the alg1/alg2 test ratio for this new length
+         */
+        if (high >= 2^31) {
+            quit "best_mul2: test implies mul2 >= 2^31, which seems bogus";
+        }
+        if (config("user_debug") > 0) {
+            printf("testing multiply alg1/alg2 ratio for len = %d\n", high);
+        }
+        ratio = mul_ratio(high);
+        if (abs(ratio - 1.0) < abs(best_ratio - 1.0)) {
+            best_val = high;
+            best_ratio = ratio;
+            if (config("user_debug") > 1) {
+                printf("    len %d has a new closest ratio to unity: %.6f\n",
+                       best_val, best_ratio);
+            }
+        }
+        if (config("user_debug") > 1) {
+            printf("    multiply alg1/alg2 ratio = %.6f\n", ratio);
+        }
     } while (ratio > 1.0);
 
     /*
@@ -434,39 +434,39 @@ define best_mul2()
      * drop down powers of two until the ratio is again >= 1.0
      */
     if (expand > 2) {
-	do {
+        do {
 
-	    /*
-	     * contract by 2
-	     */
-	    high /= 2;
-	    low = high / 2;
-	    if (config("user_debug") > 0) {
-		printf("re-testing multiply alg1/alg2 ratio for len = %d\n",
-		       high);
-	    }
-	    ratio = mul_ratio(high);
-	    if (abs(ratio - 1.0) < abs(best_ratio - 1.0)) {
-		best_val = high;
-		best_ratio = ratio;
-		if (config("user_debug") > 1) {
-		    printf("    len %d has a new closest ratio "
-			   "to unity: %.6f\n",
-			   best_val, best_ratio);
-		}
-	    }
-	    if (config("user_debug") > 1) {
-		printf("    multiply alg1/alg2 ratio = %.6f\n", ratio);
-	    }
+            /*
+             * contract by 2
+             */
+            high /= 2;
+            low = high / 2;
+            if (config("user_debug") > 0) {
+                printf("re-testing multiply alg1/alg2 ratio for len = %d\n",
+                       high);
+            }
+            ratio = mul_ratio(high);
+            if (abs(ratio - 1.0) < abs(best_ratio - 1.0)) {
+                best_val = high;
+                best_ratio = ratio;
+                if (config("user_debug") > 1) {
+                    printf("    len %d has a new closest ratio "
+                           "to unity: %.6f\n",
+                           best_val, best_ratio);
+                }
+            }
+            if (config("user_debug") > 1) {
+                printf("    multiply alg1/alg2 ratio = %.6f\n", ratio);
+            }
 
-	} while (ratio <= 1.0);
+        } while (ratio <= 1.0);
 
-	/* now that the ratio flipped again, use the previous range */
-	low = high;
-	high = high * 2;
+        /* now that the ratio flipped again, use the previous range */
+        low = high;
+        high = high * 2;
     }
     if (config("user_debug") > 0) {
-	printf("Starting binary search between %d and %d\n", low, high);
+        printf("Starting binary search between %d and %d\n", low, high);
     }
 
     /*
@@ -474,69 +474,69 @@ define best_mul2()
      */
     while (low+1 < high) {
 
-	/* try the mid-point */
-	mid = int((low+high)/2);
-	if (config("user_debug") > 0) {
-	    printf("testing multiply alg1/alg2 ratio for len = %d\n", mid);
-	}
-	ratio = mul_ratio(mid);
-	if (abs(ratio - 1.0) < abs(best_ratio - 1.0)) {
-	    best_val = mid;
-	    best_ratio = ratio;
-	    if (config("user_debug") > 1) {
-		printf("    len %d has a new closest ratio to unity: %.6f\n",
-		       best_val, best_ratio);
-	    }
-	}
-	if (config("user_debug") > 1) {
-	    printf("    len %d multiply alg1/alg2 ratio = %.6f\n", mid, ratio);
-	}
+        /* try the mid-point */
+        mid = int((low+high)/2);
+        if (config("user_debug") > 0) {
+            printf("testing multiply alg1/alg2 ratio for len = %d\n", mid);
+        }
+        ratio = mul_ratio(mid);
+        if (abs(ratio - 1.0) < abs(best_ratio - 1.0)) {
+            best_val = mid;
+            best_ratio = ratio;
+            if (config("user_debug") > 1) {
+                printf("    len %d has a new closest ratio to unity: %.6f\n",
+                       best_val, best_ratio);
+            }
+        }
+        if (config("user_debug") > 1) {
+            printf("    len %d multiply alg1/alg2 ratio = %.6f\n", mid, ratio);
+        }
 
-	/* stop search if near unity */
-	if (close_to_one(ratio)) {
-	    low = mid;
-	    high = mid;
-	    if (config("user_debug") > 0) {
-		printf("\twe are close enough to unity ratio at: %d\n", mid);
-	    }
-	    break;
-	}
+        /* stop search if near unity */
+        if (close_to_one(ratio)) {
+            low = mid;
+            high = mid;
+            if (config("user_debug") > 0) {
+                printf("\twe are close enough to unity ratio at: %d\n", mid);
+            }
+            break;
+        }
 
-	/* bump lower range up if we went over */
-	if (ratio > 1.0) {
-	    if (config("user_debug") > 2) {
-		printf("\tmove low from %d up to %d\n",
-		    low, mid);
-	    }
-	    low = mid;
+        /* bump lower range up if we went over */
+        if (ratio > 1.0) {
+            if (config("user_debug") > 2) {
+                printf("\tmove low from %d up to %d\n",
+                    low, mid);
+            }
+            low = mid;
 
-	/* drop higher range down if we went under */
-	} else {
-	    if (config("user_debug") > 2) {
-		printf("\tmove high from %d down to %d\n",
-		     high, mid);
-	    }
-	    high = mid;
-	}
+        /* drop higher range down if we went under */
+        } else {
+            if (config("user_debug") > 2) {
+                printf("\tmove high from %d down to %d\n",
+                     high, mid);
+            }
+            high = mid;
+        }
 
-	/* report on test loop progress */
-	if (config("user_debug") > 1) {
-	    printf("\tsetting low: %d high: %d diff: %d\n",
-		   low, high, high-low);
-	}
+        /* report on test loop progress */
+        if (config("user_debug") > 1) {
+            printf("\tsetting low: %d high: %d diff: %d\n",
+                   low, high, high-low);
+        }
     }
 
     /*
      * return on the suggested config("mul2") value
      */
     if (config("user_debug") > 0) {
-	printf("Best value for multiply is near %d\n", best_val);
-	printf("Best multiply alg1/alg2 ratio is: %.6f\n", best_ratio);
-	printf("We suggest placing this line in your .calcrc:\n");
-	printf("config(\"mul2\", %d),;\n", best_val);
-	printf("WARNING: It is believed that the output "
-	       "of this resource file is bogus!\n");
-	printf("WARNING: You may NOT wish to follow the above suggestion.\n");
+        printf("Best value for multiply is near %d\n", best_val);
+        printf("Best multiply alg1/alg2 ratio is: %.6f\n", best_ratio);
+        printf("We suggest placing this line in your .calcrc:\n");
+        printf("config(\"mul2\", %d),;\n", best_val);
+        printf("WARNING: It is believed that the output "
+               "of this resource file is bogus!\n");
+        printf("WARNING: You may NOT wish to follow the above suggestion.\n");
     }
     return mid;
 }
@@ -546,96 +546,96 @@ define best_mul2()
  * sq_loop - measure the CPU time to perform a set of square loops
  *
  * given:
- *	repeat	number of square loops to perform
- *	x	array of 5 values, each the same length in BASEB-bit words
+ *      repeat  number of square loops to perform
+ *      x       array of 5 values, each the same length in BASEB-bit words
  *
- *		NOTE: When their lengths are 1 BASEB-bit word, then a
- *		      dummy loop of simple constants are used.  Thus the
- *		      length == 1 is an approximation of loop overhead.
+ *              NOTE: When their lengths are 1 BASEB-bit word, then a
+ *                    dummy loop of simple constants are used.  Thus the
+ *                    length == 1 is an approximation of loop overhead.
  * returns:
- *	approximate runtime to perform a square loop
+ *      approximate runtime to perform a square loop
  *
  * NOTE: This is an internal support function that is normally
- *	 not called directly from the command line.  Call the
- *	 function best_sq2() instead.
+ *       not called directly from the command line.  Call the
+ *       function best_sq2() instead.
  */
 define sq_loop(repeat, x)
 {
-    local start;	/* start of execution */
-    local end;		/* end of execution */
-    local answer;	/* squared value */
-    local len;		/* length of each element */
-    local baseb_bytes;	/* bytes in a BASEB-bit word */
+    local start;        /* start of execution */
+    local end;          /* end of execution */
+    local answer;       /* squared value */
+    local len;          /* length of each element */
+    local baseb_bytes;  /* bytes in a BASEB-bit word */
     local i;
 
     /* firewall */
     if (!isint(repeat) || repeat < 0) {
-	quit "sq_loop: 1st arg: repeat must be an integer > 0";
+        quit "sq_loop: 1st arg: repeat must be an integer > 0";
     }
     if (size(*x) != 5) {
-	quit "sq_loop: 2nd arg matrix does not have 5 elements";
+        quit "sq_loop: 2nd arg matrix does not have 5 elements";
     }
     if (matdim(*x) != 1) {
-	quit "sq_loop: 2nd arg matrix is not 1 dimensional";
+        quit "sq_loop: 2nd arg matrix is not 1 dimensional";
     }
     if (matmin(*x, 1) != 0) {
-	quit "sq_loop: 2nd arg matrix index range does not start with 0";
+        quit "sq_loop: 2nd arg matrix index range does not start with 0";
     }
     if (matmax(*x, 1) != 4) {
-	quit "sq_loop: 2nd arg matrix index range does not end with 4";
+        quit "sq_loop: 2nd arg matrix index range does not end with 4";
     }
     baseb_bytes = config("baseb") / 8;
     len = sizeof((*x)[0]) / baseb_bytes;
     for (i=1; i < 4; ++i) {
-	if ((sizeof((*x)[i]) / baseb_bytes) != len) {
-	    quit "sq_loop: 2nd arg matrix elements are not of equal "
-	         "BASEB-bit word length";
-	}
+        if ((sizeof((*x)[i]) / baseb_bytes) != len) {
+            quit "sq_loop: 2nd arg matrix elements are not of equal "
+                 "BASEB-bit word length";
+        }
     }
 
     /* square pairwise, all sets of a given length */
     start = usertime();
     for (i=0; i < repeat; ++i) {
 
-	if (len == 1) {
-	    /* we use len == 1 to test this tester loop overhead */
-	    answer = 0^2; answer = 0^2; answer = 0^2; answer = 0^2;
-	    answer = 0^2;
-	    /**/
-	    answer = 0^2; answer = 0^2; answer = 0^2; answer = 0^2;
-	    answer = 0^2;
-	    /**/
-	    answer = 0^2; answer = 0^2; answer = 0^2; answer = 0^2;
-	    answer = 0^2;
-	    /**/
-	    answer = 0^2; answer = 0^2; answer = 0^2; answer = 0^2;
-	    answer = 0^2;
-	} else {
-	    /* one square loop */
-	    answer = (*x)[0]^2;
-	    answer = (*x)[1]^2;
-	    answer = (*x)[2]^2;
-	    answer = (*x)[3]^2;
-	    answer = (*x)[4]^2;
-	    /**/
-	    answer = (*x)[0]^2;
-	    answer = (*x)[1]^2;
-	    answer = (*x)[2]^2;
-	    answer = (*x)[3]^2;
-	    answer = (*x)[4]^2;
-	    /**/
-	    answer = (*x)[0]^2;
-	    answer = (*x)[1]^2;
-	    answer = (*x)[2]^2;
-	    answer = (*x)[3]^2;
-	    answer = (*x)[4]^2;
-	    /**/
-	    answer = (*x)[0]^2;
-	    answer = (*x)[1]^2;
-	    answer = (*x)[2]^2;
-	    answer = (*x)[3]^2;
-	    answer = (*x)[4]^2;
-	}
+        if (len == 1) {
+            /* we use len == 1 to test this tester loop overhead */
+            answer = 0^2; answer = 0^2; answer = 0^2; answer = 0^2;
+            answer = 0^2;
+            /**/
+            answer = 0^2; answer = 0^2; answer = 0^2; answer = 0^2;
+            answer = 0^2;
+            /**/
+            answer = 0^2; answer = 0^2; answer = 0^2; answer = 0^2;
+            answer = 0^2;
+            /**/
+            answer = 0^2; answer = 0^2; answer = 0^2; answer = 0^2;
+            answer = 0^2;
+        } else {
+            /* one square loop */
+            answer = (*x)[0]^2;
+            answer = (*x)[1]^2;
+            answer = (*x)[2]^2;
+            answer = (*x)[3]^2;
+            answer = (*x)[4]^2;
+            /**/
+            answer = (*x)[0]^2;
+            answer = (*x)[1]^2;
+            answer = (*x)[2]^2;
+            answer = (*x)[3]^2;
+            answer = (*x)[4]^2;
+            /**/
+            answer = (*x)[0]^2;
+            answer = (*x)[1]^2;
+            answer = (*x)[2]^2;
+            answer = (*x)[3]^2;
+            answer = (*x)[4]^2;
+            /**/
+            answer = (*x)[0]^2;
+            answer = (*x)[1]^2;
+            answer = (*x)[2]^2;
+            answer = (*x)[3]^2;
+            answer = (*x)[4]^2;
+        }
     }
 
     /*
@@ -650,10 +650,10 @@ define sq_loop(repeat, x)
  * sq_ratio - ratio of rates of 1st and 2nd square algorithms
  *
  * given:
- *	len	length in BASEB-bit words to square
+ *      len     length in BASEB-bit words to square
  *
  * return:
- *	ratio of (1st / 2nd) algorithm rates
+ *      ratio of (1st / 2nd) algorithm rates
  *
  * When want to determine a rate to a precision of 1 part in 1000.
  * Most systems today return CPU time to at least 10 msec precision.
@@ -662,28 +662,28 @@ define sq_loop(repeat, x)
  * which usually requires timing of loops that last 10 seconds or more.
  *
  * NOTE: This is an internal support function that is normally
- *	 not called directly from the command line.  Call the
- *	 function best_sq2() instead.
+ *       not called directly from the command line.  Call the
+ *       function best_sq2() instead.
  */
 define sq_ratio(len)
 {
-    local mat x[5];		/* array of values for sq_loop to square */
-    local mat one[5];		/* array if single BASEB-bit values */
-    local baseb;		/* calc word size in bits */
-    local orig_cfg;		/* caller configuration */
-    local loops;		/* number of square loops to time */
-    local tlen;			/* time to perform some number of loops */
-    local tover;		/* est of time for loop overhead */
-    local alg1_rate;		/* loop rate of 1st algorithm */
-    local alg2_rate;		/* loop rate of 2nd algorithm */
-    local ret;			/* return ratio, or 1.0 */
+    local mat x[5];             /* array of values for sq_loop to square */
+    local mat one[5];           /* array if single BASEB-bit values */
+    local baseb;                /* calc word size in bits */
+    local orig_cfg;             /* caller configuration */
+    local loops;                /* number of square loops to time */
+    local tlen;                 /* time to perform some number of loops */
+    local tover;                /* est of time for loop overhead */
+    local alg1_rate;            /* loop rate of 1st algorithm */
+    local alg2_rate;            /* loop rate of 2nd algorithm */
+    local ret;                  /* return ratio, or 1.0 */
     local i;
 
     /*
      * firewall
      */
     if (!isint(len) || len < 2) {
-	quit "sq_ratio: 1st arg: len is not an integer > 1";
+        quit "sq_ratio: 1st arg: len is not an integer > 1";
     }
 
     /*
@@ -705,10 +705,10 @@ define sq_ratio(len)
     baseb = config("baseb");
     srand(sha1(sha1(baseb, config("version"))));
     for (i=0; i < 5; ++i) {
-	/* force the values to be a full len words long */
-	x[i] = ((1<<(((len-1) * baseb) + baseb-1)) |
-		    randbit(((len-1) * baseb) + baseb-2));
-	/* single BASEB-bit values */
+        /* force the values to be a full len words long */
+        x[i] = ((1<<(((len-1) * baseb) + baseb-1)) |
+                    randbit(((len-1) * baseb) + baseb-2));
+        /* single BASEB-bit values */
         one[i] = 1;
     }
 
@@ -718,11 +718,11 @@ define sq_ratio(len)
     config("sq2", 2^31-1),;
     loops = 1/2;
     do {
-	loops *= 2;
-	tlen = sq_loop(loops, &x);
-	if (config("user_debug") > 3) {
-	    printf("\t    alg1 loops %d took %.3f sec\n", loops, tlen);
-	}
+        loops *= 2;
+        tlen = sq_loop(loops, &x);
+        if (config("user_debug") > 3) {
+            printf("\t    alg1 loops %d took %.3f sec\n", loops, tlen);
+        }
     } while (tlen < 1.0);
 
     /*
@@ -730,29 +730,29 @@ define sq_ratio(len)
      */
     loops = max(1, ceil(loops * test_time / tlen));
     if (loops < 16) {
-	if (config("user_debug") > 1) {
-	    printf("    we must expand alg1 loop test time to about %d secs\n",
-		ceil(test_time * (16 / loops)));
-	}
-	loops = 16;
+        if (config("user_debug") > 1) {
+            printf("    we must expand alg1 loop test time to about %d secs\n",
+                ceil(test_time * (16 / loops)));
+        }
+        loops = 16;
     }
     tlen = sq_loop(loops, &x);
     if (config("user_debug") > 3) {
-	printf("\t    alg1 time = %.3f secs\n", tlen);
+        printf("\t    alg1 time = %.3f secs\n", tlen);
     }
     tover = sq_loop(loops, &one);
     if (config("user_debug") > 3) {
-	printf("\t    alg1 overhead look %.3f secs\n", tover);
+        printf("\t    alg1 overhead look %.3f secs\n", tover);
     }
     if (tlen <= tover) {
-	quit "sq_ratio: overhead >= loop time";
+        quit "sq_ratio: overhead >= loop time";
     }
     alg1_rate = loops / (tlen - tover);
     if (config("user_debug") > 2) {
-	printf("\tsquare alg1 rate = %.3f loopsets/sec\n", alg1_rate);
+        printf("\tsquare alg1 rate = %.3f loopsets/sec\n", alg1_rate);
     }
     if (alg1_rate <= 0.0) {
-	quit "sq_ratio: alg1 rate was <= 0.0";
+        quit "sq_ratio: alg1 rate was <= 0.0";
     }
 
     /*
@@ -761,11 +761,11 @@ define sq_ratio(len)
     config("sq2", 2),;
     loops = 1/2;
     do {
-	loops *= 2;
-	tlen = sq_loop(loops, &x);
-	if (config("user_debug") > 3) {
-	    printf("\t    alg2 loops %d took %.3f sec\n", loops, tlen);
-	}
+        loops *= 2;
+        tlen = sq_loop(loops, &x);
+        if (config("user_debug") > 3) {
+            printf("\t    alg2 loops %d took %.3f sec\n", loops, tlen);
+        }
     } while (tlen < 1.0);
 
     /*
@@ -773,29 +773,29 @@ define sq_ratio(len)
      */
     loops = max(1, ceil(loops * test_time / tlen));
     if (loops < 16) {
-	if (config("user_debug") > 1) {
-	    printf("    we must expand alg2 loop test time to about %d secs\n",
-		ceil(test_time * (16 / loops)));
-	}
-	loops = 16;
+        if (config("user_debug") > 1) {
+            printf("    we must expand alg2 loop test time to about %d secs\n",
+                ceil(test_time * (16 / loops)));
+        }
+        loops = 16;
     }
     tlen = sq_loop(loops, &x);
     if (config("user_debug") > 3) {
-	printf("\t    alg2 time = %.3f secs\n", tlen);
+        printf("\t    alg2 time = %.3f secs\n", tlen);
     }
     tover = sq_loop(loops, &one);
     if (config("user_debug") > 3) {
-	printf("\t    alg2 overhead look %.3f secs\n", tover);
+        printf("\t    alg2 overhead look %.3f secs\n", tover);
     }
     if (tlen <= tover) {
-	quit "sq_ratio: overhead >= loop time";
+        quit "sq_ratio: overhead >= loop time";
     }
     alg2_rate = loops / (tlen - tover);
     if (config("user_debug") > 2) {
-	printf("\tsquare alg2 rate = %.3f loopsets/sec\n", alg2_rate);
+        printf("\tsquare alg2 rate = %.3f loopsets/sec\n", alg2_rate);
     }
     if (alg2_rate <= 0.0) {
-	quit "sq_ratio: alg2 rate was <= 0.0";
+        quit "sq_ratio: alg2 rate was <= 0.0";
     }
 
     /*
@@ -808,8 +808,8 @@ define sq_ratio(len)
      */
     ret = alg1_rate / alg2_rate;
     if (config("user_debug") > 2) {
-	printf("\tprecise ratio is: %.f sq_ratio will return: %.3f\n",
-		alg1_rate / alg2_rate, ret);
+        printf("\tprecise ratio is: %.f sq_ratio will return: %.3f\n",
+                alg1_rate / alg2_rate, ret);
     }
     return ret;
 }
@@ -819,25 +819,25 @@ define sq_ratio(len)
  * best_sq2 - determine the best config("sq2") parameter
  *
  * NOTE: Due to precision problems with CPU measurements, it is not
- *	 unusual for the output of this function to vary slightly
- *	 from run to run.
+ *       unusual for the output of this function to vary slightly
+ *       from run to run.
  *
  * NOTE: This function is designed to take a long time to run.
- *	  We recommend setting:
+ *        We recommend setting:
  *
- *		config("user_debug", 2)
+ *              config("user_debug", 2)
  *
- *	  so that yon can watch the progress of this function.
+ *        so that yon can watch the progress of this function.
  */
 define best_sq2()
 {
-    local ratio;	/* previously calculated alg1/alg2 ratio */
-    local low;		/* low loop value tested */
-    local high;		/* high loop value tested */
-    local mid;		/* between low and high */
-    local best_val;	/* value found with ratio closest to unity */
-    local best_ratio;	/* closest ratio found to unity */
-    local expand;	/* how fast to expand the length */
+    local ratio;        /* previously calculated alg1/alg2 ratio */
+    local low;          /* low loop value tested */
+    local high;         /* high loop value tested */
+    local mid;          /* between low and high */
+    local best_val;     /* value found with ratio closest to unity */
+    local best_ratio;   /* closest ratio found to unity */
+    local expand;       /* how fast to expand the length */
 
     /*
      * setup
@@ -847,8 +847,8 @@ define best_sq2()
     printf("The best_sq2() function will take a LONG time to run!\n");
     printf("It is important that best_sq2() run on an otherwise idle host!\n");
     if (config("user_debug") <= 0) {
-	printf("To monitor progress, set user_debug to 2: "
-	       "config(\"user_debug\", 2)\n");
+        printf("To monitor progress, set user_debug to 2: "
+               "config(\"user_debug\", 2)\n");
     }
     printf("Starting with loop test time of %d secs\n", test_time);
 
@@ -858,56 +858,56 @@ define best_sq2()
     high = 8;
     best_val = high;
     if (config("user_debug") > 0) {
-	printf("testing square alg1/alg2 ratio for len = %d\n", high);
+        printf("testing square alg1/alg2 ratio for len = %d\n", high);
     }
     ratio = sq_ratio(high);
     best_ratio = ratio;
     if (config("user_debug") > 1) {
-	printf("    square alg1/alg2 ratio = %.3f\n", ratio);
+        printf("    square alg1/alg2 ratio = %.3f\n", ratio);
     }
     if (ratio < 1.0) {
-	quit "best_sq2: test implies sq2 < 16, which seems bogus";
+        quit "best_sq2: test implies sq2 < 16, which seems bogus";
     }
 
     /*
      * expand lengths until the ratio flips
      */
     do {
-	/*
-	 * determine the parameters of the next ratio test
-	 *
-	 * We will multiplicatively expand our test level until
-	 * the ratio drops below 1.0.
-	 */
-	expand = 2;
-	low = high;
-	high *= expand;
-	if (config("user_debug") > 1) {
-	    printf("    expand the next test range by a factor of %d\n",
-		   expand);
-	}
+        /*
+         * determine the parameters of the next ratio test
+         *
+         * We will multiplicatively expand our test level until
+         * the ratio drops below 1.0.
+         */
+        expand = 2;
+        low = high;
+        high *= expand;
+        if (config("user_debug") > 1) {
+            printf("    expand the next test range by a factor of %d\n",
+                   expand);
+        }
 
-	/*
-	 * determine the alg1/alg2 test ratio for this new length
-	 */
-	if (high >= 2^31) {
-	    quit "best_sq2: tests imply sq2 >= 2^31, which seems bogus";
-	}
-	if (config("user_debug") > 0) {
-	    printf("testing square alg1/alg2 ratio for len = %d\n", high);
-	}
-	ratio = sq_ratio(high);
-	if (abs(ratio - 1.0) < abs(best_ratio - 1.0)) {
-	    best_val = high;
-	    best_ratio = ratio;
-	    if (config("user_debug") > 1) {
-		printf("    len %d has a new closest ratio to unity: %.6f\n",
-		       best_val, best_ratio);
-	    }
-	}
-	if (config("user_debug") > 1) {
-	    printf("    square alg1/alg2 ratio = %.3f\n", ratio);
-	}
+        /*
+         * determine the alg1/alg2 test ratio for this new length
+         */
+        if (high >= 2^31) {
+            quit "best_sq2: tests imply sq2 >= 2^31, which seems bogus";
+        }
+        if (config("user_debug") > 0) {
+            printf("testing square alg1/alg2 ratio for len = %d\n", high);
+        }
+        ratio = sq_ratio(high);
+        if (abs(ratio - 1.0) < abs(best_ratio - 1.0)) {
+            best_val = high;
+            best_ratio = ratio;
+            if (config("user_debug") > 1) {
+                printf("    len %d has a new closest ratio to unity: %.6f\n",
+                       best_val, best_ratio);
+            }
+        }
+        if (config("user_debug") > 1) {
+            printf("    square alg1/alg2 ratio = %.3f\n", ratio);
+        }
     } while (ratio > 1.0);
 
     /*
@@ -916,39 +916,39 @@ define best_sq2()
      * drop down powers of two until the ratio is again >= 1.0
      */
     if (expand > 2) {
-	do {
+        do {
 
-	    /*
-	     * contract by 2
-	     */
-	    high /= 2;
-	    low = high / 2;
-	    if (config("user_debug") > 0) {
-		printf("re-testing multiply alg1/alg2 ratio for len = %d\n",
-		       high);
-	    }
-	    ratio = mul_ratio(high);
-	    if (abs(ratio - 1.0) < abs(best_ratio - 1.0)) {
-		best_val = high;
-		best_ratio = ratio;
-		if (config("user_debug") > 1) {
-		    printf("    len %d has a new closest ratio "
-			   "to unity: %.6f\n",
-			   best_val, best_ratio);
-		}
-	    }
-	    if (config("user_debug") > 1) {
-		printf("    multiply alg1/alg2 ratio = %.6f\n", ratio);
-	    }
+            /*
+             * contract by 2
+             */
+            high /= 2;
+            low = high / 2;
+            if (config("user_debug") > 0) {
+                printf("re-testing multiply alg1/alg2 ratio for len = %d\n",
+                       high);
+            }
+            ratio = mul_ratio(high);
+            if (abs(ratio - 1.0) < abs(best_ratio - 1.0)) {
+                best_val = high;
+                best_ratio = ratio;
+                if (config("user_debug") > 1) {
+                    printf("    len %d has a new closest ratio "
+                           "to unity: %.6f\n",
+                           best_val, best_ratio);
+                }
+            }
+            if (config("user_debug") > 1) {
+                printf("    multiply alg1/alg2 ratio = %.6f\n", ratio);
+            }
 
-	} while (ratio <= 1.0);
+        } while (ratio <= 1.0);
 
-	/* now that the ratio flipped again, use the previous range */
-	low = high;
-	high = high * 2;
+        /* now that the ratio flipped again, use the previous range */
+        low = high;
+        high = high * 2;
     }
     if (config("user_debug") > 0) {
-	printf("Starting binary search between %d and %d\n", low, high);
+        printf("Starting binary search between %d and %d\n", low, high);
     }
 
     /*
@@ -956,56 +956,56 @@ define best_sq2()
      */
     while (low+1 < high) {
 
-	/* try the mid-point */
-	mid = int((low+high)/2);
-	if (config("user_debug") > 0) {
-	    printf("testing square alg1/alg2 ratio for len = %d\n", mid);
-	}
-	ratio = sq_ratio(mid);
-	if (abs(ratio - 1.0) < abs(best_ratio - 1.0)) {
-	    best_val = mid;
-	    best_ratio = ratio;
-	    if (config("user_debug") > 1) {
-		printf("    len %d has a new closest ratio to unity: %.6f\n",
-		       best_val, best_ratio);
-	    }
-	}
-	if (config("user_debug") > 1) {
-	    printf("    len %d square alg1/alg2 ratio = %.6f\n", mid, ratio);
-	}
+        /* try the mid-point */
+        mid = int((low+high)/2);
+        if (config("user_debug") > 0) {
+            printf("testing square alg1/alg2 ratio for len = %d\n", mid);
+        }
+        ratio = sq_ratio(mid);
+        if (abs(ratio - 1.0) < abs(best_ratio - 1.0)) {
+            best_val = mid;
+            best_ratio = ratio;
+            if (config("user_debug") > 1) {
+                printf("    len %d has a new closest ratio to unity: %.6f\n",
+                       best_val, best_ratio);
+            }
+        }
+        if (config("user_debug") > 1) {
+            printf("    len %d square alg1/alg2 ratio = %.6f\n", mid, ratio);
+        }
 
-	/* stop search if near unity */
-	if (close_to_one(ratio)) {
-	    low = mid;
-	    high = mid;
-	    if (config("user_debug") > 0) {
-		printf("\twe are close enough to unity ratio at: %d\n", mid);
-	    }
-	    break;
-	}
+        /* stop search if near unity */
+        if (close_to_one(ratio)) {
+            low = mid;
+            high = mid;
+            if (config("user_debug") > 0) {
+                printf("\twe are close enough to unity ratio at: %d\n", mid);
+            }
+            break;
+        }
 
-	/* bump lower range up if we went over */
-	if (ratio > 1.0) {
-	    if (config("user_debug") > 2) {
-		printf("\tmove low from %d up to %d\n",
-		    low, mid);
-	    }
-	    low = mid;
+        /* bump lower range up if we went over */
+        if (ratio > 1.0) {
+            if (config("user_debug") > 2) {
+                printf("\tmove low from %d up to %d\n",
+                    low, mid);
+            }
+            low = mid;
 
-	/* drop higher range down if we went under */
-	} else {
-	    if (config("user_debug") > 2) {
-		printf("\tmove high from %d down to %d\n",
-		     high, mid);
-	    }
-	    high = mid;
-	}
+        /* drop higher range down if we went under */
+        } else {
+            if (config("user_debug") > 2) {
+                printf("\tmove high from %d down to %d\n",
+                     high, mid);
+            }
+            high = mid;
+        }
 
-	/* report on test loop progress */
-	if (config("user_debug") > 1) {
-	    printf("\tsetting low: %d high: %d diff: %d\n",
-		   low, high, high-low);
-	}
+        /* report on test loop progress */
+        if (config("user_debug") > 1) {
+            printf("\tsetting low: %d high: %d diff: %d\n",
+                   low, high, high-low);
+        }
     }
 
     /*
@@ -1013,13 +1013,13 @@ define best_sq2()
      */
     mid = int((low+high)/2);
     if (config("user_debug") > 0) {
-	printf("Best value for square is near %d\n", best_val);
-	printf("Best square alg1/alg2 ratio is: %.6f\n", best_ratio);
-	printf("We suggest placing this line in your .calcrc:\n");
-	printf("config(\"sq2\", %d),;\n", best_val);
-	printf("WARNING: It is believed that the output "
-	       "of this resource file is bogus!\n");
-	printf("WARNING: You may NOT wish to follow the above suggestion.\n");
+        printf("Best value for square is near %d\n", best_val);
+        printf("Best square alg1/alg2 ratio is: %.6f\n", best_ratio);
+        printf("We suggest placing this line in your .calcrc:\n");
+        printf("config(\"sq2\", %d),;\n", best_val);
+        printf("WARNING: It is believed that the output "
+               "of this resource file is bogus!\n");
+        printf("WARNING: You may NOT wish to follow the above suggestion.\n");
     }
     return mid;
 }
@@ -1029,108 +1029,108 @@ define best_sq2()
  * pow_loop - measure the CPU time to perform a set of pmod loops
  *
  * given:
- *	repeat	number of pmod loops to perform
- *	x	array of 5 values, each the same length in BASEB-bit words
+ *      repeat  number of pmod loops to perform
+ *      x       array of 5 values, each the same length in BASEB-bit words
  *
- *		NOTE: When their lengths are 1 BASEB-bit word, then a
- *		      dummy loop of simple constants are used.  Thus the
- *		      length == 1 is an approximation of loop overhead.
+ *              NOTE: When their lengths are 1 BASEB-bit word, then a
+ *                    dummy loop of simple constants are used.  Thus the
+ *                    length == 1 is an approximation of loop overhead.
  *
- *	ex	exponent for pmod value
+ *      ex      exponent for pmod value
  *
  * returns:
- *	approximate runtime to perform a pmod loop
+ *      approximate runtime to perform a pmod loop
  *
  * NOTE: This is an internal support function that is normally
- *	 not called directly from the command line.  Call the
- *	 function best_pow2() instead.
+ *       not called directly from the command line.  Call the
+ *       function best_pow2() instead.
  */
 define pow_loop(repeat, x, ex)
 {
-    local start;	/* start of execution */
-    local end;		/* end of execution */
-    local answer;	/* pmod value */
-    local len;		/* length of each element */
-    local baseb_bytes;	/* bytes in a BASEB-bit word */
+    local start;        /* start of execution */
+    local end;          /* end of execution */
+    local answer;       /* pmod value */
+    local len;          /* length of each element */
+    local baseb_bytes;  /* bytes in a BASEB-bit word */
     local i;
 
     /* firewall */
     if (!isint(repeat) || repeat < 0) {
-	quit "pow_loop: 1st arg: repeat must be an integer > 0";
+        quit "pow_loop: 1st arg: repeat must be an integer > 0";
     }
     if (size(*x) != 5) {
-	quit "pow_loop: 2nd arg matrix does not have 5 elements";
+        quit "pow_loop: 2nd arg matrix does not have 5 elements";
     }
     if (matdim(*x) != 1) {
-	quit "pow_loop: 2nd arg matrix is not 1 dimensional";
+        quit "pow_loop: 2nd arg matrix is not 1 dimensional";
     }
     if (matmin(*x, 1) != 0) {
-	quit "pow_loop: 2nd arg matrix index range does not start with 0";
+        quit "pow_loop: 2nd arg matrix index range does not start with 0";
     }
     if (matmax(*x, 1) != 4) {
-	quit "pow_loop: 2nd arg matrix index range does not end with 4";
+        quit "pow_loop: 2nd arg matrix index range does not end with 4";
     }
     baseb_bytes = config("baseb") / 8;
     len = sizeof((*x)[0]) / baseb_bytes;
     for (i=1; i < 4; ++i) {
-	if ((sizeof((*x)[i]) / baseb_bytes) != len) {
-	    quit "pow_loop: 2nd arg matrix elements are not of "
-	         "equal BASEB-bit word length";
-	}
+        if ((sizeof((*x)[i]) / baseb_bytes) != len) {
+            quit "pow_loop: 2nd arg matrix elements are not of "
+                 "equal BASEB-bit word length";
+        }
     }
     if (!isint(ex) || ex < 3) {
-	quit" pow_loop: 3rd arg ex is not an integer > 2";
+        quit" pow_loop: 3rd arg ex is not an integer > 2";
     }
 
     /* pmod pairwise, all sets of a given length */
     start = usertime();
     for (i=0; i < repeat; ++i) {
 
-	if (len == 1) {
-	    /* we use len == 1 to test this tester loop overhead */
-	    answer = pmod(0,0,0); answer = pmod(0,0,0);
-	    answer = pmod(0,0,0); answer = pmod(0,0,0);
-	    /**/
-	    answer = pmod(0,0,0); answer = pmod(0,0,0);
-	    answer = pmod(0,0,0); answer = pmod(0,0,0);
-	    /**/
-	    answer = pmod(0,0,0); answer = pmod(0,0,0);
-	    answer = pmod(0,0,0); answer = pmod(0,0,0);
-	    /**/
-	    answer = pmod(0,0,0); answer = pmod(0,0,0);
-	    answer = pmod(0,0,0); answer = pmod(0,0,0);
-	    /**/
-	    answer = pmod(0,0,0); answer = pmod(0,0,0);
-	    answer = pmod(0,0,0); answer = pmod(0,0,0);
-	    /**/
-	    answer = pmod(0,0,0); answer = pmod(0,0,0);
-	    answer = pmod(0,0,0); answer = pmod(0,0,0);
-	} else {
-	    answer = pmod((*x)[0], ex, (*x)[1]);
-	    answer = pmod((*x)[0], ex, (*x)[2]);
-	    answer = pmod((*x)[0], ex, (*x)[3]);
-	    answer = pmod((*x)[0], ex, (*x)[4]);
-	    /**/
-	    answer = pmod((*x)[1], ex, (*x)[0]);
-	    answer = pmod((*x)[1], ex, (*x)[2]);
-	    answer = pmod((*x)[1], ex, (*x)[3]);
-	    answer = pmod((*x)[1], ex, (*x)[4]);
-	    /**/
-	    answer = pmod((*x)[2], ex, (*x)[0]);
-	    answer = pmod((*x)[2], ex, (*x)[1]);
-	    answer = pmod((*x)[2], ex, (*x)[3]);
-	    answer = pmod((*x)[2], ex, (*x)[4]);
-	    /**/
-	    answer = pmod((*x)[3], ex, (*x)[0]);
-	    answer = pmod((*x)[3], ex, (*x)[1]);
-	    answer = pmod((*x)[3], ex, (*x)[2]);
-	    answer = pmod((*x)[3], ex, (*x)[4]);
-	    /**/
-	    answer = pmod((*x)[4], ex, (*x)[0]);
-	    answer = pmod((*x)[4], ex, (*x)[1]);
-	    answer = pmod((*x)[4], ex, (*x)[2]);
-	    answer = pmod((*x)[4], ex, (*x)[3]);
-	}
+        if (len == 1) {
+            /* we use len == 1 to test this tester loop overhead */
+            answer = pmod(0,0,0); answer = pmod(0,0,0);
+            answer = pmod(0,0,0); answer = pmod(0,0,0);
+            /**/
+            answer = pmod(0,0,0); answer = pmod(0,0,0);
+            answer = pmod(0,0,0); answer = pmod(0,0,0);
+            /**/
+            answer = pmod(0,0,0); answer = pmod(0,0,0);
+            answer = pmod(0,0,0); answer = pmod(0,0,0);
+            /**/
+            answer = pmod(0,0,0); answer = pmod(0,0,0);
+            answer = pmod(0,0,0); answer = pmod(0,0,0);
+            /**/
+            answer = pmod(0,0,0); answer = pmod(0,0,0);
+            answer = pmod(0,0,0); answer = pmod(0,0,0);
+            /**/
+            answer = pmod(0,0,0); answer = pmod(0,0,0);
+            answer = pmod(0,0,0); answer = pmod(0,0,0);
+        } else {
+            answer = pmod((*x)[0], ex, (*x)[1]);
+            answer = pmod((*x)[0], ex, (*x)[2]);
+            answer = pmod((*x)[0], ex, (*x)[3]);
+            answer = pmod((*x)[0], ex, (*x)[4]);
+            /**/
+            answer = pmod((*x)[1], ex, (*x)[0]);
+            answer = pmod((*x)[1], ex, (*x)[2]);
+            answer = pmod((*x)[1], ex, (*x)[3]);
+            answer = pmod((*x)[1], ex, (*x)[4]);
+            /**/
+            answer = pmod((*x)[2], ex, (*x)[0]);
+            answer = pmod((*x)[2], ex, (*x)[1]);
+            answer = pmod((*x)[2], ex, (*x)[3]);
+            answer = pmod((*x)[2], ex, (*x)[4]);
+            /**/
+            answer = pmod((*x)[3], ex, (*x)[0]);
+            answer = pmod((*x)[3], ex, (*x)[1]);
+            answer = pmod((*x)[3], ex, (*x)[2]);
+            answer = pmod((*x)[3], ex, (*x)[4]);
+            /**/
+            answer = pmod((*x)[4], ex, (*x)[0]);
+            answer = pmod((*x)[4], ex, (*x)[1]);
+            answer = pmod((*x)[4], ex, (*x)[2]);
+            answer = pmod((*x)[4], ex, (*x)[3]);
+        }
     }
 
     /*
@@ -1145,10 +1145,10 @@ define pow_loop(repeat, x, ex)
  * pow_ratio - ratio of rates of 1st and 2nd pmod algorithms
  *
  * given:
- *	len	length in BASEB-bit words to pmod
+ *      len     length in BASEB-bit words to pmod
  *
  * return:
- *	ratio of (1st / 2nd) algorithm rates
+ *      ratio of (1st / 2nd) algorithm rates
  *
  * When want to determine a rate to a precision of 1 part in 1000.
  * Most systems today return CPU time to at least 10 msec precision.
@@ -1157,29 +1157,29 @@ define pow_loop(repeat, x, ex)
  * which usually requires timing of loops that last 10 seconds or more.
  *
  * NOTE: This is an internal support function that is normally
- *	 not called directly from the command line.  Call the
- *	 function best_pow2() instead.
+ *       not called directly from the command line.  Call the
+ *       function best_pow2() instead.
  */
 define pow_ratio(len)
 {
-    local mat x[5];		/* array of values for pow_loop to pmod */
-    local mat one[5];		/* array if single BASEB-bit values */
-    local baseb;		/* calc word size in bits */
-    local orig_cfg;		/* caller configuration */
-    local loops;		/* number of pmod loops to time */
-    local tlen;			/* time to perform some number of loops */
-    local tover;		/* est of time for loop overhead */
-    local alg1_rate;		/* loop rate of 1st algorithm */
-    local alg2_rate;		/* loop rate of 2nd algorithm */
-    local ex;			/* exponent to use in pow_loop() */
-    local ret;			/* return ratio, or 1.0 */
+    local mat x[5];             /* array of values for pow_loop to pmod */
+    local mat one[5];           /* array if single BASEB-bit values */
+    local baseb;                /* calc word size in bits */
+    local orig_cfg;             /* caller configuration */
+    local loops;                /* number of pmod loops to time */
+    local tlen;                 /* time to perform some number of loops */
+    local tover;                /* est of time for loop overhead */
+    local alg1_rate;            /* loop rate of 1st algorithm */
+    local alg2_rate;            /* loop rate of 2nd algorithm */
+    local ex;                   /* exponent to use in pow_loop() */
+    local ret;                  /* return ratio, or 1.0 */
     local i;
 
     /*
      * firewall
      */
     if (!isint(len) || len < 2) {
-	quit "pow_ratio: 1st arg: len is not an integer > 1";
+        quit "pow_ratio: 1st arg: len is not an integer > 1";
     }
 
     /*
@@ -1206,10 +1206,10 @@ define pow_ratio(len)
     baseb = config("baseb");
     srand(sha1(sha1(ex, baseb, config("version"))));
     for (i=0; i < 5; ++i) {
-	/* force the values to be a full len words long */
-	x[i] = ((1<<(((len-1) * baseb) + baseb-1)) |
-		    randbit(((len-1) * baseb) + baseb-2));
-	/* single BASEB-bit values */
+        /* force the values to be a full len words long */
+        x[i] = ((1<<(((len-1) * baseb) + baseb-1)) |
+                    randbit(((len-1) * baseb) + baseb-2));
+        /* single BASEB-bit values */
         one[i] = 1;
     }
 
@@ -1220,11 +1220,11 @@ define pow_ratio(len)
     config("redc2", 2^31-1),;
     loops = 1/2;
     do {
-	loops *= 2;
-	tlen = pow_loop(loops, &x, ex);
-	if (config("user_debug") > 3) {
-	    printf("\t    alg1 loops %d took %.3f sec\n", loops, tlen);
-	}
+        loops *= 2;
+        tlen = pow_loop(loops, &x, ex);
+        if (config("user_debug") > 3) {
+            printf("\t    alg1 loops %d took %.3f sec\n", loops, tlen);
+        }
     } while (tlen < 1.0);
 
     /*
@@ -1232,29 +1232,29 @@ define pow_ratio(len)
      */
     loops = max(1, ceil(loops * test_time / tlen));
     if (loops < 16) {
-	if (config("user_debug") > 1) {
-	    printf("    we must expand alg1 loop test time to about %d secs\n",
-		ceil(test_time * (16 / loops)));
-	}
-	loops = 16;
+        if (config("user_debug") > 1) {
+            printf("    we must expand alg1 loop test time to about %d secs\n",
+                ceil(test_time * (16 / loops)));
+        }
+        loops = 16;
     }
     tlen = pow_loop(loops, &x, ex);
     if (config("user_debug") > 3) {
-	printf("\t    alg1 time = %.3f secs\n", tlen);
+        printf("\t    alg1 time = %.3f secs\n", tlen);
     }
     tover = pow_loop(loops, &one, ex);
     if (config("user_debug") > 3) {
-	printf("\t    alg1 overhead look %.3f secs\n", tover);
+        printf("\t    alg1 overhead look %.3f secs\n", tover);
     }
     if (tlen <= tover) {
-	quit "pow_ratio: overhead >= loop time";
+        quit "pow_ratio: overhead >= loop time";
     }
     alg1_rate = loops / (tlen - tover);
     if (config("user_debug") > 2) {
-	printf("\tpmod alg1 rate = %.3f loopsets/sec\n", alg1_rate);
+        printf("\tpmod alg1 rate = %.3f loopsets/sec\n", alg1_rate);
     }
     if (alg1_rate <= 0.0) {
-	quit "pow_ratio: alg1 rate was <= 0.0";
+        quit "pow_ratio: alg1 rate was <= 0.0";
     }
 
     /*
@@ -1264,11 +1264,11 @@ define pow_ratio(len)
     config("redc2", 2^31-1),;
     loops = 1/2;
     do {
-	loops *= 2;
-	tlen = pow_loop(loops, &x, ex);
-	if (config("user_debug") > 3) {
-	    printf("\t    alg2 loops %d took %.3f sec\n", loops, tlen);
-	}
+        loops *= 2;
+        tlen = pow_loop(loops, &x, ex);
+        if (config("user_debug") > 3) {
+            printf("\t    alg2 loops %d took %.3f sec\n", loops, tlen);
+        }
     } while (tlen < 1.0);
 
     /*
@@ -1276,29 +1276,29 @@ define pow_ratio(len)
      */
     loops = max(1, ceil(loops * test_time / tlen));
     if (loops < 16) {
-	if (config("user_debug") > 1) {
-	    printf("    we must expand alg2 loop test time to about %d secs\n",
-		ceil(test_time * (16 / loops)));
-	}
-	loops = 16;
+        if (config("user_debug") > 1) {
+            printf("    we must expand alg2 loop test time to about %d secs\n",
+                ceil(test_time * (16 / loops)));
+        }
+        loops = 16;
     }
     tlen = pow_loop(loops, &x, ex);
     if (config("user_debug") > 3) {
-	printf("\t    alg2 time = %.3f secs\n", tlen);
+        printf("\t    alg2 time = %.3f secs\n", tlen);
     }
     tover = pow_loop(loops, &one, ex);
     if (config("user_debug") > 3) {
-	printf("\t    alg2 overhead look %.3f secs\n", tover);
+        printf("\t    alg2 overhead look %.3f secs\n", tover);
     }
     if (tlen <= tover) {
-	quit "pow_ratio: overhead >= loop time";
+        quit "pow_ratio: overhead >= loop time";
     }
     alg2_rate = loops / (tlen - tover);
     if (config("user_debug") > 2) {
-	printf("\tpmod alg2 rate = %.3f loopsets/sec\n", alg2_rate);
+        printf("\tpmod alg2 rate = %.3f loopsets/sec\n", alg2_rate);
     }
     if (alg2_rate <= 0.0) {
-	quit "pow_ratio: alg2 rate was <= 0.0";
+        quit "pow_ratio: alg2 rate was <= 0.0";
     }
 
     /*
@@ -1311,8 +1311,8 @@ define pow_ratio(len)
      */
     ret = alg1_rate / alg2_rate;
     if (config("user_debug") > 2) {
-	printf("\tprecise ratio is: %.f pow_ratio will return: %.3f\n",
-		alg1_rate / alg2_rate, ret);
+        printf("\tprecise ratio is: %.f pow_ratio will return: %.3f\n",
+                alg1_rate / alg2_rate, ret);
     }
     return ret;
 }
@@ -1322,26 +1322,26 @@ define pow_ratio(len)
  * best_pow2 - determine the best config("pow2") parameter w/o REDC2
  *
  * NOTE: Due to precision problems with CPU measurements, it is not
- *	 unusual for the output of this function to vary slightly
- *	 from run to run.
+ *       unusual for the output of this function to vary slightly
+ *       from run to run.
  *
  * NOTE: This function is designed to take a long time to run.
- *	  We recommend setting:
+ *        We recommend setting:
  *
- *		config("user_debug", 2)
+ *              config("user_debug", 2)
  *
- *	  so that yon can watch the progress of this function.
+ *        so that yon can watch the progress of this function.
  */
 define best_pow2()
 {
-    local ratio;	/* previously calculated alg1/alg2 ratio */
-    local low;		/* low loop value tested */
-    local high;		/* high loop value tested */
-    local mid;		/* between low and high */
-    local best_val;	/* value found with ratio closest to unity */
-    local best_ratio;	/* closest ratio found to unity */
-    local expand;	/* how fast to expand the length */
-    local looped;	/* 1 ==> we have expanded lengths before */
+    local ratio;        /* previously calculated alg1/alg2 ratio */
+    local low;          /* low loop value tested */
+    local high;         /* high loop value tested */
+    local mid;          /* between low and high */
+    local best_val;     /* value found with ratio closest to unity */
+    local best_ratio;   /* closest ratio found to unity */
+    local expand;       /* how fast to expand the length */
+    local looped;       /* 1 ==> we have expanded lengths before */
 
     /*
      * setup
@@ -1351,8 +1351,8 @@ define best_pow2()
     printf("The best_pow2() function will take a LONG time to run!\n");
     printf("It is important that best_pow2() run on an otherwise idle host!\n");
     if (config("user_debug") <= 0) {
-	printf("To monitor progress, set user_debug to 2: "
-	       "config(\"user_debug\", 2)\n");
+        printf("To monitor progress, set user_debug to 2: "
+               "config(\"user_debug\", 2)\n");
     }
     printf("Starting with loop test time of %d secs\n", test_time);
 
@@ -1366,31 +1366,31 @@ define best_pow2()
     low = 4;
     high = 4;
     best_val = high;
-    best_ratio = 1e10;	/* not a real value */
+    best_ratio = 1e10;  /* not a real value */
     do {
-	high *= 4;
-	if (config("user_debug") > 0) {
-	    printf("testing pmod alg1/alg2 ratio for len = %d\n", high);
-	}
-	ratio = pow_ratio(high);
-	if (abs(ratio - 1.0) < abs(best_ratio - 1.0)) {
-	    best_val = high;
-	    best_ratio = ratio;
-	    if (config("user_debug") > 1) {
-		printf("    len %d has a new closest ratio to unity: %.6f\n",
-		       best_val, best_ratio);
-	    }
-	}
-	if (config("user_debug") > 1) {
-	    printf("    pmod alg1/alg2 ratio = %.3f\n", ratio);
-	    if (ratio > 1.0 && ratio <= 1.02) {
-	    printf("    while alg1 is slightly better than alg2, "
-		   "it is not clearly better\n");
-	    }
-	}
+        high *= 4;
+        if (config("user_debug") > 0) {
+            printf("testing pmod alg1/alg2 ratio for len = %d\n", high);
+        }
+        ratio = pow_ratio(high);
+        if (abs(ratio - 1.0) < abs(best_ratio - 1.0)) {
+            best_val = high;
+            best_ratio = ratio;
+            if (config("user_debug") > 1) {
+                printf("    len %d has a new closest ratio to unity: %.6f\n",
+                       best_val, best_ratio);
+            }
+        }
+        if (config("user_debug") > 1) {
+            printf("    pmod alg1/alg2 ratio = %.3f\n", ratio);
+            if (ratio > 1.0 && ratio <= 1.02) {
+            printf("    while alg1 is slightly better than alg2, "
+                   "it is not clearly better\n");
+            }
+        }
     } while (ratio <= 1.02);
     if (config("user_debug") > 0) {
-	printf("starting the pow2 search above %d\n", high);
+        printf("starting the pow2 search above %d\n", high);
     }
 
     /*
@@ -1398,56 +1398,56 @@ define best_pow2()
      */
     looped = 0;
     do {
-	/*
-	 * determine the parameters of the next ratio test
-	 *
-	 * We will multiplicatively expand our test level until
-	 * the ratio drops below 1.0.
-	 *
-	 * NOTE: At low lengths, the ratios seen to be very small
-	 *	 so we force an expansion of 4 to speed us on our
-	 *	 way to larger lengths.  At these somewhat larger
-	 *	 lengths, the ratios usually don't get faster than
-	 *	 1.25, so we need to expand force a more rapid
-	 *	 expansion than normal.  At lengths longer than
-	 *	 2k, the time to test becomes very long, so we
-	 *	 want to slow down at these higher lengths.
-	 */
-	expand = 2;
-	if (looped) {
-	    low = high;
-	}
-	high *= expand;
-	if (config("user_debug") > 1) {
-	    printf("    expand the next test range by a factor of %d\n",
-		   expand);
-	}
+        /*
+         * determine the parameters of the next ratio test
+         *
+         * We will multiplicatively expand our test level until
+         * the ratio drops below 1.0.
+         *
+         * NOTE: At low lengths, the ratios seen to be very small
+         *       so we force an expansion of 4 to speed us on our
+         *       way to larger lengths.  At these somewhat larger
+         *       lengths, the ratios usually don't get faster than
+         *       1.25, so we need to expand force a more rapid
+         *       expansion than normal.  At lengths longer than
+         *       2k, the time to test becomes very long, so we
+         *       want to slow down at these higher lengths.
+         */
+        expand = 2;
+        if (looped) {
+            low = high;
+        }
+        high *= expand;
+        if (config("user_debug") > 1) {
+            printf("    expand the next test range by a factor of %d\n",
+                   expand);
+        }
 
-	/*
-	 * determine the alg1/alg2 test ratio for this new length
-	 */
-	if (high >= 2^31) {
-	    quit "best_pow2: test implies pow2 >= 2^31, which seems bogus";
-	}
-	if (config("user_debug") > 0) {
-	    printf("testing pmod alg1/alg2 ratio for len = %d\n", high);
-	}
-	ratio = pow_ratio(high);
-	if (abs(ratio - 1.0) < abs(best_ratio - 1.0)) {
-	    best_val = high;
-	    best_ratio = ratio;
-	    if (config("user_debug") > 1) {
-		printf("    len %d has a new closest ratio to unity: %.6f\n",
-		       best_val, best_ratio);
-	    }
-	}
-	if (config("user_debug") > 1) {
-	    printf("    pmod alg1/alg2 ratio = %.6f\n", ratio);
-	}
-	looped = 1;
+        /*
+         * determine the alg1/alg2 test ratio for this new length
+         */
+        if (high >= 2^31) {
+            quit "best_pow2: test implies pow2 >= 2^31, which seems bogus";
+        }
+        if (config("user_debug") > 0) {
+            printf("testing pmod alg1/alg2 ratio for len = %d\n", high);
+        }
+        ratio = pow_ratio(high);
+        if (abs(ratio - 1.0) < abs(best_ratio - 1.0)) {
+            best_val = high;
+            best_ratio = ratio;
+            if (config("user_debug") > 1) {
+                printf("    len %d has a new closest ratio to unity: %.6f\n",
+                       best_val, best_ratio);
+            }
+        }
+        if (config("user_debug") > 1) {
+            printf("    pmod alg1/alg2 ratio = %.6f\n", ratio);
+        }
+        looped = 1;
     } while (ratio > 1.0);
     if (config("user_debug") > 0) {
-	printf("Starting binary search between %d and %d\n", low, high);
+        printf("Starting binary search between %d and %d\n", low, high);
     }
 
     /*
@@ -1455,56 +1455,56 @@ define best_pow2()
      */
     while (low+1 < high) {
 
-	/* try the mid-point */
-	mid = int((low+high)/2);
-	if (config("user_debug") > 0) {
-	    printf("testing pow2 alg1/alg2 ratio for len = %d\n", mid);
-	}
-	ratio = pow_ratio(mid);
-	if (abs(ratio - 1.0) < abs(best_ratio - 1.0)) {
-	    best_val = mid;
-	    best_ratio = ratio;
-	    if (config("user_debug") > 1) {
-		printf("    len %d has a new closest ratio to unity: %.6f\n",
-		       best_val, best_ratio);
-	    }
-	}
-	if (config("user_debug") > 1) {
-	    printf("    len %d pmod alg1/alg2 ratio = %.6f\n", mid, ratio);
-	}
+        /* try the mid-point */
+        mid = int((low+high)/2);
+        if (config("user_debug") > 0) {
+            printf("testing pow2 alg1/alg2 ratio for len = %d\n", mid);
+        }
+        ratio = pow_ratio(mid);
+        if (abs(ratio - 1.0) < abs(best_ratio - 1.0)) {
+            best_val = mid;
+            best_ratio = ratio;
+            if (config("user_debug") > 1) {
+                printf("    len %d has a new closest ratio to unity: %.6f\n",
+                       best_val, best_ratio);
+            }
+        }
+        if (config("user_debug") > 1) {
+            printf("    len %d pmod alg1/alg2 ratio = %.6f\n", mid, ratio);
+        }
 
-	/* stop search if near unity */
-	if (close_to_one(ratio)) {
-	    low = mid;
-	    high = mid;
-	    if (config("user_debug") > 0) {
-		printf("\twe are close enough to unity ratio at: %d\n", mid);
-	    }
-	    break;
-	}
+        /* stop search if near unity */
+        if (close_to_one(ratio)) {
+            low = mid;
+            high = mid;
+            if (config("user_debug") > 0) {
+                printf("\twe are close enough to unity ratio at: %d\n", mid);
+            }
+            break;
+        }
 
-	/* bump lower range up if we went over */
-	if (ratio > 1.0) {
-	    if (config("user_debug") > 2) {
-		printf("\tmove low from %d up to %d\n",
-		    low, mid);
-	    }
-	    low = mid;
+        /* bump lower range up if we went over */
+        if (ratio > 1.0) {
+            if (config("user_debug") > 2) {
+                printf("\tmove low from %d up to %d\n",
+                    low, mid);
+            }
+            low = mid;
 
-	/* drop higher range down if we went under */
-	} else {
-	    if (config("user_debug") > 2) {
-		printf("\tmove high from %d down to %d\n",
-		     high, mid);
-	    }
-	    high = mid;
-	}
+        /* drop higher range down if we went under */
+        } else {
+            if (config("user_debug") > 2) {
+                printf("\tmove high from %d down to %d\n",
+                     high, mid);
+            }
+            high = mid;
+        }
 
-	/* report on test loop progress */
-	if (config("user_debug") > 1) {
-	    printf("\tsetting low: %d high: %d diff: %d\n",
-		   low, high, high-low);
-	}
+        /* report on test loop progress */
+        if (config("user_debug") > 1) {
+            printf("\tsetting low: %d high: %d diff: %d\n",
+                   low, high, high-low);
+        }
     }
 
     /*
@@ -1512,13 +1512,13 @@ define best_pow2()
      */
     mid = int((low+high)/2);
     if (config("user_debug") > 0) {
-	printf("Best value for pmod is near %d\n", best_val);
-	printf("Best pmod alg1/alg2 ratio is: %.6f\n", best_ratio);
-	printf("We suggest placing this line in your .calcrc:\n");
-	printf("config(\"pow2\", %d),;\n", best_val);
-	printf("WARNING: It is believed that the output "
-	       "of this resource file is bogus!\n");
-	printf("WARNING: You may NOT wish to follow the above suggestion.\n");
+        printf("Best value for pmod is near %d\n", best_val);
+        printf("Best pmod alg1/alg2 ratio is: %.6f\n", best_ratio);
+        printf("We suggest placing this line in your .calcrc:\n");
+        printf("config(\"pow2\", %d),;\n", best_val);
+        printf("WARNING: It is believed that the output "
+               "of this resource file is bogus!\n");
+        printf("WARNING: You may NOT wish to follow the above suggestion.\n");
     }
     return mid;
 }

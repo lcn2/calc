@@ -5,10 +5,10 @@ SYNOPSIS
     fputstr(fs, s_1, s_2, ...)
 
 TYPES
-    fs		file stream open for writing
-    s_1, ...	string
+    fs          file stream open for writing
+    s_1, ...    string
 
-    return	null or error value
+    return      null or error value
 
 DESCRIPTION
     If the stream cannot be written to or an argument is of the wrong
@@ -22,13 +22,13 @@ EXAMPLE
     ; fputstr(f, "Alpha", "Beta")
     ; freopen(f, "r")
     ; fgetstr(f)
-	"Alpha"
+        "Alpha"
     ; fgetstr(f)
-	"Beta"
+        "Beta"
     ; fgetstr(f)
 
     ; fputstr(f, "Gamma")
-	Error E_FPUTSTR_3
+        Error E_FPUTSTR_3
 
 LIMITS
     none
@@ -47,7 +47,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -55,8 +55,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1996/04/30 03:05:18
-## File existed as early as:	1996
+## Under source code control:   1996/04/30 03:05:18
+## File existed as early as:    1996
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

@@ -11,7 +11,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -19,11 +19,11 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	2023/07/19 17:58:42
- * File existed as early as:	2023
+ * Under source code control:   2023/07/19 17:58:42
+ * File existed as early as:    2023
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -42,7 +42,7 @@
 #if !defined(HAVE_STDBOOL_H)
 
 /* fake a <stdbool.h> header file */
-typedef unsigned char bool;	/* fake boolean typedef */
+typedef unsigned char bool;     /* fake boolean typedef */
 #undef true
 #define true ((bool)(1))
 #undef false

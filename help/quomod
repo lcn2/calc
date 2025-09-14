@@ -5,13 +5,13 @@ SYNOPSIS
     quomod(x, y, Q, R [, rnd])
 
 TYPES
-    x		real
-    y		real
-    Q		null-or-real-valued lvalue with assign-to permission
-    R		null-or-real-valued lvalue with assign-to permission
-    rnd		nonnegative integer, defaults to config("quomod")
+    x           real
+    y           real
+    Q           null-or-real-valued lvalue with assign-to permission
+    R           null-or-real-valued lvalue with assign-to permission
+    rnd         nonnegative integer, defaults to config("quomod")
 
-    return	0 or 1
+    return      0 or 1
 
 DESCRIPTION
     If y is nonzero and x/y is an integer q, this function assigns
@@ -31,19 +31,19 @@ DESCRIPTION
     smallest, etc. The effects of the most commonly used values of
     rnd are described in the following table:
 
-       rnd	        q			      r
+       rnd              q                             r
 
-	0   round down. q = floor(x/y)	   same sign as y
-	1   round up, q = ceil(x/y)	   opposite sign to y
-	2   round to zero, q = int(x/y)	   same sign as x, r = y * frac(x/y)
-	3   round from zero		   opposite sign to x
-	4				   positive
-	5				   negative
-	6				   same sign as x/y
-	7				   opposite sigh to x/y
+        0   round down. q = floor(x/y)     same sign as y
+        1   round up, q = ceil(x/y)        opposite sign to y
+        2   round to zero, q = int(x/y)    same sign as x, r = y * frac(x/y)
+        3   round from zero                opposite sign to x
+        4                                  positive
+        5                                  negative
+        6                                  same sign as x/y
+        7                                  opposite sigh to x/y
 
-	8   to nearest even
-	9   to nearest odd
+        8   to nearest even
+        9   to nearest odd
 
     For 16 <= rnd < 32, the rounding is to the nearest integer and r
     is the smallest (in absolute value) remainder except when x/y is
@@ -96,7 +96,7 @@ LINK LIBRARY
     BOOL qquomod(NUMBER *q1, NUMBER *q2, NUMBER **quo, NUMBER **mod)
 
 SEE ALSO
-    //,	 %, quo, mod, floor. ceil, int. frac
+    //,  %, quo, mod, floor. ceil, int. frac
 
 ## Copyright (C) 1999-2006,2021  Landon Curt Noll
 ##
@@ -106,7 +106,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -114,8 +114,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/05/07 03:17:03
-## File existed as early as:	1995
+## Under source code control:   1995/05/07 03:17:03
+## File existed as early as:    1995
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

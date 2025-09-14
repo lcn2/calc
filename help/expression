@@ -9,20 +9,20 @@ Expression sequences
     then the value of '.' is set to the value of the last expression.
     Also, if an expression is a non-assignment, then the value of the
     expression is automatically printed if its value is not NULL.
-    Some operations such as	pre-increment and plus-equals are also
+    Some operations such as     pre-increment and plus-equals are also
     treated as assignments.
 
     Examples of this are the following:
 
-    expression		    sets '.' to		prints
-    ----------		    -----------		------
-    3+4				7		   7
-    2*4; 8+1; fact(3)		6		8, 9, and 6
-    x=3^2			9		   -
-    if (3 < 2) 5; else 6	6		   6
-    x++				old x		   -
-    print fact(4)		-		   24
-    null()			null()		   -
+    expression              sets '.' to         prints
+    ----------              -----------         ------
+    3+4                         7                  7
+    2*4; 8+1; fact(3)           6               8, 9, and 6
+    x=3^2                       9                  -
+    if (3 < 2) 5; else 6        6                  6
+    x++                         old x              -
+    print fact(4)               -                  24
+    null()                      null()             -
 
     Variables can be defined at the beginning of an expression sequence.
     This is most useful for local variables, as in the following example,
@@ -42,7 +42,7 @@ Expression sequences
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -50,8 +50,8 @@ Expression sequences
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1991/07/21 04:37:18
-## File existed as early as:	1991
+## Under source code control:   1991/07/21 04:37:18
+## File existed as early as:    1991
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,10 +17,10 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1993/05/02 20:09:20
- * File existed as early as:	1993
+ * Under source code control:   1993/05/02 20:09:20
+ * File existed as early as:    1993
  *
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -32,24 +32,24 @@
  * Default binding file and history size.
  */
 #ifndef HIST_BINDING_FILE
-#define HIST_BINDING_FILE	"/usr/lib/hist.bind"
+#define HIST_BINDING_FILE       "/usr/lib/hist.bind"
 #endif
 
 #ifndef HIST_SIZE
-#define HIST_SIZE		(1024*32)
+#define HIST_SIZE               (1024*32)
 #endif
 
 
 /*
  * path search defines
  */
-#define HOMECHAR	'~'	/* char which indicates home directory */
-#define DOTCHAR		'.'	/* char which indicates current directory */
-#define PATHCHAR	'/'	/* char which separates path components */
+#define HOMECHAR        '~'     /* char which indicates home directory */
+#define DOTCHAR         '.'     /* char which indicates current directory */
+#define PATHCHAR        '/'     /* char which separates path components */
 #if defined(_WIN32) || defined(_WIN64)
-#define LISTCHAR	';'	/* char which separates paths in a list */
+#define LISTCHAR        ';'     /* char which separates paths in a list */
 #else
-#define LISTCHAR	':'	/* char which separates paths in a list */
+#define LISTCHAR        ':'     /* char which separates paths in a list */
 #endif
 
 
@@ -58,16 +58,16 @@
  * not prevent calling the other routines, but fancy command line editing
  * is then disabled.
  */
-#define HIST_SUCCESS	0	/* successfully initialized */
-#define HIST_INITED	1	/* initialization is already done */
-#define HIST_NOFILE	2	/* bindings file could not be read */
-#define HIST_NOTTY	3	/* terminal modes could not be set */
+#define HIST_SUCCESS    0       /* successfully initialized */
+#define HIST_INITED     1       /* initialization is already done */
+#define HIST_NOFILE     2       /* bindings file could not be read */
+#define HIST_NOTTY      3       /* terminal modes could not be set */
 
 
-E_FUNC	int	hist_init(char *filename);
-E_FUNC	void	hist_term(void);
-E_FUNC	size_t	hist_getline(char *prompt, char *buf, size_t len);
-E_FUNC	void	hist_saveline(char *line, int len);
+E_FUNC  int     hist_init(char *filename);
+E_FUNC  void    hist_term(void);
+E_FUNC  size_t  hist_getline(char *prompt, char *buf, size_t len);
+E_FUNC  void    hist_saveline(char *line, int len);
 
 
 #endif /* !INCLUDE_HIST_H */

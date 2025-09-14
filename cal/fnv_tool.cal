@@ -3,10 +3,10 @@
  *
  * This file provides the following functions:
  *
- *	find_fnv_prime(bits)
- *	deprecated_fnv0(bits, fnv_prime, string)
- *	fnv_offset_basis(bits, fnv_prime)
- *	fnv1a_style_hash(bits, fnv_prime, prev_hash, string)
+ *      find_fnv_prime(bits)
+ *      deprecated_fnv0(bits, fnv_prime, string)
+ *      fnv_offset_basis(bits, fnv_prime)
+ *      fnv1a_style_hash(bits, fnv_prime, prev_hash, string)
  *
  * See the individual function for details on args and return value.
  *
@@ -22,8 +22,8 @@
  *
  * For more information on the FNV hash see:
  *
- *	https://en.wikipedia.org/wiki/Fowler-Noll-Vo_hash_function
- *	http://www.isthe.com/chongo/tech/comp/fnv/index.html
+ *      https://en.wikipedia.org/wiki/Fowler-Noll-Vo_hash_function
+ *      http://www.isthe.com/chongo/tech/comp/fnv/index.html
  *
  * IMPORTANT NOTE:
  *
@@ -36,40 +36,40 @@
  *
  * Let integer n > 0 be the number if bits in the FNV hash.  Then:
  *
- *	t = floor((5+n)/12)
+ *      t = floor((5+n)/12)
  *
  * The FNV prime, for the given n bits is the smallest prime of the form:
  *
- *	p = 256^t + 2^8 + b
+ *      p = 256^t + 2^8 + b
  *
  * such that:
  *
- *	0 < b < 2^8
- *	The number of one-bits in b must be 4 or 5
- *	p mod (2^40 - 2^24 - 1) > (2^24 + 2^8 + 2^7)
+ *      0 < b < 2^8
+ *      The number of one-bits in b must be 4 or 5
+ *      p mod (2^40 - 2^24 - 1) > (2^24 + 2^8 + 2^7)
  *
  * If you force n to not be a power of 2, for example:
  *
- *	n = 44
+ *      n = 44
  *
  * you will find that the FNV prime for 44 bits is:
  *
- *	p44 = 4294967597
- *	    = 0x10000012d
- *	    = 0b100000000000000000000000100101101
- *	    = 2^32 + 301 = 2^32 + 2^8 + 2^5 + 2^3 + 2^2 + 2^0
+ *      p44 = 4294967597
+ *          = 0x10000012d
+ *          = 0b100000000000000000000000100101101
+ *          = 2^32 + 301 = 2^32 + 2^8 + 2^5 + 2^3 + 2^2 + 2^0
  *
  * However a hash size of 44 bits is not a true FNV hash, it is only a "FNV-style" hash.
  *
  * NOTE: We disallow n <= 31 because there are no FNV primes that small.
  *
  * NOTE: For n that is a power of 2 and n > 1024, you will find that
- *	 that FNV primes become so rare that that one may not find a suitable
- *	 FNV prime.  For n = powers of 2 >= 2048 and <= 1048576,
- *	 there is NO FNV primes.
+ *       that FNV primes become so rare that that one may not find a suitable
+ *       FNV prime.  For n = powers of 2 >= 2048 and <= 1048576,
+ *       there is NO FNV primes.
  *
- *	 As for as hashing goes, large values of n, even if an
- *	 FNV hash may be found, are unlikely to be truly useful.  :-)
+ *       As for as hashing goes, large values of n, even if an
+ *       FNV hash may be found, are unlikely to be truly useful.  :-)
  */
 /*
  * Copyright (c) 2023 by Landon Curt Noll.  All Rights Reserved.
@@ -105,86 +105,86 @@
  * for a value and provide commends on the value of bits.
  *
  * given:
- *	bits	number of bits in the hash, null() ==> prompt for value
+ *      bits    number of bits in the hash, null() ==> prompt for value
  *
  * returns:
- *	0 ==> no FNV prime found
- *	>0 ==> FNV prime
+ *      0 ==> no FNV prime found
+ *      >0 ==> FNV prime
  */
 define find_fnv_prime(bits)
 {
-    local b;		/* lower octet of the potential FNV prime: [1,255] */
-    local p;		/* value to test as an FNV prime */
-    local t;		/* power of 256 part of the FNV prime */
-    local one_bits;	/* number of 1 bits in b */
-    local p_minus_b;	/* potential FNV prime less b */
-    local interactive;	/* true ==> interactive mode and print commentary */
+    local b;            /* lower octet of the potential FNV prime: [1,255] */
+    local p;            /* value to test as an FNV prime */
+    local t;            /* power of 256 part of the FNV prime */
+    local one_bits;     /* number of 1 bits in b */
+    local p_minus_b;    /* potential FNV prime less b */
+    local interactive;  /* true ==> interactive mode and print commentary */
 
     /*
      * case: no arg, prompt for bits and print commentary
      */
-    interactive = 0;	/* assume non-interactive mode */
+    interactive = 0;    /* assume non-interactive mode */
     if (isnull(bits)) {
 
-	/*
-	 * must be attached to an interactive terminal
-	 */
-	if (!isatty(files(0))) {
-	    print "# FATAL: stdin is not a tty: not attached to an interactive terminal";
-	    return 0;
-	}
-	interactive = 1;	/* set interactive mode */
+        /*
+         * must be attached to an interactive terminal
+         */
+        if (!isatty(files(0))) {
+            print "# FATAL: stdin is not a tty: not attached to an interactive terminal";
+            return 0;
+        }
+        interactive = 1;        /* set interactive mode */
 
-	/*
-	 * prompt for the number of bits
-	 */
-	do {
-	    local strscanf_ret;		/* return from strscanf_ret */
-	    local input;		/* value read after prompt */
+        /*
+         * prompt for the number of bits
+         */
+        do {
+            local strscanf_ret;         /* return from strscanf_ret */
+            local input;                /* value read after prompt */
 
-	    /*
-	     * prompt and obtain the input
-	     */
-	    input = prompt("Enter hash size in bits: ");
-	    strscanf_ret = strscanf(input, "%i", bits);
-	    print "input =", input;
-	    print "bits =", bits;
-	    if (!isint(bits) || bits <= 0) {
-		print;
-		print "# NOTE: must enter a integer > 0, try again";
-		print;
-	    }
-	} while (!isint(bits) || bits <= 0);
+            /*
+             * prompt and obtain the input
+             */
+            input = prompt("Enter hash size in bits: ");
+            strscanf_ret = strscanf(input, "%i", bits);
+            print "input =", input;
+            print "bits =", bits;
+            if (!isint(bits) || bits <= 0) {
+                print;
+                print "# NOTE: must enter a integer > 0, try again";
+                print;
+            }
+        } while (!isint(bits) || bits <= 0);
     }
 
     /*
      * firewall - bits must be non-negative integer
      */
     if (!isint(bits) || bits < 0) {
-	if (interactive) {
-	    print "# FATAL: bits must be non-negative integer";
-	}
-	return 0;
+        if (interactive) {
+            print "# FATAL: bits must be non-negative integer";
+        }
+        return 0;
     }
 
     /*
      * provide commentary on the choice of bits if we are interactive
      */
     if (interactive) {
-	if (popcnt(bits) == 1) {
-	    if (bits > 1024) {
-		print "# WARNING: FNV primes for bit size powers of 2  > 1024 are extremely rare.";
-		print "# WARNING: There are no FNV primes for bit size powers of 2 >= 2048 and <= 1048576.";
-	    }
-	    print "n =", bits;
-	} else {
-	    if (bits < 32) {
-		print "# WARNING: bits < 32 is not recommended because there isn't enough bits to be worth hashing";
-	    }
-	    print "# WARNING: because bits is not a power of 2, we can only form an \"FNV-style hash\": not a true FNV hash.";
-	    print "# WARNING: A \"FNV-style hash\" may not have the desired hash properties of a true FNV hash.";
-	    print "n =", bits;
-	}
+        if (popcnt(bits) == 1) {
+            if (bits > 1024) {
+                print "# WARNING: FNV primes for bit size powers of 2  > 1024 are extremely rare.";
+                print "# WARNING: There are no FNV primes for bit size powers of 2 >= 2048 and <= 1048576.";
+            }
+            print "n =", bits;
+        } else {
+            if (bits < 32) {
+                print "# WARNING: bits < 32 is not recommended because there isn't enough bits to be worth hashing";
+            }
+            print "# WARNING: because bits is not a power of 2, we can only form an \"FNV-style hash\": not a true FNV hash.";
+            print "# WARNING: A \"FNV-style hash\" may not have the desired hash properties of a true FNV hash.";
+            print "n =", bits;
+        }
     }
 
     /*
@@ -198,28 +198,28 @@ define find_fnv_prime(bits)
      */
     for (b=1; b < 256; ++b) {
 
-	/*
-	 * reject b unless the of one-bits in bottom octet of p is 4 or 5
-	 */
-	one_bits = popcnt(b);
-	if (one_bits != 4 && one_bits != 5) {
-	    continue;
-	}
+        /*
+         * reject b unless the of one-bits in bottom octet of p is 4 or 5
+         */
+        one_bits = popcnt(b);
+        if (one_bits != 4 && one_bits != 5) {
+            continue;
+        }
 
-	/*
-	 * reject p if p mod (2^40 - 2^24 - 1) <= (2^24 + 2^8 + 2^7)
-	 */
-	p = p_minus_b + b;
-	if ((p % (2^40 - 2^24 - 1)) <= (2^24 + 2^8 + 2^7)) {
-	    continue;
-	}
+        /*
+         * reject p if p mod (2^40 - 2^24 - 1) <= (2^24 + 2^8 + 2^7)
+         */
+        p = p_minus_b + b;
+        if ((p % (2^40 - 2^24 - 1)) <= (2^24 + 2^8 + 2^7)) {
+            continue;
+        }
 
-	/*
-	 * accept potential p value that is prime
-	 */
-	if (ptest(p) == 1) {
-	    return p;
-	}
+        /*
+         * accept potential p value that is prime
+         */
+        if (ptest(p) == 1) {
+            return p;
+        }
     }
 
     /*
@@ -227,29 +227,29 @@ define find_fnv_prime(bits)
      */
     if (b >= 256) {
 
-	/*
-	 * examine results if interactive
-	 */
-	if (interactive) {
-	    print "# FATAL: There is no a suitable FNV prime for bits =", bits;
-	    quit "find_fnv_prime: FATAL: FNV prime search failed";
-	}
+        /*
+         * examine results if interactive
+         */
+        if (interactive) {
+            print "# FATAL: There is no a suitable FNV prime for bits =", bits;
+            quit "find_fnv_prime: FATAL: FNV prime search failed";
+        }
 
-	/*
-	 * return 0 to indicate no FNV prime found
-	 */
-	return 0;
+        /*
+         * return 0 to indicate no FNV prime found
+         */
+        return 0;
     }
 
     /*
      * provide FNV commentary if interactive
      */
     if (interactive) {
-	print "t =", t;
-	print "b =", b;
-	print "# NOTE: p = 256^":t, "+ 2^8 +", b;
-	print;
-	print "p =", p;
+        print "t =", t;
+        print "b =", b;
+        print "# NOTE: p = 256^":t, "+ 2^8 +", b;
+        print;
+        print "p =", p;
     }
 
     /*
@@ -266,44 +266,44 @@ define find_fnv_prime(bits)
  * for a hash of size bits.
  *
  * given:
- *	bits		number of bits in FNV hash
- *	fnv_prime	FNV prime, null() ==> generate suitable FNV prime if possible
- *	string		string to hash
+ *      bits            number of bits in FNV hash
+ *      fnv_prime       FNV prime, null() ==> generate suitable FNV prime if possible
+ *      string          string to hash
  *
  * returns:
- *	FNV-0 hash, for size bytes, of string
+ *      FNV-0 hash, for size bytes, of string
  *
  * NOTE: This function does NOT attempt to determine that fnv_prime is prime.
  */
 define deprecated_fnv0(bits, fnv_prime, string)
 {
-    local hash;		/* FNV hash value */
-    local len;		/* length of string */
-    local base;		/* base of FNV hash: 2^bits */
+    local hash;         /* FNV hash value */
+    local len;          /* length of string */
+    local base;         /* base of FNV hash: 2^bits */
     local i;
 
     /*
      * firewall
      */
     if (!isint(bits) || bits <= 0) {
-	quit "deprecated_fnv0: FATAL: bits arg must be an integer > 0";
+        quit "deprecated_fnv0: FATAL: bits arg must be an integer > 0";
     }
     if (!isstr(string)) {
-	quit "deprecated_fnv0: FATAL: string arg must be a string";
+        quit "deprecated_fnv0: FATAL: string arg must be a string";
     }
 
     /*
      * fnv_prime == null() means to try and generate the FNV prime
      */
     if (isnull(fnv_prime)) {
-	/* try to generate an FNV prime */
-	fnv_prime = find_fnv_prime(bits);
-	if (fnv_prime == 0) {
-	    quit "deprecated_fnv0: FATAL: no FNV prime exists for the given hash size in bits";
-	}
+        /* try to generate an FNV prime */
+        fnv_prime = find_fnv_prime(bits);
+        if (fnv_prime == 0) {
+            quit "deprecated_fnv0: FATAL: no FNV prime exists for the given hash size in bits";
+        }
     }
     if (!isint(fnv_prime) || fnv_prime <= 0) {
-	quit "deprecated_fnv0: FATAL: fnv_prime arg must be an integer > 0 and should be prime";
+        quit "deprecated_fnv0: FATAL: fnv_prime arg must be an integer > 0 and should be prime";
     }
 
     /*
@@ -313,7 +313,7 @@ define deprecated_fnv0(bits, fnv_prime, string)
     base = 2^bits;
     hash = 0;
     for (i=0; i < len; ++i) {
-	hash = xor((hash * fnv_prime) % base, ord(string[i]));
+        hash = xor((hash * fnv_prime) % base, ord(string[i]));
     }
     return hash;
 }
@@ -323,18 +323,18 @@ define deprecated_fnv0(bits, fnv_prime, string)
  * fnv_offset_basis - generate and FNV offset basis
  *
  * given:
- *	bits		number of bits in FNV hash
- *	fnv_prime	FNV prime, null() ==> generate suitable FNV prime if possible
+ *      bits            number of bits in FNV hash
+ *      fnv_prime       FNV prime, null() ==> generate suitable FNV prime if possible
  *
  * returns:
- *	FNV offset basis for a hash size of bits and an FNV prime of fnv_prime
+ *      FNV offset basis for a hash size of bits and an FNV prime of fnv_prime
  *
  * NOTE: This function does NOT attempt to determine that fnv_prime is prime.
  */
 define
 fnv_offset_basis(bits, fnv_prime)
 {
-    local fnv0_hash = 0;	/* FNV-0 hash value */
+    local fnv0_hash = 0;        /* FNV-0 hash value */
 
     /* string to generate a FNV offset basis - do not change this value */
     static chongo_was_here = "chongo <Landon Curt Noll> /\\../\\";
@@ -343,21 +343,21 @@ fnv_offset_basis(bits, fnv_prime)
      * firewall
      */
     if (!isint(bits) || bits <= 0) {
-	quit "fnv_offset_basis: FATAL: bits arg must be an integer > 0";
+        quit "fnv_offset_basis: FATAL: bits arg must be an integer > 0";
     }
 
     /*
      * fnv_prime == null() means to try and generate the FNV prime
      */
     if (isnull(fnv_prime)) {
-	/* try to generate an FNV prime */
-	fnv_prime = find_fnv_prime(bits);
-	if (fnv_prime == 0) {
-	    quit "fnv_offset_basis: FATAL: no FNV prime exists for the given hash size in bits";
-	}
+        /* try to generate an FNV prime */
+        fnv_prime = find_fnv_prime(bits);
+        if (fnv_prime == 0) {
+            quit "fnv_offset_basis: FATAL: no FNV prime exists for the given hash size in bits";
+        }
     }
     if (!isint(fnv_prime) || fnv_prime <= 0) {
-	quit "fnv_offset_basis: FATAL: fnv_prime arg must be an integer > 0 and should be prime";
+        quit "fnv_offset_basis: FATAL: fnv_prime arg must be an integer > 0 and should be prime";
     }
 
     /*
@@ -374,10 +374,10 @@ fnv_offset_basis(bits, fnv_prime)
  * These functions, if given non-standard values, will produce bogus results.
  * To produce a true FNV-1a hash:
  *
- *	bits must be a power of 2
- *	32 <= bits
- *	fnv_prime == find_fnv_prime(bits) OR fnv_prime == null()
- *	prev_hash == previous FNV hash OR prev_hash == null()
+ *      bits must be a power of 2
+ *      32 <= bits
+ *      fnv_prime == find_fnv_prime(bits) OR fnv_prime == null()
+ *      prev_hash == previous FNV hash OR prev_hash == null()
  *
  * If fnv_prime == null(), this function will try to compute the FNV prime
  * for a hash of size bits.
@@ -388,64 +388,64 @@ fnv_offset_basis(bits, fnv_prime)
  * One may chain "FNV-style" hashes by replacing the offset_basis with
  * the hash state of the previous hash.  For the first hash:
  *
- *	fnv_prime = find_fnv_prime(bits)
- *	hash_val = fnv_style_hash(bits, fnv_prime, null(), string_a);
+ *      fnv_prime = find_fnv_prime(bits)
+ *      hash_val = fnv_style_hash(bits, fnv_prime, null(), string_a);
  *
  * then:
  *
- *	hash_val = fnv_style_hash(bits, fnv_prime, hash_val, string_b);
+ *      hash_val = fnv_style_hash(bits, fnv_prime, hash_val, string_b);
  *
  * This will produce the same as the string_a concatenated with string_b:
  *
- *	hash_val = fnv_style_hash(bits, null(), null(), string_a + string_b);
+ *      hash_val = fnv_style_hash(bits, null(), null(), string_a + string_b);
  *
  * NOTE: Because string_a and string_b are strings, the expression:
  *
- *	    string_a + string_b
+ *          string_a + string_b
  *
- *	is string_a concatenated with string_b.
+ *      is string_a concatenated with string_b.
  *
  * given:
- *	bits		number of bits in FNV hash
- *	fnv_prime	FNV prime, null() ==> generate suitable FNV prime if possible
- *	prev_hash	previous hash value, null() ==> generate FNV offset basis
- *	string		string to hash
+ *      bits            number of bits in FNV hash
+ *      fnv_prime       FNV prime, null() ==> generate suitable FNV prime if possible
+ *      prev_hash       previous hash value, null() ==> generate FNV offset basis
+ *      string          string to hash
  *
  * returns:
- *	"FNV-style" hash of bits
+ *      "FNV-style" hash of bits
  *
  * NOTE: This function does NOT attempt to determine that fnv_prime is prime.
  */
 define
 fnv1a_style_hash(bits, fnv_prime, prev_hash, string)
 {
-    local hash = 0;	/* FNV hash value */
-    local len;		/* length of string */
-    local base;		/* base of FNV hash: 2^bits */
+    local hash = 0;     /* FNV hash value */
+    local len;          /* length of string */
+    local base;         /* base of FNV hash: 2^bits */
     local i;
 
     /*
      * firewall
      */
     if (!isint(bits) || bits <= 0) {
-	quit "fnv1a_style_hash: FATAL: bits arg must be an integer > 0";
+        quit "fnv1a_style_hash: FATAL: bits arg must be an integer > 0";
     }
     if (!isstr(string)) {
-	quit "fnv1a_style_hash: FATAL: string arg must be a string";
+        quit "fnv1a_style_hash: FATAL: string arg must be a string";
     }
 
     /*
      * fnv_prime == null() means to try and generate the FNV prime
      */
     if (isnull(fnv_prime)) {
-	/* try to generate an FNV prime */
-	fnv_prime = find_fnv_prime(bits);
-	if (fnv_prime == 0) {
-	    quit "fnv1a_style_hash: FATAL: no FNV prime exists for the given hash size in bits";
-	}
+        /* try to generate an FNV prime */
+        fnv_prime = find_fnv_prime(bits);
+        if (fnv_prime == 0) {
+            quit "fnv1a_style_hash: FATAL: no FNV prime exists for the given hash size in bits";
+        }
     }
     if (!isint(fnv_prime) || fnv_prime <= 0) {
-	quit "fnv1a_style_hash: FATAL: fnv_prime arg must be an integer > 0 and should be prime";
+        quit "fnv1a_style_hash: FATAL: fnv_prime arg must be an integer > 0 and should be prime";
     }
 
     /*
@@ -453,11 +453,11 @@ fnv1a_style_hash(bits, fnv_prime, prev_hash, string)
      */
     if (isnull(prev_hash)) {
 
-	/* generate the FNV offset basis for a hash of size bits */
-	prev_hash = fnv_offset_basis(bits, fnv_prime);
+        /* generate the FNV offset basis for a hash of size bits */
+        prev_hash = fnv_offset_basis(bits, fnv_prime);
     }
     if (!isint(prev_hash) || prev_hash < 0) {
-	quit "fnv1a_style_hash: FATAL: prev_hash arg must be an integer => 0";
+        quit "fnv1a_style_hash: FATAL: prev_hash arg must be an integer => 0";
     }
 
     /*
@@ -467,7 +467,7 @@ fnv1a_style_hash(bits, fnv_prime, prev_hash, string)
     base = 2^bits;
     hash = prev_hash;
     for (i=0; i < len; ++i) {
-	hash = xor((hash * fnv_prime) % base, ord(string[i]));
+        hash = xor((hash * fnv_prime) % base, ord(string[i]));
     }
     return hash;
 }

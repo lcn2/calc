@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,41 +17,41 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1997/03/10 00:27:17
- * File existed as early as:	1997
+ * Under source code control:   1997/03/10 00:27:17
+ * File existed as early as:    1997
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 /*
  * This file is part of the custom sample calc files.
  *
  * NOTE: You must use a calc that was compiled with ALLOW_CUSTOM= -DCUSTOM
- *	 and run with a -C arg.
+ *       and run with a -C arg.
  */
 if (config("compile_custom") == 0) {
-	quit "calc compiled without -DCUSTOM";
+        quit "calc compiled without -DCUSTOM";
 } else if (config("allow_custom") == 0) {
-	quit "calc was run without the -D command line option";
+        quit "calc was run without the -D command line option";
 }
 
 
 define argv_test()
 {
-	local i;	/* arg number */
-	local junk;	/* throw away value */
+        local i;        /* arg number */
+        local junk;     /* throw away value */
 
-	/*
-	 * process each arg passed to us
-	 */
-	for (i = 1; i <= param(0); ++i) {
-		/*
-		 * This won't really work because all the arg numbers
-		 * will be reported as arg[0] ... but what the heck
-		 * this is only a demo!
-		 */
-		junk = custom("argv", param(i));
-	}
-	return i-1;
+        /*
+         * process each arg passed to us
+         */
+        for (i = 1; i <= param(0); ++i) {
+                /*
+                 * This won't really work because all the arg numbers
+                 * will be reported as arg[0] ... but what the heck
+                 * this is only a demo!
+                 */
+                junk = custom("argv", param(i));
+        }
+        return i-1;
 }

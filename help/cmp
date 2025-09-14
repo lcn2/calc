@@ -12,79 +12,79 @@ TYPES
 
     For non-object x and y:
 
-    x		any
-    y		any
+    x           any
+    y           any
 
-    return	if x and y are both real: -1, 0, or 1
-		if x and y are both numbers but not both real:
-			-1, 0, 1, -1+1i, 1i, 1+1i, -1-1i, -1i, or 1-1i
-		if x and y are both strings: -1, 0, or 1
-		all other cases: the null value
+    return      if x and y are both real: -1, 0, or 1
+                if x and y are both numbers but not both real:
+                        -1, 0, 1, -1+1i, 1i, 1+1i, -1-1i, -1i, or 1-1i
+                if x and y are both strings: -1, 0, or 1
+                all other cases: the null value
 
 DESCRIPTION
 
     x and y both real: cmp(x, y) = sgn(x - y), i.e. -1, 0, or 1
-	according as x < y, x == y, or x > y
+        according as x < y, x == y, or x > y
 
     x and y both numbers, at least one being complex:
-	cmp(x,y) = sgn(re(x) - re(y)) + sgn(im(x) - im(y)) * 1i
+        cmp(x,y) = sgn(re(x) - re(y)) + sgn(im(x) - im(y)) * 1i
 
     x and y both strings: successive characters are compared until either
-	different characters are encountered or at least one string is
-	completed.  If the comparison ends because of different characters,
-	cmp(x,y) = 1 or -1 according as the greater character is in x or y.
-	If all characters compared in both strings are equal, then
-	cmp(x,y) = -1, 0 or 1 according as the length of x is less than,
-	equal to, or greater than the length of y.  (This comparison
-	is performed via the strcmp() libc function.)
+        different characters are encountered or at least one string is
+        completed.  If the comparison ends because of different characters,
+        cmp(x,y) = 1 or -1 according as the greater character is in x or y.
+        If all characters compared in both strings are equal, then
+        cmp(x,y) = -1, 0 or 1 according as the length of x is less than,
+        equal to, or greater than the length of y.  (This comparison
+        is performed via the strcmp() libc function.)
 
     objects: comparisons of objects are usually intended for some total or
-	partial ordering and appropriate definitions of cmp(a,b) may
-	make use of comparison of numerical or string components.
-	definitions using comparison of numbers or strings are usually
-	appropriate.  For example, after
+        partial ordering and appropriate definitions of cmp(a,b) may
+        make use of comparison of numerical or string components.
+        definitions using comparison of numbers or strings are usually
+        appropriate.  For example, after
 
-		obj point {x,y};
+                obj point {x,y};
 
-	if points with real components are to be partially ordered by their
-	Euclidean distance from the origin, an appropriate point_rel
-	function may be that given by
+        if points with real components are to be partially ordered by their
+        Euclidean distance from the origin, an appropriate point_rel
+        function may be that given by
 
-		define point_rel(a,b) = sgn(a.x^2 + a.y^2 - b.x^2 - b.y^2);
+                define point_rel(a,b) = sgn(a.x^2 + a.y^2 - b.x^2 - b.y^2);
 
-	A total "lexicographic" ordering is that given by:
+        A total "lexicographic" ordering is that given by:
 
-		define point_rel(a,b) {
-			if (a.y != b.y)
-				return sgn(a.y - b.y);
-			return (a.x - b.x);
-		}
+                define point_rel(a,b) {
+                        if (a.y != b.y)
+                                return sgn(a.y - b.y);
+                        return (a.x - b.x);
+                }
 
-	A comparison function that compares points analogously to
-	cmp(a,b) for real and complex numbers is that given by
+        A comparison function that compares points analogously to
+        cmp(a,b) for real and complex numbers is that given by
 
-		define point_rel(P1, P2) {
-			return obj point = {sgn(P1.x-P2.x), sgn(P1.y-P2.y)};
-		}
+                define point_rel(P1, P2) {
+                        return obj point = {sgn(P1.x-P2.x), sgn(P1.y-P2.y)};
+                }
 
-	The range of this function is the set of nine points with zero
-	or unit components.
+        The range of this function is the set of nine points with zero
+        or unit components.
 
 
     Some properties of cmp(a,b) for real or complex a and b are:
 
-	cmp(a + c, b + c) = cmp(a, b)
+        cmp(a + c, b + c) = cmp(a, b)
 
-	cmp(a, b) == 0 if and only if a == b
+        cmp(a, b) == 0 if and only if a == b
 
-	cmp(b, a) = -cmp(a, b)
+        cmp(b, a) = -cmp(a, b)
 
-	if c is real or pure imaginary, cmp(c * a, c * b) = c * cmp(a,b)
+        if c is real or pure imaginary, cmp(c * a, c * b) = c * cmp(a,b)
 
     Then a function that defines "b is between a and c" in an often useful
     sense is
 
-	define between(a,b,c) = (cmp(a,b) == cmp(b,c)).
+        define between(a,b,c) = (cmp(a,b) == cmp(b,c)).
 
     For example, in this sense, 3 + 4i is between 1 + 5i and 4 + 2i.
 
@@ -122,7 +122,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -130,8 +130,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1994/10/20 02:52:30
-## File existed as early as:	1994
+## Under source code control:   1994/10/20 02:52:30
+## File existed as early as:    1994
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

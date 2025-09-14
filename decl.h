@@ -11,7 +11,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -19,10 +19,10 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	2007/02/09 05:24:25
- * File existed as early as:	2007
+ * Under source code control:   2007/02/09 05:24:25
+ * File existed as early as:    2007
  *
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -37,7 +37,7 @@
  * Thread Local Storage macros
  *
  * NOTE: The use of -DWITH_TLS is extremely experimental.  Calc may not
- *	 compile with WITH_TLS defined.
+ *       compile with WITH_TLS defined.
  */
 #if defined(WITH_TLS)
 

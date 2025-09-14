@@ -5,7 +5,7 @@ SYNOPSIS
     freeglobals()
 
 TYPES
-    return	null value
+    return      null value
 
 DESCRIPTION
     This function frees the memory used for the values of all global
@@ -19,10 +19,10 @@ EXAMPLE
 
     Name    Level    Type
     ----    -----    -----
-    a	       1     real = 2
-    a	       0     real = 1
-    b	       0     list
-    c	       0     matrix
+    a          1     real = 2
+    a          0     real = 1
+    b          0     list
+    c          0     matrix
 
     Number: 4
     ; freeglobals()
@@ -30,10 +30,10 @@ EXAMPLE
 
     Name    Level    Type
     ----    -----    -----
-    a	       1     null
-    a	       0     null
-    b	       0     null
-    c	       0     null
+    a          1     null
+    a          0     null
+    b          0     null
+    c          0     null
 
     Number: 4
 
@@ -54,7 +54,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -62,8 +62,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1997/09/06 20:03:35
-## File existed as early as:	1997
+## Under source code control:   1997/09/06 20:03:35
+## File existed as early as:    1997
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

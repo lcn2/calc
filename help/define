@@ -6,11 +6,11 @@ SYNTAX
     define fname([param_1 [= default_1], ...]) { [statement_1 ... ] }
 
 TYPES
-    fname		identifier, not a builtin function name
-    param_1, ...	identifiers, no two the same
-    default_1, ...	expressions
-    expr		expression
-    statement_1, ...	statements
+    fname               identifier, not a builtin function name
+    param_1, ...        identifiers, no two the same
+    default_1, ...      expressions
+    expr                expression
+    statement_1, ...    statements
 
 DESCRIPTION
     The intention of a function definition is that the identifier fname
@@ -30,17 +30,17 @@ DESCRIPTION
     For example, suppose a function f and a global variable A have been
     defined by:
 
-	; define f(x) = (x = 3);
-	; global mat A[3];
+        ; define f(x) = (x = 3);
+        ; global mat A[3];
 
     If g() is  a function that evaluates to 2:
 
-	; f(A[g()]);
+        ; f(A[g()]);
 
     assigns the value of A[2] to the parameter x and then assigns the
     value 3 to x:
 
-	; f(`A[g()]);
+        ; f(`A[g()]);
 
     has essentially the effect of assigning A[2] as an lvalue to x and
     then assigning the value 3 to A[2].  (Very old versions of calc
@@ -79,7 +79,7 @@ DESCRIPTION
 
     If the expr is omitted from an expression definition, as in:
 
-	; define h() = ;
+        ; define h() = ;
 
     any call to the function will evaluate the arguments and return the
     null value.
@@ -105,11 +105,11 @@ DESCRIPTION
 
     After fname has been defined, the definition may be removed by the command:
 
-	; undefine fname
+        ; undefine fname
 
     The definitions of all user-defined functions may be removed by:
 
-	; undefine *
+        ; undefine *
 
     If bit 0 of config("resource_debug") is set and the define command is
     at interactive level, a message saying that fname has been defined
@@ -120,8 +120,8 @@ DESCRIPTION
     The identifiers used for the parameters in a function definition do
     not form part of the completed definition.  For example,
 
-	; define f(a,b) = a + b;
-	; define g(alpha, beta) = alpha + beta;
+        ; define f(a,b) = a + b;
+        ; define g(alpha, beta) = alpha + beta;
 
     result in identical code for the functions f, g.
 
@@ -129,22 +129,22 @@ DESCRIPTION
     function are displayed on completion of its definition, parameters
     being specified by names used in the definition.  For example:
 
-	; config("trace", 8),
-	; define f(a,b) = a + b
-	0: PARAMADDR a
-	2: PARAMADDR b
-	4: ADD
-	5: RETURN
-	f(a,b) defined
+        ; config("trace", 8),
+        ; define f(a,b) = a + b
+        0: PARAMADDR a
+        2: PARAMADDR b
+        4: ADD
+        5: RETURN
+        f(a,b) defined
 
     The opcodes may also be displayed later using the show opcodes command;
     parameters will be specified by indices instead of by names.  For example:
 
-	; show opco f
-	0: PARAMADDR 0
-	2: PARAMADDR 1
-	4: ADD
-	5: RETURN
+        ; show opco f
+        0: PARAMADDR 0
+        2: PARAMADDR 1
+        4: ADD
+        5: RETURN
 
     When a function is defined by the statement mode, the opcodes normally
     include DEBUG opcodes which specify statement boundaries at which
@@ -169,17 +169,17 @@ EXAMPLE
     ; define f(a,b) = 2*a + b;
     ; define g(alpha, beta)
     ;; {
-    ;;	   local a, pi2;
+    ;;     local a, pi2;
     ;;
-    ;;	   pi2 = 2 * pi();
-    ;;	   a = sin(alpha % pi2);
-    ;;	   if (a > 0.0) {
-    ;;	       return a*beta;
-    ;;	   }
-    ;;	   if (beta > 0.0) {
-    ;;	       a *= cos(-beta % pi2);
-    ;;	   }
-    ;;	   return a;
+    ;;     pi2 = 2 * pi();
+    ;;     a = sin(alpha % pi2);
+    ;;     if (a > 0.0) {
+    ;;         return a*beta;
+    ;;     }
+    ;;     if (beta > 0.0) {
+    ;;         a *= cos(-beta % pi2);
+    ;;     }
+    ;;     return a;
     ;; }
 
 LIMITS
@@ -192,7 +192,7 @@ SEE ALSO
     param, variable, undefine, show
 
 ## Copyright (C) 2000-2006,2021  David I. Bell, Landon Curt Noll
-##				 and Ernest Bowen
+##                               and Ernest Bowen
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -200,7 +200,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -209,8 +209,8 @@ SEE ALSO
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
 ##
-## Under source code control:	1991/07/21 04:37:18
-## File existed as early as:	1991
+## Under source code control:   1991/07/21 04:37:18
+## File existed as early as:    1991
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

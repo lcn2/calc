@@ -10,7 +10,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -18,8 +18,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	2000/12/15 06:52:01
- * File existed as early as:	2000
+ * Under source code control:   2000/12/15 06:52:01
+ * File existed as early as:    2000
  *
  * Share and enjoy!  :-) http://www.isthe.com/chongo/tech/comp/calc/
  */
@@ -48,8 +48,8 @@
  *               1522756
  *       ln(2)
  *               ~.48045301391820142467
- *	 2i
- *		 -4
+ *       2i
+ *               -4
  *       config("mode","frac"), bernoulli(10)
  *               25/4356
  *       config("mode", "hex"), 0xff
@@ -58,5 +58,5 @@
 
 
 while (s = fgetline(files(0))) {
-	print "\t":eval(s)^2;
+        print "\t":eval(s)^2;
 }

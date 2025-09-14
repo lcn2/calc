@@ -8,17 +8,17 @@ SYNOPSIS
     ## comment
 
 TYPES
-    x, y		integer or real
+    x, y                integer or real
 
-    return		integer (unary operator case)
-			integer or real (binary operator case)
+    return              integer (unary operator case)
+                        integer or real (binary operator case)
 
 DESCRIPTION
     The pound sign or sharp sign "#" has special meaning in calc.
 
     As a unary operator:
 
-	# value
+        # value
 
     returns the number of 1 bits, or pop-count of the absolute value of
     the numerator (abs(num(value))).  Therefore when x is a non-negative
@@ -28,20 +28,20 @@ DESCRIPTION
 
     As a binary operator:
 
-	x # y
+        x # y
 
     returns abs(x-y), the absolute value of the difference.
 
     When two or more pound signs in a row start a comment:
 
-	## this is a comment
-	### this is also a comment
-	print "this will print";  ## but this will not because it is a comment
+        ## this is a comment
+        ### this is also a comment
+        print "this will print";  ## but this will not because it is a comment
 
     A pound sign followed by a bang also starts a comment:
 
-	#! strictly speaking, this is a comment
-	print "this is correct but not recommended" #! acts like ##
+        #! strictly speaking, this is a comment
+        print "this is correct but not recommended" #! acts like ##
 
     On POSIX / Un*X / Linux / BSD conforming systems, when an executable
     starts with the two bytes # and !, the remainder of the 1st line
@@ -52,15 +52,15 @@ DESCRIPTION
 
     For example, of an executable file contains:
 
-	#!/usr/local/src/bin/calc/calc -q -f
-	/* NOTE: The #! above must start in column 1 of the 1st line */
-	/* 	 The 1st line must end with -f */
-	## Single # shell comments don't work, use two or more
-	print "2+2 =", 2+2;
+        #!/usr/local/src/bin/calc/calc -q -f
+        /* NOTE: The #! above must start in column 1 of the 1st line */
+        /*       The 1st line must end with -f */
+        ## Single # shell comments don't work, use two or more
+        print "2+2 =", 2+2;
 
     When the above file it is executed by the kernel, it will print:
 
-	2+2 = 4
+        2+2 = 4
 
     Such files are known to calc as cscripts.  See "help cscript"
     for examples.
@@ -76,18 +76,18 @@ DESCRIPTION
 
 EXAMPLE
     ; #3
-	2
+        2
     ; #3.5
-	3
+        3
     ; 4 # 5
-	1
+        1
     ; 5 # 4
-	1
+        1
 
     ; pi() # exp(1)
-	0.4233108251307480031
+        0.4233108251307480031
     ; exp(1) # pi()
-	0.4233108251307480031
+        0.4233108251307480031
 
     ; ## this is a comment
 
@@ -108,7 +108,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -116,8 +116,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	2007/02/06 14:09
-## File existed as early as:	2007
+## Under source code control:   2007/02/06 14:09
+## File existed as early as:    2007
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

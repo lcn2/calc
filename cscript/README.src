@@ -26,7 +26,7 @@ This is the correct way to form a calc shell script:
     /*
      * another correct comment
      */
-    print "2+2 =", 2+2;	## yet another comment
+    print "2+2 =", 2+2; ## yet another comment
 
 The first argument after the path to calc executable must be an -S.
 The next arguments are optional.  The -q is often recommended because
@@ -58,10 +58,10 @@ For more info, see:
 
     4dsphere x0 y0 z0 w0   x1 y1 z1 w1   ...   x5 y5 z5 w5
 
-	x0 y0 z0 w0     point 0 in R^4
-	x1 y1 z1 w1     point 1 in R^4
-	...             ...
-	x5 y5 z5 w5     point 5 in R^4
+        x0 y0 z0 w0     point 0 in R^4
+        x1 y1 z1 w1     point 1 in R^4
+        ...             ...
+        x5 y5 z5 w5     point 5 in R^4
 
 
 fproduct filename term ...
@@ -102,7 +102,7 @@ simple
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -110,8 +110,8 @@ simple
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1999/12/17 10:23:40
-## File existed as early as:	1999
+## Under source code control:   1999/12/17 10:23:40
+## File existed as early as:    1999
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

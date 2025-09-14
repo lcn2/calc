@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,34 +17,34 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1995/04/22 13:18:44
- * File existed as early as:	1995
+ * Under source code control:   1995/04/22 13:18:44
+ * File existed as early as:    1995
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 /*
  * usage:
- *	have_const
+ *      have_const
  *
  * Not all compilers support const, so this may not compile on your system.
  *
  * This prog outputs several defines:
  *
- *	HAVE_CONST
- *		defined ==> OK to use const
- *		undefined ==> do not use const
+ *      HAVE_CONST
+ *              defined ==> OK to use const
+ *              undefined ==> do not use const
  *
- *	CONST
- *		const ==> use const
- *		(nothing) ==> const not used
+ *      CONST
+ *              const ==> use const
+ *              (nothing) ==> const not used
  */
 
 #include <stdio.h>
 
 
-#include "banned.h"	/* include after system header <> includes */
+#include "banned.h"     /* include after system header <> includes */
 
 
 int
@@ -52,20 +52,20 @@ main(void)
 {
 #if defined(HAVE_NO_CONST)
 
-	printf("#undef HAVE_CONST /* no */\n");
-	printf("#undef CONST\n");
-	printf("#define CONST /* no */\n");
+        printf("#undef HAVE_CONST /* no */\n");
+        printf("#undef CONST\n");
+        printf("#define CONST /* no */\n");
 
 #else /* HAVE_NO_CONST */
 
-	const char * const str = "const";
+        const char * const str = "const";
 
-	printf("#define HAVE_CONST /* yes */\n");
-	printf("#undef CONST\n");
-	printf("#define CONST %s /* yes */\n", str);
+        printf("#define HAVE_CONST /* yes */\n");
+        printf("#undef CONST\n");
+        printf("#define CONST %s /* yes */\n", str);
 
 #endif /* HAVE_NO_CONST */
 
-	/* exit(0); */
-	return 0;
+        /* exit(0); */
+        return 0;
 }

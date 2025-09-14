@@ -26,9 +26,9 @@ resource_debug_level = config("resource_debug", 0);
 define isinfinite(x)
 {
     if (isstr(x)) {
-	if (strncmp(x, "cinf", 4) == 0
-	    || strncmp(x, "pinf", 4) == 0 || strncmp(x, "ninf", 4) == 0)
-	    return 1;
+        if (strncmp(x, "cinf", 4) == 0
+            || strncmp(x, "pinf", 4) == 0 || strncmp(x, "ninf", 4) == 0)
+            return 1;
     }
     return 0;
 }
@@ -36,8 +36,8 @@ define isinfinite(x)
 define iscinf(x)
 {
     if (isstr(x)) {
-	if (strncmp(x, "cinf", 4) == 0)
-	    return 1;
+        if (strncmp(x, "cinf", 4) == 0)
+            return 1;
     }
     return 0;
 }
@@ -45,8 +45,8 @@ define iscinf(x)
 define ispinf(x)
 {
     if (isstr(x)) {
-	if (strncmp(x, "pinf", 4) == 0)
-	    return 1;
+        if (strncmp(x, "pinf", 4) == 0)
+            return 1;
     }
     return 0;
 }
@@ -54,8 +54,8 @@ define ispinf(x)
 define isninf(x)
 {
     if (isstr(x)) {
-	if (strncmp(x, "ninf", 4) == 0)
-	    return 1;
+        if (strncmp(x, "ninf", 4) == 0)
+            return 1;
     }
     return 0;
 }

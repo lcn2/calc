@@ -5,12 +5,12 @@ SYNOPSIS
     calclevel()
 
 TYPES
-    return	nonnegative integer
+    return      nonnegative integer
 
 DESCRIPTION
     This function returns the calculation level at which it is called.
     When a command is being read from a terminal or from a file,
-    calc is at calculation level zero.	The level is increased
+    calc is at calculation level zero.  The level is increased
     by 1 each time calculation starts of a user-defined function
     or of eval(S) for some expression S which evaluates to a string.  It
     decreases to zero if an error occurs or a quit or abort statement
@@ -45,7 +45,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -53,8 +53,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1999/10/31 06:01:21
-## File existed as early as:	1999
+## Under source code control:   1999/10/31 06:01:21
+## File existed as early as:    1999
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

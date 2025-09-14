@@ -2,11 +2,11 @@ Where to get the latest versions of calc
 
     Official calc source is maintained on GitHub:
 
-	https://github.com/lcn2/calc
+        https://github.com/lcn2/calc
 
     Calc releases may be found as GitHub tagged releases:
 
-	https://github.com/lcn2/calc/releases?page=2
+        https://github.com/lcn2/calc/releases?page=2
 
      At the bottom of a given release is a "> Assets" that may
      be opened to reveal down-loadable files such as source
@@ -14,7 +14,7 @@ Where to get the latest versions of calc
 
     Landon Noll also maintains a calc home page at:
 
-	    http://www.isthe.com/chongo/tech/comp/calc/
+            http://www.isthe.com/chongo/tech/comp/calc/
 
 Landon Curt Noll
 http://www.isthe.com/chongo/
@@ -29,7 +29,7 @@ chongo <was here> /\../\
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -37,8 +37,8 @@ chongo <was here> /\../\
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1996/06/13 02:51:48
-## File existed as early as:	1996
+## Under source code control:   1996/06/13 02:51:48
+## File existed as early as:    1996
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

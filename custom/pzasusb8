@@ -5,19 +5,19 @@ SYNOPSIS
     custom("pzasusb8", arg)
 
 TYPES
-    arg		real
+    arg         real
 
-    return	null
+    return      null
 
 DESCRIPTION
     This custom function prints out the numerator of a real value
-    in octets.	Each HALF value is printed in a separate line.
+    in octets.  Each HALF value is printed in a separate line.
 
     NOTE: The output will vary depending on the size of a HALF
-	  and the byte order of the system.  See:
+          and the byte order of the system.  See:
 
-		custom("sysinfo", "BASEB")
-		custom("sysinfo", "CALC_BYTE_ORDER")
+                custom("sysinfo", "BASEB")
+                custom("sysinfo", "CALC_BYTE_ORDER")
 
     for details.
 
@@ -26,15 +26,15 @@ DESCRIPTION
 
 EXAMPLE
     > custom("pzasusb8", 0x01020304050607080910111213141516);
-    0:	    13141516
-    1:	    09101112
-    2:	    05060708
-    3:	    01020304
+    0:      13141516
+    1:      09101112
+    2:      05060708
+    3:      01020304
 
     > custom("pzasusb8", 10^25)
-    0:	    4a000000
-    1:	    16140148
-    2:	    00084595
+    0:      4a000000
+    1:      16140148
+    2:      00084595
 
     > printf("%x\n", 10^25);
     0x84595161401484a000000
@@ -57,7 +57,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -65,8 +65,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1999/10/06 04:05:43
-## File existed as early as:	1999
+## Under source code control:   1999/10/06 04:05:43
+## File existed as early as:    1999
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

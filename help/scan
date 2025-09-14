@@ -5,13 +5,13 @@ SYNOPSIS
    scan(x_1, x_2, ..., x_n)
 
 TYPES
-    x_1, x_2, ...	any
+    x_1, x_2, ...       any
 
-    return		integer
+    return              integer
 
 DESCRIPTION
    When input is from a terminal, execution is halted and input is read
-   until a newline is entered.	Strings of non-whitespace characters
+   until a newline is entered.  Strings of non-whitespace characters
    are evaluated in succession and if the corresponding x_i is an lvalue,
    the resulting value is assigned to x_i.  If the number of strings
    read exceeds n, only the first n strings are evaluated.  If the number
@@ -20,9 +20,9 @@ DESCRIPTION
 EXAMPLE
     ; global a, b, c, d;
     ; scan(a, 0, c, d)
-    ; 2+3    b=a^2	  3+4i	   3+"a"
+    ; 2+3    b=a^2        3+4i     3+"a"
     ; print a,b,c,d
-	5 25 3+4i Error E_ADD
+        5 25 3+4i Error E_ADD
 
 LIMITS
     The number of arguments is not to exceed 1024.
@@ -41,7 +41,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -49,8 +49,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1996/04/30 03:05:18
-## File existed as early as:	1996
+## Under source code control:   1996/04/30 03:05:18
+## File existed as early as:    1996
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

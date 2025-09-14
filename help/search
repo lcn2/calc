@@ -5,12 +5,12 @@ SYNOPSIS
     search(a, b [, [c] [, [d] ] ])
 
 TYPES
-    a		matrix, list, association or file
-    b		string if a is a file, otherwise any
-    c		integer, defaults to zero or current file-position
-    d		integer, defaults to size(a) or current file-position
+    a           matrix, list, association or file
+    b           string if a is a file, otherwise any
+    c           integer, defaults to zero or current file-position
+    d           integer, defaults to size(a) or current file-position
 
-    return	nonnegative integer or null value
+    return      nonnegative integer or null value
 
 DESCRIPTION
 
@@ -24,24 +24,24 @@ DESCRIPTION
 
     For a matrix, list, or association a,
     search(a, b, c, d) returns, if it exists, the least index i for which
-    c <= i < d,	 0 <= i < size(a), and, if accept() has not been defined,
+    c <= i < d,  0 <= i < size(a), and, if accept() has not been defined,
     a[[i]] == b, or if accept() has been defined, accept(a[[i]], b)
     tests as nonzero.  The null value is returned if there is no such i.
 
     For example, to search for the first a[[i]] > b an appropriate
     accept() function is given by:
 
-		define accept(v,b) = (v > b);
+                define accept(v,b) = (v > b);
 
     To restore the original behavior of search(), one may then use
 
-		define accept(v, b) = (v == b).
+                define accept(v, b) = (v == b).
 
     Since the addresses (rather than values) of a and b are passed,
     the values of v = x[[i]] and b may be changed during execution
     of search(a, b, c, d), e.g. if accept(v,b) has been defined by
 
-		define accept(v,b) = (v > b ? v-- : b++);
+                define accept(v,b) = (v > b ? v-- : b++);
 
 
     For a is a file-stream:
@@ -81,37 +81,37 @@ DESCRIPTION
 EXAMPLE
     ; L = list(2,"three",4i)
     ; search(L,"three")
-	    1
+            1
     ; search(L,"threes")
     ; search(L, 4i, 4)
     ; search(L, 4i, 1)
-	    2
+            2
 
     ; f = fopen("foo", "w+")
     ; fputs(f, "This file has 28 characters.")
     ; rewind(f)
     ; search(f, "ha")
-	10
+        10
     ; ftell(f)
-	12
+        12
     ; search(f, "ha")
-	18
+        18
     ; search(f, "ha")
     ; search(f, "ha",)
-	10
+        10
     ; search(f, "ha", 12)
-	18
+        18
     ; search(f, "ha", -10)
-	18
+        18
     ; search(f, "ha", ,)
-	10
+        10
     ; search(f, "ha", 11, 19)
     ; ftell(f)
-	18
+        18
     ; search(f, "ha", 11, 20)
-	18
+        18
     ; search(f, "ha", 5, 500)
-	10
+        10
 
 LIMITS
     none
@@ -133,7 +133,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -141,8 +141,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1994/03/19 03:13:21
-## File existed as early as:	1994
+## Under source code control:   1994/03/19 03:13:21
+## File existed as early as:    1994
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

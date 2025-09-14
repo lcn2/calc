@@ -5,42 +5,42 @@ SYNOPSIS
     strerror([errnum | "E_STRING"])
 
 TYPES
-    errnum	integer
-    E_STRING	string
+    errnum      integer
+    E_STRING    string
 
-    return	string
+    return      string
 
 DESCRIPTION
     With errno(errnum) numeric argument:
 
-	strerror(errnum) will return one of:
+        strerror(errnum) will return one of:
 
-	* system error and libc errno value related string
-	* calc computation error code string
-	* user-defined description string created by newerror(str)
-	* "Unknown error errnum" (where errnum is in decimal)
+        * system error and libc errno value related string
+        * calc computation error code string
+        * user-defined description string created by newerror(str)
+        * "Unknown error errnum" (where errnum is in decimal)
 
     With strerror("E_STRING") string argument:
 
-	If E_STRING is a valid errsym code, then the E_STRING errsym
-	is converted into strerror(errnum).
+        If E_STRING is a valid errsym code, then the E_STRING errsym
+        is converted into strerror(errnum).
 
-	If E_STRING is not a valid errsym code, an error error condition
-	is raised about the invalid E_STRING.
+        If E_STRING is not a valid errsym code, an error error condition
+        is raised about the invalid E_STRING.
 
-	For example, these two calls are equivalent:
+        For example, these two calls are equivalent:
 
-	    cstrerror(10003);	/* error 10003 has a E_STRING of "E_ADD" */
-	    cstrerror("E_ADD");	/* error 10003 has a E_STRING of "E_ADD" */
+            cstrerror(10003);   /* error 10003 has a E_STRING of "E_ADD" */
+            cstrerror("E_ADD"); /* error 10003 has a E_STRING of "E_ADD" */
 
-	See help errsym for information on E_STRING errsym codes.
+        See help errsym for information on E_STRING errsym codes.
 
-	For a list of the E_STRING associated with calc computation error
-	codes, see help errorcodes.
+        For a list of the E_STRING associated with calc computation error
+        codes, see help errorcodes.
 
     Without a argument, strerror() returns as if it were called with:
 
-	strerror(errno())
+        strerror(errno())
 
     That is, the string associated with the "global calc_errno value"
     is returned.
@@ -53,18 +53,18 @@ DESCRIPTION
 
     For users of libcalc:
 
-	The libcalc array error_table[] contains the hard coded
-	calc-generated error array of ECOUNT+2 pointers to strings
-	starting with E__BASE, ending with E__HIGHEST and terminated
-	by a NULL pointer.
+        The libcalc array error_table[] contains the hard coded
+        calc-generated error array of ECOUNT+2 pointers to strings
+        starting with E__BASE, ending with E__HIGHEST and terminated
+        by a NULL pointer.
 
-	The error_table[0] is for errnum of E__BASE, and is the
-	string "No error".
+        The error_table[0] is for errnum of E__BASE, and is the
+        string "No error".
 
-	The error_table[ECOUNT] is string associated with the
-	highest calc-generated error message.
+        The error_table[ECOUNT] is string associated with the
+        highest calc-generated error message.
 
-	The error_table[ECOUNT+1] is a NULL pointer.
+        The error_table[ECOUNT+1] is a NULL pointer.
 
      See help error for more information on the ranges of errnum and
      the meaning of the above mentioned constants.
@@ -102,9 +102,9 @@ LIMITS
     E_STRING is string that must match the regular expression: ^E_[A-Z0-9_]+$
 
 LINK LIBRARY
-    int calc_errno;				/* global calc_errno value */
+    int calc_errno;                             /* global calc_errno value */
 
-    CONST struct errtbl error_table[ECOUNT+2];	/* calc error codes, error symbols and error messages */
+    CONST struct errtbl error_table[ECOUNT+2];  /* calc error codes, error symbols and error messages */
 
     bool is_e_digits(CONST char *errsym);
     bool is_valid_errnum(int errnum);
@@ -133,7 +133,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -141,8 +141,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1996/04/30 03:05:18
-## File existed as early as:	1996
+## Under source code control:   1996/04/30 03:05:18
+## File existed as early as:    1996
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

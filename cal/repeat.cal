@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,11 +17,11 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	2003/01/05 00:00:01
- * File existed as early as:	2003
+ * Under source code control:   2003/01/05 00:00:01
+ * File existed as early as:    2003
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -29,18 +29,18 @@
  * repeat - return the value of a repeated set of digits
  *
  * usage:
- *	repeat(digit_set, repeat_count)
+ *      repeat(digit_set, repeat_count)
  */
 define repeat(digit_set, repeat_count)
 {
-    local digit_count;	/* digits in the digit_set */
+    local digit_count;  /* digits in the digit_set */
 
     /* firewall */
     if (!isint(digit_set) || digit_set <= 0) {
-	quit "digit set must be an integer > 0";
+        quit "digit set must be an integer > 0";
     }
     if (!isint(repeat_count) || repeat_count <= 0) {
-	quit "repeat count must be an integer > 0";
+        quit "repeat count must be an integer > 0";
     }
 
     /* return repeated set of digits */

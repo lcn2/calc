@@ -11,7 +11,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -19,11 +19,11 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1996/05/24 05:55:58
- * File existed as early as:	1996
+ * Under source code control:   1996/05/24 05:55:58
+ * File existed as early as:    1996
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -47,17 +47,17 @@
  */
 #define MODE_LEN (sizeof("rb+")-1)
 typedef struct {
-	FILEID id;		/* id to identify this file */
-	FILE *fp;		/* real file structure for I/O */
-	dev_t dev;		/* file device */
-	ino_t inode;		/* file inode */
-	char *name;		/* file name */
-	bool reading;		/* true if opened for reading */
-	bool writing;		/* true if opened for writing */
-	bool appending;		/* true if also opened for appending */
-	bool binary;		/* true if binary mode - mode ignored/unused */
-	char action;		/* most recent use for 'r', 'w' or 0 */
-	char mode[MODE_LEN+1];	/* open mode */
+        FILEID id;              /* id to identify this file */
+        FILE *fp;               /* real file structure for I/O */
+        dev_t dev;              /* file device */
+        ino_t inode;            /* file inode */
+        char *name;             /* file name */
+        bool reading;           /* true if opened for reading */
+        bool writing;           /* true if opened for writing */
+        bool appending;         /* true if also opened for appending */
+        bool binary;            /* true if binary mode - mode ignored/unused */
+        char action;            /* most recent use for 'r', 'w' or 0 */
+        char mode[MODE_LEN+1];  /* open mode */
 } FILEIO;
 
 
@@ -65,15 +65,15 @@ typedef struct {
  * fgetpos/fsetpos vs fseek/ftell interface
  *
  * f_seek_set(FILE *stream, FILEPOS *loc)
- *	Seek loc bytes from the beginning of the open file, stream.
+ *      Seek loc bytes from the beginning of the open file, stream.
  *
  * f_tell(FILE *stream, FILEPOS *loc)
- *	Set loc to bytes from the beginning of the open file, stream.
+ *      Set loc to bytes from the beginning of the open file, stream.
  *
  * We assume that if your system does not have fgetpos/fsetpos,
  * then it will have a FILEPOS that is a scalar type (e.g., long).
  * Some obscure systems without fgetpos/fsetpos may not have a simple
- * scalar type.	 In these cases the f_tell macro below will fail.
+ * scalar type.  In these cases the f_tell macro below will fail.
  */
 #if defined(HAVE_FGETSETPOS)
 
@@ -82,8 +82,8 @@ typedef struct {
 
 #else
 
-#define f_seek_set(stream, loc)	 \
-	fseek((FILE*)(stream), *(FILEPOS*)(loc), SEEK_SET)
+#define f_seek_set(stream, loc)  \
+        fseek((FILE*)(stream), *(FILEPOS*)(loc), SEEK_SET)
 #define f_tell(stream, loc) (*((FILEPOS*)(loc)) = ftell((FILE*)(stream)))
 
 #endif
@@ -98,7 +98,7 @@ E_FUNC int fsetposid(FILEID id, FILEPOS *ptr);
 E_FUNC int get_open_siz(FILE *fp, ZVALUE *res);
 E_FUNC char* findfname(FILEID);
 E_FUNC FILE *f_pathopen(char *name, char *mode, char *pathlist,
-			char **openpath);
+                        char **openpath);
 
 
 #endif /* !INCLUDE_FILE_H */

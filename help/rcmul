@@ -5,11 +5,11 @@ SYNOPSIS
     rcmul(x, y, m)
 
 TYPES
-    x		integer
-    y		integer
-    m		odd positive integer
+    x           integer
+    y           integer
+    m           odd positive integer
 
-    return	integer v, 0 <= v < m.
+    return      integer v, 0 <= v < m.
 
 DESCRIPTION
     Let B be the base calc uses for representing integers internally
@@ -22,18 +22,18 @@ DESCRIPTION
     The normal use of rcmul() may be said to be that of multiplying modulo m
     values encoded by rcin() and REDC functions, as in:
 
-	    rcin(x * y, m) = rcmul(rcin(x,m), rcin(y,m), m),
+            rcin(x * y, m) = rcmul(rcin(x,m), rcin(y,m), m),
 
     or with only one factor encoded:
 
-	    x * y % m = rcmul(rcin(x,m), y, m).
+            x * y % m = rcmul(rcin(x,m), y, m).
 
 RUNTIME
     If the value of m in rcmul(x,y,m) is being used for the first time
     in a REDC function, the information required for the REDC
     algorithms is calculated and stored for future use, possibly
     replacing an already stored valued, in a table covering up to 5
-    (i.e. MAXREDC) values of m.	 The runtime required for this is about
+    (i.e. MAXREDC) values of m.  The runtime required for this is about
     two times that required for multiplying two N-word integers.
 
     Two algorithms are available for evaluating rcmul(x,y,m), the one
@@ -69,7 +69,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -77,8 +77,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1996/02/25 02:22:21
-## File existed as early as:	1996
+## Under source code control:   1996/02/25 02:22:21
+## File existed as early as:    1996
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,25 +17,25 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1999/10/20 22:51:13
- * File existed as early as:	1999
+ * Under source code control:   1999/10/20 22:51:13
+ * File existed as early as:    1999
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 /*
  * usage:
- *	have_getpgid
+ *      have_getpgid
  *
  * Not all systems have the getpgid() function, so this may not
  * compile on your system.
  *
  * This prog outputs several defines:
  *
- *	HAVE_GETPGID
- *		defined ==> use getpgid()
- *		undefined ==> do not or cannot call getpgid()
+ *      HAVE_GETPGID
+ *              defined ==> use getpgid()
+ *              undefined ==> do not or cannot call getpgid()
  */
 
 #include <stdio.h>
@@ -46,7 +46,7 @@
 #endif
 
 
-#include "banned.h"	/* include after system header <> includes */
+#include "banned.h"     /* include after system header <> includes */
 
 
 int
@@ -54,16 +54,16 @@ main(void)
 {
 #if defined(HAVE_NO_GETPGID)
 
-	printf("#undef HAVE_GETPGID /* no */\n");
+        printf("#undef HAVE_GETPGID /* no */\n");
 
 #else /* HAVE_NO_GETPGID */
 
-	(void) getpgid((pid_t)0);
+        (void) getpgid((pid_t)0);
 
-	printf("#define HAVE_GETPGID /* yes */\n");
+        printf("#define HAVE_GETPGID /* yes */\n");
 
 #endif /* HAVE_NO_GETPGID */
 
-	/* exit(0); */
-	return 0;
+        /* exit(0); */
+        return 0;
 }

@@ -5,13 +5,13 @@ SYNOPSIS
     g2gms(grads, g, m, s [,rnd])
 
 TYPES
-    grads	real
-    g		null-or-real-valued lvalue with assign-to permission
-    m		null-or-real-valued lvalue with assign-to permission
-    s		null-or-real-valued lvalue with assign-to permission
-    rnd		nonnegative integer, defaults to config("mod")
+    grads       real
+    g           null-or-real-valued lvalue with assign-to permission
+    m           null-or-real-valued lvalue with assign-to permission
+    s           null-or-real-valued lvalue with assign-to permission
+    rnd         nonnegative integer, defaults to config("mod")
 
-    return	mod(grads, 400, rnd)
+    return      mod(grads, 400, rnd)
 
 DESCRIPTION
     Convert grads gradians into g gradians, m minutes, and s seconds.
@@ -19,7 +19,7 @@ DESCRIPTION
     The return value is a normalized number of gradians, and is equivalent
     to the following:
 
-	return_value = mod(grads, 400, rnd);
+        return_value = mod(grads, 400, rnd);
 
     The argument rnd, if not given, defaults to config("mod").
     For more information on the effects of rnd, see "help mod".
@@ -32,7 +32,7 @@ DESCRIPTION
 
     The value g will be set as if the following were used:
 
-	g = int(return_value);
+        g = int(return_value);
 
     For some rounding modes, g will be an integer in the interval [0, 400).
     For other rounding modes, g will be an integer in the interval (-400, 0].
@@ -42,10 +42,10 @@ DESCRIPTION
 
     The value m will be set as if the following were used:
 
-	tmp = return_value - g;
-	tmp_m = tmp * 60;
-	free(tmp);
-	m = int(tmp_m);
+        tmp = return_value - g;
+        tmp_m = tmp * 60;
+        free(tmp);
+        m = int(tmp_m);
 
     For some rounding modes, m will be an integer in the interval [0, 60).
     For other rounding modes, m will be an integer in the interval (-60, 0].
@@ -55,10 +55,10 @@ DESCRIPTION
 
     The value s will be set as if the following were used:
 
-	tmp = tmp_m - m;
-	free(tmp_m);
-	s = tmp * 60;
-	free(tmp);
+        tmp = tmp_m - m;
+        free(tmp_m);
+        s = tmp * 60;
+        free(tmp);
 
     For some rounding modes, s will be a real value in the interval [0, 60).
     For other rounding modes, s will be a real value in the interval (-60, 0].
@@ -67,7 +67,7 @@ DESCRIPTION
     The following shows relationship between the return value and the resulting
     g, m, and s values:
 
-	return_value == g + m/60 + s/3600;
+        return_value == g + m/60 + s/3600;
 
 EXAMPLE
     ; ## if args are undefined, pre-declare them or assign them as args
@@ -115,7 +115,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -123,8 +123,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	2021/09/25 17:24:51
-## File existed as early as:	2021
+## Under source code control:   2021/09/25 17:24:51
+## File existed as early as:    2021
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

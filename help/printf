@@ -5,10 +5,10 @@ SYNOPSIS
     printf(fmt, x_1, x_2, ...)
 
 TYPES
-    fmt			string
-    x_1, x_2, ...	any
+    fmt                 string
+    x_1, x_2, ...       any
 
-    return		null
+    return              null
 
 DESCRIPTION
     The function printf() is similar to the C function with the same name.
@@ -24,11 +24,11 @@ DESCRIPTION
     a '%' indicates the intention to build a format specifier.
     This is completed by a succession of characters as follows:
 
-	    an optional '-'
-	    zero or more decimal digits
-	    an optional '. followed by zero or more decimal digits
-	    an optional 'l'
-	    one of the letters: d, s, c, f, e, g, r, o, x, b,
+            an optional '-'
+            zero or more decimal digits
+            an optional '. followed by zero or more decimal digits
+            an optional 'l'
+            one of the letters: d, s, c, f, e, g, r, o, x, b,
 
     If any other character is read, the '%' and any characters
     between '%' and the character are ignored and no specifier is
@@ -37,25 +37,25 @@ DESCRIPTION
 
     The characters in a format specifier are interpreted as follows:
 
-	    a minus sign sets the right-pad flag;
-	    the first group of digits determines the width w;
-		    w = 0 if there are no digits
-	    a dot indicates the precision is to be read from the
-		    following digits; if there is no dot,
-		    precision = config("display").
-	    any digits following the . determines the precision p;
-		    p = 0 if there are no digits
-	    any 'l' before the final letter is ignored
-	    the final letter determines the mode as follows:
+            a minus sign sets the right-pad flag;
+            the first group of digits determines the width w;
+                    w = 0 if there are no digits
+            a dot indicates the precision is to be read from the
+                    following digits; if there is no dot,
+                    precision = config("display").
+            any digits following the . determines the precision p;
+                    p = 0 if there are no digits
+            any 'l' before the final letter is ignored
+            the final letter determines the mode as follows:
 
-	    d, s, c		current config("mode")
-	    f		real (decimal, floating point)
-	    e		exponential
-	    g		general format (real or exponential)
-	    r		fractional
-	    o		octal
-	    x		hexadecimal
-	    b		binary
+            d, s, c             current config("mode")
+            f           real (decimal, floating point)
+            e           exponential
+            g           general format (real or exponential)
+            r           fractional
+            o           octal
+            x           hexadecimal
+            b           binary
 
     If the number of arguments after fmt is less than the number
     of format specifiers in fmt, the "missing" arguments may be
@@ -67,13 +67,13 @@ DESCRIPTION
     the \ character.  The following control charter escape
     sequences are recognized:
 
-	\a	audible bell	byte 0x07 in ASCII encoding
-	\b	backspace	byte 0x08 in ASCII encoding
-	\f	form feed	byte 0x0c in ASCII encoding
-	\n	newline		byte 0x0b in ASCII encoding
-	\r	return		byte 0x0a in ASCII encoding
-	\t	tab		byte 0x0d in ASCII encoding
-	\v	vertical tab	byte 0x09 in ASCII encoding
+        \a      audible bell    byte 0x07 in ASCII encoding
+        \b      backspace       byte 0x08 in ASCII encoding
+        \f      form feed       byte 0x0c in ASCII encoding
+        \n      newline         byte 0x0b in ASCII encoding
+        \r      return          byte 0x0a in ASCII encoding
+        \t      tab             byte 0x0d in ASCII encoding
+        \v      vertical tab    byte 0x09 in ASCII encoding
 
     If i <= the number of specifiers in fmt, the value of argument
     x_i is printed in the format specified by the i-th specifier.
@@ -92,7 +92,7 @@ DESCRIPTION
 
     If the i-th specifier is of numerical type, any numbers in the
     printing of x_i will be printed in the specified format, unless
-    this is modified by the printing procedure for x_i's type.	Any
+    this is modified by the printing procedure for x_i's type.  Any
     specified precision will be ignored except for floating-point
     mode.
 
@@ -112,8 +112,8 @@ DESCRIPTION
     config("mode").  Therefore this will print the entire
     "1.2345" value:
 
-	; printf("%d\n", 1.2345);
-	1.2345
+        ; printf("%d\n", 1.2345);
+        1.2345
 
 
     assuming printing of 4 or more digits is allowed by the current
@@ -121,49 +121,49 @@ DESCRIPTION
 
     See also:
 
-	; help printf
-	; help display
-	; help mode
+        ; help printf
+        ; help display
+        ; help mode
 
     In calc, %x formats in base 16.  A non-integer numeric values such
     as 1/3 is represented as a fraction.  When fractions are printed
     in %x format, both the numerator and denominator are printed
     as is mode("fraction"):
 
-	; printf("%x\n", 1.2345);
-	0x9a5/0x7d0
+        ; printf("%x\n", 1.2345);
+        0x9a5/0x7d0
 
     See also:
 
-	; help printf
-	; help display
-	; help mode
+        ; help printf
+        ; help display
+        ; help mode
 
 
     Because calc is capable of of printing very large values, some
     people may be surprised when this does not print the entire
     value of M(23209):
 
-	fprintf(fd, "%d\n", 2^23209-1);
-	/* the entire value may not be printed yet */
+        fprintf(fd, "%d\n", 2^23209-1);
+        /* the entire value may not be printed yet */
 
     Because I/O is usually buffered to files, the above fprintf()
     may print only the initial 4096 characters.  One needs to also
     flush (or close the stream) to be sure that the entire
     value as been printed to the file:
 
-	; fflush(fd);
+        ; fflush(fd);
 
     A similar problem an arise when printing many digits after
     the decimal point:
 
-	; display(10000),;
-	; fprintf(fd, "%d\n", pi(1e-10000));
-	; fflush(fd);
+        ; display(10000),;
+        ; fprintf(fd, "%d\n", pi(1e-10000));
+        ; fflush(fd);
 
     The buffer will also be flushed during a call to fclose():
 
-	; fclose(fd);
+        ; fclose(fd);
 
 EXAMPLE
     ; config("epsilon", 1e-6),;
@@ -318,7 +318,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -326,8 +326,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1996/03/12 22:50:41
-## File existed as early as:	1996
+## Under source code control:   1996/03/12 22:50:41
+## File existed as early as:    1996
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

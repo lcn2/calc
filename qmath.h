@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,10 +17,10 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1993/07/30 19:42:47
- * File existed as early as:	1993
+ * Under source code control:   1993/07/30 19:42:47
+ * File existed as early as:    1993
  *
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -28,7 +28,7 @@
 #define INCLUDE_QMATH_H
 
 
-#if defined(CALC_SRC)	/* if we are building from the calc source tree */
+#if defined(CALC_SRC)   /* if we are building from the calc source tree */
 # include "zmath.h"
 #else
 # include <calc/zmath.h>
@@ -39,10 +39,10 @@
  * Rational arithmetic definitions.
  */
 struct number {
-	ZVALUE num;		/* numerator (containing sign) */
-	ZVALUE den;		/* denominator (always positive) */
-	long links;		/* number of links to this value */
-	struct number *next;	/* pointer to next number */
+        ZVALUE num;             /* numerator (containing sign) */
+        ZVALUE den;             /* denominator (always positive) */
+        long links;             /* number of links to this value */
+        struct number *next;    /* pointer to next number */
 };
 
 typedef struct number NUMBER;
@@ -160,7 +160,7 @@ E_FUNC long qilog10(NUMBER *q);
 E_FUNC NUMBER *qilog(NUMBER *q, ZVALUE base);
 E_FUNC bool qcmpmod(NUMBER *q1, NUMBER *q2, NUMBER *q3);
 E_FUNC bool qquomod(NUMBER *q1, NUMBER *q2, NUMBER **quo, NUMBER **mod,
-		    long rnd);
+                    long rnd);
 E_FUNC FLAG qnear(NUMBER *q1, NUMBER *q2, NUMBER *epsilon);
 E_FUNC NUMBER *qdigit(NUMBER *q, ZVALUE dpos, ZVALUE base);
 E_FUNC long qprecision(NUMBER *q);
@@ -277,35 +277,35 @@ E_FUNC NUMBER *swap_HALF_in_NUMBER(NUMBER *dest, NUMBER *src, bool all);
 /*
  * macro expansions to speed this thing up
  */
-#define qiszero(q)	(ziszero((q)->num))
-#define qisneg(q)	(zisneg((q)->num))
-#define qispos(q)	(zispos((q)->num))
-#define qisint(q)	(zisunit((q)->den))
-#define qisfrac(q)	(!zisunit((q)->den))
-#define qisunit(q)	(zisunit((q)->num) && zisunit((q)->den))
-#define qisone(q)	(zisone((q)->num) && zisunit((q)->den))
-#define qisnegone(q)	(zisnegone((q)->num) && zisunit((q)->den))
-#define qistwo(q)	(zistwo((q)->num) && zisunit((q)->den))
-#define qiseven(q)	(zisunit((q)->den) && ziseven((q)->num))
-#define qisodd(q)	(zisunit((q)->den) && zisodd((q)->num))
-#define qistiny(q)	(zistiny((q)->num))
+#define qiszero(q)      (ziszero((q)->num))
+#define qisneg(q)       (zisneg((q)->num))
+#define qispos(q)       (zispos((q)->num))
+#define qisint(q)       (zisunit((q)->den))
+#define qisfrac(q)      (!zisunit((q)->den))
+#define qisunit(q)      (zisunit((q)->num) && zisunit((q)->den))
+#define qisone(q)       (zisone((q)->num) && zisunit((q)->den))
+#define qisnegone(q)    (zisnegone((q)->num) && zisunit((q)->den))
+#define qistwo(q)       (zistwo((q)->num) && zisunit((q)->den))
+#define qiseven(q)      (zisunit((q)->den) && ziseven((q)->num))
+#define qisodd(q)       (zisunit((q)->den) && zisodd((q)->num))
+#define qistiny(q)      (zistiny((q)->num))
 
-#define qhighbit(q)	(zhighbit((q)->num))
-#define qlowbit(q)	(zlowbit((q)->num))
-#define qdivcount(q1, q2)	(zdivcount((q1)->num, (q2)->num))
-#define qisreciprocal(q)	(zisunit((q)->num) && !ziszero((q)->den))
+#define qhighbit(q)     (zhighbit((q)->num))
+#define qlowbit(q)      (zlowbit((q)->num))
+#define qdivcount(q1, q2)       (zdivcount((q1)->num, (q2)->num))
+#define qisreciprocal(q)        (zisunit((q)->num) && !ziszero((q)->den))
 /* operation on #q may be undefined, so replace with an inline-function */
-/* was: #define qlink(q)	((q)->links++, (q)) */
+/* was: #define qlink(q)        ((q)->links++, (q)) */
 static inline NUMBER* qlink(NUMBER* q) { if(q) { (q)->links++; } return q; }
 
-#define qfree(q)	{if (--((q)->links) <= 0) qfreenum(q);}
+#define qfree(q)        {if (--((q)->links) <= 0) qfreenum(q);}
 
 
 /*
  * Flags for qparse calls
  */
-#define QPF_SLASH	0x1	/* allow slash for fractional number */
-#define QPF_IMAG	0x2	/* allow trailing 'i' for imaginary number */
+#define QPF_SLASH       0x1     /* allow slash for fractional number */
+#define QPF_IMAG        0x2     /* allow trailing 'i' for imaginary number */
 
 
 /*

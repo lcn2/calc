@@ -5,25 +5,25 @@ SYNOPSIS
     issq(x)
 
 TYPES
-    x		real
+    x           real
 
-    return	int
+    return      int
 
 DESCRIPTION
-    Determine if x is a square.	 If there exists integers a, b such that:
+    Determine if x is a square.  If there exists integers a, b such that:
 
-	x == a^2 / b^2		(b != 0)
+        x == a^2 / b^2          (b != 0)
 
     return 1, otherwise return 0.
 
     Note that issq() works on rational values, so:
 
-	issq(25/16) == 1
+        issq(25/16) == 1
 
     If you want to test for prefect square integers, you need to exclude
     non-integer values before you test:
 
-	isint(curds) && issq(curds)
+        isint(curds) && issq(curds)
 
 EXAMPLE
     ; print issq(25), issq(3), issq(0)
@@ -53,7 +53,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -61,8 +61,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1994/10/21 02:21:31
-## File existed as early as:	1994
+## Under source code control:   1994/10/21 02:21:31
+## File existed as early as:    1994
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

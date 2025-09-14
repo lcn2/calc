@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,10 +17,10 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1990/02/15 01:50:37
- * File existed as early as:	before 1990
+ * Under source code control:   1990/02/15 01:50:37
+ * File existed as early as:    before 1990
  *
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 /*
@@ -32,35 +32,35 @@
 
 define solve(low, high, epsilon)
 {
-	local flow, fhigh, fmid, mid, places;
+        local flow, fhigh, fmid, mid, places;
 
-	if (isnull(epsilon))
-		epsilon = epsilon();
-	if (epsilon <= 0)
-		quit "Non-positive epsilon value";
-	places = highbit(1 + int(1/epsilon)) + 1;
-	flow = f(low);
-	if (abs(flow) < epsilon)
-		return low;
-	fhigh = f(high);
-	if (abs(fhigh) < epsilon)
-		return high;
-	if (sgn(flow) == sgn(fhigh))
-		quit "Non-opposite signs";
-	while (1) {
-		mid = bround(high - fhigh * (high - low) / (fhigh - flow),
-			     places);
-		if ((mid == low) || (mid == high))
-			places++;
-		fmid = f(mid);
-		if (abs(fmid) < epsilon)
-			return mid;
-		if (sgn(fmid) == sgn(flow)) {
-			low = mid;
-			flow = fmid;
-		} else {
-			high = mid;
-			fhigh = fmid;
-		}
-	}
+        if (isnull(epsilon))
+                epsilon = epsilon();
+        if (epsilon <= 0)
+                quit "Non-positive epsilon value";
+        places = highbit(1 + int(1/epsilon)) + 1;
+        flow = f(low);
+        if (abs(flow) < epsilon)
+                return low;
+        fhigh = f(high);
+        if (abs(fhigh) < epsilon)
+                return high;
+        if (sgn(flow) == sgn(fhigh))
+                quit "Non-opposite signs";
+        while (1) {
+                mid = bround(high - fhigh * (high - low) / (fhigh - flow),
+                             places);
+                if ((mid == low) || (mid == high))
+                        places++;
+                fmid = f(mid);
+                if (abs(fmid) < epsilon)
+                        return mid;
+                if (sgn(fmid) == sgn(flow)) {
+                        low = mid;
+                        flow = fmid;
+                } else {
+                        high = mid;
+                        fhigh = fmid;
+                }
+        }
 }

@@ -5,12 +5,12 @@ SYNOPSIS
     custom("devnull" [, arg ...])
 
 TYPES
-    arg		any
+    arg         any
 
-    return	null
+    return      null
 
 DESCRIPTION
-    This custom function does nothing.	It is intended for testing
+    This custom function does nothing.  It is intended for testing
     of the general custom interface.
 
 EXAMPLE
@@ -34,7 +34,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -42,8 +42,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1997/03/09 17:49:12
-## File existed as early as:	1997
+## Under source code control:   1997/03/09 17:49:12
+## File existed as early as:    1997
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

@@ -5,10 +5,10 @@ SYNOPSIS
     custom([custname [, arg ...]])
 
 TYPES
-    custname	string
-    arg		any
+    custname    string
+    arg         any
 
-    return	any
+    return      any
 
 DESCRIPTION
     This function will invoke the custom function interface.  Custom
@@ -19,16 +19,16 @@ DESCRIPTION
 
     In order to use the custom interface, two things must happen:
 
-	1) Calc must be built to allow custom functions.  By default,
-	   the master Makefile is shipped with ALLOW_CUSTOM= -DCUSTOM
-	   which causes custom functions to be compiled in.
+        1) Calc must be built to allow custom functions.  By default,
+           the master Makefile is shipped with ALLOW_CUSTOM= -DCUSTOM
+           which causes custom functions to be compiled in.
 
-	2) Calc must be invoked with an argument of -C as in:
+        2) Calc must be invoked with an argument of -C as in:
 
-		calc -C
+                calc -C
 
     In other words, explicit action must be taken in order to
-    enable the use of custom functions.	 By default (no -C arg)
+    enable the use of custom functions.  By default (no -C arg)
     custom functions are compiled in but disabled so that only
     portable calc scripts may be used.
 
@@ -36,7 +36,7 @@ DESCRIPTION
     multi-precision calculations in a C-like environment.  You should
     consider implementing algorithms in the calc language as a first
     choice.  Sometimes an algorithm requires use of special hardware, a
-    non-portable OS or pre-compiled C library.	In these cases a custom
+    non-portable OS or pre-compiled C library.  In these cases a custom
     interface may be needed.
 
     The custom function interface is intended to make is easy for
@@ -48,16 +48,16 @@ DESCRIPTION
     To add a new custom function requires access to calc source.
     For information on how to add a new custom function, try:
 
-	    help new_custom
+            help new_custom
 
     To serve as examples, calc is shipped with a few custom functions.
     If calc if invoked with -C, then either of the following will
     display information about the custom functions that are available:
 
-	    show custom
+            show custom
     or:
 
-	    custom()
+            custom()
 
     A few resource files that uses these function are also provided
     to serve as usage examples.
@@ -65,20 +65,20 @@ DESCRIPTION
     We welcome submissions for new custom functions.  For information
     on how to submit new custom functions for general distribution, see:
 
-	    help contrib
+            help contrib
 
 EXAMPLE
     If calc compiled with ALLOW_CUSTOM="-UCUSTOM", the custom system
     is disabled, even when -C is used on the command line:
 
     ; print custom("sysinfo", "baseb")
-	    Calc was built with custom functions disabled
+            Calc was built with custom functions disabled
     Error E_NO_C_ARG
 
     If calc compiled with ALLOW_CUSTOM= -DCUSTOM and is invoked without -C:
 
     ; print custom("sysinfo", "baseb")
-	    Calc must be run with a -C argument to use custom function
+            Calc must be run with a -C argument to use custom function
     Error E_NO_C_ARG
 
     If calc compiled with ALLOW_CUSTOM= -DCUSTOM and is invoked with -C:
@@ -103,7 +103,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -111,8 +111,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1997/03/09 16:33:22
-## File existed as early as:	1997
+## Under source code control:   1997/03/09 16:33:22
+## File existed as early as:    1997
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

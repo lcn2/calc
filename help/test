@@ -5,34 +5,34 @@ SYNOPSIS
     test(x)
 
 TYPES
-    x		any
+    x           any
 
-    return	0 or 1
+    return      0 or 1
 
 DESCRIPTION
     This function returns 1 or 0 according as x tests as "true" or "false".
 
     Conditions under which a value x is considered to be false are:
 
-	Numbers (real or complex):  x is zero
+        Numbers (real or complex):  x is zero
 
-	String: x == ""
+        String: x == ""
 
-	Matrix: every component of x tests as false
+        Matrix: every component of x tests as false
 
-	List: every element of x tests as false
+        List: every element of x tests as false
 
-	Association: x has no element
+        Association: x has no element
 
-	File: x is not open
+        File: x is not open
 
-	Null: always
+        Null: always
 
-	Object of type xx: if xx_test has been defined, xx_test(x)
-		returns zero;  if xx_test has not been defined,
-		every element of x tests as false.
+        Object of type xx: if xx_test has been defined, xx_test(x)
+                returns zero;  if xx_test has not been defined,
+                every element of x tests as false.
 
-	Error-value or other types: never
+        Error-value or other types: never
 
 EXAMPLE
     ; print test(27), test(0), test("abc"), test("")
@@ -63,7 +63,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -71,8 +71,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1996/07/11 01:05:13
-## File existed as early as:	1996
+## Under source code control:   1996/07/11 01:05:13
+## File existed as early as:    1996
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

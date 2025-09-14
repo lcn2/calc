@@ -19,9 +19,9 @@ FIRST THINGS FIRST
 ------------------
 
 ...............................................................................
-.									      .
+.                                                                             .
 . You MUST call libcalc_call_me_first() prior to using libcalc lib functions! .
-.									      .
+.                                                                             .
 ...............................................................................
 
 The function libcalc_call_me_first() takes no args and returns void.  You
@@ -34,16 +34,16 @@ INCLUDE FILES
 To use any of these routines in your own programs, you need to include the
 appropriate include file.  These include files are:
 
-	zmath.h		(for integer arithmetic)
-	qmath.h		(for rational arithmetic)
-	cmath.h		(for complex number arithmetic)
+        zmath.h         (for integer arithmetic)
+        qmath.h         (for rational arithmetic)
+        cmath.h         (for complex number arithmetic)
 
 You never need to include more than one of the above files, even if you wish
 to use more than one type of arithmetic, since qmath.h automatically includes
 zmath.h, and cmath.h automatically includes qmath.h.
 
 The prototypes for the available routines are listed in the above include
-files.	Some of these routines are meant for internal use, and so aren't
+files.  Some of these routines are meant for internal use, and so aren't
 convenient for outside use.  So you should read the source for a routine
 to see if it really does what you think it does.  I won't guarantee that
 obscure internal routines won't change or disappear in future releases!
@@ -61,20 +61,20 @@ to define CALC_SRC.
 You need to include the following file to get the symbols and variables
 related to error handling:
 
-	lib_calc.h
+        lib_calc.h
 
 External programs may want to compile with:
 
-	-I${INCDIR} -L${LIBDIR} -lcalc
+        -I${INCDIR} -L${LIBDIR} -lcalc
 
 If custom functions are also used, they may want to compile with:
 
-	-I${INCDIR} -L${LIBDIR} -lcalc -lcustcalc
+        -I${INCDIR} -L${LIBDIR} -lcalc -lcustcalc
 
 The CALC_SRC symbol should NOT be defined by default.  However if you are
 feeling pedantic you may want to force CALC_SRC to be undefined:
 
-	-UCALC_SRC
+        -UCALC_SRC
 
 as well.
 
@@ -87,64 +87,64 @@ condition, such as malloc failures, division by zero, or some form of
 an internal computation error.  The routine is called in the manner of
 printf, with a format string and optional arguments:
 
-	    void math_error(char *fmt, ...);
+            void math_error(char *fmt, ...);
 
 Your program must handle math errors in one of three ways:
 
     1) Print the error message and then exit
 
-	There is a math_error() function supplied with the calc library.
-	By default, this routine simply prints a message to stderr and
-	then exits.  By simply linking in this link library, any calc
-	errors will result in a error message on stderr followed by
-	an exit.
+        There is a math_error() function supplied with the calc library.
+        By default, this routine simply prints a message to stderr and
+        then exits.  By simply linking in this link library, any calc
+        errors will result in a error message on stderr followed by
+        an exit.
 
     2) Use setjmp and longjmp in your program
 
-	Use setjmp at some appropriate level in your program, and let
-	the longjmp in math_error() return to that level and to allow you
-	to recover from the error.  This is what the calc program does.
+        Use setjmp at some appropriate level in your program, and let
+        the longjmp in math_error() return to that level and to allow you
+        to recover from the error.  This is what the calc program does.
 
-	If one sets up calc_matherr_jmpbuf, and then sets
-	calc_use_matherr_jmpbuf to non-zero then math_error() will
-	longjmp back with the return value of calc_use_matherr_jmpbuf.
-	In addition, the last calc error message will be found in
-	calc_err_msg; this error is not printed to stderr.  The calc
-	error message will not have a trailing newline.
+        If one sets up calc_matherr_jmpbuf, and then sets
+        calc_use_matherr_jmpbuf to non-zero then math_error() will
+        longjmp back with the return value of calc_use_matherr_jmpbuf.
+        In addition, the last calc error message will be found in
+        calc_err_msg; this error is not printed to stderr.  The calc
+        error message will not have a trailing newline.
 
-	For example:
+        For example:
 
-	    #include <setjmp.h>
-	    #include "lib_calc.h"
+            #include <setjmp.h>
+            #include "lib_calc.h"
 
-	    int error;
+            int error;
 
-	    ...
+            ...
 
-	    if ((error = setjmp(calc_matherr_jmpbuf)) != 0) {
+            if ((error = setjmp(calc_matherr_jmpbuf)) != 0) {
 
-		    /* report the error */
-		    printf("Ouch: %s\n", calc_err_msg);
+                    /* report the error */
+                    printf("Ouch: %s\n", calc_err_msg);
 
-		    /* reinitialize calc after the longjmp */
-		    reinitialize();
-	    }
-	    calc_use_matherr_jmpbuf = 1;
+                    /* reinitialize calc after the longjmp */
+                    reinitialize();
+            }
+            calc_use_matherr_jmpbuf = 1;
 
-	If calc_use_matherr_jmpbuf is non-zero, then the jmp_buf value
-	calc_matherr_jmpbuf must be initialized by the setjmp() function
-	or your program will crash.
+        If calc_use_matherr_jmpbuf is non-zero, then the jmp_buf value
+        calc_matherr_jmpbuf must be initialized by the setjmp() function
+        or your program will crash.
 
     3) Supply your own math_error function:
 
-	    void math_error(char *fmt, ...);
+            void math_error(char *fmt, ...);
 
-	Your math_error() function may exit or transfer control to outside
-	of the calc library, but it must never return or calc will crash.
+        Your math_error() function may exit or transfer control to outside
+        of the calc library, but it must never return or calc will crash.
 
 External programs can obtain the appropriate calc symbols by compiling with:
 
-	-I${INCDIR} -L${LIBDIR} -lcalc
+        -I${INCDIR} -L${LIBDIR} -lcalc
 
 -------------------------
 PARSE/SCAN ERROR HANDLING
@@ -159,15 +159,15 @@ any parse/scan errors.  By default, this variable it set to 1 and so
 parse/scan errors are printed to stderr.  By setting this value to zero,
 parse/scan errors are not printed:
 
-	#include "lib_calc.h"
+        #include "lib_calc.h"
 
-	/* do not print parse/scan errors to stderr */
-	calc_print_scanerr_msg = 0;
+        /* do not print parse/scan errors to stderr */
+        calc_print_scanerr_msg = 0;
 
 The last calc math error or calc parse/scan error message is kept
 in the NUL terminated buffer:
 
-	char calc_err_msg[MAXERROR+1];
+        char calc_err_msg[MAXERROR+1];
 
 The value of calc_print_scanerr_msg does not change the use
 of the calc_err_msg[] buffer.  Messages are stored in that
@@ -182,54 +182,54 @@ Your program must handle parse/scan errors in one of two ways:
 
     1) exit on error
 
-	If you do not setup the calc_scanerr_jmpbuf, then when calc
-	encounters a parse/scan error, a message will be printed to
-	stderr and calc will exit.
+        If you do not setup the calc_scanerr_jmpbuf, then when calc
+        encounters a parse/scan error, a message will be printed to
+        stderr and calc will exit.
 
     2) Use setjmp and longjmp in your program
 
-	Use setjmp at some appropriate level in your program, and let
-	the longjmp in scanerror() return to that level and to allow you
-	to recover from the error.  This is what the calc program does.
+        Use setjmp at some appropriate level in your program, and let
+        the longjmp in scanerror() return to that level and to allow you
+        to recover from the error.  This is what the calc program does.
 
-	If one sets up calc_scanerr_jmpbuf, and then sets
-	calc_use_scanerr_jmpbuf to non-zero then scanerror() will longjmp
-	back with the return with a non-zero code.  In addition, the last
-	calc error message will be found in calc_err_msg[]; this error is
-	not printed to stderr.	The calc error message will not have a
-	trailing newline.
+        If one sets up calc_scanerr_jmpbuf, and then sets
+        calc_use_scanerr_jmpbuf to non-zero then scanerror() will longjmp
+        back with the return with a non-zero code.  In addition, the last
+        calc error message will be found in calc_err_msg[]; this error is
+        not printed to stderr.  The calc error message will not have a
+        trailing newline.
 
-	For example:
+        For example:
 
-	    #include <setjmp.h>
-	    #include "lib_calc.h"
+            #include <setjmp.h>
+            #include "lib_calc.h"
 
-	    int scan_error;
+            int scan_error;
 
-	    ...
+            ...
 
-	    /* delay the printing of the parse/scan error */
-	    calc_use_scanerr_jmpbuf = 0;	/* this is optional */
+            /* delay the printing of the parse/scan error */
+            calc_use_scanerr_jmpbuf = 0;        /* this is optional */
 
-	    if ((scan_error = setjmp(calc_scanerr_jmpbuf)) != 0) {
+            if ((scan_error = setjmp(calc_scanerr_jmpbuf)) != 0) {
 
-		    /* report the parse/scan */
-		    if (calc_use_scanerr_jmpbuf == 0) {
-			    printf("parse error: %s\n", calc_err_msg);
-		    }
+                    /* report the parse/scan */
+                    if (calc_use_scanerr_jmpbuf == 0) {
+                            printf("parse error: %s\n", calc_err_msg);
+                    }
 
-		    /* initialize calc after the longjmp */
-		    initialize();
-	    }
-	    calc_use_scanerr_jmpbuf = 1;
+                    /* initialize calc after the longjmp */
+                    initialize();
+            }
+            calc_use_scanerr_jmpbuf = 1;
 
-	If calc_use_scanerr_jmpbuf is non-zero, then the jmp_buf value
-	calc_scanerr_jmpbuf must be initialized by the setjmp() function
-	or your program will crash.
+        If calc_use_scanerr_jmpbuf is non-zero, then the jmp_buf value
+        calc_scanerr_jmpbuf must be initialized by the setjmp() function
+        or your program will crash.
 
 External programs can obtain the appropriate calc symbols by compiling with:
 
-	-I${INCDIR} -L${LIBDIR} -lcalc
+        -I${INCDIR} -L${LIBDIR} -lcalc
 
 ---------------------------
 PARSE/SCAN WARNING HANDLING
@@ -239,22 +239,22 @@ Calc parse/scan warning message are printed to stderr by the warning()
 function.  The routine is called in the manner of printf, with a format
 string and optional arguments:
 
-	void warning(char *fmt, ...);
+        void warning(char *fmt, ...);
 
 The variable, calc_print_scanwarn_msg, controls if calc prints to stderr,
 any parse/scan warnings.  By default, this variable it set to 1 and so
 parse/scan warnings are printed to stderr.  By setting this value to zero,
 parse/scan warnings are not printed:
 
-	#include "lib_calc.h"
+        #include "lib_calc.h"
 
-	/* do not print parse/scan warnings to stderr */
-	calc_print_scanwarn_msg = 0;
+        /* do not print parse/scan warnings to stderr */
+        calc_print_scanwarn_msg = 0;
 
 The last calc calc parse/scan warning message is kept in the NUL
 terminated buffer:
 
-	char calc_warn_msg[MAXERROR+1];
+        char calc_warn_msg[MAXERROR+1];
 
 The value of calc_print_scanwarn_msg does not change the use
 of the calc_warn_msg[] buffer.  Messages are stored in that
@@ -264,19 +264,19 @@ Your program must handle parse/scan warnings in one of two ways:
 
     1) print the warning to stderr and continue
 
-	The warning() from libcalc prints warning messages to
-	stderr and returns.  The flow of execution is not changed.
-	This is what calc does by default.
+        The warning() from libcalc prints warning messages to
+        stderr and returns.  The flow of execution is not changed.
+        This is what calc does by default.
 
     2) Supply your own warning function:
 
-	    void warning(char *fmt, ...);
+            void warning(char *fmt, ...);
 
-	Your warning function should simply return when it is finished.
+        Your warning function should simply return when it is finished.
 
 External programs can obtain the appropriate calc symbols by compiling with:
 
-	-I${INCDIR} -L${LIBDIR} -lcalc
+        -I${INCDIR} -L${LIBDIR} -lcalc
 
 
 ---------------
@@ -308,7 +308,7 @@ output strings with space filling, output formatted strings like printf, and
 flush the output.  Output from these routines is diverted as described above.
 
 You can change the default output mode by calling math_setmode, and you can
-change the default number of digits printed by calling math_setdigits.	These
+change the default number of digits printed by calling math_setdigits.  These
 routines return the previous values.  The possible modes are described in
 zmath.h.
 
@@ -320,7 +320,7 @@ The arbitrary precision integer routines define a structure called a ZVALUE.
 This is defined in zmath.h.  A ZVALUE contains a pointer to an array of
 integers, the length of the array, and a sign flag.  The array is allocated
 using malloc, so you need to free this array when you are done with a
-ZVALUE.	 To do this, you should call zfree() with the ZVALUE as an argument
+ZVALUE.  To do this, you should call zfree() with the ZVALUE as an argument
 and never try to free the array yourself using free().  The reason for this
 is that sometimes the pointer points to a statically allocated arrays which
 should NOT be freed.
@@ -329,11 +329,11 @@ The ZVALUE structures are passed to routines by value, and are returned
 through pointers.  For example, to multiply two small integers together,
 you could do the following:
 
-	ZVALUE	z1, z2, z3;
+        ZVALUE  z1, z2, z3;
 
-	itoz(3L, &z1);
-	itoz(4L, &z2);
-	zmul(z1, z2, &z3);
+        itoz(3L, &z1);
+        itoz(4L, &z2);
+        zmul(z1, z2, &z3);
 
 Use zcopy to copy one ZVALUE to another.  There is no sharing of arrays
 between different ZVALUEs even if they have the same value, so you MUST
@@ -354,67 +354,67 @@ address to a routine as a destination value, otherwise memory will be
 lost.  The following shows an example of the correct way to free memory
 over a long sequence of operations.
 
-	ZVALUE z1, z2, z3;
+        ZVALUE z1, z2, z3;
 
-	z1 = _one_;
-	str2z("12345678987654321", &z2);
-	zadd(z1, z2, &z3);
-	zfree(z1);
-	zfree(z2);
-	zsquare(z3, &z1);
-	zfree(z3);
-	itoz(17L, &z2);
-	zsub(z1, z2, &z3);
-	zfree(z1);
-	zfree(z2);
-	zfree(z3);
+        z1 = _one_;
+        str2z("12345678987654321", &z2);
+        zadd(z1, z2, &z3);
+        zfree(z1);
+        zfree(z2);
+        zsquare(z3, &z1);
+        zfree(z3);
+        itoz(17L, &z2);
+        zsub(z1, z2, &z3);
+        zfree(z1);
+        zfree(z2);
+        zfree(z3);
 
 There are some quick checks you can make on integers.  For example, whether
 or not they are zero, negative, even, and so on.  These are all macros
 defined in zmath.h, and should be used instead of checking the parts of the
 ZVALUE yourself.  Examples of such checks are:
 
-	ziseven(z)	(number is even)
-	zisodd(z)	(number is odd)
-	ziszero(z)	(number is zero)
-	zisneg(z)	(number is negative)
-	zispos(z)	(number is positive)
-	zisunit(z)	(number is 1 or -1)
-	zisone(z)	(number is 1)
-	zisnegone(z)	(number is -1)
-	zistwo(z)	(number is 2)
-	zisabstwo(z)	(number is 2 or -2)
-	zisabsleone(z)	(number is -1, 0 or 1)
-	zislezero(z)	(number is <= 0)
-	zisleone(z)	(number is <= 1)
-	zge16b(z)	(number is >= 2^16)
-	zge24b(z)	(number is >= 2^24)
-	zge31b(z)	(number is >= 2^31)
-	zge32b(z)	(number is >= 2^32)
-	zge64b(z)	(number is >= 2^64)
+        ziseven(z)      (number is even)
+        zisodd(z)       (number is odd)
+        ziszero(z)      (number is zero)
+        zisneg(z)       (number is negative)
+        zispos(z)       (number is positive)
+        zisunit(z)      (number is 1 or -1)
+        zisone(z)       (number is 1)
+        zisnegone(z)    (number is -1)
+        zistwo(z)       (number is 2)
+        zisabstwo(z)    (number is 2 or -2)
+        zisabsleone(z)  (number is -1, 0 or 1)
+        zislezero(z)    (number is <= 0)
+        zisleone(z)     (number is <= 1)
+        zge16b(z)       (number is >= 2^16)
+        zge24b(z)       (number is >= 2^24)
+        zge31b(z)       (number is >= 2^31)
+        zge32b(z)       (number is >= 2^32)
+        zge64b(z)       (number is >= 2^64)
 
 Typically the largest unsigned long is typedefed to FULL.  The following
 macros are useful in dealing with this data type:
 
-	MAXFULL		(largest positive FULL value)
-	MAXUFULL	(largest unsigned FULL value)
-	zgtmaxfull(z)	(number is > MAXFULL)
-	zgtmaxufull(z)	(number is > MAXUFULL)
-	zgtmaxlong(z)	(number is > MAXLONG, largest long value)
-	zgtmaxulong(z)	(number is > MAXULONG, largest unsigned long value)
+        MAXFULL         (largest positive FULL value)
+        MAXUFULL        (largest unsigned FULL value)
+        zgtmaxfull(z)   (number is > MAXFULL)
+        zgtmaxufull(z)  (number is > MAXUFULL)
+        zgtmaxlong(z)   (number is > MAXLONG, largest long value)
+        zgtmaxulong(z)  (number is > MAXULONG, largest unsigned long value)
 
 If zgtmaxufull(z) is false, then one may quickly convert the absolute
 value of number into a full with the macro:
 
-	ztofull(z)	(convert abs(number) to FULL)
-	ztoulong(z)	(convert abs(number) to an unsigned long)
-	ztolong(z)	(convert abs(number) to a long)
+        ztofull(z)      (convert abs(number) to FULL)
+        ztoulong(z)     (convert abs(number) to an unsigned long)
+        ztolong(z)      (convert abs(number) to a long)
 
 If the value is too large for ztofull(), ztoulong() or ztolong(), only
 the low order bits converted.
 
 There are two types of comparisons you can make on ZVALUEs.  This is whether
-or not they are equal, or the ordering on size of the numbers.	The zcmp
+or not they are equal, or the ordering on size of the numbers.  The zcmp
 function tests whether two ZVALUEs are equal, returning true if they differ.
 The zrel function tests the relative sizes of two ZVALUEs, returning -1 if
 the first one is smaller, 0 if they are the same, and 1 if the first one
@@ -422,11 +422,11 @@ is larger.
 
 To determine if z is an integer power of 2, use zispowerof2:
 
-	ZVALUE z;		/* value to check if it is a power of */
-	FULL log2;		/* set to log base 2 of z when is_power_of_2 is true */
-	bool is_power_of_2;
+        ZVALUE z;               /* value to check if it is a power of */
+        FULL log2;              /* set to log base 2 of z when is_power_of_2 is true */
+        bool is_power_of_2;
 
-	is_power_of_2 = zispowerof2(z, &log2)
+        is_power_of_2 = zispowerof2(z, &log2)
 
 Returns true if z an integer power of 2: set log2 to log base 2 of z.
 Returns false if z is NOT integer power of 2 and leave log2 untouched.
@@ -445,35 +445,35 @@ is always positive.  If the NUMBER is an integer, the denominator has the
 value 1.
 
 Unlike ZVALUEs, NUMBERs are passed using pointers, and pointers to them are
-returned by functions.	So the basic type for using fractions is not really
+returned by functions.  So the basic type for using fractions is not really
 (NUMBER), but is (NUMBER *).  NUMBERs are allocated using the qalloc routine.
 This returns a pointer to a number which has the value 1.  Because of the
 special property of a ZVALUE of 1, the numerator and denominator of this
 returned value can simply be overwritten with new ZVALUEs without needing
 to free them first.  The following illustrates this:
 
-	NUMBER *q;
+        NUMBER *q;
 
-	q = qalloc();
-	itoz(55L, &q->num);
+        q = qalloc();
+        itoz(55L, &q->num);
 
 A better way to create NUMBERs with particular values is to use the itoq,
 iitoq, or str2q functions.  Using itoq makes a long value into a NUMBER,
 using iitoq makes a pair of longs into the numerator and denominator of a
 NUMBER (reducing them first if needed), and str2q converts a string representing
-a number into the corresponding NUMBER.	 The str2q function accepts input in
+a number into the corresponding NUMBER.  The str2q function accepts input in
 integral, fractional, real, or exponential formats.  Examples of allocating
 numbers are:
 
-	NUMBER *q1, *q2, *q3, *q4;
+        NUMBER *q1, *q2, *q3, *q4;
 
-	q1 = itoq(66L);
-	q2 = iitoq(2L, 3L);
-	q3 = str2q("456.78");
-	q4 = utoq((FULL) 1234567890L);
+        q1 = itoq(66L);
+        q2 = iitoq(2L, 3L);
+        q3 = str2q("456.78");
+        q4 = utoq((FULL) 1234567890L);
 
 Also unlike ZVALUEs, NUMBERs are quickly copied.  This is because they contain
-a link count, which is the number of pointers there are to the NUMBER.	The
+a link count, which is the number of pointers there are to the NUMBER.  The
 qlink macro is used to copy a pointer to a NUMBER, and simply increments
 the link count and returns the same pointer.  Since it is a macro, the
 argument should not be a function call, but a real pointer variable.  The
@@ -486,16 +486,16 @@ the ZVALUEs contained within the NUMBER, and then puts the NUMBER structure
 onto a free list for quick reuse.  The following is an example of allocating
 NUMBERs, copying them, adding them, and finally deleting them again.
 
-	NUMBER *q1, *q2, *q3, *q4;
+        NUMBER *q1, *q2, *q3, *q4;
 
-	q1 = itoq(111L);
-	q2 = qlink(q1);
-	q3 = qqadd(q1, q2);
-	q4 = qnum(q2, q3);
+        q1 = itoq(111L);
+        q2 = qlink(q1);
+        q3 = qqadd(q1, q2);
+        q4 = qnum(q2, q3);
 
-	qfree(q1);
-	qfree(q2);
-	qfree(q3);
+        qfree(q1);
+        qfree(q2);
+        qfree(q3);
 
 Because of the passing of pointers and the ability to copy numbers easily,
 you might wish to use the rational number routines even for integral
@@ -513,55 +513,55 @@ There are some transcendental functions in the link library, such as sin
 and cos.  These cannot be evaluated exactly as fractions.  Therefore,
 they accept another argument which tells how accurate you want the result.
 This is an "epsilon" value, and the returned value will be within that
-quantity of the correct value.	This is usually an absolute difference,
+quantity of the correct value.  This is usually an absolute difference,
 but for some functions (such as exp), this is a relative difference.
 For example, to calculate sin(0.5) to 100 decimal places, you could do:
 
-	NUMBER *q, *ans, *epsilon;
+        NUMBER *q, *ans, *epsilon;
 
-	q = str2q("0.5");
-	epsilon = str2q("1e-100");
-	ans = qsin(q, epsilon);
+        q = str2q("0.5");
+        epsilon = str2q("1e-100");
+        ans = qsin(q, epsilon);
 
 There are many convenience macros similar to the ones for ZVALUEs which can
 give quick information about NUMBERs.  In addition, there are some new ones
 applicable to fractions.  These are all defined in qmath.h.  Some of these
 macros are:
 
-	qiszero(q)		(number is zero)
-	qisneg(q)		(number is negative)
-	qispos(q)		(number is positive)
-	qisint(q)		(number is an integer)
-	qisfrac(q)		(number is fractional)
-	qisunit(q)		(number is 1 or -1)
-	qisone(q)		(number is 1)
-	qisnegone(q)		(number is -1)
-	qistwo(q)		(number is 2)
-	qiseven(q)		(number is an even integer)
-	qisodd(q)		(number is an odd integer)
-	qisreciprocal(q)	(number is 1 / an integer and q != 0)
+        qiszero(q)              (number is zero)
+        qisneg(q)               (number is negative)
+        qispos(q)               (number is positive)
+        qisint(q)               (number is an integer)
+        qisfrac(q)              (number is fractional)
+        qisunit(q)              (number is 1 or -1)
+        qisone(q)               (number is 1)
+        qisnegone(q)            (number is -1)
+        qistwo(q)               (number is 2)
+        qiseven(q)              (number is an even integer)
+        qisodd(q)               (number is an odd integer)
+        qisreciprocal(q)        (number is 1 / an integer and q != 0)
 
 The comparisons for NUMBERs are similar to the ones for ZVALUEs.  You use the
 qcmp and qrel functions.
 
-There are four predefined values for fractions.	 You should qlink them when
+There are four predefined values for fractions.  You should qlink them when
 you want to use them.  These are _qzero_, _qone_, _qnegone_, and _qonehalf_.
 These have the values 0, 1, -1, and 1/2.  An example of using them is:
 
-	NUMBER *q1, *q2;
+        NUMBER *q1, *q2;
 
-	q1 = qlink(&_qonehalf_);
-	q2 = qlink(&_qone_);
+        q1 = qlink(&_qonehalf_);
+        q2 = qlink(&_qone_);
 
 To determine if q is an integer power of 2, use qispowerof2:
 
-	NUMBER *q;		/* value to check if it is a power of */
-	NUMBER *qlog2;		/* set to log base 2 of q when is_power_of_2 is true */
-	bool is_power_of_2;
+        NUMBER *q;              /* value to check if it is a power of */
+        NUMBER *qlog2;          /* set to log base 2 of q when is_power_of_2 is true */
+        bool is_power_of_2;
 
-	q = utoq((FULL) 1234567890L);
-	qlog2 = qalloc();
-	is_power_of_2 = qispowerof2(q, &qlog2);
+        q = utoq((FULL) 1234567890L);
+        qlog2 = qalloc();
+        is_power_of_2 = qispowerof2(q, &qlog2);
 
 Returns true if q an integer power of 2: set *qlog2 to log base 2 of q.
 Returns false if q is NOT integer power of 2 and leave *qlog2 untouched.
@@ -572,7 +572,7 @@ USING COMPLEX NUMBERS
 ---------------------
 
 The arbitrary precision complex arithmetic routines define a structure
-called COMPLEX.	 This is defined in cmath.h.  This contains two NUMBERs
+called COMPLEX.  This is defined in cmath.h.  This contains two NUMBERs
 for the real and imaginary parts of a complex number, and a count of the
 number of links there are to this COMPLEX number.
 
@@ -583,19 +583,19 @@ fractional parts using qqtoc.  You can copy COMPLEX values using clink
 which increments the link count.  And you free a COMPLEX value using cfree.
 The following example illustrates this:
 
-	NUMBER *q1, *q2;
-	COMPLEX *c1, *c2, *c3;
+        NUMBER *q1, *q2;
+        COMPLEX *c1, *c2, *c3;
 
-	q1 = itoq(3L);
-	q2 = itoq(4L);
-	c1 = qqtoc(q1, q2);
-	qfree(q1);
-	qfree(q2);
-	c2 = clink(c1);
-	c3 = cmul(c1, c2);
-	cfree(c1);
-	cfree(c2);
-	cfree(c3);
+        q1 = itoq(3L);
+        q2 = itoq(4L);
+        c1 = qqtoc(q1, q2);
+        qfree(q1);
+        qfree(q2);
+        c2 = clink(c1);
+        c3 = cmul(c1, c2);
+        cfree(c1);
+        cfree(c2);
+        cfree(c3);
 
 As a shortcut, when you want to manipulate a COMPLEX value by a real value,
 you can use the caddq, csubq, cmulq, and cdivq routines.  These accept one
@@ -605,33 +605,33 @@ There is no direct routine to convert a string value into a COMPLEX value.
 But you can do this yourself by converting two strings into two NUMBERS,
 and then using the qqtoc routine.
 
-COMPLEX values are always returned from these routines.	 To split out the
+COMPLEX values are always returned from these routines.  To split out the
 real and imaginary parts into normal NUMBERs, you can simply qlink the
 two components, as shown in the following example:
 
-	COMPLEX *c;
-	NUMBER *rp, *ip;
+        COMPLEX *c;
+        NUMBER *rp, *ip;
 
-	c = calloc();
-	rp = qlink(c->real);
-	ip = qlink(c->imag);
+        c = calloc();
+        rp = qlink(c->real);
+        ip = qlink(c->imag);
 
 There are many macros for checking quick things about complex numbers,
 similar to the ZVALUE and NUMBER macros.  In addition, there are some
-only used for complex numbers.	Examples of macros are:
+only used for complex numbers.  Examples of macros are:
 
-	cisreal(c)	(number is real)
-	cisimag(c)	(number is pure imaginary)
-	ciszero(c)	(number is zero)
-	cisnegone(c)	(number is -1)
-	cisone(c)	(number is 1)
-	cisrunit(c)	(number is 1 or -1)
-	cisiunit(c)	(number is i or -i)
-	cisunit(c)	(number is 1, -1, i, or -i)
-	cistwo(c)	(number is 2)
-	cisint(c)	(number is has integer real and imaginary parts)
-	ciseven(c)	(number is has even real and imaginary parts)
-	cisodd(c)	(number is has odd real and imaginary parts)
+        cisreal(c)      (number is real)
+        cisimag(c)      (number is pure imaginary)
+        ciszero(c)      (number is zero)
+        cisnegone(c)    (number is -1)
+        cisone(c)       (number is 1)
+        cisrunit(c)     (number is 1 or -1)
+        cisiunit(c)     (number is i or -i)
+        cisunit(c)      (number is 1, -1, i, or -i)
+        cistwo(c)       (number is 2)
+        cisint(c)       (number is has integer real and imaginary parts)
+        ciseven(c)      (number is has even real and imaginary parts)
+        cisodd(c)       (number is has odd real and imaginary parts)
 
 There is only one comparison you can make for COMPLEX values, and that is
 for equality.  The ccmp function returns true if two complex numbers differ.
@@ -641,13 +641,13 @@ That is, the imaginary part of the COMPLEX is 0.  You may convert the
 COMPLEX into a new allocated NUMBER that is real part of the COMPLEX value.
 For example:
 
-	COMPLEX *c;
-	NUMBER *q;
-	bool ok_to_free;	/* true ==> free COMPLEX value, false ==> do not */
+        COMPLEX *c;
+        NUMBER *q;
+        bool ok_to_free;        /* true ==> free COMPLEX value, false ==> do not */
 
-	if (cisreal(c)) {
-		q = c_to_q(c, ok_to_free);
-	}
+        if (cisreal(c)) {
+                q = c_to_q(c, ok_to_free);
+        }
 
 The 2nd argument to c_to_q() determines if the complex argument should be freed
 or not.  Pass a false value as the 2nd arg if you wish to continue to use the
@@ -655,13 +655,13 @@ COMPLEX value.
 
 To convert a NUMBER into a COMPLEX value, use:
 
-	COMPLEX *c;
-	NUMBER *q;
+        COMPLEX *c;
+        NUMBER *q;
 
-	c = q_to_c(q);
+        c = q_to_c(q);
 
-There are three predefined values for complex numbers.	You should clink
-them when you want to use them.	 They are _czero_, _cone_, and _conei_.
+There are three predefined values for complex numbers.  You should clink
+them when you want to use them.  They are _czero_, _cone_, and _conei_.
 These have the values 0, 1, and i.
 
 ----------------
@@ -683,7 +683,7 @@ need call libcalc_call_me_last() only once.
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -691,8 +691,8 @@ need call libcalc_call_me_last() only once.
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1993/07/30 19:44:49
-## File existed as early as:	1993
+## Under source code control:   1993/07/30 19:44:49
+## File existed as early as:    1993
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

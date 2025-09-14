@@ -5,9 +5,9 @@ SYNOPSIS
     system(cmd)
 
 TYPES
-    cmd		str
+    cmd         str
 
-    return	int
+    return      int
 
 DESCRIPTION
     This function executes the shell command found in the string, cmd.
@@ -20,19 +20,19 @@ DESCRIPTION
     and other waitpid values will change the return value.
 
     On POSIX P1003.1 compliant systems, if cmd is empty then this function
-    will determine if the shell is executable.	If the shell is executable,
+    will determine if the shell is executable.  If the shell is executable,
     0 is returned otherwise non-zero is returned.
 
 EXAMPLE
     ; system("")
-	    0
+            0
     ; system("true")
-	    0
+            0
     ; system("exit 2")
-	    512
+            512
     ; system("date")
     Sun Jul  9 03:21:48 PDT 1995
-	    0
+            0
 
 LIMITS
     none
@@ -51,7 +51,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -59,8 +59,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/07/09 03:48:57
-## File existed as early as:	1995
+## Under source code control:   1995/07/09 03:48:57
+## File existed as early as:    1995
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

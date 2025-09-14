@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	2013/08/11 01:31:28
- * File existed as early as:	2013
+ * Under source code control:   2013/08/11 01:31:28
+ * File existed as early as:    2013
  */
 
 
@@ -152,21 +152,21 @@ define __CZ__lngammarp(z)
     holds_enough = 0;
 
     if (size(__CZ__Ck) != a) {
-	__CZ__Ck = mat[a];
-	holds_enough = 1;
+        __CZ__Ck = mat[a];
+        holds_enough = 1;
     }
 
     factrl = 1.0;
 
-    __CZ__Ck[0] = sqrt(2 * pi());	/* c_0 */
+    __CZ__Ck[0] = sqrt(2 * pi());       /* c_0 */
     for (n = 1; n < a; n++) {
-	if (holds_enough == 1) {
-	    __CZ__Ck[n] = (a - n) ^ (n - 0.5) * exp(a - n) / factrl;
-	factrl *= -n}
+        if (holds_enough == 1) {
+            __CZ__Ck[n] = (a - n) ^ (n - 0.5) * exp(a - n) / factrl;
+        factrl *= -n}
     }
     sum = __CZ__Ck[0];
     for (n = 1; n < a; n++) {
-	sum += __CZ__Ck[n] / (z + n);
+        sum += __CZ__Ck[n] / (z + n);
     }
 
     ret = ln(sum) + (-(z + a)) + ln(z + a) * (z + 0.5);
@@ -177,7 +177,7 @@ define __CZ__lngammarp(z)
      * in that case.
      */
     if (im(ret)) {
-	ret = re(ret) + ln(exp(im(ret) * 1i));
+        ret = re(ret) + ln(exp(im(ret) * 1i));
     }
 
     epsilon(epsilon);
@@ -189,27 +189,27 @@ define __CZ__lngamma_lanczos(z)
 {
     local a k g zghalf lanczos;
     mat lanczos[15] = {
-	9.9999999999999709182e-1,
-	5.7156235665862923516e1,
-	-5.9597960355475491248e1,
-	1.4136097974741747173e1,
-	-4.9191381609762019978e-1,
-	3.3994649984811888638e-5,
-	4.6523628927048576010e-5,
-	-9.8374475304879566105e-5,
-	1.5808870322491249322e-4,
-	-2.1026444172410489480e-4,
-	2.1743961811521265523e-4,
-	-1.6431810653676390482e-4,
-	8.4418223983852751308e-5,
-	-2.6190838401581411237e-5,
-	3.6899182659531626821e-6
+        9.9999999999999709182e-1,
+        5.7156235665862923516e1,
+        -5.9597960355475491248e1,
+        1.4136097974741747173e1,
+        -4.9191381609762019978e-1,
+        3.3994649984811888638e-5,
+        4.6523628927048576010e-5,
+        -9.8374475304879566105e-5,
+        1.5808870322491249322e-4,
+        -2.1026444172410489480e-4,
+        2.1743961811521265523e-4,
+        -1.6431810653676390482e-4,
+        8.4418223983852751308e-5,
+        -2.6190838401581411237e-5,
+        3.6899182659531626821e-6
     };
     g = 607 / 128;
     z = z - 1;
     a = 0;
     for (k = 12; k >= 1; k--) {
-	a += lanczos[k] / (z + k);
+        a += lanczos[k] / (z + k);
     }
     a += lanczos[0];
     zghalf = z + g + .5;
@@ -221,10 +221,10 @@ define __CZ__print__CZ__Ck()
 {
     local k;
     if (size(__CZ__Ck) <= 1) {
-	__CZ__lngammarp(2.2 - 2.2i);
+        __CZ__lngammarp(2.2 - 2.2i);
     }
     for (k = 0; k < size(__CZ__Ck); k++) {
-	print __CZ__Ck[k];
+        print __CZ__Ck[k];
     }
 }
 
@@ -232,16 +232,16 @@ define __CZ__print__CZ__Ck()
 define kroneckerdelta(i, j)
 {
     if (isnull(j)) {
-	if (i == 0) {
-	    return 1;
-	} else {
-	    return 0;
-	}
+        if (i == 0) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
     if (i != j) {
-	return 0;
+        return 0;
     } else {
-	return 1;
+        return 1;
     }
 }
 
@@ -260,19 +260,19 @@ define __CZ__lngstirling(z, n)
     z2 = z ^ 2;
 
     if (size(__CZ__precomp_stirling) < n) {
-	__CZ__precomp_stirling = mat[n];
-	for (k = 1; k <= n; k++) {
-	    bernterm = bernoulli(2 * k) / (2 * k * (2 * k - 1));
-	    __CZ__precomp_stirling[k - 1] = bernterm;
-	    sum += bernterm / zz;
-	    zz *= z2;
-	}
+        __CZ__precomp_stirling = mat[n];
+        for (k = 1; k <= n; k++) {
+            bernterm = bernoulli(2 * k) / (2 * k * (2 * k - 1));
+            __CZ__precomp_stirling[k - 1] = bernterm;
+            sum += bernterm / zz;
+            zz *= z2;
+        }
     } else {
-	for (k = 1; k <= n; k++) {
-	    bernterm = __CZ__precomp_stirling[k - 1];
-	    sum += bernterm / zz;
-	    zz *= z2;
-	}
+        for (k = 1; k <= n; k++) {
+            bernterm = __CZ__precomp_stirling[k - 1];
+            sum += bernterm / zz;
+            zz *= z2;
+        }
     }
     return head + sum;
 }
@@ -287,7 +287,7 @@ define R(z, k)
     ab = a / b;
     /* a/b might round to zero */
     if (abs(ab) < epsilon()) {
-	return digits(1 / epsilon());
+        return digits(1 / epsilon());
     }
     return digits(1 / (a / b));
 }
@@ -298,49 +298,49 @@ define lngammasmall(z)
     local ret eps flag corr;
     flag = 0;
     if (isint(z)) {
-	if (z <= 0) {
-	    return newerror("gamma(z): z is a negative integer");
-	} else {
-	    /* may hold up accuracy a bit longer, but YMMV */
-	    if (z < 20) {
-		return ln((z - 1) !);
-	    } else {
-		return __CZ__lngamma_lanczos(z);
-	    }
-	}
+        if (z <= 0) {
+            return newerror("gamma(z): z is a negative integer");
+        } else {
+            /* may hold up accuracy a bit longer, but YMMV */
+            if (z < 20) {
+                return ln((z - 1) !);
+            } else {
+                return __CZ__lngamma_lanczos(z);
+            }
+        }
     } else {
-	if (re(z) < 0) {
-	    if (im(z) && im(z) < 0) {
-		z = conj(z);
-		flag = 1;
-	    }
+        if (re(z) < 0) {
+            if (im(z) && im(z) < 0) {
+                z = conj(z);
+                flag = 1;
+            }
 
-	    ret = ln(pi() / sin(pi() * z)) - __CZ__lngamma_lanczos(1 - z);
+            ret = ln(pi() / sin(pi() * z)) - __CZ__lngamma_lanczos(1 - z);
 
-	    if (!im(z)) {
-		if (abs(z) <= 1 / 2) {
-		    ret = re(ret) - pi() * 1i;
-		} else if (isodd(floor(abs(re(z))))) {
-		    ret = re(ret) + (ceil(abs(z)) * pi() * 1i);
-		} else if (iseven(floor(abs(re(z))))) {
-		    /* < n+1/2 */
-		    if (iseven(floor(abs(z)))) {
-			ret = re(ret) + (ceil(abs(z) - 1 / 2 - 1) * pi() * 1i);
-		    } else {
-			ret = re(ret) + (ceil(abs(z) - 1 / 2) * pi() * 1i);
-		    }
-		}
-	    } else {
-		corr = ceil(re(z) / 2 - 3 / 4 - kroneckerdelta(im(z)) / 4);
-		ret = ret + 2 * (corr * pi()) * 1i;
-	    }
-	    if (flag == 1) {
-		ret = conj(ret);
-	    }
-	    return ret;
-	}
-	ret = (__CZ__lngamma_lanczos(z));
-	return ret;
+            if (!im(z)) {
+                if (abs(z) <= 1 / 2) {
+                    ret = re(ret) - pi() * 1i;
+                } else if (isodd(floor(abs(re(z))))) {
+                    ret = re(ret) + (ceil(abs(z)) * pi() * 1i);
+                } else if (iseven(floor(abs(re(z))))) {
+                    /* < n+1/2 */
+                    if (iseven(floor(abs(z)))) {
+                        ret = re(ret) + (ceil(abs(z) - 1 / 2 - 1) * pi() * 1i);
+                    } else {
+                        ret = re(ret) + (ceil(abs(z) - 1 / 2) * pi() * 1i);
+                    }
+                }
+            } else {
+                corr = ceil(re(z) / 2 - 3 / 4 - kroneckerdelta(im(z)) / 4);
+                ret = ret + 2 * (corr * pi()) * 1i;
+            }
+            if (flag == 1) {
+                ret = conj(ret);
+            }
+            return ret;
+        }
+        ret = (__CZ__lngamma_lanczos(z));
+        return ret;
     }
 }
 
@@ -355,255 +355,255 @@ define lngamma(z)
     local corr d37 d52 termcount;
     /* z \in \mathbf{Z} */
     if (isint(z)) {
-	/*The gamma-function has poles at zero and the negative integers */
-	if (z <= 0) {
-	    return newerror("lngamma(z): z is a negative integer");
-	} else {
-	    /* may hold up accuracy a bit longer, but YMMV */
-	    if (z < 20) {
-		return ln((z - 1) !);
-	    } else {
-		return __CZ__lngammarp(z);
-	    }
-	}
-    } else {			/*if(isint(z)) */
-	if (re(z) > 0) {
-	    flag = 0;
-	    eps = epsilon();
-	    epsilon(eps * 1e-3);
+        /*The gamma-function has poles at zero and the negative integers */
+        if (z <= 0) {
+            return newerror("lngamma(z): z is a negative integer");
+        } else {
+            /* may hold up accuracy a bit longer, but YMMV */
+            if (z < 20) {
+                return ln((z - 1) !);
+            } else {
+                return __CZ__lngammarp(z);
+            }
+        }
+    } else {                    /*if(isint(z)) */
+        if (re(z) > 0) {
+            flag = 0;
+            eps = epsilon();
+            epsilon(eps * 1e-3);
 
-	    /* Compute values on the real line with Spouge's algorithm */
-	    if (!im(z)) {
-		ret = __CZ__lngammarp(z);
-		epsilon(eps);
-		return ret;
-	    }
-	    /* Do the rest with the Stirling series. */
-	    /* This code repeats down under. Booh! */
-	    /* Make it a positive im(z) */
-	    if (im(z) < 0) {
-		z = conj(z);
-		flag = 1;
-	    }
-	    /* Evaluate the number of terms needed */
-	    decdigits = floor(digits(1 / eps));
-	    /* 20 dec. digits is the default in calc(?) */
-	    if (decdigits <= 21) {
-		/* set 20 as the minimum */
-		epsilon(1e-22);
-		increasedby = 0;
-		/* inflate z */
-		Z = z;
-		while (abs(z) < 10) {
-		    z++;
-		    increasedby++;
-		}
+            /* Compute values on the real line with Spouge's algorithm */
+            if (!im(z)) {
+                ret = __CZ__lngammarp(z);
+                epsilon(eps);
+                return ret;
+            }
+            /* Do the rest with the Stirling series. */
+            /* This code repeats down under. Booh! */
+            /* Make it a positive im(z) */
+            if (im(z) < 0) {
+                z = conj(z);
+                flag = 1;
+            }
+            /* Evaluate the number of terms needed */
+            decdigits = floor(digits(1 / eps));
+            /* 20 dec. digits is the default in calc(?) */
+            if (decdigits <= 21) {
+                /* set 20 as the minimum */
+                epsilon(1e-22);
+                increasedby = 0;
+                /* inflate z */
+                Z = z;
+                while (abs(z) < 10) {
+                    z++;
+                    increasedby++;
+                }
 
-		ret = __CZ__lngstirling(z, 11);
-		/* deflate z */
-		if (increasedby > 1) {
-		    for (k = 0; k < increasedby; k++) {
-			ret = ret - ln(Z + (k));
-		    }
-		}
-		/* Undo conjugate if one has been applied */
-		if (flag == 1) {
-		    ret = conj(ret);
-		}
-		epsilon(eps);
-		return ret;
-	    } else {
-		d37 = decdigits * .37;
-		d52 = decdigits * .52;
-		termcount = ceil(d52);
-		if (abs(z) >= d52) {
-		    if (abs(im(z)) >= d37) {
-			termcount = ceil(d37);
-		    } else {
-			termcount = ceil(d52);
-		    }
-		}
+                ret = __CZ__lngstirling(z, 11);
+                /* deflate z */
+                if (increasedby > 1) {
+                    for (k = 0; k < increasedby; k++) {
+                        ret = ret - ln(Z + (k));
+                    }
+                }
+                /* Undo conjugate if one has been applied */
+                if (flag == 1) {
+                    ret = conj(ret);
+                }
+                epsilon(eps);
+                return ret;
+            } else {
+                d37 = decdigits * .37;
+                d52 = decdigits * .52;
+                termcount = ceil(d52);
+                if (abs(z) >= d52) {
+                    if (abs(im(z)) >= d37) {
+                        termcount = ceil(d37);
+                    } else {
+                        termcount = ceil(d52);
+                    }
+                }
 
-		Z = z;
-		increasedby = 0;
-		/* inflate z */
-		if (abs(im(z)) >= d37) {
-		    while (abs(z) < d52 + 1) {
-			z++;
-			increasedby++;
-		    }
-		} else {
-		    tmp = R(z, termcount);
-		    tmp2 = tmp;
-		    while (tmp2 < decdigits) {
-			z++;
-			increasedby++;
-			tmp2 = R(z, termcount);
-			if (tmp2 < tmp) {
-			    return
-				newerror(strcat
-					 ("lngamma(1): something happened ",
-					  "that shouldn't have happened"));
-			}
-		    }
-		}
+                Z = z;
+                increasedby = 0;
+                /* inflate z */
+                if (abs(im(z)) >= d37) {
+                    while (abs(z) < d52 + 1) {
+                        z++;
+                        increasedby++;
+                    }
+                } else {
+                    tmp = R(z, termcount);
+                    tmp2 = tmp;
+                    while (tmp2 < decdigits) {
+                        z++;
+                        increasedby++;
+                        tmp2 = R(z, termcount);
+                        if (tmp2 < tmp) {
+                            return
+                                newerror(strcat
+                                         ("lngamma(1): something happened ",
+                                          "that shouldn't have happened"));
+                        }
+                    }
+                }
 
-		corr = ceil(re(z) / 2 - 3 / 4 - kroneckerdelta(im(z)) / 4);
+                corr = ceil(re(z) / 2 - 3 / 4 - kroneckerdelta(im(z)) / 4);
 
-		ret = __CZ__lngstirling(z, termcount);
+                ret = __CZ__lngstirling(z, termcount);
 
-		/* deflate z */
-		if (increasedby > 1) {
-		    for (k = 0; k < increasedby; k++) {
-			ret = ret - ln(Z + (k));
-		    }
-		}
-		/* Undo conjugate if one has been applied */
-		if (flag == 1) {
-		    ret = conj(ret);
-		}
-		epsilon(eps);
-		return ret;
-	    }			/* if(decdigits <= 20){...} else */
-	} else {		/* re(z)<0 */
-	    eps = epsilon();
-	    epsilon(eps * 1e-3);
+                /* deflate z */
+                if (increasedby > 1) {
+                    for (k = 0; k < increasedby; k++) {
+                        ret = ret - ln(Z + (k));
+                    }
+                }
+                /* Undo conjugate if one has been applied */
+                if (flag == 1) {
+                    ret = conj(ret);
+                }
+                epsilon(eps);
+                return ret;
+            }                   /* if(decdigits <= 20){...} else */
+        } else {                /* re(z)<0 */
+            eps = epsilon();
+            epsilon(eps * 1e-3);
 
-	    /* Use Spouge's approximation on the real line */
-	    if (!im(z)) {
-		/* reflection */
-		ret = ln(pi() / sin(pi() * z)) - __CZ__lngammarp(1 - z);
-		/* it is log(gamma) and im(log(even(-x))) = k\pi, therefore: */
-		if (abs(z) <= 1 / 2) {
-		    ret = re(ret) - pi() * 1i;
-		} else if (isodd(floor(abs(re(z))))) {
-		    ret = re(ret) + (ceil(abs(z)) * pi() * 1i);
-		} else if (iseven(floor(abs(re(z))))) {
-		    /* < n+1/2 */
-		    if (iseven(floor(abs(z)))) {
-			ret = re(ret) + (ceil(abs(z) - 1 / 2 - 1) * pi() * 1i);
-		    } else {
-			ret = re(ret) + (ceil(abs(z) - 1 / 2) * pi() * 1i);
-		    }
-		}
-		epsilon(eps);
-		return ret;
-	    } else {
-		/* Make it a positive im(z) */
-		if (im(z) < 0) {
-		    z = conj(z);
-		    flag = 1;
-		}
-		/* Evaluate the number of terms needed */
-		decdigits = floor(digits(1 / eps));
-		/* 20 dec. digits is the default in calc(?) */
-		if (decdigits <= 21) {
-		    /* set 20 as the minimum */
-		    epsilon(1e-22);
-		    termcount = 11;
-		    increasedby = 0;
-		    Z = z;
-		    /* inflate z */
-		    if (im(z) >= digits(1 / epsilon()) * .37) {
-			while (abs(1 - z) < 10) {
-			    z--;
-			    increasedby++;
-			}
-		    } else {
-			tmp = R(1 - z, termcount);
-			tmp2 = tmp;
-			while (tmp2 < 21) {
-			    z--;
-			    increasedby++;
-			    tmp2 = R(1 - z, termcount);
-			    if (tmp2 < tmp) {
-				return
-				    newerror(strcat
-					     ("lngamma(1): something happened ",
-					      "that should not have happened"));
-			    }
-			}
-		    }
+            /* Use Spouge's approximation on the real line */
+            if (!im(z)) {
+                /* reflection */
+                ret = ln(pi() / sin(pi() * z)) - __CZ__lngammarp(1 - z);
+                /* it is log(gamma) and im(log(even(-x))) = k\pi, therefore: */
+                if (abs(z) <= 1 / 2) {
+                    ret = re(ret) - pi() * 1i;
+                } else if (isodd(floor(abs(re(z))))) {
+                    ret = re(ret) + (ceil(abs(z)) * pi() * 1i);
+                } else if (iseven(floor(abs(re(z))))) {
+                    /* < n+1/2 */
+                    if (iseven(floor(abs(z)))) {
+                        ret = re(ret) + (ceil(abs(z) - 1 / 2 - 1) * pi() * 1i);
+                    } else {
+                        ret = re(ret) + (ceil(abs(z) - 1 / 2) * pi() * 1i);
+                    }
+                }
+                epsilon(eps);
+                return ret;
+            } else {
+                /* Make it a positive im(z) */
+                if (im(z) < 0) {
+                    z = conj(z);
+                    flag = 1;
+                }
+                /* Evaluate the number of terms needed */
+                decdigits = floor(digits(1 / eps));
+                /* 20 dec. digits is the default in calc(?) */
+                if (decdigits <= 21) {
+                    /* set 20 as the minimum */
+                    epsilon(1e-22);
+                    termcount = 11;
+                    increasedby = 0;
+                    Z = z;
+                    /* inflate z */
+                    if (im(z) >= digits(1 / epsilon()) * .37) {
+                        while (abs(1 - z) < 10) {
+                            z--;
+                            increasedby++;
+                        }
+                    } else {
+                        tmp = R(1 - z, termcount);
+                        tmp2 = tmp;
+                        while (tmp2 < 21) {
+                            z--;
+                            increasedby++;
+                            tmp2 = R(1 - z, termcount);
+                            if (tmp2 < tmp) {
+                                return
+                                    newerror(strcat
+                                             ("lngamma(1): something happened ",
+                                              "that should not have happened"));
+                            }
+                        }
+                    }
 
-		    corr = ceil(re(z) / 2 - 3 / 4 - kroneckerdelta(im(z)) / 4);
+                    corr = ceil(re(z) / 2 - 3 / 4 - kroneckerdelta(im(z)) / 4);
 
-		    /* reflection */
-		    ret =
-			ln(pi() / sin(pi() * z)) - __CZ__lngstirling(1 - z,
-								     termcount);
+                    /* reflection */
+                    ret =
+                        ln(pi() / sin(pi() * z)) - __CZ__lngstirling(1 - z,
+                                                                     termcount);
 
-		    /* deflate z */
-		    if (increasedby > 0) {
-			for (k = 0; k < increasedby; k++) {
-			    ret = ret + ln(z + (k));
-			}
-		    }
-		    /* Apply correction term */
-		    ret = ret + 2 * (corr * pi()) * 1i;
-		    /* Undo conjugate if one has been applied */
-		    if (flag == 1) {
-			ret = conj(ret);
-		    }
+                    /* deflate z */
+                    if (increasedby > 0) {
+                        for (k = 0; k < increasedby; k++) {
+                            ret = ret + ln(z + (k));
+                        }
+                    }
+                    /* Apply correction term */
+                    ret = ret + 2 * (corr * pi()) * 1i;
+                    /* Undo conjugate if one has been applied */
+                    if (flag == 1) {
+                        ret = conj(ret);
+                    }
 
-		    epsilon(eps);
-		    return ret;
-		} else {
-		    d37 = decdigits * .37;
-		    d52 = decdigits * .52;
-		    termcount = ceil(d52);
-		    if (abs(z) >= d52) {
-			if (abs(im(z)) >= d37) {
-			    termcount = ceil(d37);
-			} else {
-			    termcount = ceil(d52);
-			}
-		    }
-		    increasedby = 0;
-		    Z = z;
-		    /* inflate z */
-		    if (abs(im(z)) >= d37) {
-			while (abs(1 - z) < d52 + 1) {
-			    z--;
-			    increasedby++;
-			}
-		    } else {
-			tmp = R(1 - z, termcount);
-			tmp2 = tmp;
-			while (tmp2 < decdigits) {
-			    z--;
-			    increasedby++;
-			    tmp2 = R(1 - z, termcount);
-			    if (tmp2 < tmp) {
-				return
-				    newerror(strcat
-					     ("lngamma(1): something happened ",
-					      "that should not have happened"));
-			    }
-			}
-		    }
-		    corr = ceil(re(z) / 2 - 3 / 4 - kroneckerdelta(im(z)) / 4);
-		    /* reflection */
-		    ret =
-			ln(pi() / sin(pi() * (z))) - __CZ__lngstirling(1 - z,
-								     termcount);
-		    /* deflate z */
-		    if (increasedby > 0) {
-			for (k = 0; k < increasedby; k++) {
-			    ret = ret + ln(z + (k));
-			}
-		    }
-		    /* Apply correction term */
-		    ret = ret + 2 * ((corr) * pi()) * 1i;
-		    /* Undo conjugate if one has been applied */
-		    if (flag == 1) {
-			ret = conj(ret);
-		    }
-		    epsilon(eps);
-		    return ret;
-		}		/* if(decdigits <= 20){...} else */
-	    }			/*if(!im(z)){...} else */
-	}			/* if(re(z) > 0){...} else */
-    }				/*if(isint(z)){...} else */
+                    epsilon(eps);
+                    return ret;
+                } else {
+                    d37 = decdigits * .37;
+                    d52 = decdigits * .52;
+                    termcount = ceil(d52);
+                    if (abs(z) >= d52) {
+                        if (abs(im(z)) >= d37) {
+                            termcount = ceil(d37);
+                        } else {
+                            termcount = ceil(d52);
+                        }
+                    }
+                    increasedby = 0;
+                    Z = z;
+                    /* inflate z */
+                    if (abs(im(z)) >= d37) {
+                        while (abs(1 - z) < d52 + 1) {
+                            z--;
+                            increasedby++;
+                        }
+                    } else {
+                        tmp = R(1 - z, termcount);
+                        tmp2 = tmp;
+                        while (tmp2 < decdigits) {
+                            z--;
+                            increasedby++;
+                            tmp2 = R(1 - z, termcount);
+                            if (tmp2 < tmp) {
+                                return
+                                    newerror(strcat
+                                             ("lngamma(1): something happened ",
+                                              "that should not have happened"));
+                            }
+                        }
+                    }
+                    corr = ceil(re(z) / 2 - 3 / 4 - kroneckerdelta(im(z)) / 4);
+                    /* reflection */
+                    ret =
+                        ln(pi() / sin(pi() * (z))) - __CZ__lngstirling(1 - z,
+                                                                     termcount);
+                    /* deflate z */
+                    if (increasedby > 0) {
+                        for (k = 0; k < increasedby; k++) {
+                            ret = ret + ln(z + (k));
+                        }
+                    }
+                    /* Apply correction term */
+                    ret = ret + 2 * ((corr) * pi()) * 1i;
+                    /* Undo conjugate if one has been applied */
+                    if (flag == 1) {
+                        ret = conj(ret);
+                    }
+                    epsilon(eps);
+                    return ret;
+                }               /* if(decdigits <= 20){...} else */
+            }                   /*if(!im(z)){...} else */
+        }                       /* if(re(z) > 0){...} else */
+    }                           /*if(isint(z)){...} else */
 }
 
 /* Warning about large values? */
@@ -613,24 +613,24 @@ define gamma(z)
     /* exp(log(gamma(z))) = exp(lngamma(z)), so use Spouge here? */
     local ret eps;
     if (isint(z)) {
-	if (z <= 0) {
-	    return newerror("gamma(z): z is a negative integer");
-	} else {
-	    /* may hold up accuracy a bit longer, but YMMV */
-	    if (z < 20) {
-		return (z - 1) ! *1.0;
-	    } else {
-		eps = epsilon(epsilon() * 1e-2);
-		ret = exp(lngamma(z));
-		epsilon(eps);
-		return ret;
-	    }
-	}
+        if (z <= 0) {
+            return newerror("gamma(z): z is a negative integer");
+        } else {
+            /* may hold up accuracy a bit longer, but YMMV */
+            if (z < 20) {
+                return (z - 1) ! *1.0;
+            } else {
+                eps = epsilon(epsilon() * 1e-2);
+                ret = exp(lngamma(z));
+                epsilon(eps);
+                return ret;
+            }
+        }
     } else {
-	eps = epsilon(epsilon() * 1e-2);
-	ret = exp(lngamma(z));
-	epsilon(eps);
-	return ret;
+        eps = epsilon(epsilon() * 1e-2);
+        ret = exp(lngamma(z));
+        epsilon(eps);
+        return ret;
     }
 }
 
@@ -638,12 +638,12 @@ define __CZ__harmonicF(a, b, s)
 {
     local c;
     if (b == a) {
-	return s;
+        return s;
     }
     if (b - a > 1) {
-	c = (b + a) >> 1;
-	return (__CZ__harmonicF(a, c, 1 / a) +
-		__CZ__harmonicF(c + 1, b, 1 / b));
+        c = (b + a) >> 1;
+        return (__CZ__harmonicF(a, c, 1 / a) +
+                __CZ__harmonicF(c + 1, b, 1 / b));
     }
     return (1 / a + 1 / b);
 }
@@ -651,14 +651,14 @@ define __CZ__harmonicF(a, b, s)
 define harmonic(limit)
 {
     if (!isint(limit)) {
-	return newerror("harmonic(limit): limit is not an integer");
+        return newerror("harmonic(limit): limit is not an integer");
     }
     if (limit <= 0) {
-	return newerror("harmonic(limit): limit is <=0");
+        return newerror("harmonic(limit): limit is <=0");
     }
     /* The binary splitting algorithm returns 0 for f(1,1,0) */
     if (limit == 1) {
-	return 1;
+        return 1;
     }
     return __CZ__harmonicF(1, limit, 0);
 }
@@ -677,10 +677,10 @@ define __CZ__gammainc_series_lower(a, z)
     fact = 1;
     eps = epsilon();
     while (abs(tmp - ret) > eps) {
-	tmp = ret;
-	ret += (z ^ (k + a)) / ((a + k) * fact);
-	k++;
-	fact *= -k;
+        tmp = ret;
+        ret += (z ^ (k + a)) / ((a + k) * fact);
+        k++;
+        fact *= -k;
     }
     return gamma(a) - ret;
 }
@@ -693,7 +693,7 @@ define __CZ__gammainc_cf(a, z, n)
     local ret k num1 denom1 num2 denom2;
     ret = 0;
     for (k = n + 1; k > 1; k--) {
-	ret = ((1 - k) * (k - 1 - a)) / (2 * k - 1 + z - a + ret);
+        ret = ((1 - k) * (k - 1 - a)) / (2 * k - 1 + z - a + ret);
     }
     return ((z ^ a * exp(-z)) / (1 + z - a + ret));
 }
@@ -703,7 +703,7 @@ define __CZ__gammainc_integer_a(a, z)
 {
     local k sum fact zz;
     for (k = 0; k < a; k++) {
-	sum += (z ^ k) / (k !);
+        sum += (z ^ k) / (k !);
     }
     return (a - 1) ! *exp(-z) * sum;
 }
@@ -718,8 +718,8 @@ define __CZ__endcf(n, a, z, P)
     local ret;
 
     ret =
-	P * ln(10) + ln(4 * pi() * sqrt(n)) + re(z + (3 / 2 - a) * ln(z) -
-						 lngamma(1 - a));
+        P * ln(10) + ln(4 * pi() * sqrt(n)) + re(z + (3 / 2 - a) * ln(z) -
+                                                 lngamma(1 - a));
     ret = ret / (sqrt(8 * (abs(z) + re(z))));
     return ret ^ 2;
 
@@ -730,59 +730,59 @@ define gammainc(a, z)
 {
     local ret nterms eps epsilon tmp_before tmp_after n A B C sum k;
     if (z == 0) {
-	return 1;
+        return 1;
     }
     if (isint(a)) {
-	if (a > 0) {
-	    if (a == 1) {
-		return exp(-z);
-	    }
-	    return __CZ__gammainc_integer_a(a, z);
-	} else {
-	    if (a == 0) {
-		return -expoint(-z) + 1 / 2 * (ln(-z) - ln(-1 / z)) - ln(z);
-	    } else if (a == -1) {
-		return expoint(-z) + 1 / 2 * (ln(-1 / z) - ln(-z)) + ln(z) +
-		    (exp(-z) / z);
-	    } else {
-		A = (-1) ^ ((-a) - 1) / ((-a) !);
-		B = expoint(-z) - 1 / 2 * (ln(-z) - ln(1 / -z)) + ln(z);
-		C = exp(-z);
-		sum = 0;
-		for (k = 1; k < -a; k++) {
-		    sum += (z ^ (k - a - 1)) / (fallingfactorial(-a, k));
-		}
-		return A * B - C * sum;
-	    }
-	}
+        if (a > 0) {
+            if (a == 1) {
+                return exp(-z);
+            }
+            return __CZ__gammainc_integer_a(a, z);
+        } else {
+            if (a == 0) {
+                return -expoint(-z) + 1 / 2 * (ln(-z) - ln(-1 / z)) - ln(z);
+            } else if (a == -1) {
+                return expoint(-z) + 1 / 2 * (ln(-1 / z) - ln(-z)) + ln(z) +
+                    (exp(-z) / z);
+            } else {
+                A = (-1) ^ ((-a) - 1) / ((-a) !);
+                B = expoint(-z) - 1 / 2 * (ln(-z) - ln(1 / -z)) + ln(z);
+                C = exp(-z);
+                sum = 0;
+                for (k = 1; k < -a; k++) {
+                    sum += (z ^ (k - a - 1)) / (fallingfactorial(-a, k));
+                }
+                return A * B - C * sum;
+            }
+        }
     }
     if (re(z) <= 1.1 || re(z) < a + 1) {
-	eps = epsilon(epsilon() * 1e-10);
-	ret = __CZ__gammainc_series_lower(a, z);
-	epsilon(eps);
-	return ret;
+        eps = epsilon(epsilon() * 1e-10);
+        ret = __CZ__gammainc_series_lower(a, z);
+        epsilon(eps);
+        return ret;
     } else {
-	eps = epsilon(epsilon() * 1e-10);
-	if (abs(exp(-z)) <= eps) {
-	    return 0;
-	}
-	tmp_before = 0;
-	tmp_after = 1;
-	n = 1;
-	while (ceil(tmp_before) != ceil(tmp_after)) {
-	    tmp_before = tmp_after;
-	    tmp_after = __CZ__endcf(n++, a, z, digits(1 / eps));
-	    /* a still quite arbitrary limit */
-	    if (n > 10) {
-		return
-		    newerror(strcat
-			     ("gammainc: evaluating limit for continued ",
-			      "fraction does not converge"));
-	    }
-	}
-	ret = __CZ__gammainc_cf(a, z, ceil(tmp_after));
-	epsilon(eps);
-	return ret;
+        eps = epsilon(epsilon() * 1e-10);
+        if (abs(exp(-z)) <= eps) {
+            return 0;
+        }
+        tmp_before = 0;
+        tmp_after = 1;
+        n = 1;
+        while (ceil(tmp_before) != ceil(tmp_after)) {
+            tmp_before = tmp_after;
+            tmp_after = __CZ__endcf(n++, a, z, digits(1 / eps));
+            /* a still quite arbitrary limit */
+            if (n > 10) {
+                return
+                    newerror(strcat
+                             ("gammainc: evaluating limit for continued ",
+                              "fraction does not converge"));
+            }
+        }
+        ret = __CZ__gammainc_cf(a, z, ceil(tmp_after));
+        epsilon(eps);
+        return ret;
     }
 }
 
@@ -809,10 +809,10 @@ define g(prec)
 {
     local eps ret;
     if (!isnull(prec)) {
-	eps = epsilon(prec);
-	ret = -psi(1);
-	epsilon(eps);
-	return ret;
+        eps = epsilon(prec);
+        ret = -psi(1);
+        epsilon(eps);
+        return ret;
     }
     return -psi(1);
 }
@@ -821,13 +821,13 @@ define __CZ__series_converged(new, old, max)
 {
     local eps;
     if (isnull(max)) {
-	eps = epsilon();
+        eps = epsilon();
     } else {
-	eps = max;
+        eps = max;
     }
     if (abs(re(new - old)) <= eps * abs(re(new))
-	&& abs(im(new - old)) <= eps * abs(im(new))) {
-	return true;
+        && abs(im(new - old)) <= eps * abs(im(new))) {
+        return true;
     }
     return false;
 }
@@ -839,13 +839,13 @@ define __CZ__ei_power(z)
     tmp = 1;
     k = 1;
     while (k) {
-	tmp *= z / k;
-	old = ei;
-	ei += tmp / k;
-	if (__CZ__series_converged(ei, old)) {
-	    break;
-	}
-	k++;
+        tmp *= z / k;
+        old = ei;
+        ei += tmp / k;
+        if (__CZ__series_converged(ei, old)) {
+            break;
+        }
+        k++;
     }
     return ei;
 }
@@ -856,12 +856,12 @@ define __CZ__ei_asymp(z)
     ei = sgn(im(z)) * 1i * pi();
     tmp = exp(z) / z;
     for (k = 1; k <= floor(abs(z)) + 1; k++) {
-	old = ei;
-	ei += tmp;
-	if (__CZ__series_converged(ei, old)) {
-	    return ei;
-	}
-	tmp *= k / z;
+        old = ei;
+        ei += tmp;
+        if (__CZ__series_converged(ei, old)) {
+            return ei;
+        }
+        tmp *= k / z;
     }
     return newerror("expoint: asymptotic series does not converge");
 }
@@ -871,28 +871,28 @@ define __CZ__ei_cf(z)
     local ei c d k old;
     ei = sgn(im(z)) * 1i * pi();
     if (ei != 0) {
-	c = 1 / ei;
-	d = 0;
-	c = 1 / (1 - z - exp(z) * c);
-	d = 1 / (1 - z - exp(z) * d);
-	ei *= d / c;
+        c = 1 / ei;
+        d = 0;
+        c = 1 / (1 - z - exp(z) * c);
+        d = 1 / (1 - z - exp(z) * d);
+        ei *= d / c;
     } else {
-	c = NUMBER_POSITIVE_INFINITY();
-	d = 0;
-	c = 0;
-	d = 1 / (1 - z - exp(z) * d);
-	ei = d * (-exp(z));
+        c = NUMBER_POSITIVE_INFINITY();
+        d = 0;
+        c = 0;
+        d = 1 / (1 - z - exp(z) * d);
+        ei = d * (-exp(z));
     }
     k = 1;
     while (1) {
-	c = 1 / (2 * k + 1 - z - k * k * c);
-	d = 1 / (2 * k + 1 - z - k * k * d);
-	old = ei;
-	ei *= d / c;
-	if (__CZ__series_converged(ei, old)) {
-	    break;
-	}
-	k++;
+        c = 1 / (2 * k + 1 - z - k * k * c);
+        d = 1 / (2 * k + 1 - z - k * k * d);
+        old = ei;
+        ei *= d / c;
+        if (__CZ__series_converged(ei, old)) {
+            break;
+        }
+        k++;
     }
     return ei;
 }
@@ -902,46 +902,46 @@ define expoint(z)
     local ei eps ret;
     eps = epsilon(epsilon() * 1e-5);
     if (abs(z) >= NUMBER_POSITIVE_INFINITY()) {
-	if (config("user_debug") > 0) {
-	    print "expoint: abs(z) > +inf";
-	}
-	ret = sgn(im(z)) * 1i * pi() + exp(z) / z;
-	epsilon(eps);
-	return ret;
+        if (config("user_debug") > 0) {
+            print "expoint: abs(z) > +inf";
+        }
+        ret = sgn(im(z)) * 1i * pi() + exp(z) / z;
+        epsilon(eps);
+        return ret;
     }
     if (abs(z) > 2 - 1.035 * log(epsilon())) {
-	if (config("user_debug") > 0) {
-	    print "expoint: using asymptotic series";
-	}
-	ei = __CZ__ei_asymp(z);
-	if (!iserror(ei)) {
-	    ret = ei;
-	    epsilon(eps);
-	    return ret;
-	}
+        if (config("user_debug") > 0) {
+            print "expoint: using asymptotic series";
+        }
+        ei = __CZ__ei_asymp(z);
+        if (!iserror(ei)) {
+            ret = ei;
+            epsilon(eps);
+            return ret;
+        }
     }
     if (abs(z) > 1 && (re(z) < 0 || abs(im(z)) > 1)) {
-	if (config("user_debug") > 0) {
-	    print "expoint: using continued fraction";
-	}
-	ret = __CZ__ei_cf(z);
-	epsilon(eps);
-	return ret;
+        if (config("user_debug") > 0) {
+            print "expoint: using continued fraction";
+        }
+        ret = __CZ__ei_cf(z);
+        epsilon(eps);
+        return ret;
     }
     if (abs(z) > 0) {
-	if (config("user_debug") > 0) {
-	    print "expoint: using power series";
-	}
-	ret = __CZ__ei_power(z);
-	epsilon(eps);
-	return ret;
+        if (config("user_debug") > 0) {
+            print "expoint: using power series";
+        }
+        ret = __CZ__ei_power(z);
+        epsilon(eps);
+        return ret;
     }
     if (abs(z) == 0) {
-	if (config("user_debug") > 0) {
-	    print "expoint: abs(z) = zero ";
-	}
-	epsilon(eps);
-	return NUMBER_NEGATIVE_INFINITY();
+        if (config("user_debug") > 0) {
+            print "expoint: abs(z) = zero ";
+        }
+        epsilon(eps);
+        return NUMBER_NEGATIVE_INFINITY();
     }
 }
 
@@ -994,7 +994,7 @@ define __CZ__ibetacf_a(a, b, z, n)
 {
     local A B m places;
     if (n == 1) {
-	return 1;
+        return 1;
     }
     m = n - 1;
     places = highbit(1 + int (1 / epsilon())) +1;
@@ -1010,7 +1010,7 @@ define __CZ__ibetacf_b(a, b, z, n)
     m = n - 1;
     A = bround((m * (b - m) * z) / (a + 2 * m - 1), places++);
     B = bround(((a + m) * (a - (a + b) * z + 1 + m * (2 - z))) / (a + 2 * m +
-								  1), places++);
+                                                                  1), places++);
     return m + A + B;
 }
 
@@ -1022,32 +1022,32 @@ define __CZ__ibeta_cf_var_dm(a, b, z, max)
     eps = epsilon();
 
     if (isnull(max)) {
-	max = 100;
+        max = 100;
     }
     places = highbit(1 + int (1 / epsilon())) + 1;
     f = eps;
     c = f;
     d = 0;
     for (m = 1; m <= max; m++) {
-	d = bround(__CZ__ibetacf_b(a, b, z, m) +
-		   __CZ__ibetacf_a(a, b, z, m) * d, places++);
-	if (abs(d) < eps) {
-	    d = eps;
-	}
-	c = bround(__CZ__ibetacf_b(a, b, z, m) +
-		   __CZ__ibetacf_a(a, b, z, m) / c, places++);
-	if (abs(c) < eps) {
-	    c = eps;
-	}
-	d = 1 / d;
-	check = c * d;
-	f = f * check;
-	if (abs(check - 1) < eps) {
-	    break;
-	}
+        d = bround(__CZ__ibetacf_b(a, b, z, m) +
+                   __CZ__ibetacf_a(a, b, z, m) * d, places++);
+        if (abs(d) < eps) {
+            d = eps;
+        }
+        c = bround(__CZ__ibetacf_b(a, b, z, m) +
+                   __CZ__ibetacf_a(a, b, z, m) / c, places++);
+        if (abs(c) < eps) {
+            c = eps;
+        }
+        d = 1 / d;
+        check = c * d;
+        f = f * check;
+        if (abs(check - 1) < eps) {
+            break;
+        }
     }
     if (m > max) {
-	return newerror("ibeta: continuous fraction does not converge");
+        return newerror("ibeta: continuous fraction does not converge");
     }
     return f;
 }
@@ -1057,57 +1057,57 @@ define betainc_complex(z, a, b)
     local factor ret eps cf sum k N places tmp tmp2;
 
     if (z == 0) {
-	if (re(a) > 0) {
-	    return 0;
-	}
-	if (re(a) < 0) {
-	    return newerror("betainc_complex: z == 0 and re(a) < 0");
-	}
+        if (re(a) > 0) {
+            return 0;
+        }
+        if (re(a) < 0) {
+            return newerror("betainc_complex: z == 0 and re(a) < 0");
+        }
     }
     if (z == 1) {
-	if (re(b) > 0) {
-	    return 1;
-	} else {
-	    return newerror("betainc_complex: z == 1 and re(b) < 0");
-	}
+        if (re(b) > 0) {
+            return 1;
+        } else {
+            return newerror("betainc_complex: z == 1 and re(b) < 0");
+        }
     }
     if (b <= 0) {
-	if (isint(b)) {
-	    return 0;
-	} else {
-	    return newerror("betainc_complex: b <= 0");
-	}
+        if (isint(b)) {
+            return 0;
+        } else {
+            return newerror("betainc_complex: b <= 0");
+        }
     }
     if (z == 1 / 2 && (a == b)) {
-	return 1 / 2;
+        return 1 / 2;
     }
     if (isint(a) && isint(b)) {
-	eps = epsilon(epsilon() * 1e-10);
-	N = a + b - 1;
-	sum = 0;
-	for (k = a; k <= N; k++) {
-	    tmp = ln(z) * k + ln(1 - z) * (N - k);
-	    tmp2 = exp(ln(comb(N, k)) + tmp);
-	    sum += tmp2;
-	}
-	epsilon(eps);
+        eps = epsilon(epsilon() * 1e-10);
+        N = a + b - 1;
+        sum = 0;
+        for (k = a; k <= N; k++) {
+            tmp = ln(z) * k + ln(1 - z) * (N - k);
+            tmp2 = exp(ln(comb(N, k)) + tmp);
+            sum += tmp2;
+        }
+        epsilon(eps);
         return sum;
     } else if (re(z) <= re((a + 1) / (a + b + 2))) {
-	eps = epsilon(epsilon() * 1e-10);
-	places = highbit(1 + int (1 / epsilon())) + 1;
-	factor = bround((ln(z ^ a * (1 - z) ^ b) - lnbeta(a, b)), places);
-	cf = bround(__CZ__ibeta_cf_var_dm(a, b, z), places);
-	ret = factor + ln(cf);
-	if (abs(ret//ln(2)) >= places) {
-	    ret = 0;
-	} else {
-	    ret = bround(exp(factor + ln(cf)), places);
-	}
-	epsilon(eps);
-	return ret;
+        eps = epsilon(epsilon() * 1e-10);
+        places = highbit(1 + int (1 / epsilon())) + 1;
+        factor = bround((ln(z ^ a * (1 - z) ^ b) - lnbeta(a, b)), places);
+        cf = bround(__CZ__ibeta_cf_var_dm(a, b, z), places);
+        ret = factor + ln(cf);
+        if (abs(ret//ln(2)) >= places) {
+            ret = 0;
+        } else {
+            ret = bround(exp(factor + ln(cf)), places);
+        }
+        epsilon(eps);
+        return ret;
     } else if (re(z) > re((a + 1) / (a + b + 2))
-	       || re(1 - z) < re((b + 1) / (a + b + 2))) {
-	ret = 1 - betainc_complex(1 - z, b, a);
+               || re(1 - z) < re((b + 1) / (a + b + 2))) {
+        ret = 1 - betainc_complex(1 - z, b, a);
     }
     return ret;
 }
@@ -1163,31 +1163,31 @@ define __CZ__ibetaas63(x, a, b, beta)
     value = x;
     /* inverse incbeta calculates it already */
     if (isnull(beta))
-	beta = lnbeta(a, b);
+        beta = lnbeta(a, b);
 
     if (a <= 0.0 || b <= 0.0) {
-	return newerror("betainc: domain error: a < 0 and/or b < 0");
+        return newerror("betainc: domain error: a < 0 and/or b < 0");
     }
     if (x < 0.0 || 1.0 < x) {
-	return newerror("betainc: domain error: x<0 or x>1");
+        return newerror("betainc: domain error: x<0 or x>1");
     }
     if (x == 0.0 || x == 1.0) {
-	return value;
+        return value;
     }
     asb = a + b;
     cx = 1.0 - x;
 
     if (a < asb * x) {
-	xx = cx;
-	cx = x;
-	aa = b;
-	bb = a;
-	indx = 1;
+        xx = cx;
+        cx = x;
+        aa = b;
+        bb = a;
+        indx = 1;
     } else {
-	xx = x;
-	aa = a;
-	bb = b;
-	indx = 0;
+        xx = x;
+        aa = a;
+        bb = b;
+        indx = 0;
     }
 
     term = 1.0;
@@ -1198,36 +1198,36 @@ define __CZ__ibetaas63(x, a, b, beta)
     rx = xx / cx;
     temp = bb - ai;
     if (ns == 0) {
-	rx = xx;
+        rx = xx;
     }
     places = highbit(1 + int (1 / acu)) + 1;
     while (1) {
-	term = bround(term * temp * rx / (aa + ai), places++);
-	value = value + term;;
-	temp = abs(term);
+        term = bround(term * temp * rx / (aa + ai), places++);
+        value = value + term;;
+        temp = abs(term);
 
-	if (temp <= acu && temp <= abs(acu * value)) {
-	    value = value * exp(aa * ln(xx)
-				+ (bb - 1.0) * ln(cx) - beta) / aa;
+        if (temp <= acu && temp <= abs(acu * value)) {
+            value = value * exp(aa * ln(xx)
+                                + (bb - 1.0) * ln(cx) - beta) / aa;
 
-	    if (indx) {
-		value = 1.0 - value;
-	    }
-	    break;
-	}
+            if (indx) {
+                value = 1.0 - value;
+            }
+            break;
+        }
 
-	ai = ai + 1.0;
-	ns = ns - 1;
+        ai = ai + 1.0;
+        ns = ns - 1;
 
-	if (0 <= ns) {
-	    temp = bb - ai;
-	    if (ns == 0) {
-		rx = xx;
-	    }
-	} else {
-	    temp = asb;
-	    asb = asb + 1.0;
-	}
+        if (0 <= ns) {
+            temp = bb - ai;
+            if (ns == 0) {
+                rx = xx;
+            }
+        } else {
+            temp = asb;
+            asb = asb + 1.0;
+        }
     }
     epsilon(acu);
     return value;
@@ -1249,32 +1249,32 @@ define betainc(z, a, b)
     local factor ret eps cf sum k N places tmp tmp2;
 
     if (im(z) || im(a) || im(b))
-	return betainc_complex(z, a, b);
+        return betainc_complex(z, a, b);
 
     if (z == 0) {
-	if (re(a) > 0) {
-	    return 0;
-	}
-	if (re(a) < 0) {
-	    return newerror("betainc: z == 0 and re(a) < 0");
-	}
+        if (re(a) > 0) {
+            return 0;
+        }
+        if (re(a) < 0) {
+            return newerror("betainc: z == 0 and re(a) < 0");
+        }
     }
     if (z == 1) {
-	if (re(b) > 0) {
-	    return 1;
-	} else {
-	    return newerror("betainc: z == 1 and re(b) < 0");
-	}
+        if (re(b) > 0) {
+            return 1;
+        } else {
+            return newerror("betainc: z == 1 and re(b) < 0");
+        }
     }
     if (b <= 0) {
-	if (isint(b)) {
-	    return 0;
-	} else {
-	    return newerror("betainc: b <= 0");
-	}
+        if (isint(b)) {
+            return 0;
+        } else {
+            return newerror("betainc: b <= 0");
+        }
     }
     if (z == 1 / 2 && a == b) {
-	return 1 / 2;
+        return 1 / 2;
     }
     return __CZ__ibetaas63(z, a, b);
 
@@ -1285,9 +1285,9 @@ define __CZ__erfinvapprox(x)
     local a;
     a = 0.147;
     return sgn(x) *
-	sqrt(sqrt
-	     ((2 / (pi() * a) + (ln(1 - x ^ 2)) / 2) ^ 2 - (ln(1 - x ^ 2)) / a)
-	     - (2 / (pi() * a) + (ln(1 - x ^ 2)) / 2));
+        sqrt(sqrt
+             ((2 / (pi() * a) + (ln(1 - x ^ 2)) / 2) ^ 2 - (ln(1 - x ^ 2)) / a)
+             - (2 / (pi() * a) + (ln(1 - x ^ 2)) / 2));
 }
 
 /* complementary inverse error function, faster at about x < 1-.91
@@ -1298,14 +1298,14 @@ define __CZ__inverffettis(x, n)
 {
     local y sqrtpi oldy k places;
     if (isnull(n))
-	n = 205;
+        n = 205;
     y = erfinvapprox(1 - x);
     places = highbit(1 + int (1 / epsilon())) + 1;
     sqrtpi = sqrt(pi());
     do {
-	oldy = y;
-	k++;
-	y = bround((ln(__CZ__fettiscf(y, n) / (sqrtpi * x))) ^ (1 / 2), places);
+        oldy = y;
+        k++;
+        y = bround((ln(__CZ__fettiscf(y, n) / (sqrtpi * x))) ^ (1 / 2), places);
     } while (abs(y - oldy) / y > epsilon());
     return y;
 }
@@ -1317,9 +1317,9 @@ define __CZ__fettiscf(y, n)
     t = 1 / y;
     tt = t ^ 2 / 2;
     for (k = n; k > 0; k--) {
-	a = 1;
-	b = k * tt;
-	r = b / (a + r);
+        a = 1;
+        b = k * tt;
+        r = b / (a + r);
     }
     return t / (1 + r);
 }
@@ -1336,21 +1336,21 @@ define __CZ__inverfbin(x)
     fhigh = x - erf(high);
     flow = x - erf(low);
     while (1) {
-	mid = bround(high - fhigh * (high - low) / (fhigh - flow), places);
-	if ((mid == low) || (mid == high)) {
-	    places++;
-	}
-	fmid = x - erf(mid);
-	if (abs(fmid) < epsilon) {
-	    return mid;
-	}
-	if (sgn(fmid) == sgn(flow)) {
-	    low = mid;
-	    flow = fmid;
-	} else {
-	    high = mid;
-	    fhigh = fmid;
-	}
+        mid = bround(high - fhigh * (high - low) / (fhigh - flow), places);
+        if ((mid == low) || (mid == high)) {
+            places++;
+        }
+        fmid = x - erf(mid);
+        if (abs(fmid) < epsilon) {
+            return mid;
+        }
+        if (sgn(fmid) == sgn(flow)) {
+            low = mid;
+            flow = fmid;
+        } else {
+            high = mid;
+            fhigh = fmid;
+        }
     }
 }
 
@@ -1358,41 +1358,41 @@ define erfinv(x)
 {
     local ret approx a eps y old places errfunc sqrtpihalf flag k;
     if (x < -1 || x > 1)
-	return newerror("erfinv: input out of domain (-1<=x<=1)");
+        return newerror("erfinv: input out of domain (-1<=x<=1)");
     if (x == 0)
-	return 0;
+        return 0;
     if (x == -1)
-	return NUMBER_NEGATIVE_INFINITY();
+        return NUMBER_NEGATIVE_INFINITY();
     if (x == +1)
-	return NUMBER_POSITIVE_INFINITY();
+        return NUMBER_POSITIVE_INFINITY();
 
     if (x < 0) {
-	x = -x;
-	flag = 1;
+        x = -x;
+        flag = 1;
     }
     /* No need for full precision */
     eps = epsilon(1e-20);
     if (eps >= 1e-40) {
-	/* Winitzki, Sergei (6 February 2008). "A handy approximation for the
-	 * error function and its inverse" */
-	a = 0.147;
-	y = sgn(x) * sqrt(sqrt((2 / (pi() * a)
-				+ (ln(1 - x ^ 2)) / 2) ^ 2
-			       - (ln(1 - x ^ 2)) / a)
-			  - (2 / (pi() * a) + (ln(1 - x ^ 2)) / 2));
+        /* Winitzki, Sergei (6 February 2008). "A handy approximation for the
+         * error function and its inverse" */
+        a = 0.147;
+        y = sgn(x) * sqrt(sqrt((2 / (pi() * a)
+                                + (ln(1 - x ^ 2)) / 2) ^ 2
+                               - (ln(1 - x ^ 2)) / a)
+                          - (2 / (pi() * a) + (ln(1 - x ^ 2)) / 2));
 
     } else {
-	/* 20 digits instead of 5 */
-	if (x <= .91) {
-	    y = __CZ__inverfbin(x);
-	} else {
-	    y = __CZ__inverffettis(1 - x);
-	}
+        /* 20 digits instead of 5 */
+        if (x <= .91) {
+            y = __CZ__inverfbin(x);
+        } else {
+            y = __CZ__inverffettis(1 - x);
+        }
 
-	if (eps <= 1e-20) {
-	    epsilon(eps);
-	    return y;
-	}
+        if (eps <= 1e-20) {
+            epsilon(eps);
+            return y;
+        }
     }
     epsilon(eps);
     /* binary digits in number (here: number = epsilon()) */
@@ -1405,13 +1405,13 @@ define erfinv(x)
      * at higher precision is quite costly;
      */
     do {
-	old = y;
-	errfunc = bround(erf(y), places);
-	if (abs(errfunc - x) <= eps) {
-	    break;
-	}
-	y = bround(y - (errfunc - x) / (sqrtpihalf * exp(-y ^ 2)), places);
-	k++;
+        old = y;
+        errfunc = bround(erf(y), places);
+        if (abs(errfunc - x) <= eps) {
+            break;
+        }
+        y = bround(y - (errfunc - x) / (sqrtpihalf * exp(-y ^ 2)), places);
+        k++;
     } while (1);
     /*
      * This is not really necessary but e.g:
@@ -1428,10 +1428,10 @@ define erfinv(x)
      * The precision "looks too short".
      */
     if (k == 0) {
-	y = bround(y - (errfunc - x) / (sqrtpihalf * exp(-y ^ 2)), places);
+        y = bround(y - (errfunc - x) / (sqrtpihalf * exp(-y ^ 2)), places);
     }
     if (flag == 1) {
-	y = -y;
+        y = -y;
     }
     return y;
 }

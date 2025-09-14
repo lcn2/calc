@@ -5,17 +5,17 @@ SYNOPSIS
     modify(A, fname)
 
 TYPES
-    A		lvalue with list, matrix or object value
-    fname	string, the name of a user-defined function
+    A           lvalue with list, matrix or object value
+    fname       string, the name of a user-defined function
 
-    return	null value if successful, otherwise an error value
+    return      null value if successful, otherwise an error value
 
 DESCRIPTION
     The value of each element of A is replaced by the value at that
     value of the user-defined function with name fname. Thus,
     modify(A, "f") has the effect of
 
-	for (i = 0; i < size(A); i++) A[[i]] = f(A[[i]]);
+        for (i = 0; i < size(A); i++) A[[i]] = f(A[[i]]);
 
     An error value is returned if A is not of acceptable type, if A has
     no-change protection, or if there is no user-defined function with
@@ -28,11 +28,11 @@ DESCRIPTION
     To obtain a modified copy of A without changing values in A,
     one may use
 
-	Amod = A; modify(A, fname)
+        Amod = A; modify(A, fname)
 
     or more simply
 
-	modify(Amod = A, fname).
+        modify(Amod = A, fname).
 
 EXAMPLE
     ; define f(x) = x^2
@@ -41,9 +41,9 @@ EXAMPLE
     ; print A
 
     list (3 elements, 3 nonzero):
-	  [[0]] = 4
-	  [[1]] = 16
-	  [[3]] = 36
+          [[0]] = 4
+          [[1]] = 16
+          [[3]] = 36
 
 LIMITS
     none
@@ -62,7 +62,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -70,8 +70,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/07/10 02:09:31
-## File existed as early as:	1995
+## Under source code control:   1995/07/10 02:09:31
+## File existed as early as:    1995
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

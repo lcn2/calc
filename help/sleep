@@ -5,9 +5,9 @@ SYNOPSIS
     sleep([n])
 
 TYPES
-    n		non-negative real, defaults to 1
+    n           non-negative real, defaults to 1
 
-    return	integer or null value
+    return      integer or null value
 
 DESCRIPTION
     This uses the C-library sleep (if n is integral) or usleep (for
@@ -18,18 +18,18 @@ DESCRIPTION
     One kind of use is to slow down output to permit easier reading of
     results, as in:
 
-	; for (i = 0; i < 100; i++) {
-	;;	print sqrt(i);
-	;;	sleep(1/2);
-	;; }
+        ; for (i = 0; i < 100; i++) {
+        ;;      print sqrt(i);
+        ;;      sleep(1/2);
+        ;; }
 
     The following illustrates what happens if ctrl-C is hit 5 seconds
     after the first command:
 
-	; print sleep(20)
+        ; print sleep(20)
 
-	[Abort level 1]
-	15
+        [Abort level 1]
+        15
 
 EXAMPLE
     ; sleep(1/3);
@@ -49,7 +49,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -57,7 +57,7 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	2000/12/14 01:33:00
-## File existed as early as:	2000
+## Under source code control:   2000/12/14 01:33:00
+## File existed as early as:    2000
 ##
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

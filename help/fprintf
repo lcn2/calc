@@ -5,15 +5,15 @@ SYNOPSIS
     fprintf(fd, fmt, x_1, x_2, ...)
 
 TYPES
-    fd			file
-    fmt			string
-    x_1, x_2, ...	any
+    fd                  file
+    fmt                 string
+    x_1, x_2, ...       any
 
-    return		null
+    return              null
 
 DESCRIPTION
     This prints to the file fd exactly what would be printed to
-	the standard output by printf(fmt, x_1, x_2, ...).
+        the standard output by printf(fmt, x_1, x_2, ...).
 
 EXAMPLE
     ; fprintf(files(1), "h=%d, i=%d\n", 2, 3);
@@ -108,7 +108,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -116,8 +116,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1996/03/12 22:50:41
-## File existed as early as:	1996
+## Under source code control:   1996/03/12 22:50:41
+## File existed as early as:    1996
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

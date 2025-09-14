@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,10 +17,10 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	2021/11/06 14:35:37
- * File existed as early as:	2021
+ * Under source code control:   2021/11/06 14:35:37
+ * File existed as early as:    2021
  *
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -30,23 +30,23 @@
  * NOTE: We assume base 10 digits and place 1 is the units digit.
  *
  * given:
- *	val	value to find a digit of
- *	place	digit place
+ *      val     value to find a digit of
+ *      place   digit place
  *
  * returns:
- * 	value (>= 0 and < 10) that is the place-th digit of val
- *	or 0 if place is not a digit of val
+ *      value (>= 0 and < 10) that is the place-th digit of val
+ *      or 0 if place is not a digit of val
  */
 define digitof(val, place)
 {
-    local d;	/* length of val in digits */
+    local d;    /* length of val in digits */
 
     /* determine length */
     d = digits(val);
 
     /* firewall - return 0 if digit place doesn't exist */
     if (place < 1 || place > d) {
-	return 0;
+        return 0;
     }
 
     /* return the place-th digit of val as a single digit */
@@ -60,18 +60,18 @@ define digitof(val, place)
  * NOTE: We assume base 10 digits and place 1 is the units digit.
  *
  * given:
- *	d	digits of a value
- *	place	digit place
+ *      d       digits of a value
+ *      place   digit place
  *
  * returns:
- *	given palindrome val, the other digit paired with place
- *	or 0 if place is not a digit of val
+ *      given palindrome val, the other digit paired with place
+ *      or 0 if place is not a digit of val
  */
 define copalplace(d, place)
 {
     /* firewall - return 0 if digit place doesn't exist */
     if (d < 1 || place < 1 || place > d) {
-	return 0;
+        return 0;
     }
 
     /* return digit coplace */
@@ -85,18 +85,18 @@ define copalplace(d, place)
  * NOTE: We assume base 10 digits and place 1 is the units digit.
  *
  * NOTE: When the value has an odd number of digits, the upper half
- *	 includes the middle digit.
+ *       includes the middle digit.
  *
  * given:
- *	val	a value
+ *      val     a value
  *
  * returns:
- * 	the upper half digits of a value
+ *      the upper half digits of a value
  */
 define upperhalf(val)
 {
-    local d;		/* length of val in digits */
-    local halfd;	/* length of upper hand of val */
+    local d;            /* length of val in digits */
+    local halfd;        /* length of upper hand of val */
 
     /* determine length */
     d = digits(val);
@@ -113,16 +113,16 @@ define upperhalf(val)
  * NOTE: We assume base 10 digits and place 1 is the units digit.
  *
  * given:
- *	val	a value
+ *      val     a value
  *
  * returns:
- * 	val as a palindrome with lower half being reverse digits of val
+ *      val as a palindrome with lower half being reverse digits of val
  */
 define mkpal(val)
 {
-    local d;	/* length of val in digits */
-    local i;	/* counter */
-    local ret;	/* palindrome being formed */
+    local d;    /* length of val in digits */
+    local i;    /* counter */
+    local ret;  /* palindrome being formed */
 
     /* determine length */
     d = digits(val);
@@ -130,7 +130,7 @@ define mkpal(val)
     /* insert digits in reverse order at the bottom */
     ret = val;
     for (i=0; i < d; ++i) {
-	ret = ret*10 + digit(val, i);
+        ret = ret*10 + digit(val, i);
     }
     return ret;
 }
@@ -142,18 +142,18 @@ define mkpal(val)
  * NOTE: We assume base 10 digits and place 1 is the units digit.
  *
  * given:
- *	val	a value
- *	digit	the digit to put into the middle of the palindrome
+ *      val     a value
+ *      digit   the digit to put into the middle of the palindrome
  *
  * returns:
- * 	val as a palindrome with lower half being reverse digits of val
- *		and digit as a middle digit
+ *      val as a palindrome with lower half being reverse digits of val
+ *              and digit as a middle digit
  */
 define mkpalmiddigit(val, digit)
 {
-    local d;	/* length of val in digits */
-    local i;	/* counter */
-    local ret;	/* palindrome being formed */
+    local d;    /* length of val in digits */
+    local i;    /* counter */
+    local ret;  /* palindrome being formed */
 
     /* determine length */
     d = digits(val);
@@ -161,7 +161,7 @@ define mkpalmiddigit(val, digit)
     /* insert digits in reverse order at the bottom */
     ret = val*10 + digit;
     for (i=0; i < d; ++i) {
-	ret = ret*10 + digit(val, i);
+        ret = ret*10 + digit(val, i);
     }
     return ret;
 }
@@ -173,31 +173,31 @@ define mkpalmiddigit(val, digit)
  * NOTE: We assume base 10 digits and place 1 is the units digit.
  *
  * given:
- *	val	a value
+ *      val     a value
  *
  * returns:
- * 	1 ==> val is a palindrome
- * 	0 ==> val is NOT a palindrome
+ *      1 ==> val is a palindrome
+ *      0 ==> val is NOT a palindrome
  */
 define ispal(val)
 {
-    local half;		/* upper half of digits of val */
-    local digit;	/* middle digit */
+    local half;         /* upper half of digits of val */
+    local digit;        /* middle digit */
 
     /* case: val has an even number of digits */
     if (iseven(digits(val))) {
 
-	/* test palindrome-ness */
-	return (val == mkpal(upperhalf(val)));
+        /* test palindrome-ness */
+        return (val == mkpal(upperhalf(val)));
 
     /* case: val can an odd number of digits */
     } else {
 
-	/* test palindrome-ness */
-	half = upperhalf(val);
-	digit = half % 10;
-	half //= 10;
-	return (val == mkpalmiddigit(half, digit));
+        /* test palindrome-ness */
+        half = upperhalf(val);
+        digit = half % 10;
+        half //= 10;
+        return (val == mkpalmiddigit(half, digit));
     }
 }
 
@@ -208,21 +208,21 @@ define ispal(val)
  * NOTE: We assume base 10 digits and place 1 is the units digit.
  *
  * given:
- *	pal	a palindrome
+ *      pal     a palindrome
  *
  * returns:
- *	next palindrome > pal
+ *      next palindrome > pal
  */
 define palnextpal(pal)
 {
-    local paldigits;	/* digits in pal */
-    local half;		/* upper half of newval */
-    local newhalf;	/* half+1 */
-    local newpal;	/* new palindrome */
+    local paldigits;    /* digits in pal */
+    local half;         /* upper half of newval */
+    local newhalf;      /* half+1 */
+    local newpal;       /* new palindrome */
 
     /* case: negative palindrome */
     if (pal < 0) {
-	return -(palprevpal(-pal));
+        return -(palprevpal(-pal));
     }
 
     /*
@@ -244,19 +244,19 @@ define palnextpal(pal)
      */
     paldigits = digits(pal);
     if (digits(newhalf) == digits(half)) {
-	/* no change in half digits: process as normal */
-	if (iseven(paldigits)) {
-	    newpal = mkpal(newhalf);
-	} else {
-	    newpal = mkpalmiddigit(newhalf // 10, newhalf % 10);
-	}
+        /* no change in half digits: process as normal */
+        if (iseven(paldigits)) {
+            newpal = mkpal(newhalf);
+        } else {
+            newpal = mkpalmiddigit(newhalf // 10, newhalf % 10);
+        }
     } else {
-	/* change in half digits: process as opposite */
-	if (iseven(paldigits)) {
-	    newpal = mkpalmiddigit(newhalf // 10, newhalf % 10);
-	} else {
-	    newpal = mkpal(newhalf);
-	}
+        /* change in half digits: process as opposite */
+        if (iseven(paldigits)) {
+            newpal = mkpalmiddigit(newhalf // 10, newhalf % 10);
+        } else {
+            newpal = mkpal(newhalf);
+        }
     }
 
     /*
@@ -272,22 +272,22 @@ define palnextpal(pal)
  * NOTE: We assume base 10 digits and place 1 is the units digit.
  *
  * given:
- *	val	a value
+ *      val     a value
  *
  * returns:
- *	next palindrome > val
+ *      next palindrome > val
  */
 define nextpal(val)
 {
-    local newval;	/* val+1 */
-    local newvaldigits;	/* digits in newval */
-    local half;		/* upper half of newval */
-    local pal;		/* palindrome test value */
-    local newpal;	/* new palindrome */
+    local newval;       /* val+1 */
+    local newvaldigits; /* digits in newval */
+    local half;         /* upper half of newval */
+    local pal;          /* palindrome test value */
+    local newpal;       /* new palindrome */
 
     /* case: negative value */
     if (val < 0) {
-	return -(prevpal(-val));
+        return -(prevpal(-val));
     }
 
     /*
@@ -298,7 +298,7 @@ define nextpal(val)
 
     /* case: single digit palindrome */
     if (newvaldigits < 2) {
-	return newval;
+        return newval;
     }
 
     /*
@@ -314,16 +314,16 @@ define nextpal(val)
      * half may not or may include the middle digit.
      */
     if (iseven(newvaldigits)) {
-	pal = mkpal(half);
+        pal = mkpal(half);
     } else {
-	pal = mkpalmiddigit(half // 10, half % 10);
+        pal = mkpalmiddigit(half // 10, half % 10);
     }
 
     /*
      * case: we found a larger palindrome, we are done
      */
     if (pal > val) {
-	return pal;
+        return pal;
     }
 
     /*
@@ -344,33 +344,33 @@ define nextpal(val)
  * NOTE: We assume base 10 digits and place 1 is the units digit.
  *
  * given:
- *	pal	a palindrome
+ *      pal     a palindrome
  *
  * returns:
- *	previous palindrome < pal
+ *      previous palindrome < pal
  */
 define palprevpal(pal)
 {
-    local paldigits;	/* digits in pal */
-    local half;		/* upper half of newval */
-    local newhalf;	/* half+1 */
-    local newpal;	/* new palindrome */
+    local paldigits;    /* digits in pal */
+    local half;         /* upper half of newval */
+    local newhalf;      /* half+1 */
+    local newpal;       /* new palindrome */
 
     /* case: negative value */
     if (pal < 0) {
-	return -(palnextpal(-pal));
+        return -(palnextpal(-pal));
     }
 
     /* case: single digit palindrome */
     if (pal < 10) {
-	newpal = pal-1;
-	return newpal;
+        newpal = pal-1;
+        return newpal;
     }
 
     /* case: 10 or 11 */
     if (pal < 12) {
-	newpal = 9;
-	return newpal;
+        newpal = 9;
+        return newpal;
     }
 
     /*
@@ -392,19 +392,19 @@ define palprevpal(pal)
      */
     paldigits = digits(pal);
     if (digits(newhalf) == digits(half)) {
-	/* no change in half digits: process as normal */
-	if (iseven(paldigits)) {
-	    newpal = mkpal(newhalf);
-	} else {
-	    newpal = mkpalmiddigit(newhalf // 10, newhalf % 10);
-	}
+        /* no change in half digits: process as normal */
+        if (iseven(paldigits)) {
+            newpal = mkpal(newhalf);
+        } else {
+            newpal = mkpalmiddigit(newhalf // 10, newhalf % 10);
+        }
     } else {
-	/* change in half digits: process as opposite */
-	if (iseven(paldigits)) {
-	    newpal = mkpalmiddigit(newhalf // 10, newhalf % 10);
-	} else {
-	    newpal = mkpal(newhalf);
-	}
+        /* change in half digits: process as opposite */
+        if (iseven(paldigits)) {
+            newpal = mkpalmiddigit(newhalf // 10, newhalf % 10);
+        } else {
+            newpal = mkpal(newhalf);
+        }
     }
 
     /*
@@ -420,22 +420,22 @@ define palprevpal(pal)
  * NOTE: We assume base 10 digits and place 1 is the units digit.
  *
  * given:
- *	val	a value
+ *      val     a value
  *
  * returns:
- *	previous palindrome < val
+ *      previous palindrome < val
  */
 define prevpal(val)
 {
-    local newval;	/* val-1 */
-    local newvaldigits;	/* digits in newval */
-    local half;		/* upper half of newval */
-    local pal;		/* palindrome test value */
-    local newpal;	/* new palindrome */
+    local newval;       /* val-1 */
+    local newvaldigits; /* digits in newval */
+    local half;         /* upper half of newval */
+    local pal;          /* palindrome test value */
+    local newpal;       /* new palindrome */
 
     /* case: negative value */
     if (val < 0) {
-	return -(nextpal(-val));
+        return -(nextpal(-val));
     }
 
     /*
@@ -446,7 +446,7 @@ define prevpal(val)
 
     /* case: single digit palindrome */
     if (newvaldigits < 2) {
-	return newval;
+        return newval;
     }
 
     /*
@@ -462,16 +462,16 @@ define prevpal(val)
      * half may not or may include the middle digit.
      */
     if (iseven(newvaldigits)) {
-	pal = mkpal(half);
+        pal = mkpal(half);
     } else {
-	pal = mkpalmiddigit(half // 10, half % 10);
+        pal = mkpalmiddigit(half // 10, half % 10);
     }
 
     /*
      * case: we found a smaller palindrome, we are done
      */
     if (pal < val) {
-	return pal;
+        return pal;
     }
 
     /*
@@ -492,15 +492,15 @@ define prevpal(val)
  * NOTE: We assume base 10 digits and place 1 is the units digit.
  *
  * given:
- *	val	a value
+ *      val     a value
  *
  * returns:
- *	next palindrome (highly probable) prime > val
+ *      next palindrome (highly probable) prime > val
  */
 define nextprimepal(val)
 {
-    local pal;		/* palindrome test value */
-    local dpal;		/* digits in pal */
+    local pal;          /* palindrome test value */
+    local dpal;         /* digits in pal */
 
     /*
      * pre-start under the next palindrome
@@ -512,45 +512,45 @@ define nextprimepal(val)
      */
     do {
 
-	/* case: negative values and tiny values */
-	if (pal < 2) {
-	    return 2;
-	}
+        /* case: negative values and tiny values */
+        if (pal < 2) {
+            return 2;
+        }
 
-	/*
-	 * compute the next palindrome
-	 */
-	pal = palnextpal(pal);
-	dpal = digits(pal);
+        /*
+         * compute the next palindrome
+         */
+        pal = palnextpal(pal);
+        dpal = digits(pal);
 
-	/* case: 11 is the only prime palindrome with even digit count */
-	if (pal == 11) {
-	    return 11;
-	}
+        /* case: 11 is the only prime palindrome with even digit count */
+        if (pal == 11) {
+            return 11;
+        }
 
-	/* case: even number of digits and not 11 */
-	if (iseven(dpal)) {
+        /* case: even number of digits and not 11 */
+        if (iseven(dpal)) {
 
-	    /*
-	     * Except for 11 (which is handled above already), there are
-	     * no prime palindrome with even digits.  So we need to
-	     * increase the digit count and work with that larger palindrome.
-	     */
-	    pal = nextpal(10^dpal);
-	}
+            /*
+             * Except for 11 (which is handled above already), there are
+             * no prime palindrome with even digits.  So we need to
+             * increase the digit count and work with that larger palindrome.
+             */
+            pal = nextpal(10^dpal);
+        }
 
-	/* case: palindrome is even or ends in 5 */
-	if (iseven(pal % 10) || (pal%10 == 10/2)) {
+        /* case: palindrome is even or ends in 5 */
+        if (iseven(pal % 10) || (pal%10 == 10/2)) {
 
-	    /*
-	     * we need to increase the bottom and top digits
-	     * so that we have a chance to be prime
-	     */
-	    pal += (1 + 10^(dpal-1));
-	}
-	if (config("resource_debug") & 0x8) {
-	    print "DEBUG: nextprimepal:", pal;
-	}
+            /*
+             * we need to increase the bottom and top digits
+             * so that we have a chance to be prime
+             */
+            pal += (1 + 10^(dpal-1));
+        }
+        if (config("resource_debug") & 0x8) {
+            print "DEBUG: nextprimepal:", pal;
+        }
     } while (ptest(pal) == 0 && pal > 0);
 
     /* return palindrome that his (highly probable) prime or 0 */
@@ -564,15 +564,15 @@ define nextprimepal(val)
  * NOTE: We assume base 10 digits and place 1 is the units digit.
  *
  * given:
- *	val	a value
+ *      val     a value
  *
  * returns:
- *	prev palindrome (highly probable) prime < val or 0
+ *      prev palindrome (highly probable) prime < val or 0
  */
 define prevprimepal(val)
 {
-    local pal;		/* palindrome test value */
-    local dpal;		/* digits in pal */
+    local pal;          /* palindrome test value */
+    local dpal;         /* digits in pal */
 
     /*
      * pre-start over the previous palindrome
@@ -584,56 +584,56 @@ define prevprimepal(val)
      */
     do {
 
-	/*
-	 * case: single digit values are always palindromes
-	 */
-	if (val < 10) {
-	    /*
-	     * The prevcand() call will return 0 if there is no previous prime
-	     * such as the case when val < 2.
-	     */
-	    return prevcand(pal);
-	}
+        /*
+         * case: single digit values are always palindromes
+         */
+        if (val < 10) {
+            /*
+             * The prevcand() call will return 0 if there is no previous prime
+             * such as the case when val < 2.
+             */
+            return prevcand(pal);
+        }
 
-	/*
-	 * compute the previous palindrome
-	 */
-	pal = palprevpal(pal);
-	dpal = digits(pal);
+        /*
+         * compute the previous palindrome
+         */
+        pal = palprevpal(pal);
+        dpal = digits(pal);
 
-	/* case: 11 is the only prime palindrome with even digit count */
-	if (pal == 11) {
-	    return 11;
-	}
+        /* case: 11 is the only prime palindrome with even digit count */
+        if (pal == 11) {
+            return 11;
+        }
 
-	/* case: 2 digit palindrome and not 11 */
-	if (dpal == 2) {
-	    return 7;
-	}
+        /* case: 2 digit palindrome and not 11 */
+        if (dpal == 2) {
+            return 7;
+        }
 
-	/* case: even number of digits */
-	if (iseven(dpal)) {
+        /* case: even number of digits */
+        if (iseven(dpal)) {
 
-	    /*
-	     * Except for 11 (which is handled above already), there are
-	     * no prime palindrome with even digits.  So we need to
-	     * decrease the digit count and work with that smaller palindrome.
-	     */
-	    pal = prevpal(10^(dpal-1));
-	}
+            /*
+             * Except for 11 (which is handled above already), there are
+             * no prime palindrome with even digits.  So we need to
+             * decrease the digit count and work with that smaller palindrome.
+             */
+            pal = prevpal(10^(dpal-1));
+        }
 
-	/* case: palindrome is even or ends in 5 */
-	if (iseven(pal % 10) || (pal%10 == 10/2)) {
+        /* case: palindrome is even or ends in 5 */
+        if (iseven(pal % 10) || (pal%10 == 10/2)) {
 
-	    /*
-	     * we need to decrease the bottom and top digits
-	     * so that we have a chance to be prime
-	     */
-	    pal -= (1 + 10^(dpal-1));
-	}
-	if (config("resource_debug") & 0x8) {
-	    print "DEBUG: prevprimepal:", pal;
-	}
+            /*
+             * we need to decrease the bottom and top digits
+             * so that we have a chance to be prime
+             */
+            pal -= (1 + 10^(dpal-1));
+        }
+        if (config("resource_debug") & 0x8) {
+            print "DEBUG: prevprimepal:", pal;
+        }
     } while (ptest(pal) == 0 && pal > 0);
 
     /* return palindrome that his (highly probable) prime or 0 */

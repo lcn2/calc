@@ -5,9 +5,9 @@ SYNOPSIS
     argv([n])
 
 TYPES
-    n		nonnegative integer
+    n           nonnegative integer
 
-    return	any
+    return      any
 
 DESCRIPTION
     Without args, this builtin returns the number of calc command line
@@ -22,16 +22,16 @@ DESCRIPTION
     assuming the calc is located in /usr/local/bin/calc, the first
     line of a calc script would be:
 
-	#!/usr/local/bin/calc -f
-	...
+        #!/usr/local/bin/calc -f
+        ...
 
     then argv(0) will refer to the filename of the script.
 
     As it is common to use -q in a calc script, and using that same
     /usr/local/bin/calc location:
 
-	#!/usr/local/bin/calc -q -f
-	...
+        #!/usr/local/bin/calc -q -f
+        ...
 
     and again, argv(0) will refer to the filename of the script.
 
@@ -43,14 +43,14 @@ DESCRIPTION
     However, if calc is invoked with -s, all non-dashed options will
     be left as unevaluated strings.  Thus:
 
-	calc -i 2+2
+        calc -i 2+2
 
     will cause calc to print 4 and enter interactive mode.  In this case
     argv() will return 1.
 
     On the other hand:
 
-	calc -i -s 2+2
+        calc -i -s 2+2
 
     will cause calc to interactive mode.  The argv() builtin will return 2
     and argv(1) will return the string "2+2".
@@ -84,7 +84,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -92,8 +92,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1999/11/23 19:45:05
-## File existed as early as:	1999
+## Under source code control:   1999/11/23 19:45:05
+## File existed as early as:    1999
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

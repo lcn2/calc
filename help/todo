@@ -7,24 +7,24 @@ High priority items:
     * Improve the way that calc parses statements such as if, for, while
       and do so that when a C programmer does.  This works as expected:
 
-	    if (expr) {
-		...
-	    }
+            if (expr) {
+                ...
+            }
 
       However this WILL NOT WORK AS EXPECTED:
 
-	    if (expr)
-	    {
-		...
-	    }
+            if (expr)
+            {
+                ...
+            }
 
       because calc will parse the if being terminated by
       an empty statement followed by a
 
-	    if (expr) ;
-	    {
-		...
-	    }
+            if (expr) ;
+            {
+                ...
+            }
 
       See also "help statement", "help unexpected", "help todo", and
       "help bugs".
@@ -71,22 +71,22 @@ Low priority items:
 
     * Complete the use of CONST where appropriate:
 
-	CONST is beginning to be used with read-only tables and some
-	function arguments.  This allows certain compilers to better
-	optimize the code as well as alerts one to when some value
-	is being changed inappropriately.  Use of CONST as in:
+        CONST is beginning to be used with read-only tables and some
+        function arguments.  This allows certain compilers to better
+        optimize the code as well as alerts one to when some value
+        is being changed inappropriately.  Use of CONST as in:
 
-	    int foo(CONST int curds, char *CONST whey)
+            int foo(CONST int curds, char *CONST whey)
 
-	while legal C is not as useful because the caller is protected
-	by the fact that args are passed by value.  However, the
-	in the following:
+        while legal C is not as useful because the caller is protected
+        by the fact that args are passed by value.  However, the
+        in the following:
 
-	    int bar(CONST char *fizbin, CONST HALF *data)
+            int bar(CONST char *fizbin, CONST HALF *data)
 
-	is useful because it calls the compiler that the string pointed
-	at by 'fizbin' and the HALF array pointer at by 'data' should be
-	treated as read-only.
+        is useful because it calls the compiler that the string pointed
+        at by 'fizbin' and the HALF array pointer at by 'data' should be
+        treated as read-only.
 
       One should make available a the fundamental math operations
       on ZVALUE, NUMBER and perhaps COMPLEX (without all of the
@@ -101,16 +101,16 @@ Low priority items:
 
 Calc bug reports and calc bug fixes should be sent to:
 
-NOTE:	calc-bug-report Email address no longer in use
+NOTE:   calc-bug-report Email address no longer in use
 
-	NOTE: Remove spaces and replace 'at' with @, 'dot' with .
+        NOTE: Remove spaces and replace 'at' with @, 'dot' with .
 
     This replaces the old calc-bugs Email address.
 
     To be sure we see your Email reporting a calc bug, please use the
     following phase in your Email Subject line:
 
-	calc bug report
+        calc bug report
 
     That phrase in your subject line will help ensure your
     request will get past our anti-spam filters.  You may have
@@ -137,7 +137,7 @@ The calc web site is located at:
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -145,8 +145,8 @@ The calc web site is located at:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1999/10/20 07:42:55
-## File existed as early as:	1999
+## Under source code control:   1999/10/20 07:42:55
+## File existed as early as:    1999
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

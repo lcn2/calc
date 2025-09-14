@@ -11,7 +11,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -19,10 +19,10 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1991/05/22 21:56:36
- * File existed as early as:	1991
+ * Under source code control:   1991/05/22 21:56:36
+ * File existed as early as:    1991
  *
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 /*
@@ -32,26 +32,26 @@
 
 define mersenne(p)
 {
-	local u, i, p_mask;
+        local u, i, p_mask;
 
-	/* firewall */
-	if (! isint(p))
-		quit "p is not an integer";
+        /* firewall */
+        if (! isint(p))
+                quit "p is not an integer";
 
-	/* two is a special case */
-	if (p == 2)
-		return 1;
+        /* two is a special case */
+        if (p == 2)
+                return 1;
 
-	/* if p is not prime, then 2^p-1 is not prime */
-	if (! ptest(p,1))
-		return 0;
+        /* if p is not prime, then 2^p-1 is not prime */
+        if (! ptest(p,1))
+                return 0;
 
-	/* lltest: u(i+1) = u(i)^2 - 2 mod 2^p-1 */
-	u = 4;
-	for (i = 2; i < p; ++i) {
-		u = hnrmod(u^2 - 2, 1, p, -1);
-	}
+        /* lltest: u(i+1) = u(i)^2 - 2 mod 2^p-1 */
+        u = 4;
+        for (i = 2; i < p; ++i) {
+                u = hnrmod(u^2 - 2, 1, p, -1);
+        }
 
-	/* 2^p-1 is prime iff u(p) = 0 mod 2^p-1 */
-	return (u == 0);
+        /* 2^p-1 is prime iff u(p) = 0 mod 2^p-1 */
+        return (u == 0);
 }

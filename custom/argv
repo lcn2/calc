@@ -5,17 +5,17 @@ SYNOPSIS
     custom("argv" [, arg ...])
 
 TYPES
-    arg		any
+    arg         any
 
-    return	int
+    return      int
 
 DESCRIPTION
     This custom function will, for each arg given print:
 
-	arg number
-	arg type
-	number of elements (size())
-	memory size (sizeof())
+        arg number
+        arg type
+        number of elements (size())
+        memory size (sizeof())
 
     The number of args passed, not counting the initial "argv" name
     arg is returned.
@@ -23,12 +23,12 @@ DESCRIPTION
 EXAMPLE
     > foo=5^713; bar=17; baz=list(2,3,4);
     > custom("argv", foo, bar, baz, 3+4.5i, pi())
-	    arg[0]  rational_value	    size=1  sizeof=272
-	    arg[1]  rational_value	    size=1  sizeof=68
-	    arg[2]  list		    size=3  sizeof=256
-	    arg[3]  complex_value	    size=1  sizeof=140
-	    arg[4]  rational_value	    size=1  sizeof=84
-	    5
+            arg[0]  rational_value          size=1  sizeof=272
+            arg[1]  rational_value          size=1  sizeof=68
+            arg[2]  list                    size=3  sizeof=256
+            arg[3]  complex_value           size=1  sizeof=140
+            arg[4]  rational_value          size=1  sizeof=84
+            5
 
 LIMITS
     calc must be built with ALLOW_CUSTOM= -DCUSTOM
@@ -48,7 +48,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -56,8 +56,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1997/03/09 20:28:01
-## File existed as early as:	1997
+## Under source code control:   1997/03/09 20:28:01
+## File existed as early as:    1997
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

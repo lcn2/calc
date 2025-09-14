@@ -5,18 +5,18 @@ SYNOPSIS
     isptr(x)
 
 TYPES
-    x		any
+    x           any
 
-    return	0, 1, 2, 3, or 4
+    return      0, 1, 2, 3, or 4
 
 DESCRIPTION
     isptr(x) returns:
 
-		0 if x is a not pointer
-		1 if x is an octet-pointer
-		2 if x is a value-pointer
-		3 if x is a string-pointer
-		4 if x is a number-pointer
+                0 if x is a not pointer
+                1 if x is an octet-pointer
+                2 if x is a value-pointer
+                3 if x is a string-pointer
+                4 if x is a number-pointer
 
      Pointers are initially defined by using the address (&) operator
      with an "addressable" value; currently, these are octets, lvalues,
@@ -48,7 +48,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -56,8 +56,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1997/09/06 20:03:35
-## File existed as early as:	1997
+## Under source code control:   1997/09/06 20:03:35
+## File existed as early as:    1997
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,11 +17,11 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1997/03/09 17:49:12
- * File existed as early as:	1997
+ * Under source code control:   1997/03/09 17:49:12
+ * File existed as early as:    1997
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -30,9 +30,9 @@
  * so we declare a global variable whose value is based on if CUSTOM is defined.
  */
 #if defined(CUSTOM)
-int c_devnull_allowed = 1;	/* CUSTOM defined */
+int c_devnull_allowed = 1;      /* CUSTOM defined */
 #else /* CUSTOM */
-int c_devnull_allowed = 0;	/* CUSTOM undefined */
+int c_devnull_allowed = 0;      /* CUSTOM undefined */
 #endif /* CUSTOM */
 
 
@@ -50,7 +50,7 @@ int c_devnull_allowed = 0;	/* CUSTOM undefined */
 #include "../have_unused.h"
 
 
-#include "../banned.h"	/* include after system header <> includes */
+#include "../banned.h"  /* include after system header <> includes */
 
 
 /*
@@ -63,13 +63,13 @@ int c_devnull_allowed = 0;	/* CUSTOM undefined */
 VALUE
 c_devnull(char *UNUSED(name), int UNUSED(count), VALUE **UNUSED(vals))
 {
-	VALUE result;		/* what we will return */
+        VALUE result;           /* what we will return */
 
-	/*
-	 * return NULL
-	 */
-	result.v_type = V_NULL;
-	return result;
+        /*
+         * return NULL
+         */
+        result.v_type = V_NULL;
+        return result;
 }
 
 #endif /* CUSTOM */

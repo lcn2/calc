@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,10 +17,10 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1993/07/30 19:42:45
- * File existed as early as:	1993
+ * Under source code control:   1993/07/30 19:42:45
+ * File existed as early as:    1993
  *
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -28,7 +28,7 @@
 #define INCLUDE_CMATH_H
 
 
-#if defined(CALC_SRC)	/* if we are building from the calc source tree */
+#if defined(CALC_SRC)   /* if we are building from the calc source tree */
 # include "qmath.h"
 #else
 # include <calc/qmath.h>
@@ -39,9 +39,9 @@
  * Complex arithmetic definitions.
  */
 typedef struct {
-	NUMBER *real;		/* real part of number */
-	NUMBER *imag;		/* imaginary part of number */
-	long links;		/* link count */
+        NUMBER *real;           /* real part of number */
+        NUMBER *imag;           /* imaginary part of number */
+        long links;             /* link count */
 } COMPLEX;
 
 
@@ -167,19 +167,19 @@ E_FUNC COMPLEX *swap_HALF_in_COMPLEX(COMPLEX *dest, COMPLEX *src, bool all);
 /*
  * macro expansions to speed this thing up
  */
-#define cisreal(c)	(qiszero((c)->imag))
-#define cisimag(c)	(qiszero((c)->real) && !cisreal(c))
-#define ciszero(c)	(cisreal(c) && qiszero((c)->real))
-#define cisone(c)	(cisreal(c) && qisone((c)->real))
-#define cisnegone(c)	(cisreal(c) && qisnegone((c)->real))
-#define cisrunit(c)	(cisreal(c) && qisunit((c)->real))
-#define cisiunit(c)	(qiszero((c)->real) && qisunit((c)->imag))
-#define cisunit(c)	(cisrunit(c) || cisiunit(c))
-#define cistwo(c)	(cisreal(c) && qistwo((c)->real))
-#define cisint(c)	(qisint((c)->real) && qisint((c)->imag))
-#define ciseven(c)	(qiseven((c)->real) && qiseven((c)->imag))
-#define cisodd(c)	(qisodd((c)->real) || qisodd((c)->imag))
-#define clink(c)	((c)->links++, (c))
+#define cisreal(c)      (qiszero((c)->imag))
+#define cisimag(c)      (qiszero((c)->real) && !cisreal(c))
+#define ciszero(c)      (cisreal(c) && qiszero((c)->real))
+#define cisone(c)       (cisreal(c) && qisone((c)->real))
+#define cisnegone(c)    (cisreal(c) && qisnegone((c)->real))
+#define cisrunit(c)     (cisreal(c) && qisunit((c)->real))
+#define cisiunit(c)     (qiszero((c)->real) && qisunit((c)->imag))
+#define cisunit(c)      (cisrunit(c) || cisiunit(c))
+#define cistwo(c)       (cisreal(c) && qistwo((c)->real))
+#define cisint(c)       (qisint((c)->real) && qisint((c)->imag))
+#define ciseven(c)      (qiseven((c)->real) && qiseven((c)->imag))
+#define cisodd(c)       (qisodd((c)->real) || qisodd((c)->imag))
+#define clink(c)        ((c)->links++, (c))
 
 
 /*

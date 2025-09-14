@@ -5,9 +5,9 @@ SYNOPSIS
     newerror([str])
 
 TYPES
-    str		string
+    str         string
 
-    return	error-value
+    return      error-value
 
 DESCRIPTION
     If str is not "" and has not earlier been used as an argument for
@@ -35,25 +35,25 @@ EXAMPLE
     Error 20000 caused errcount to exceed errmax
 
     ; errmax(errcount()+5)
-	    0
+            0
     ; e1 = newerror("triangle side length <= 0")
     ; iserror(e1)
-	    20000
+            20000
     ; error(20000)
-	    Error E_20000
+            Error E_20000
     ; strerror(error(20000))
-	    "triangle side length <= 0"
+            "triangle side length <= 0"
     ; strerror(e1);
-	    "triangle side length <= 0"
+            "triangle side length <= 0"
     ; strerror(error(iserror(e1)))
-	    "triangle side length <= 0"
+            "triangle side length <= 0"
 
     ; define area(a,b,c) {
-    ;;	local s;
-    ;;	if (!(a > 0) || !(b > 0) || !(c > 0)) return e1;
-    ;;	s = (a + b + c)/2;
-    ;;	if (s <= a || s <= b || s <= c) return newerror("Non-triangle sides");
-    ;;	return sqrt(s * (s - a) * (s - b) * (s - c));
+    ;;  local s;
+    ;;  if (!(a > 0) || !(b > 0) || !(c > 0)) return e1;
+    ;;  s = (a + b + c)/2;
+    ;;  if (s <= a || s <= b || s <= c) return newerror("Non-triangle sides");
+    ;;  return sqrt(s * (s - a) * (s - b) * (s - c));
     ;; }
     "area" defined
 
@@ -83,7 +83,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -91,8 +91,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1996/04/30 03:39:56
-## File existed as early as:	1996
+## Under source code control:   1996/04/30 03:39:56
+## File existed as early as:    1996
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

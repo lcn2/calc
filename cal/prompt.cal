@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,10 +17,10 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1995/12/18 04:43:25
- * File existed as early as:	1995
+ * Under source code control:   1995/12/18 04:43:25
+ * File existed as early as:    1995
  *
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 /*
@@ -32,7 +32,7 @@
  * entering "end", "exit" or "quit"; "end" returns to the level from
  * which adder() is called, e.g. with:
  *
- *		for (;;) adder()
+ *              for (;;) adder()
  *
  * entering "end" would start a new edition with sum = 0; "quit" and
  * "exit" return to the top level.
@@ -43,25 +43,25 @@
  * thus the string may include variables, assignments, functions, etc.
  * as in:
  *
- *		2 + 3
- *		x = 2 + 3, x^3
- *		x^2
- *		local x = 2; while (x < 100) x *= 2; x % 100
- *		x
- *		exp(2, 1e-5)
- *		sum
- *		print sum^2;
- *		3; print sum^2;
+ *              2 + 3
+ *              x = 2 + 3, x^3
+ *              x^2
+ *              local x = 2; while (x < 100) x *= 2; x % 100
+ *              x
+ *              exp(2, 1e-5)
+ *              sum
+ *              print sum^2;
+ *              3; print sum^2;
  *
  * (Here the second line creates x as a global variable; the local
- * variable x in the fourth line has no effect on the global x.	 In
+ * variable x in the fourth line has no effect on the global x.  In
  * the last three lines, sum is the sum of numbers already entered, so
  * the third last line doubles the value of sum.  The value returned
  * by "print sum^2;" is the null value, so the second last line adds
  * nothing to sum.  The last line returns the value 3, i.e. the last
  * non-null value found for the expressions separated by semicolons,
  * so sum will be increased by 3 after the "print sum^2;" command
- * is executed.	 XXX The terminating semicolon is essential in the
+ * is executed.  XXX The terminating semicolon is essential in the
  * last two lines.  A command like eval("print 7;") is acceptable to
  * calc but eval("print 7") causes an exit from calc. XXX)
  *
@@ -72,44 +72,44 @@
  *
  * Calling showvalues(str) assumes str defines a function of x as in:
  *
- *	"sin(x)", "x^2 + 3*x", "exp(x, 1e-5)".
+ *      "sin(x)", "x^2 + 3*x", "exp(x, 1e-5)".
  *
  * Values of the function so defined are returned for values of x
- * entered in response to the ? prompt.	Operation is terminated by
+ * entered in response to the ? prompt. Operation is terminated by
  * entering "end", "exit" or "quit".
  */
 
 
 define adder() {
-	global sum = 0;
-	local s, t;
-	for (;;) {
-		s = prompt("? ");
-		if (s == "end")
-			break;
-		t = eval(s);
-		if (!isnum(t)) {
-			print "Please enter a number";
-			continue;
-		}
-		sum += t;
-		print "\t":sum;
-	}
+        global sum = 0;
+        local s, t;
+        for (;;) {
+                s = prompt("? ");
+                if (s == "end")
+                        break;
+                t = eval(s);
+                if (!isnum(t)) {
+                        print "Please enter a number";
+                        continue;
+                }
+                sum += t;
+                print "\t":sum;
+        }
 }
 
 global prompt_x;
 
 define showvalues(str) {
-	local s;
-	for (;;) {
-		s = prompt("? ");
-		if (s == "end")
-			break;
-		prompt_x = eval(s);
-		if (!isnum(prompt_x)) {
-			print "Please enter a number";
-			continue;
-		}
-		print "\t":eval(str);
-	}
+        local s;
+        for (;;) {
+                s = prompt("? ");
+                if (s == "end")
+                        break;
+                prompt_x = eval(s);
+                if (!isnum(prompt_x)) {
+                        print "Please enter a number";
+                        continue;
+                }
+                print "\t":eval(str);
+        }
 }

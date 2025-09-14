@@ -6,24 +6,24 @@ Using files
     Some differences do occur, as will be explained here.
 
     Names of files are subject to ~ expansion just like the C or
-    Korn shell.	 For example, the file name:
+    Korn shell.  For example, the file name:
 
-	    ~/.rc.cal
+            ~/.rc.cal
 
     refers to the file '.rc.cal' under your home directory.  The
     file name:
 
-	    ~chongo/.rc.cal
+            ~chongo/.rc.cal
 
     refers to the a file 'rc.cal' under the home directory of 'chongo'.
 
     A file can be opened for either reading, writing, or appending.
     To do this, the 'fopen' function is used, which accepts a filename
-    and an open mode, both as strings.	You use 'r' for reading, 'w'
-    for writing, and 'a' for appending.	 For example, to open the file
+    and an open mode, both as strings.  You use 'r' for reading, 'w'
+    for writing, and 'a' for appending.  For example, to open the file
     'foo' for reading, the following could be used:
 
-	    fd = fopen('foo', 'r');
+            fd = fopen('foo', 'r');
 
     If the open is unsuccessful, the numeric value of errno is returned.
     If the open is successful, a value of type 'file' will be returned.
@@ -48,21 +48,21 @@ Using files
     of using 'files', if you wanted to assign a file value which is
     equivalent to stdout, you could use:
 
-	    stdout = files(1);
+            stdout = files(1);
 
      Or for example, if you wanted to assign a file value which is
      equivalent to stdin, you could use:
 
-	    stdout = files(0);
+            stdout = files(0);
 
     And for stderr:
 
-	    stderr = files(2);
+            stderr = files(2);
 
     The 'fclose' function is used to close a file which had been opened.
     When this is done, the file value associated with the file remains
     a file value, but appears 'closed', and cannot be used in further
-    file-related calls (except fclose) without causing errors.	This same
+    file-related calls (except fclose) without causing errors.  This same
     action occurs to all copies of the file value.  You do not need to
     explicitly close all the copies of a file value.  The 'fclose'
     function returns the numeric value of errno if there had been an
@@ -71,12 +71,12 @@ Using files
     The builtin 'strerror' can be use to convert an errno number into
     a slightly more meaningful error message:
 
-	    badfile = fopen("not_a_file", "r");
-	    if (!isfile(badfile)) {
-		print "error #" : badfile : ":", strerror(badfile);
-	    }
+            badfile = fopen("not_a_file", "r");
+            if (!isfile(badfile)) {
+                print "error #" : badfile : ":", strerror(badfile);
+            }
 
-    File values can be printed.	 When this is done, the filename of the
+    File values can be printed.  When this is done, the filename of the
     opened file is printed inside of quote marks.  If the file value had
     been closed, then the null string is printed.  If a file value is the
     result of a top-level expression, then in addition to the filename,
@@ -84,23 +84,23 @@ Using files
     status is also displayed.
 
     File values can be used inside of 'if' tests.  When this is done,
-    an opened file is TRUE, and a closed file is FALSE.	 As an example
+    an opened file is TRUE, and a closed file is FALSE.  As an example
     of this, the following loop will print the names of all the currently
     opened non-standard files with their indexes, and then close them:
 
-	    for (i = 3; i < files(); i++) {
-		    if (files(i)) {
-			    print i, files(i);
-			    fclose(files(i));
-		    }
-	    }
+            for (i = 3; i < files(); i++) {
+                    if (files(i)) {
+                            print i, files(i);
+                            fclose(files(i));
+                    }
+            }
 
     The functions to read from files are 'fgetline' and 'fgetc'.
     The 'fgetline' function accepts a file value, and returns the next
     input line from a file.  The line is returned as a string value, and
-    does not contain the end of line character.	 Empty lines return the
+    does not contain the end of line character.  Empty lines return the
     null string.  When the end of file is reached, fgetline returns the
-    null value.	 (Note the distinction between a null string and a null
+    null value.  (Note the distinction between a null string and a null
     value.)  If the line contained a numeric value, then the 'eval'
     function can then be used to convert the string to a numeric value.
     Care should be used when doing this, however, since eval will
@@ -113,15 +113,15 @@ Using files
     as long as the -p flag is given to calc.  For example, this
     will print "chongo was here":
 
-	    echo chongo was here | calc -p 'print fgetline(files(0));'
+            echo chongo was here | calc -p 'print fgetline(files(0));'
 
     while this does not:
 
-	    echo chongo was here | calc 'print fgetline(files(0));'
+            echo chongo was here | calc 'print fgetline(files(0));'
 
     nor will this print "chongo was here":
 
-	    echo chongo was here | calc -i 'print fgetline(files(0));'
+            echo chongo was here | calc -i 'print fgetline(files(0));'
 
     This is because without -p, the interactive parser, in an effort
     to parse interactive commands, flushes data on standard input.
@@ -129,20 +129,20 @@ Using files
     On the other hand, once interactive mode is entered, reading
     from standard input works as expected.  For example, this works:
 
-	    $ calc
-	    C-style arbitrary precision calculator (version 2.12.6.0)
-	    Calc is open software. For license details type:  help copyright
-	    [Type "exit" to exit, or "help" for help.]
+            $ calc
+            C-style arbitrary precision calculator (version 2.12.6.0)
+            Calc is open software. For license details type:  help copyright
+            [Type "exit" to exit, or "help" for help.]
 
-	    ; str = fgetline(files(0))
-	    this text was typed into stdin
-	    ; print str
-	    this text was typed into stdin
+            ; str = fgetline(files(0))
+            this text was typed into stdin
+            ; print str
+            this text was typed into stdin
 
     The 'printf' and 'fprintf' functions are used to print results to a
     file (which could be stdout or stderr).  The 'fprintf' function
     accepts a file variable, whereas the 'printf' function assumes the
-    use of 'files(1)' (stdout).	 They both require a format string, which
+    use of 'files(1)' (stdout).  They both require a format string, which
     is used in almost the same way as in normal C.  The differences come
     in the interpretation of values to be printed for various formats.
     Unlike in C, where an unmatched format type and value will cause
@@ -152,7 +152,7 @@ Using files
     use %s or %d in your format strings, even if you are printing a non-
     string or non-numeric value.  For example, the following is valid:
 
-	    printf("Two values are %d and %s\n", "fred", 4567);
+            printf("Two values are %d and %s\n", "fred", 4567);
 
     and will print "Two values are fred and 4567".
 
@@ -161,13 +161,13 @@ Using files
     you wish to print numbers in a particular format.  The following
     is a list of the possible numeric formats:
 
-	    %d		print in currently defined numeric format
-	    %f		print as floating point
-	    %e		print as exponential
-	    %r		print as decimal fractions
-	    %x		print as hex fractions
-	    %o		print as octal fractions
-	    %b		print as binary fractions
+            %d          print in currently defined numeric format
+            %f          print as floating point
+            %e          print as exponential
+            %r          print as decimal fractions
+            %x          print as hex fractions
+            %o          print as octal fractions
+            %b          print as binary fractions
 
     Note then, that using %d in the format makes the output configurable
     by using the 'config' function to change the output mode, whereas
@@ -177,7 +177,7 @@ Using files
     Using the precision argument will override the 'config' function
     to set the number of decimal places printed.  For example:
 
-	    printf("The number is %.100f\n", 1/3);
+            printf("The number is %.100f\n", 1/3);
 
     will print 100 decimal places no matter what the display configuration
     value is set to.
@@ -213,7 +213,7 @@ Using files
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -221,8 +221,8 @@ Using files
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1991/07/21 04:37:19
-## File existed as early as:	1991
+## Under source code control:   1991/07/21 04:37:19
+## File existed as early as:    1991
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

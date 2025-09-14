@@ -5,9 +5,9 @@ SYNOPSIS
     display([d])
 
 TYPES
-    d		integer >= 0
+    d           integer >= 0
 
-    return	integer
+    return      integer
 
 DESCRIPTION
     When given an argument, this function sets the maximum number of
@@ -21,13 +21,13 @@ DESCRIPTION
 
     The builtin function:
 
-	display(d)
-	display()
+        display(d)
+        display()
 
     is an alias for:
 
-	config("display", d)
-	config("display")
+        config("display", d)
+        config("display")
 
     The display digit value does not change the stored value of a number.
     It only changes how a stored value is displayed.
@@ -108,7 +108,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -116,8 +116,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	2004/07/25 23:50:40
-## File existed as early as:	2004
+## Under source code control:   2004/07/25 23:50:40
+## File existed as early as:    2004
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

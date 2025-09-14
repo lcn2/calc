@@ -27,18 +27,18 @@
  * function may lead to a fatal compiler complication.
  * If that happens, consider compiling as:
  *
- *	make clobber all chk CCBAN=-DUNBAN
+ *      make clobber all chk CCBAN=-DUNBAN
  *
  * as see if this is a work-a-round.
  *
  * If YOU discover a need for the -DUNBAN work-a-round, PLEASE tell us!
  * Please send us a bug report.  See the file:
  *
- *	BUGS
+ *      BUGS
  *
  * or the URL:
  *
- *	http://www.isthe.com/chongo/tech/comp/calc/calc-bugrept.html
+ *      http://www.isthe.com/chongo/tech/comp/calc/calc-bugrept.html
  *
  * for how to send us such a bug report.
  *
@@ -50,7 +50,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -58,11 +58,11 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	2021/03/06 21:07:31
- * File existed as early as:	2021
+ * Under source code control:   2021/03/06 21:07:31
+ * File existed as early as:    2021
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -82,7 +82,7 @@
 /*
  * In the spirit of:
  *
- *	https://github.com/git/git/blob/master/banned.h
+ *      https://github.com/git/git/blob/master/banned.h
  *
  * we will ban the use of certain unsafe functions by turning
  * then into function calls that do not exist.
@@ -157,22 +157,22 @@
 /*
  * XXX - As of 2021, functions such as:
  *
- *	gmtime_s
- *	localtime_s
- *	ctime_s
- *	asctime_s
+ *      gmtime_s
+ *      localtime_s
+ *      ctime_s
+ *      asctime_s
  *
  * are not universal.  We cannot yet ban the following
  * functions because we do not have a portable AND
  * widely available alternative.  Therefore we just
  * have to be extra careful when using:
  *
- *	gmtime
- *	localtime
- *	ctime
- *	ctime_r
- *	asctime
- *	asctime_r
+ *      gmtime
+ *      localtime
+ *      ctime
+ *      ctime_r
+ *      asctime
+ *      asctime_r
  */
 
 #endif /* !UNBAN */

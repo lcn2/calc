@@ -5,9 +5,9 @@ SYNOPSIS
     fgetfield(fs)
 
 TYPES
-    fs		file stream open for reading
+    fs          file stream open for reading
 
-    return	string or null
+    return      string or null
 
 DESCRIPTION
 
@@ -25,20 +25,20 @@ EXAMPLE
     ; fputs(f, " Alpha Beta \n")
     ; freopen(f, "r")
     ; fgetfield(f)
-	"Alpha"
+        "Alpha"
     ; fgetfield(f)
-	"Beta"
+        "Beta"
     ; fgetfield(f)
 
     ; freopen(f, "w")
     ; fputstr(f, " Alpha  ", "Beta")
     ; freopen(f, "r")
     ; fgetfield(f)
-	"Alpha"
+        "Alpha"
     ; fgetfield(f)
-	""
+        ""
     ; fgetfield(f)
-	"Beta"
+        "Beta"
 
 LIMITS
     none
@@ -57,7 +57,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -65,8 +65,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1996/04/30 03:05:17
-## File existed as early as:	1996
+## Under source code control:   1996/04/30 03:05:17
+## File existed as early as:    1996
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

@@ -9,7 +9,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -17,11 +17,11 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1994/07/01 19:44:21
- * File existed as early as:	1994
+ * Under source code control:   1994/07/01 19:44:21
+ * File existed as early as:    1994
  *
- * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -30,13 +30,13 @@
 #include "have_const.h"
 
 
-#include "banned.h"	/* include after system header <> includes */
+#include "banned.h"     /* include after system header <> includes */
 
 
 /*
  * pi10b - number of primes <= 2^18 in multiples of 2^10
  *
- * pi10b[x]  ==	 pi(x*1024)		for 0 <= x <= 256
+ * pi10b[x]  ==  pi(x*1024)             for 0 <= x <= 256
  */
 CONST unsigned short pi10b[(MAX_PI10B/1024)+1+1] = {
     0, 172, 309, 439, 564, 685, 801, 916, 1028, 1142, 1254, 1362, 1469, 1580,
@@ -68,7 +68,7 @@ CONST unsigned short pi10b[(MAX_PI10B/1024)+1+1] = {
  * pi18b - primes found in a given 2^18 interval
  *
  * i<x
- * sum pi18b[i]	 ==  pi(x*262144)	for 0 <= x <= 16384
+ * sum pi18b[i]  ==  pi(x*262144)       for 0 <= x <= 16384
  * i=0
  */
 CONST unsigned short pi18b[(MAX_PI18B/262144)+1] = {

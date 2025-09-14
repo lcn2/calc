@@ -5,7 +5,7 @@ SYNOPSIS
     assoc()
 
 TYPES
-    return	association
+    return      association
 
 DESCRIPTION
     This function returns an empty association array.
@@ -13,10 +13,10 @@ DESCRIPTION
     After A = assoc(), elements can be added to the association by
     assignments of the forms
 
-	A[a_1] = v_1
-	A[a_1, a_2] = v_2
-	A[a_1, a_2, a_3] = v_3
-	A[a_1, a_2, a_3, a_4] = v_4
+        A[a_1] = v_1
+        A[a_1, a_2] = v_2
+        A[a_1, a_2, a_3] = v_3
+        A[a_1, a_2, a_3, a_4] = v_4
 
     There are no restrictions on the values of the "indices" a_i or
     the "values" v_i.
@@ -52,7 +52,7 @@ DESCRIPTION
     a sequential scan through the elements difficult.
 
     The search and rsearch functions can search for an element in an
-    association which has the specified value.	They return the index
+    association which has the specified value.  They return the index
     of the found element, or a NULL value if the value was not found.
 
     Associations can be copied by an assignment, and can be compared
@@ -90,7 +90,7 @@ SEE ALSO
 ##
 ## Calc is distributed in the hope that it will be useful, but WITHOUT
 ## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
 ## Public License for more details.
 ##
 ## A copy of version 2.1 of the GNU Lesser General Public License is
@@ -98,8 +98,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1994/09/25 20:22:31
-## File existed as early as:	1994
+## Under source code control:   1994/09/25 20:22:31
+## File existed as early as:    1994
 ##
-## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+## Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/

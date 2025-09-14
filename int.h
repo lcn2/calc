@@ -3,8 +3,8 @@
  *
  * For general information on C integers, see:
  *
- *	https://en.cppreference.com/w/c/language/arithmetic_types
- *	https://en.cppreference.com/w/c/types/integer
+ *      https://en.cppreference.com/w/c/language/arithmetic_types
+ *      https://en.cppreference.com/w/c/types/integer
  *
  * Copyright (C) 2023  Landon Curt Noll
  *
@@ -16,7 +16,7 @@
  *
  * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * A copy of version 2.1 of the GNU Lesser General Public License is
@@ -24,10 +24,10 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	2023/08/22 21:14:25
- * File existed as early as:	2023
+ * Under source code control:   2023/08/22 21:14:25
+ * File existed as early as:    2023
  *
- * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -132,7 +132,7 @@
 
 /*
  * calc v2 is the last version where one might be able to use an old C compiler
- *	   and/or tolerate missing include files
+ *         and/or tolerate missing include files
  */
 #if MAJOR_VER < 3
 
