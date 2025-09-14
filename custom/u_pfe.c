@@ -35,7 +35,7 @@ int u_pfe_allowed = 0; /* CUSTOM undefined */
 
 #if defined(CUSTOM)
 
-    #include <sys/_types/_timeval.h>
+    #include <sys/time.h>
     #include <sys/errno.h>
     #include <sys/param.h> // MAXPATHLEN attow
     #include <sys/types.h>
@@ -1251,7 +1251,10 @@ char *
 strext(char **subject, char *with)
 {
     size_t n = strlen(*subject) + strlen(with);
-    if ((*subject = reallocf(*subject, n + 1)) == NULL) return NULL;
+    if ((*subject = realloc(*subject, n + 1)) == NULL) {
+        free(*subject);
+        return NULL;
+    }
     strlcat(*subject, with, n + 1);
     return *subject;
 }
@@ -1306,7 +1309,7 @@ u_pfe_pread(char *UNUSED(name), int count, VALUE **vals)
 
     fd_set rcs; // read check set
     while (!eoo || !eoe) {
-        FD_COPY(&rbs, &rcs);
+        memmove(&rcs, &rbs, sizeof(fd_set));
 
         int r = select(1 + ssz, &rcs, &nvm, &nvm, NULL);
         if (r < 0)
@@ -1488,7 +1491,8 @@ u_vadd_basename(char *UNUSED(name), int count, VALUE **vals)
     VALUE *strp = valv_get_strp(custname, count, vals, 0, "path");
 
     char buf[MAXPATHLEN];
-    if (!basename_r(strp->v_str->s_str, buf))
+    strlcpy(buf, basename(strp->v_str->s_str), sizeof(buf));
+    if (!*buf)
         math_error("%s: "__FILE__ ": %d: %s", custname, __LINE__,
             strerror(errno));
 
@@ -1518,7 +1522,8 @@ u_vadd_dirname(char *UNUSED(name), int count, VALUE **vals)
     VALUE *strp = valv_get_strp(custname, count, vals, 0, "path");
 
     char buf[MAXPATHLEN];
-    if (!dirname_r(strp->v_str->s_str, buf))
+    strlcpy(buf, dirname(strp->v_str->s_str), sizeof(buf));
+    if (!*buf)
         math_error("%s: "__FILE__ ": %d: %s", custname, __LINE__,
             strerror(errno));
 
