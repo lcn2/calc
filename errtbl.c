@@ -759,6 +759,8 @@ CONST struct errtbl error_table[] =
         { 10607,        "E_LOG_5",              "Cannot calculate log of 0" },
         { 10608,        "E_LOG2_4",             "Cannot calculate log base 2 of 0" },
         { 10609,        "E_LOGN_6",             "Cannot calculate log base n of 0" },
+        { 10610,        "E_INVALID_DEREF",      "Dereferencing a non-variable" },
+        { 10611,        "E_INVALID_ADDR_OP",    "Invalid arithmetic address operation" },
         /* IMPORTANT NOTE: add new entries above here and be sure their errnum numeric value is consecutive! */
 
         /* The next NULL entry must be last */

@@ -434,6 +434,8 @@ addvalue(VALUE *v1, VALUE *v2, VALUE *vres)
                         *vres = error_value(E_STRADD);
                 return;
         case TWOVAL(V_VPTR, V_NUM):
+#if defined(PERMIT_DANGEROUS_ADDRESS_ARITHMETIC)
+                /* NOTE: Defining PERMIT_DANGEROUS_ADDRESS_ARITHMETIC is NOT supported! */
                 q = v2->v_num;
                 if (qisfrac(q)) {
                         math_error("Adding non-integer to address");
@@ -442,6 +444,12 @@ addvalue(VALUE *v1, VALUE *v2, VALUE *vres)
                 i = qtoi(q);
                 vres->v_addr = v1->v_addr + i;
                 vres->v_type = V_VPTR;
+#else /* Disable arithmetic on addresses */
+                *vres = error_value(E_INVALID_ADDR_OP);
+#endif /* Disable arithmetic on addresses */
+                return;
+        case TWOVAL(V_VPTR, V_VPTR):
+                *vres = error_value(E_INVALID_ADDR_OP);
                 return;
         case TWOVAL(V_OPTR, V_NUM):
                 q = v2->v_num;
@@ -515,6 +523,8 @@ subvalue(VALUE *v1, VALUE *v2, VALUE *vres)
                         *vres = error_value(E_STRSUB);
                 return;
         case TWOVAL(V_VPTR, V_NUM):
+#if defined(PERMIT_DANGEROUS_ADDRESS_ARITHMETIC)
+                /* NOTE: Defining PERMIT_DANGEROUS_ADDRESS_ARITHMETIC is NOT supported! */
                 q = v2->v_num;
                 if (qisfrac(q)) {
                         math_error("Subtracting non-integer from address");
@@ -523,6 +533,9 @@ subvalue(VALUE *v1, VALUE *v2, VALUE *vres)
                 i = qtoi(q);
                 vres->v_addr = v1->v_addr - i;
                 vres->v_type = V_VPTR;
+#else /* Disable arithmetic on addresses */
+                *vres = error_value(E_INVALID_ADDR_OP);
+#endif /* Disable arithmetic on addresses */
                 return;
         case TWOVAL(V_OPTR, V_NUM):
                 q = v2->v_num;
@@ -1407,7 +1420,12 @@ incvalue(VALUE *vp, VALUE *vres)
                 vres->v_octet = vp->v_octet + 1;
                 break;
         case V_VPTR:
+#if defined(PERMIT_DANGEROUS_ADDRESS_ARITHMETIC)
+                /* NOTE: Defining PERMIT_DANGEROUS_ADDRESS_ARITHMETIC is NOT supported! */
                 vres->v_addr = vp->v_addr + 1;
+#else /* Disable arithmetic on addresses */
+                *vres = error_value(E_INVALID_ADDR_OP);
+#endif /* Disable arithmetic on addresses */
                 break;
         default:
                 if (vp->v_type > 0)
@@ -1443,7 +1461,12 @@ decvalue(VALUE *vp, VALUE *vres)
                 vres->v_octet = vp->v_octet - 1;
                 break;
         case V_VPTR:
+#if defined(PERMIT_DANGEROUS_ADDRESS_ARITHMETIC)
+                /* NOTE: Defining PERMIT_DANGEROUS_ADDRESS_ARITHMETIC is NOT supported! */
                 vres->v_addr = vp->v_addr - 1;
+#else /* Disable arithmetic on addresses */
+                *vres = error_value(E_INVALID_ADDR_OP);
+#endif /* Disable arithmetic on addresses */
                 break;
         default:
                 if (vp->v_type >= 0)

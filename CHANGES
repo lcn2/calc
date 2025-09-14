@@ -1,4 +1,50 @@
-The following are the changes from calc version 2.15.1.1 to date:
+The following are the changes from calc version 2.15.1.2 to 2.16.0.0:
+
+    Starting with calc version 2.16.0.0, the ability to perform arithmetic
+    on addresses of values in calc objects has been greatly restricted.
+
+    Most arithmetic on of value addresses could easily cause calc to
+    crash.  For example, prior to calc version 2.16.0.0, the following
+    command was likely to crash calc:
+
+        calc '*((&.)+1e9)'
+
+    Subtracting two value addresses is permitted, however there is NO
+    guarantee that the address of a value will remain consistent across
+    calc runs.  Addresses of values depend on the circumstances of when
+    the calc values were formed.
+
+    The above restrictions and caveats apply to addresses of values.
+    Such restrictions and caveats to NOT apply to the addresses of
+    octets, NOR to the addresses within strings.  If isptr(x) == 2, then
+    x is value-pointer and the above mentioned restrictions and caveats apply.
+
+    See "help address" for more information on value address arithmetic.
+
+    Added E_INVALID_DEREF (10610) error code to indicate the invalid
+    dereferencing a non-variable.
+
+    Added E_INVALID_ADDR_OP (10611) error code to indicate an invalid
+    arithmetic address operation.
+
+    We plan to let this most recent change settle down before performing
+    the calc v2 to calc v3 fork.  Therefore, version 2.16.1.0 will form
+    the basis for the calc v2 to calc v3 fork.
+
+
+The following are the changes from calc version 2.15.1.2 to 2.15.1.2:
+
+    Removed use of HAVE_MEMMOVE as well have_memmv.c.  Removed the
+    building and including of have_memmv.h.  Removed the memmove()
+    function in blkcpy.c, used when HAVE_MEMMOVE was NOT defined.
+    The libc memmove(3) function as defined by <string.h> is now
+    required to compile calc because the replacement code in
+    blkcpy.c q was problematic, especially when regions overlap.
+    The HAVE_MEMMOVE make symbol was removed from Makefile.config.
+    Thanks to GitHub user @skeeto for reporting this problem.
+
+
+The following are the changes from calc version 2.15.1.1 to 2.15.1.1:
 
     Change Makefile.config to, if not using not HomeBrew, then try to
     detect macports and/or using /opt/local/{lib,include}.

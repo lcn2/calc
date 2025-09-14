@@ -96,8 +96,6 @@ have_gettime
 have_gettime.h
 have_inttypes.h
 have_limits.h
-have_memmv
-have_memmv.h
 have_newstr
 have_newstr.h
 have_offscl
@@ -168,7 +166,6 @@ ll_tmp
 longbits
 longbits.h
 Makefile.our
-memmv_tmp
 newstr_tmp
 NOTES
 offscl_tmp

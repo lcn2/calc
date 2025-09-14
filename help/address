@@ -113,7 +113,7 @@ DESCRIPTION
 
     (the case of f(0) is exceptional since 27 + 0 simply copies the 27
     rather than creating a new number value).  Here it is clearly more
-    efficient to use
+    efficient to use:
 
         ; A = B = C = f(2);
 
@@ -125,11 +125,74 @@ DESCRIPTION
     and number-pointer respectively, and 0 otherwise.
 
     The output when addresses are printed consists of a description (o_ptr,
-    v_ptr, s_ptr, n_ptr) followed by : and the address printed in
-    %p format.
+    v_ptr, s_ptr, n_ptr) followed by : and the address printed in %p format.
 
-    Iteration of & is not permitted; &&X causes a "non-variable operand"
-    scan error.
+    Iteration of & is not permitted; &(&X) causes a "Addressing
+    non-addressable type" scan error.
+
+RESTRICTIONS ON VALUE ADDRESS ARITHMETIC
+    Most arithmetic operations on addresses of values are not permitted.
+    For example one may not perform arithmetic operations (like +, ++,
+    -, --, *, /, etc.) on an address of a value with a numeric value.
+
+    The reason why most arithmetic operations were removed from calc
+    because arithmetic on addresses of calc objects could easily cause
+    calc to crash.  Consider this horrific expression that was allowed
+    in calc prior to version 2.16.0.0:
+
+        ; *((&.)+1e9)           /* INVALID: for calc version >= 2.16.0.0 */
+
+    Prior to calc version 2.16.0.0, some arithmetic operations on
+    addresses of values were permitted.  Starting with calc version
+    2.16.0.0, arithmetic operations between an addresses and an integer
+    will return an error code:
+
+        ; ++p;                  /* INVALID: will be set to E_INVALID_ADDR_OP */
+        ; r = q - 2;            /* INVALID: will be set to E_INVALID_ADDR_OP */
+
+    Adding two value addresses is NOT permitted:
+
+        ; mat A[3];
+        ; p = &A[1];
+        ; q = &A[2];
+        ; s = p + q;            /* INVALID: will be set to E_INVALID_ADDR_OP */
+
+    Subtracting two value addresses is permitted, however there is NO
+    guarantee that the address of a value will remain consistent across
+    calc runs.  Addresses of values depend on the circumstances of when
+    the calc values were formed.  For example:
+
+        ; a = 3; pa = &a;
+        ; /* ... stuff happens ... */
+        ; b = 5; pb = &b;
+        ; t = pa - pb;          /* permitted: value depends on circumstances */
+
+    Subtracting value addresses of components with the same compound
+    object, such as a matrix, is permitted.  For example:
+
+        ; mat M[10] = {0,1,2,3,4,5,6,7,8,9};
+        ; i = 4; j = 5;
+        ; p = &M[i]; q = &M[j];
+        ; v = p - q;            /* permitted: value depends on circumstances */
+
+    Comparison between two value addresses is permitted, however the
+    same caveats apply as to the subtracting of addresses:
+
+        ; if (p < q) {
+        ;;    print "permitted: p is less than q";
+        ;; } else if (p == q) {
+        ;;    print "permitted: p is equal to q";
+        ;; } else {
+        ;;    print "permitted: p is greater than q";
+        ;; }
+
+    PLEASE NOTE:
+
+        The above restrictions and caveats apply to addresses of values.
+        Such restrictions and caveats to NOT apply to the addresses of
+        octets, NOR to the addresses within strings.  If isptr(x) == 2,
+        then x is value-pointer and the above mentioned restrictions
+        and caveats apply it.
 
 EXAMPLE
     Addresses for particular systems may differ from those displayed here.
@@ -160,7 +223,7 @@ LINK LIBRARY
 SEE ALSO
     dereference, isptr
 
-## Copyright (C) 1999-2006,2021  Landon Curt Noll
+## Copyright (C) 1999-2006,2021,2025  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

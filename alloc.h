@@ -1,7 +1,7 @@
 /*
  * alloc - storage allocation and storage debug macros
  *
- * Copyright (C) 1999-2007,2014  David I. Bell
+ * Copyright (C) 1999-2007,2014,2025  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -29,13 +29,15 @@
 
 
 #if defined(CALC_SRC)   /* if we are building from the calc source tree */
+# include "decl.h"
 # include "have_newstr.h"
 # include "have_string.h"
-# include "have_memmv.h"
+# include "have_const.h"
 #else
+# include <calc/decl.h>
 # include <calc/have_newstr.h>
 # include <calc/have_string.h>
-# include <calc/have_memmv.h>
+# include <calc/have_const.h>
 #endif
 
 #ifdef HAVE_STRING_H
@@ -74,16 +76,5 @@ E_FUNC int strcmp();
 #undef strchr
 #define strchr(s, c) index(s, c)
 #endif /* HAVE_NEWSTR */
-
-#if !defined(HAVE_MEMMOVE)
-# undef MEMMOVE_SIZE_T
-#if defined(FORCE_STDC) || \
-   (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
-#  define MEMMOVE_SIZE_T size_t
-# else
-#  define MEMMOVE_SIZE_T long
-# endif
-E_FUNC void *memmove(void *s1, CONST void *s2, MEMMOVE_SIZE_T n);
-#endif
 
 #endif /* !INCLUDE_ALLOC_H */
