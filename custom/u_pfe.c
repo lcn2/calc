@@ -103,8 +103,8 @@ static VALUE *u_pfe_poll_TIMEOUT_DFLT = NULL;
 /*
  * forward declarations
  */
-static size_t strlcat(char *dst, const char *src, size_t dsize);
-static size_t strlcpy(char *dst, const char *src, size_t dsize);
+static size_t private_strlcat(char *dst, const char *src, size_t dsize);
+static size_t private_strlcpy(char *dst, const char *src, size_t dsize);
 static const char * type2str(short type);
 static VALUE * associndex_int(ASSOC *assoc, long index);
 static VALUE * associndex_str(ASSOC *assoc, STRING *index);
@@ -173,7 +173,7 @@ static char * strext(char **subject, char *with);
 
 
 /*
- * strlcat - size-bounded string concatenation
+ * private_strlcat - size-bounded string concatenation
  *
  * Sadly, strlcat(3) is not portable enough for a number of supported calc v2 enviroments.
  * So we will include as a static function below, strlcat.c from:
@@ -187,7 +187,7 @@ static char * strext(char **subject, char *with);
  * If retval >= dsize, truncation occurred.
  */
 static size_t
-strlcat(char *dst, const char *src, size_t dsize)
+private_strlcat(char *dst, const char *src, size_t dsize)
 {
     const char *odst = dst;
     const char *osrc = src;
@@ -222,7 +222,7 @@ strlcat(char *dst, const char *src, size_t dsize)
 
 
 /*
- * strlcpy - size-bounded string copying
+ * private_strlcpy - size-bounded string copying
  *
  * Copy string src to buffer dst of size dsize.  At most dsize-1
  * chars will be copied.  Always NUL terminates (unless dsize == 0).
@@ -234,7 +234,7 @@ strlcat(char *dst, const char *src, size_t dsize)
  *      https://github.com/libressl/openbsd/blob/master/src/lib/libc/string/strlcpy.c
  */
 static size_t
-strlcpy(char *dst, const char *src, size_t dsize)
+private_strlcpy(char *dst, const char *src, size_t dsize)
 {
     const char *osrc = src;
     size_t nleft = dsize;
@@ -1762,7 +1762,7 @@ strext(char **subject, char *with)
         free(*subject);
         return NULL;
     }
-    strlcat(*subject, with, n + 1);
+    private_strlcat(*subject, with, n + 1);
 
     return *subject;
 }
@@ -2043,7 +2043,7 @@ u_vadd_basename(char *UNUSED(name), int count, VALUE **vals)
 
     strp = valv_get_strp(custname, count, vals, 0, "path");
 
-    strlcpy(buf, basename(strp->v_str->s_str), sizeof(buf));
+    private_strlcpy(buf, basename(strp->v_str->s_str), sizeof(buf));
     if (!*buf) {
         math_error("%s: "__FILE__ ": %d: %s", custname, __LINE__,
             strerror(errno));
@@ -2081,7 +2081,7 @@ u_vadd_dirname(char *UNUSED(name), int count, VALUE **vals)
 
     strp = valv_get_strp(custname, count, vals, 0, "path");
 
-    strlcpy(buf, dirname(strp->v_str->s_str), sizeof(buf));
+    private_strlcpy(buf, dirname(strp->v_str->s_str), sizeof(buf));
     if (!*buf) {
         math_error("%s: "__FILE__ ": %d: %s", custname, __LINE__,
             strerror(errno));
