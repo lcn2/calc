@@ -1,3 +1,21 @@
+The following are the changes from calc version 2.16.0.0 to 2.16.0.1:
+
+    Adding support for "pipe/fork/exec and friends" via custom functions
+    thanks to a contribution by GitHub user @vike2000.
+
+    We to address a bug after adding support for pipe/fork/exec (and
+    friends) via custom functions
+
+    TODO: Before the calc v2 to calc v3 fork, we need to fix a critical
+    [bug](https://github.com/lcn2/calc/issues/103#issuecomment-3194363618)
+    related to heap-use-after-free memory errors.  We anticipate this
+    will involve releasing a bug fix version of calc and then allow
+    for extensive testing before declaring the resulting 2.16.0.x as a
+    stable release.  From that 2.16.0.x stable release that a new version
+    2.16.1.0 stable release, with no changes other than a new version
+    number and git tag as the basis for the calc v2 to calc v3 fork.
+
+
 The following are the changes from calc version 2.15.1.2 to 2.16.0.0:
 
     Starting with calc version 2.16.0.0, the ability to perform arithmetic
@@ -27,10 +45,6 @@ The following are the changes from calc version 2.15.1.2 to 2.16.0.0:
     Added E_INVALID_ADDR_OP (10611) error code to indicate an invalid
     arithmetic address operation.
 
-    We plan to let this most recent change settle down before performing
-    the calc v2 to calc v3 fork.  Therefore, version 2.16.1.0 will form
-    the basis for the calc v2 to calc v3 fork.
-
 
 The following are the changes from calc version 2.15.1.2 to 2.15.1.2:
 
@@ -50,11 +64,6 @@ The following are the changes from calc version 2.15.1.1 to 2.15.1.1:
     detect macports and/or using /opt/local/{lib,include}.
 
     Put full date range (1989-2025) of calc source into version.h.
-
-    Adding support for pipe/fork/exec via custom functions thanks
-    to a contribution by GitHub user @vike2000.
-
-    Version 2.16.0.0 will form the basis for the calc v2 to calc v3 fork.
 
 
 The following are the changes from calc version 2.15.0.7 to 2.15.1.0:

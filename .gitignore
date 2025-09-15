@@ -26,6 +26,7 @@ align32.h
 align32_tmp
 arc4random_tmp
 args.h
+.cache/clangd
 cal/.all
 calc
 calc.1
@@ -37,7 +38,6 @@ cal/test082.cal
 charbit.h
 chatbit
 chk_c
-.cache/clangd
 .clang-format
 clang-format-testee.c
 compile_commands.json
@@ -56,7 +56,6 @@ cscript/simple
 cscript/square
 custom/.all
 custom/libcustcalc*
-custom/.gitignore
 debug.out
 .dynamic
 endian
@@ -186,6 +185,6 @@ uid_tmp
 unused_tmp
 ustat_tmp
 ver_calc
-vs_tmp
 .vscode
+vs_tmp
 win32/

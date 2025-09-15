@@ -33,7 +33,7 @@
 
 #include <stdio.h>
 
-#if defined(CALC_SRC)	/* if we are building from the calc source tree */
+#if defined(CALC_SRC)   /* if we are building from the calc source tree */
 # include "value.h"
 # include "have_fgetsetpos.h"
 #else
