@@ -31,9 +31,13 @@
 #define INCLUDE_FILE_H
 
 
+#include <stdio.h>
+
 #if defined(CALC_SRC)   /* if we are building from the calc source tree */
+# include "value.h"
 # include "have_fgetsetpos.h"
 #else
+# include <calc/value.h>
 # include <calc/have_fgetsetpos.h>
 #endif
 
