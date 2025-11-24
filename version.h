@@ -64,7 +64,7 @@
 #define MAJOR_VER       2       /* level 1: major library version */
 #define MINOR_VER       16      /* level 2: minor library version */
 #define MAJOR_PATCH     0       /* level 3: major software version level */
-#define MINOR_PATCH     0       /* level 4: minor software version level */
+#define MINOR_PATCH     1       /* level 4: minor software version level */
 
 /*
  * Defining PERMIT_DANGEROUS_ADDRESS_ARITHMETIC is NOT supported!
