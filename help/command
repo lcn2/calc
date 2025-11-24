@@ -245,6 +245,8 @@ Command sequence
     ---------
     help $var
     help name
+    man $var
+    man name
 
         This displays a help related to 'name' or general
         help of none is given.
@@ -260,6 +262,8 @@ Command sequence
         In the 2nd form, the filename argument is treated as a literal
         string, not a variable.  In this form, the name can be quoted
         if desired.
+
+        The man command alias for help.
 
 
     =-=
