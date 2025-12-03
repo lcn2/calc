@@ -55,6 +55,7 @@
 # PREFIX:= /usr/local
 # BINDIR:= ${PREFIX}/bin
 # LIBDIR:= ${PREFIX}/lib
+# MANDIR:= ${PREFIX}/share/man/man1
 # CALC_SHAREDIR:= ${PREFIX}/share/calc
 # CALC_INCDIR:= ${PREFIX}/include/calc
 ####
