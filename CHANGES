@@ -1,4 +1,4 @@
-The following are the changes from calc version 2.16.0.1 to date:
+The following are the changes from calc version 2.16.0.1 to 2.16.0.2:
 
     Fixed bug, when custom functions were enabled, where returning a
     value from the sysinfo custom function such as:
