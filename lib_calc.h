@@ -83,6 +83,8 @@ EXTERN char *calc_history;
  * calc help
  */
 EXTERN char *calc_helpdir;
+#if defined(CUSTOM)
 EXTERN char *calc_customhelpdir;
+#endif /* CUSTOM */
 
 #endif /* !INCLUDE_MATH_ERROR_H */

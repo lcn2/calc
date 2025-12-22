@@ -62,6 +62,7 @@
 #define HIST_INITED     1       /* initialization is already done */
 #define HIST_NOFILE     2       /* bindings file could not be read */
 #define HIST_NOTTY      3       /* terminal modes could not be set */
+#define HIST_NULL_HIST  4       /* failed to set non-NULL name of history file in calc_history */
 
 
 E_FUNC  int     hist_init(char *filename);

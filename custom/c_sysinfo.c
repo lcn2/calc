@@ -333,11 +333,10 @@ c_sysinfo(char *UNUSED(name), int count, VALUE **vals)
         } else if (vals[0]->v_type == V_STR) {
 
                 /* convert vals[0] to upper case string */
-                buf = (char *)malloc(strlen((char *)vals[0]->v_str->s_str)+1);
-                for (q = (char *)vals[0]->v_str->s_str, r = buf; *q; ++q, ++r)
-                {
+                buf = (char *)calloc(strlen((char *)vals[0]->v_str->s_str)+1, sizeof(char));
+                for (q = (char *)vals[0]->v_str->s_str, r = buf; *q; ++q, ++r) {
                         if (isascii((int)*q) && islower((int)*q)) {
-                                *r = *q - 'a' + 'A';
+                                *r = toupper((int)*q);
                         } else {
                                 *r = *q;
                         }
@@ -358,12 +357,18 @@ c_sysinfo(char *UNUSED(name), int count, VALUE **vals)
                                         /* return value as string */
                                         result.v_type = V_STR;
                                         result.v_subtype = V_NOSUBTYPE;
-                                        result.v_str = makestring(p->str);
+                                        result.v_str = makenewstring(p->str);
                                 }
 
                                 /* return found infotype as value */
                                 break;
                         }
+                }
+
+                /* free converted upper case string buffer */
+                if (buf != NULL) {
+                    free(buf);
+                    buf = NULL;
                 }
 
         /*

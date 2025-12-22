@@ -155,7 +155,9 @@ char *shell = NULL;             /* $SHELL or default */
 char *calc_history = NULL;      /* $CALCHISTFILE or ~/.calc_history */
 char *calc_helpdir = NULL;      /* $CALCHELP or /usr/local/share/calc/help */
 /* $CALCCUSTOMHELP or /usr/local/share/calc/custhelp */
+#if defined(CUSTOM)
 char *calc_customhelpdir = NULL;
+#endif /* CUSTOM */
 int stdin_tty = false;          /* true if stdin is a tty */
 int havecommands = false;       /* true if have one or more cmd args */
 long stoponerror = 0;           /* >0 => stop, <0 => continue, ==0 => use -c */
@@ -477,13 +479,35 @@ cvmalloc_error(char *message)
 
 
 /*
- * initenv - obtain $CALCPATH, $CALCRC, $CALCBINDINGS, $HOME, $PAGER
- * and $SHELL values
+ * initenv - obtain various environment variable values.
  *
- * If $CALCPATH, $CALCRC, $CALCBINDINGS, $PAGER or $SHELL do not exist,
- * use the default values.  If $PAGER or $SHELL is an empty string, also
- * use a default value. If $HOME does not exist, or is empty, use the home
- * directory information from the password file.
+ * If these environment variables do not exist, or is an empty string,
+ * use the default values as found in calc.h:
+ *
+ *      $CALCPATH               set calcpath
+ *      $CALCRC                 set calcrc
+ *      $CALCBINDINGS           set calcbindings
+ *      $HOME                   set home
+ *      $PAGER                  set pager
+ *      $SHELL                  set shell
+ *
+ *      $CALCHISTFILE           set calc_history
+ *                              NOTE: calc_history may be set to NULL by this function.
+ *
+ *      $CALCHELP               set calc_helpdir
+ *
+ *      $CALCCUSTOMHELP         set calc_customhelpdir
+ *                              NOTE: Only set if CUSTOM is defined.
+ *
+ * If $HOME does not exist, or is empty, use the home directory information
+ * the from the password file if possible, otherwise use "." (dot).
+ *
+ * In all cases EXCEPT calc_history, the obtained value will NOT be NULL.
+ * In the case of calc_history == NULL, the calc history file will be
+ * set to "~/.calc_history" when hist_init() is called later on.
+ *
+ * In all cases, the obtained value is a strdup-ed value so that the
+ * final call to libcalc_call_me_last() can free the non-NULL string.
  */
 S_FUNC void
 initenv(void)
@@ -496,14 +520,24 @@ initenv(void)
         /* determine the $CALCPATH value */
         c = (no_env ? NULL : getenv(CALCPATH));
         calcpath = (c ? strdup(c) : NULL);
-        if (calcpath == NULL)
-                calcpath = DEFAULTCALCPATH;
+        if (calcpath == NULL || *calcpath == '\0') {
+                calcpath = strdup(DEFAULTCALCPATH);
+        }
+        if (calcpath == NULL) {
+                math_error("Unable to allocate string for calcpath");
+                not_reached();
+        }
 
         /* determine the $CALCRC value */
         c = (no_env ? NULL : getenv(CALCRC));
         calcrc = (c ? strdup(c) : NULL);
-        if (calcrc == NULL)
-                calcrc = DEFAULTCALCRC;
+        if (calcrc == NULL || *calcrc == '\0') {
+                calcrc = strdup(DEFAULTCALCRC);
+        }
+        if (calcrc == NULL) {
+                math_error("Unable to allocate string for calcrc");
+                not_reached();
+        }
         if (strlen(calcrc) > MAX_CALCRC) {
                 math_error("The $CALCRC variable is longer than %d chars",
                            MAX_CALCRC);
@@ -513,8 +547,13 @@ initenv(void)
         /* determine the $CALCBINDINGS value */
         c = (no_env ? NULL : getenv(CALCBINDINGS));
         calcbindings = (c ? strdup(c) : NULL);
-        if (calcbindings == NULL)
-                calcbindings = DEFAULTCALCBINDINGS;
+        if (calcbindings == NULL || *calcbindings == '\0') {
+                calcbindings = strdup(DEFAULTCALCBINDINGS);
+        }
+        if (calcbindings == NULL) {
+                math_error("Unable to allocate string for calcbindings");
+                not_reached();
+        }
 
         /* determine the $HOME value */
         c = (no_env ? NULL : getenv(HOME));
@@ -524,6 +563,7 @@ initenv(void)
                 /* free home if it was previously allocated, but empty */
                 if (home != NULL) {
                         free(home);
+                        home = NULL;
                 }
                 /* just assume . is home if all else fails */
                 home = strdup(".");
@@ -533,6 +573,7 @@ initenv(void)
                 /* free home if it was previously allocated, but empty */
                 if (home != NULL) {
                         free(home);
+                        home = NULL;
                 }
                 /* try using the home directory of current effective UID */
                 ent = (struct passwd *)getpwuid(geteuid());
@@ -546,36 +587,51 @@ initenv(void)
                 }
         }
 #endif /* Windows free systems */
-        /* paranoia */
         if (home == NULL) {
-                math_error("Unable to allocate string for $HOME");
+                math_error("Unable to allocate string for home");
                 not_reached();
         }
 
         /* determine the $PAGER value */
         c = (no_env ? NULL : getenv(PAGER));
         pager = (c ? strdup(c) : NULL);
-        if (pager == NULL || *pager == '\0')
-                pager = DEFAULTCALCPAGER;
+        if (pager == NULL || *pager == '\0') {
+                pager = strdup(DEFAULTCALCPAGER);
+        }
+        if (pager == NULL) {
+                math_error("Unable to allocate string for pager");
+                not_reached();
+        }
 
         /* determine the $SHELL value */
         c = (no_env ? NULL : getenv(SHELL));
         shell = (c ? strdup(c) : NULL);
-        if (shell == NULL || *shell == '\0')
-                shell = DEFAULTSHELL;
+        if (shell == NULL || *shell == '\0') {
+                shell = strdup(DEFAULTSHELL);
+        }
+        if (shell == NULL) {
+                math_error("Unable to allocate string for shell");
+                not_reached();
+        }
 
         /* determine the $CALCHISTFILE value */
         c = (no_env ? NULL : getenv(CALCHISTFILE));
         calc_history = (c ? strdup(c) : NULL);
-        if (calc_history == NULL || *calc_history == '\0')
+        if (calc_history == NULL || *calc_history == '\0') {
                 calc_history = NULL;    /* will use ~/.calc_history */
+        }
+        /* NOTE: calc_history may be set to NULL in which case hist_init() may set it later on */
 
         /* determine the $CALCHELP value */
         c = (no_env ? NULL : getenv(CALCHELP));
         calc_helpdir = (c ? strdup(c) : NULL);
         if (calc_helpdir == NULL || *calc_helpdir == '\0') {
                 /* will use /usr/local/share/calc/help */
-                calc_helpdir = HELPDIR;
+                calc_helpdir = strdup(HELPDIR);
+        }
+        if (calc_helpdir == NULL) {
+                math_error("Unable to allocate string for calc_helpdir");
+                not_reached();
         }
 
 #if defined(CUSTOM)
@@ -584,7 +640,11 @@ initenv(void)
         calc_customhelpdir = (c ? strdup(c) : NULL);
         if (calc_customhelpdir == NULL || *calc_customhelpdir == '\0') {
                 /* will use /usr/local/share/calc/custhelp */
-                calc_customhelpdir = CUSTOMHELPDIR;
+                calc_customhelpdir = strdup(CUSTOMHELPDIR);
+        }
+        if (calc_customhelpdir == NULL) {
+                math_error("Unable to allocate string for calc_customhelpdir");
+                not_reached();
         }
 #endif /* CUSTOM */
 }
@@ -596,6 +656,8 @@ initenv(void)
  * Anything that uses libcalc.a can call this function after they are
  * completely finished with libcalc.a processing.  The only effect of
  * this function is to free storage that might otherwise go unused.
+ *
+ * This function also frees any non-NULL values set by initenv().
  *
  * NOTE: If, for any reason, you need to do more libcalc.a processing,
  *       then you will need to call libcalc_call_me_first() again.
@@ -647,6 +709,48 @@ libcalc_call_me_last(void)
          * free all globals
          */
         freeglobals();
+
+        /*
+         * free non-NULL strdup values set by initenv()
+         */
+        if (calcpath != NULL) {
+            free(calcpath);
+            calcpath = NULL;
+        }
+        if (calcrc != NULL) {
+            free(calcrc);
+            calcrc = NULL;
+        }
+        if (calcbindings != NULL) {
+            free(calcbindings);
+            calcbindings = NULL;
+        }
+        if (home != NULL) {
+            free(home);
+            home = NULL;
+        }
+        if (pager != NULL) {
+            free(pager);
+            pager = NULL;
+        }
+        if (shell != NULL) {
+            free(shell);
+            shell = NULL;
+        }
+        if (calc_history != NULL) {
+            free(calc_history);
+            calc_history = NULL;
+        }
+        if (calc_helpdir != NULL) {
+            free(calc_helpdir);
+            calc_helpdir = NULL;
+        }
+#if defined(CUSTOM)
+        if (calc_customhelpdir != NULL) {
+            free(calc_customhelpdir);
+            calc_customhelpdir = NULL;
+        }
+#endif /* CUSTOM */
 
         /*
          * all done

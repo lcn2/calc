@@ -833,8 +833,9 @@ ttychar(void)
                 int ret;
 
                 cmd = charbuf + 1;
-                if (*cmd == '\0' || *cmd == '\n')
-                        cmd = shell;
+                if (*cmd == '\0' || *cmd == '\n') {
+                        cmd = (shell == NULL) ? DEFAULTSHELL : shell;
+                }
                 if (allow_exec) {
                         if (conf->calc_debug & CALCDBG_SYSTEM) {
                                 printf("%s\n", cmd);

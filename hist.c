@@ -920,8 +920,10 @@ uppercase_word(int UNUSED(key))
         while ((HS.pos < HS.end) && !in_word((int)(*HS.pos)))
                 echo_char(*HS.pos++);
         while ((HS.pos < HS.end) && in_word((int)(*HS.pos))) {
-                if ((*HS.pos >= 'a') && (*HS.pos <= 'z'))
-                        *HS.pos += 'A' - 'a';
+                /* convert ASCII lower case to UPPER CASE */
+                if (isascii((int)(*HS.pos)) && islower((int)(*HS.pos))) {
+                        *HS.pos = toupper((int)(*HS.pos));
+                }
                 echo_char(*HS.pos++);
         }
 }
@@ -933,8 +935,10 @@ lowercase_word(int UNUSED(key))
         while ((HS.pos < HS.end) && !in_word((int)(*HS.pos)))
                 echo_char(*HS.pos++);
         while ((HS.pos < HS.end) && in_word((int)(*HS.pos))) {
-                if ((*HS.pos >= 'A') && (*HS.pos <= 'Z'))
-                        *HS.pos += 'a' - 'A';
+                /* convert ASCII UPPER CASE to lower case */
+                if (isascii((int)(*HS.pos)) && isupper((int)(*HS.pos))) {
+                        *HS.pos = tolower((int)(*HS.pos));
+                }
                 echo_char(*HS.pos++);
         }
 }
@@ -1560,6 +1564,8 @@ my_stifle_history (void)
 int
 hist_init(char *UNUSED(filename))
 {
+        char *expanded = NULL;          /* tilde_expand of ~/.calc_history */
+
         /* used when parsing conditionals in ~/.inputrc */
         rl_readline_name = "calc";
 
@@ -1568,7 +1574,19 @@ hist_init(char *UNUSED(filename))
 
         /* name of history file */
         if (calc_history == NULL) {
-                calc_history = tilde_expand("~/.calc_history");
+                /* for info in tilde_expand see the readine(3) man page */
+                expanded = tilde_expand("~/.calc_history");
+                if (expanded == NULL) {
+                        /* tilde_expand failed, default to just .calc_history */
+                        calc_history = strdup(".calc_history");
+                } else {
+                        calc_history = strdup(expanded);
+                }
+        }
+
+        /* paranoia */
+        if (calc_history == NULL) {
+            return HIST_NULL_HIST;
         }
 
         /* read previous history */

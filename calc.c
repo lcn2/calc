@@ -611,6 +611,11 @@ main(int argc, char **argv)
                                 "%s: Cannot set terminal modes, "
                                 "fancy editing disabled\n", program);
                         break;
+                case HIST_NULL_HIST:
+                        fprintf(stderr,
+                                "%s: failed to determine name of history file, "
+                                "fancy editing disabled\n", program);
+                        break;
                 }
         }
 

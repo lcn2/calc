@@ -1,3 +1,38 @@
+The following are the changes from calc version 2.16.0.1 to date:
+
+    Fixed bug, when custom functions were enabled, where returning a
+    value from the sysinfo custom function such as:
+
+        custom("sysinfo","DEFAULTSHELL")
+
+    would cause a segmentation violation due to an improper `free(3)`.
+
+    Fixed a memory leak that was related to the sysinfo custom function.
+
+    Added paranoia checks on shell value when processing commands
+    read from the tty that start with the "!" character.
+
+    Improved code that converts between UPPER CASE and lower case.
+
+    Verify that the default underlying shell defaults to the shell
+    as given by the `$SHELL` environment variable if that environment
+    variable is set and is NOT empty, otherwise the `DEFAULTSHELL`
+    (as defined in `calc.h`) value will be used as the underlying shell.
+
+    Fixed memory leaks related to various environment variable values
+    used by calc code.  All various environment variable values used
+    used by calc code are processed by `strdup(3)`.
+
+    The `libcalc_call_me_last()` function frees any non-NULL values set
+    by `initenv()`.
+
+    If the readline tilde_expand fails to expand "~/.calc_history",
+    then ".calc_history" will be used as the name of the history file.
+
+    Added HIST_NULL_HIST code to indicate that name of the history file
+    could not be set.
+
+
 The following are the changes from calc version 2.16.0.0 to 2.16.0.1:
 
     Adding support for "pipe/fork/exec and friends" via custom functions
