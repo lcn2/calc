@@ -931,16 +931,38 @@ runrcfiles(void)
         char *cp;
         char *p;
 
+        /* paranoia, be sure we have a non-NULL calcrc */
+        if (calcrc == NULL) {
+            calcrc = strdup(DEFAULTCALCRC);
+        }
+        if (calcrc == NULL) {
+            fprintf(stderr, "failed to strdup DEFAULTCALCRC: %s\n", DEFAULTCALCRC);
+            return;
+        }
+
+        /* free any previous value in working_calcrc */
+        if (working_calcrc != NULL) {
+            free(working_calcrc);
+            working_calcrc = NULL;
+        }
+
+        /* clone calcrc into working_calcrc */
+        working_calcrc = strdup(DEFAULTCALCRC);
+        if (working_calcrc == NULL) {
+            fprintf(stderr, "failed to strdup calcrc: %s\n", calcrc);
+            return;
+        }
+
         /* execute each file in the list */
-        while (calcrc != NULL && *calcrc) {
-                cp = calcrc;
-                calcrc = (char *) strchr(calcrc + 1, LISTCHAR);
+        while (working_calcrc != NULL && *working_calcrc) {
+                cp = working_calcrc;
+                working_calcrc = (char *) strchr(working_calcrc + 1, LISTCHAR);
 
                 /* load file name into the path */
                 if (calcrc == NULL) {
                         strlcpy(path, cp, MAX_CALCRC+1);
                 } else {
-                        strlcpy(path, cp, calcrc - cp + 1);
+                        strlcpy(path, cp, working_calcrc - cp + 1);
                 }
 
                 /* find the start of the path */
@@ -959,6 +981,12 @@ runrcfiles(void)
                 }
                 getcommands(FALSE);
                 closeinput();
+        }
+
+        /* free working_calcrc */
+        if (working_calcrc != NULL) {
+            free(working_calcrc);
+            working_calcrc = NULL;
         }
 }
 

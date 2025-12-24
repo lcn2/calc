@@ -148,6 +148,7 @@ int s_flag = false;     /* true => keep args as strings for argv() */
  */
 char *calcpath = NULL;          /* $CALCPATH or default */
 char *calcrc = NULL;            /* $CALCRC or default */
+char *working_calcrc = NULL;    /* working copy of calcrc used by runrcfiles() */
 char *calcbindings = NULL;      /* $CALCBINDINGS or default */
 char *home = NULL;              /* $HOME or default */
 char *pager = NULL;             /* $PAGER or default */
@@ -720,6 +721,10 @@ libcalc_call_me_last(void)
         if (calcrc != NULL) {
             free(calcrc);
             calcrc = NULL;
+        }
+        if (working_calcrc != NULL) {
+            free(working_calcrc);
+            working_calcrc = NULL;
         }
         if (calcbindings != NULL) {
             free(calcbindings);

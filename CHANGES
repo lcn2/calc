@@ -9,6 +9,8 @@ The following are the changes from calc version 2.16.0.2 to date;
     Thanks go to the GitHub user @mengrj for reporting this problem
     in issue #174 in a clear and concise way such that we were able
     to fix this problem.
+    
+    Fixed minor memory leak of `calcrc` in `runrcfiles()`.
 
 
 The following are the changes from calc version 2.16.0.1 to 2.16.0.2:

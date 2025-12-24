@@ -226,6 +226,7 @@ EXTERN int calc_errno;  /* global calc_errno value */
 
 EXTERN char *calcpath;  /* $CALCPATH or default */
 EXTERN char *calcrc;    /* $CALCRC or default */
+EXTERN char *working_calcrc;    /* working copy of calcrc used by runrcfiles() */
 EXTERN char *calcbindings;      /* $CALCBINDINGS or default */
 EXTERN char *home;              /* $HOME or default */
 EXTERN char *shell;             /* $SHELL or default */
