@@ -928,6 +928,7 @@ void
 runrcfiles(void)
 {
         char path[MAX_CALCRC+1+1];      /* name being searched for */
+        char *working_calcrc = NULL;
         char *cp;
         char *p;
 
@@ -938,12 +939,6 @@ runrcfiles(void)
         if (calcrc == NULL) {
             fprintf(stderr, "failed to strdup DEFAULTCALCRC: %s\n", DEFAULTCALCRC);
             return;
-        }
-
-        /* free any previous value in working_calcrc */
-        if (working_calcrc != NULL) {
-            free(working_calcrc);
-            working_calcrc = NULL;
         }
 
         /* clone calcrc into working_calcrc */

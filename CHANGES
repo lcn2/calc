@@ -10,7 +10,19 @@ The following are the changes from calc version 2.16.0.2 to date;
     in issue #174 in a clear and concise way such that we were able
     to fix this problem.
     
-    Fixed minor memory leak of `calcrc` in `runrcfiles()`.
+    Fixed a problem where `calcrc` as modified in `runrcfiles()`.
+
+    Reduced `MAXCMD` (maximum length of command invocation) in `calv.h`
+    from 16384 to 5120.  On most systems, commands longer than 5.6k would
+    hit the soft stack size limit and trigger a stack overflow condition
+    causing calc to crash with a SIGSEGV (segmentation violation).
+
+    If you need a super-long calc commands, consider increasing
+    the `MAXCMD` value in `calc.h`, and increase the stack size
+    limits for your calc run.  For example under Linux to increase
+    the maximum stack size to 2^28 bytes:
+
+        prlimit --stack=268435456 calc
 
 
 The following are the changes from calc version 2.16.0.1 to 2.16.0.2:

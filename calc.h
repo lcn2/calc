@@ -64,7 +64,7 @@
 #else
 #define LISTCHAR        ':'     /* char which separates paths in a list */
 #endif
-#define MAXCMD          16384   /* maximum length of command invocation */
+#define MAXCMD          5120    /* maximum length of command invocation */
 
 #define SYMBOLSIZE      256     /* maximum symbol name size */
 #define MAXLABELS       100     /* maximum number of user labels in function */
@@ -226,7 +226,6 @@ EXTERN int calc_errno;  /* global calc_errno value */
 
 EXTERN char *calcpath;  /* $CALCPATH or default */
 EXTERN char *calcrc;    /* $CALCRC or default */
-EXTERN char *working_calcrc;    /* working copy of calcrc used by runrcfiles() */
 EXTERN char *calcbindings;      /* $CALCBINDINGS or default */
 EXTERN char *home;              /* $HOME or default */
 EXTERN char *shell;             /* $SHELL or default */
