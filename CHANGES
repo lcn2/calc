@@ -10,8 +10,6 @@ The following are the changes from calc version 2.16.0.2 to date:
     in issue #174 in a clear and concise way such that we were able
     to fix this problem.
 
-    Fixed a problem where `calcrc` as modified in `runrcfiles()`.
-
     Reduced `MAXCMD` (maximum length of command invocation) in `calv.h`
     from 16384 to 5120.  On most systems, commands longer than 5.6k would
     hit the soft stack size limit and trigger a stack overflow condition
