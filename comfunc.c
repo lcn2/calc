@@ -1,7 +1,7 @@
 /*
  * comfunc - extended precision complex arithmetic non-primitive routines
  *
- * Copyright (C) 1999-2007,2021-2023  David I. Bell, Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023,2025  David I. Bell, Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -441,6 +441,11 @@ c_root(COMPLEX *c, NUMBER *q, NUMBER *epsilon)
  * Calculate the complex exponential function to the desired accuracy.
  * We use the formula:
  *      exp(a + bi) = exp(a) * (cos(b) + i * sin(b)).
+ *
+ * IMPORTANT NOTE: This function will return NULL when
+ *                 qexp(NUMBER *q, NUMBER *epsilon) returns NULL because
+ *                 "Too-large re(argument) for exp" resulting
+ *                 in an E_EXP_3 error.
  */
 COMPLEX *
 c_exp(COMPLEX *c, NUMBER *epsilon)
@@ -649,6 +654,12 @@ c_log2(COMPLEX *c, NUMBER *epsilon)
  * Calculate the complex cosine within the specified accuracy.
  * This uses the formula:
  *      cos(x) = (exp(1i * x) + exp(-1i * x))/2;
+ *
+ * IMPORTANT NOTE: This function will return NULL when
+ *                 c_exp(COMPLEX *c, NUMBER *epsilon) return NULL because
+ *                 qexp(NUMBER *q, NUMBER *epsilon) returns NULL because
+ *                 "Too-large re(argument) for exp" resulting
+ *                 in an E_COS_3 error.
  */
 COMPLEX *
 c_cos(COMPLEX *c, NUMBER *epsilon)
@@ -699,6 +710,12 @@ c_cos(COMPLEX *c, NUMBER *epsilon)
  * Calculate the complex sine within the specified accuracy.
  * This uses the formula:
  *      sin(x) = (exp(1i * x) - exp(-i1*x))/(2i).
+ *
+ * IMPORTANT NOTE: This function will return NULL when
+ *                 c_exp(COMPLEX *c, NUMBER *epsilon) return NULL because
+ *                 qexp(NUMBER *q, NUMBER *epsilon) returns NULL because
+ *                 "Too-large re(argument) for exp" resulting
+ *                 in an E_SIN_3 error.
  */
 COMPLEX *
 c_sin(COMPLEX *c, NUMBER *epsilon)
@@ -753,6 +770,13 @@ c_sin(COMPLEX *c, NUMBER *epsilon)
 }
 
 
+/*
+ * IMPORTANT NOTE: This function will return NULL when
+ *                 c_exp(COMPLEX *c, NUMBER *epsilon) return NULL because
+ *                 qexp(NUMBER *q, NUMBER *epsilon) returns NULL because
+ *                 "Too-large re(argument) for exp" resulting
+ *                 in an E_COSH_3 or E_TANH_4 or E_COTH_3 or E_SECH_3 error.
+ */
 COMPLEX *
 c_cosh(COMPLEX *c, NUMBER *epsilon)
 {
@@ -775,6 +799,13 @@ c_cosh(COMPLEX *c, NUMBER *epsilon)
 }
 
 
+/*
+ * IMPORTANT NOTE: This function will return NULL when
+ *                 c_exp(COMPLEX *c, NUMBER *epsilon) return NULL because
+ *                 qexp(NUMBER *q, NUMBER *epsilon) returns NULL because
+ *                 "Too-large re(argument) for exp" resulting
+ *                 in an E_SINH_3 or E_TANH_3 or E_COTH_4 or E_CSCH_3 error.
+ */
 COMPLEX *
 c_sinh(COMPLEX *c, NUMBER *epsilon)
 {
@@ -1326,6 +1357,13 @@ c_acsch(COMPLEX *c, NUMBER *epsilon)
 }
 
 
+/*
+ * IMPORTANT NOTE: This function will return NULL when
+ *                 c_exp(COMPLEX *c, NUMBER *epsilon) return NULL because
+ *                 qexp(NUMBER *q, NUMBER *epsilon) returns NULL because
+ *                 "Too-large re(argument) for exp" resulting
+ *                 in an E_GD_3 error.
+ */
 COMPLEX *
 c_gd(COMPLEX *c, NUMBER *epsilon)
 {
@@ -1487,6 +1525,12 @@ c_polar(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 /*
  * Raise one complex number to the power of another one to within the
  * specified error.
+ *
+ * IMPORTANT NOTE: This function will return NULL when
+ *                 c_exp(COMPLEX *c, NUMBER *epsilon) return NULL because
+ *                 qexp(NUMBER *q, NUMBER *epsilon) returns NULL because
+ *                 "Too-large re(argument) for exp" resulting
+ *                 in an E_POWER_4 error.
  */
 COMPLEX *
 c_power(COMPLEX *c1, COMPLEX *c2, NUMBER *epsilon)

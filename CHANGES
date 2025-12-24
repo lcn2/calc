@@ -1,3 +1,16 @@
+The following are the changes from calc version 2.16.0.2 to date;
+
+    The segmentation fault as reported in issue #174 has been fixed.
+    When the `powervalue()` function was expanded to (in `value.c`), to
+    process complex powers, the author forgot that the function `c_power()`
+    returns NULL when the result is too large to represent in memory.  Now,
+    when `c_power()` returns NULL within the `powervalue()` function, the
+    `E_POWER_4` math error ("Too-large value for power") will be raised.
+    Thanks go to the GitHub user @mengrj for reporting this problem
+    in issue #174 in a clear and concise way such that we were able
+    to fix this problem.
+
+
 The following are the changes from calc version 2.16.0.1 to 2.16.0.2:
 
     Fixed bug, when custom functions were enabled, where returning a

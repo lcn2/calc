@@ -1,7 +1,7 @@
 /*
  * value - generic value manipulation routines
  *
- * Copyright (C) 1999-2007,2014,2017,2021-2023  David I. Bell
+ * Copyright (C) 1999-2007,2014,2017,2021-2023,2025  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -2055,7 +2055,7 @@ powervalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 {
         unsigned int twoval_as_uint;    /* TWOVAL(a,b) or TWOVAL_INVALID */
         NUMBER *epsilon;
-        COMPLEX *c, ctmp1, ctmp2;
+        COMPLEX *c = NULL, ctmp1, ctmp2;
 
         vres->v_subtype = V_NOSUBTYPE;
         if (v1->v_type <= 0) {
@@ -2126,6 +2126,10 @@ powervalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
         /*
          * Here for any complex result.
          */
+        if (c == NULL) {
+            *vres = error_value(E_POWER_4);
+            return;
+        }
         vres->v_type = V_COM;
         vres->v_com = c;
         if (cisreal(c)) {
