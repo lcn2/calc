@@ -1,4 +1,4 @@
-The following are the changes from calc version 2.16.0.2 to date;
+The following are the changes from calc version 2.16.0.2 to date:
 
     The segmentation fault as reported in issue #174 has been fixed.
     When the `powervalue()` function was expanded to (in `value.c`), to
@@ -9,7 +9,7 @@ The following are the changes from calc version 2.16.0.2 to date;
     Thanks go to the GitHub user @mengrj for reporting this problem
     in issue #174 in a clear and concise way such that we were able
     to fix this problem.
-    
+
     Fixed a problem where `calcrc` as modified in `runrcfiles()`.
 
     Reduced `MAXCMD` (maximum length of command invocation) in `calv.h`
@@ -23,6 +23,8 @@ The following are the changes from calc version 2.16.0.2 to date;
     the maximum stack size to 2^28 bytes:
 
         prlimit --stack=268435456 calc
+
+    Recommend `-fstack-protector-all` in `Makefile.local` comments.
 
 
 The following are the changes from calc version 2.16.0.1 to 2.16.0.2:

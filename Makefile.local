@@ -74,7 +74,7 @@
 # FSANITIZE+= -fsanitize=nullability-arg
 # FSANITIZE+= -fsanitize=nullability-assign
 # FSANITIZE+= -fsanitize=nullability-return
-# CFLAGS+= ${FSANITIZE}
+# CFLAGS+= ${FSANITIZE} -fstack-protector-all
 # LDFLAGS+= ${FSANITIZE}
 # DEBUG:= -O0 -g3
 ####
@@ -95,7 +95,7 @@
 # To use the Address Sanitizer, uncomment this set set of lines and recompile (make clobber all):
 #
 # FSANITIZE+= -fsanitize=bounds
-# CFLAGS+= ${FSANITIZE}
+# CFLAGS+= ${FSANITIZE} -fstack-protector-all
 # LDFLAGS+= ${FSANITIZE}
 # DEBUG:= -O0 -g3
 ###
