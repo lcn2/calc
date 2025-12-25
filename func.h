@@ -56,13 +56,13 @@ struct func {
 /*
  * Amount of space needed to allocate a function of n opcodes.
  */
-#define funcsize(n) (sizeof(FUNC) + (n) * sizeof(long))
+#define funcsize(n) (sizeof(FUNC) + ((n) * sizeof(unsigned long)))
 
 
 /*
  * Size of a character pointer rounded up to a number of opcodes.
  */
-#define PTR_SIZE ((sizeof(char *) + sizeof(long) - 1) / sizeof(long))
+#define PTR_SIZE ((sizeof(char *) + sizeof(unsigned long) - 1) / sizeof(unsigned long))
 
 
 /*

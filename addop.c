@@ -153,7 +153,7 @@ beginfunc(char *name, bool newflag)
         maxopcodes = OPCODEALLOCSIZE;
         fp = functemplate;
         if (newflag) {
-                fp = (FUNC *) malloc(funcsize(maxopcodes));
+                fp = (FUNC *) calloc(funcsize(maxopcodes), 1);
                 if (fp == NULL) {
                         math_error("Cannot allocate temporary function");
                         not_reached();
