@@ -1,4 +1,4 @@
-The following are the changes from calc version 2.16.0.2 to 2.16.0.3::
+The following are the changes from calc version 2.16.0.2 to 2.16.0.3:
 
     The segmentation fault as reported in issue #174 has been fixed.
     When the `powervalue()` function was expanded to (in `value.c`), to
