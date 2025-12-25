@@ -72,6 +72,8 @@
 
 #if defined(HAVE_B64)
 
+/* BTW: BASEB is effectively HALF_BITS */
+
 #define BASEB   32                      /* use base 2^32 */
 typedef USB32 HALF;                     /* unit of number storage */
 typedef SB32 SHALF;                     /* signed HALF */
@@ -118,8 +120,8 @@ typedef SB32 SFULL;                     /* signed FULL */
 #define BASE1   (BASE - (FULL)1)                /* one less than base */
 #define BASEDIG ((BASEB/16)*5)                  /* number of digits in base */
 #define FULL_BITS (2*BASEB)                     /* bits in a FULL */
-#define HALF_LEN (sizeof(HALF))                 /* length of HALF in bites */
-#define FULL_LEN (sizeof(FULL))                 /* length of FULL in bites */
+#define HALF_LEN (sizeof(HALF))                 /* length of HALF in bytes */
+#define FULL_LEN (sizeof(FULL))                 /* length of FULL in bytes */
 
 
 /*
@@ -233,23 +235,33 @@ typedef uintptr_t LEN;                  /* unit of length storage */
 /*
  * MAXDATA - largest data object in bytes we will use
  *
- * We start with MAXDATA as 1/16 of the maximum address space.
- * We limit to 1/16 because for a maximum complex value we
+ * We start with MAXDATA as 1 less than 1/8 of the maximum address space.
+ * We limit to 1/8 because for a maximum complex value we
  * will need 4 huge integers, plus other data, code and stack space.
+ *
+ * NOTE: MAXDATA must be 1 less than a power of 2.
+ * NOTE: MAXDATA_LOG2 is the log base 2 of MAXDATA+1.
  */
 #if MAJOR_VER < 3
-#define MAXDATA (0x80000000>>3)         /* calc v2 compatible supported address space */
+#define MAXDATA_LOG2 (28)                       /* as defined by calc v2 */
+#define MAXDATA ((1<<MAXDATA_LOG2) - 1)         /* calc v2 compatible supported address space */
 #else /* MAJOR_VER < 3 */
-#define MAXDATA ((LEN) 1<<(UINTPTR_WIDTH-4))    /* 1/16 of address space */
+#define MAXDATA_LOG2 (UINTPTR_WIDTH - 3)        /* 1/8 of address space */
+#define MAXDATA (((LEN) 1<<MAXDATA_LOG2) - 1)
 #endif /* MAJOR_VER < 3 */
+
 
 /*
  * MAXLEN - maximum length of internal integer values in units of HALF
  *
  * We limit MAXLEN based on 1 less than the number of HALFs that
  * will fit into MAXDATA bytes.
+ *
+ * NOTE: MAXLEN must be 1 less than a power of 2.
+ * NOTE: MAXLEN_LOG2 is the log base 2 of MAXLEN+1.
  */
 #define MAXLEN ((LEN) ((MAXDATA / HALF_LEN) - 1))       /* longest value allowed */
+#define MAXLEN_LOG2 (MAXDATA_LOG2 - BASEB)
 
 
 #define MAXREDC 256                     /* number of entries in REDC cache */
@@ -359,6 +371,7 @@ E_FUNC void zsquare(ZVALUE z, ZVALUE *res);
 E_FUNC long zlowbit(ZVALUE z);
 E_FUNC LEN zhighbit(ZVALUE z);
 E_FUNC void zbitvalue(long n, ZVALUE *res);
+E_FUNC bool zzbitvalue(ZVALUE pos, ZVALUE *res);
 E_FUNC bool zisset(ZVALUE z, long n);
 E_FUNC bool zisonebit(ZVALUE z);
 E_FUNC bool zisallbits(ZVALUE z);
@@ -682,6 +695,9 @@ EXTERN ZVALUE _pow4base_;
 
 EXTERN HALF _pow8baseval_[];
 EXTERN ZVALUE _pow8base_;
+
+EXTERN HALF _basebval_[];
+EXTERN ZVALUE _baseb_;
 
 /* _b32_ is _sqbaseval_ or _pow4baseval_ depending on BASEB */
 EXTERN ZVALUE _b32_;

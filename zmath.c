@@ -58,6 +58,10 @@ ZVALUE _pow4base_ = { _pow4baseval_, 4, 0 };
 HALF _pow8baseval_[] = { 0, 0, 0, 0, 1 };
 ZVALUE _pow8base_ = { _pow8baseval_, 4, 0 };
 
+HALF _basebval_[] = { BASEB };
+ZVALUE _baseb_ = { _basebval_, 1, 0 };
+
+
 /*
  * 2^64 as a ZVALUE
  */
@@ -1844,10 +1848,70 @@ zbitvalue(long n, ZVALUE *res)
         if (n < 0) n = 0;
         z.sign = 0;
         z.len = (LEN)((n / BASEB) + 1);
+        if (z.len > MAXLEN) {
+                math_error("zbitvalue: ZVALUE would be too large");
+                not_reached();
+        }
         z.v = alloc(z.len);
         zclearval(z);
-        z.v[z.len-1] = (((HALF) 1) << (n % BASEB));
+        z.v[z.len-1] = bitmask[n % BASEB];
         *res = z;
+}
+
+
+/*
+ * This is like zbitvalue(long n, ZVALUE *res) but where n is a ZVALUE
+ * and returns a boolean, and does not call math_error().
+ *
+ * Return the number whose binary representation contains only one bit which
+ * is in the specified position (counting from zero).  This is equivalent
+ * to raising two to the given power.
+ *
+ * Returns:
+ *       true ==> *res is set to two the power of pos
+ *       false ==> res was NULL, or ZVALUE would be too large
+ */
+bool
+zzbitvalue(ZVALUE pos, ZVALUE *res)
+{
+        ZVALUE z;
+        ZVALUE quo;
+        ZVALUE rem;
+        ZVALUE len;
+        long shift;
+
+        /* firewall */
+        if (res == NULL) {
+                return false;
+        }
+
+        /* if (pos < 0) pos = 0; so return 1 */
+        if (zisneg(pos)) {
+                itoz(1, res);
+                return true;
+        }
+
+        /* determine length and final shift position */
+        zdiv(pos, _baseb_, &quo, &rem, 0);
+
+        /* allocate res */
+        zadd(quo, _one_, &len);
+        zfree(quo);
+        z.sign = 0;
+        z.len = (LEN)ztou(len);
+        if (z.len > MAXLEN) {
+                zfree(rem);
+                zfree(len);
+                return false;
+        }
+        zfree(len);
+        z.v = alloc(z.len);
+        zclearval(z);
+        shift = ztoi(rem);
+        zfree(rem);
+        z.v[z.len-1] = bitmask[shift];
+        *res = z;
+        return true;
 }
 
 

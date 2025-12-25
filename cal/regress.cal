@@ -9182,8 +9182,8 @@ read -once "test8900.special";
 print '8902: about to run test8900(1,,8903)';
 testnum = test8900(1,,8903);
 print "8941: ecnt ==", ecnt;
-print '8942: ecnt = 224;'
-ecnt = 224;
+print '8942: ecnt = 226;'
+ecnt = 226;
 
 
 /*
@@ -9995,8 +9995,7 @@ print '9610: Ending test of dupvar_warn and redecl_warn config parameters';
  *
  * This function tests the error builtin.
  *
- * This function is designed to trigger 148 errors, so we bump the
- * errmax by 148 during this call.
+ * This function is designed to trigger 149 errors.
  */
 define test_error()
 {
@@ -10199,12 +10198,15 @@ define test_error()
         vrfy(sec(2e9i) == error("E_SEC_5"),     '9831: sec(2e9i) == error("E_SEC_5")');
         vrfy(csc(2e9i) == error("E_CSC_6"),     '9832: csc(2e9i) == error("E_CSC_6")');
 
-        /* errmax and errcount should be bumped up the 148 errors above */
-        print                                   '9833: errcount():', errcount();
-        print                                   '9833: ecnt:', ecnt;
-        vrfy(errcount() == ecnt,                '9835: errcount() == ecnt');
+        vrfy(4i ^ 3i ^ 3635.61 == error("E_POWER_4"),
+                                                '9833: 4i ^ 3i ^ 3635.61 == error("E_POWER_4")');
 
-        print '9836: Ending test_error';
+        /* last - report errmax and errcount */
+        print                                   '9834: errcount():', errcount();
+        print                                   '9835: ecnt:', ecnt;
+        vrfy(errcount() == ecnt,                '9836: errcount() == ecnt');
+
+        print '9837: Ending test_error';
 }
 print;
 print '9699: parsed test_error()';

@@ -1531,22 +1531,32 @@ c_polar(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
  *                 qexp(NUMBER *q, NUMBER *epsilon) returns NULL because
  *                 "Too-large re(argument) for exp" resulting
  *                 in an E_POWER_4 error.
+ *
+ * This function also returns NULL when epsilon is invalid,
+ * or if we are given a non-positive real exponent of zero for complex power.
  */
 COMPLEX *
 c_power(COMPLEX *c1, COMPLEX *c2, NUMBER *epsilon)
 {
         COMPLEX *ctmp1, *ctmp2;
-        long k1, k2, k, m1, m2, m, n;
+        long k1, k2, m1, m2, m, n;
         NUMBER *a2b2, *qtmp1, *qtmp2, *epsilon1;
+        NUMBER *k1_num;
+        NUMBER *k2_num;
+        NUMBER *tmp;
+        NUMBER *tmp2;
+        NUMBER *k_num;
+        NUMBER *n_num;
+        NUMBER *m_num;
+        NUMBER *ep1_power_of_2;
+        NUMBER *two_num;
 
         if (check_epsilon(epsilon) == false) {
-                math_error("Invalid epsilon value for complex power");
-                not_reached();
+                return NULL;
         }
         if (ciszero(c1)) {
                 if (cisreal(c2) && qisneg(c2->real)) {
-                        math_error ("Non-positive real exponent of zero for complex power");
-                        not_reached();
+                        return NULL;
                 }
                 return clink(&_czero_);
         }
@@ -1586,12 +1596,74 @@ c_power(COMPLEX *c1, COMPLEX *c2, NUMBER *epsilon)
                 qfree(qtmp2);
         }
         m = (m2 > m1) ? m2 : m1;
-        k = k1 - k2 + 1;
-        if (k < n)
+
+        /*
+         * We want to, in effect, compute:
+         *
+         *      k = k1 - k2 + 1
+         *
+         * however we must be careful about "Signed integer overflow" during k1 - k2 or due to + 1.
+         */
+        k1_num = itoq(k1);
+        k2_num = itoq(k2);
+        tmp = qsub(k1_num, k2_num);
+        qfree(k1_num);
+        qfree(k2_num);
+        k_num = qinc(tmp);
+        qfree(tmp);
+
+        /*
+         * We want to, in effect, compute:
+         *
+         *      if (k < n)
+         *              return clink(&_czero_);
+         *
+         * If that is true, then value is < epsilon, so return complex 0.
+         */
+        n_num = itoq(n);
+        if (qrel(k_num, n_num) < 0) {
+
+                /* value is < epsilon, so return complex 0 */
+                qfree(k_num)
+                qfree(n_num)
                 return clink(&_czero_);
-        epsilon1 = qbitvalue(n - k - m - 2);
+        }
+
+        /*
+         * We want to, in effect, compute:
+         *
+         *      epsilon1 = "2 to the power of (n - k - m - 2)"
+         *
+         * I.e.:
+         *
+         *      epsilon1 = qbitvalue(-(n - k - m - 2));
+         *
+         * where "n - k - m - 2" does not lead to a "Signed integer overflow"
+         * and where "n - k - m - 2" may not fit into a long.
+         */
+        tmp = qsub(n_num, k_num);
+        qfree(n_num);
+        qfree(k_num);
+        m_num = itoq(m);
+        tmp2 = qsub(tmp, m_num);
+        qfree(tmp);
+        qfree(m_num);
+        two_num = itoq(2);
+        ep1_power_of_2 = qsub(tmp2, two_num);
+        qfree(tmp2);
+        qfree(two_num);
+        epsilon1 = qqbitvalue(*ep1_power_of_2);
+        if (epsilon1 == NULL) {
+            qfree(epsilon1);
+            return NULL;
+        }
+        qfree(ep1_power_of_2);
+
+        /* ctmp1 = natural log of epsilon1 */
         ctmp1 = c_ln(c1, epsilon1);
         qfree(epsilon1);
+
+        /* return complex result */
         ctmp2 = c_mul(ctmp1, c2);
         comfree(ctmp1);
         ctmp1 = c_exp(ctmp2, epsilon);

@@ -1181,6 +1181,49 @@ qbitvalue(long n)
         return r;
 }
 
+
+/*
+ * Like qbitvalue(long n) but with a NUMBER arg
+ *
+ * NOTE: will return NULL if the shifted bit is too large to hold in memory.
+ *
+ * Return the number whose binary representation only has the specified
+ * bit set (counting from zero).  This thus produces a given power of two.
+ *
+ * NOTE: Only the integer part of pos is used to set a bit.
+ *
+ * Returns:
+ *      NULL ==> shifted bit is too large to hold in memory
+ *      != NULL ==> returned given power of two
+ */
+NUMBER *
+qqbitvalue(NUMBER pos)
+{
+        NUMBER *r;
+        NUMBER *n;                      /* integer part of pos */
+        bool formed;
+
+        n = qint(&pos);
+        if (qiszero(n)) {
+                qfree(n);
+                return qlink(&_qone_);
+        }
+        r = qalloc();
+        if (qispos(n)) {
+                formed = zzbitvalue(n->num, &r->num);
+        } else {
+                n->num.sign = 0;        /* use absolute value of pos to shift denominator */
+                formed = zzbitvalue(n->num, &r->den);
+        }
+        qfree(n);
+        if (! formed) {
+                qfree(r);
+                return NULL;
+        }
+        return r;
+}
+
+
 /*
  * Return 10^n
  */

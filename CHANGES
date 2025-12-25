@@ -24,6 +24,27 @@ The following are the changes from calc version 2.16.0.2 to date:
 
     Recommend `-fstack-protector-all` in `Makefile.local` comments.
 
+    Fixed signed integer overflow in `c_power()`.
+
+    The `c_power(COMPLEX *c1, COMPLEX *c2, NUMBER *epsilon)` function in
+    `comfunc.c` no longer triggers a signed integer overflow.
+
+    Added `qqbitvalue(NUMBER pos)` to `qmarth.c`: like `qbitvalue(long n)`
+    but with a NUMBER arg, and will return NULL if the shifted bit is too
+    large to hold in memory.
+
+    Added `zzbitvalue(ZVALUE pos, ZVALUE *res)`: similar to the
+    `zbitvalue(long n, ZVALUE *res)` function but with a `ZVALUE` arg,
+    and returns a boolean, and does not call math_error().
+
+    Added `ZVALUE _baseb_` to hold the `BASEB` as a `ZVALUE`.
+    Added `MAXDATA_LOG2` to hold the log base 2 value of `MAXDATA`.
+    Added `MAXLEN_LOG2` to hold the log base 2 value of `MAXLEN`.
+    Added `HALF_BITS` as an alias for `BASEB`.
+
+    Added to `cal/regress.cal`, regression test 9758 to test for
+    the condition that issue #174 was about.
+
 
 The following are the changes from calc version 2.16.0.1 to 2.16.0.2:
 
