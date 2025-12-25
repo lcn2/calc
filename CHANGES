@@ -22,6 +22,13 @@ The following are the changes from calc version 2.16.0.2 to date:
 
         prlimit --stack=268435456 calc
 
+    or:
+
+        ulimit -s 49152
+        calc
+
+    Resolved, as much we can, issue #175.
+
     Recommend `-fstack-protector-all` in `Makefile.local` comments.
 
     Fixed signed integer overflow in `c_power()`.
@@ -44,6 +51,11 @@ The following are the changes from calc version 2.16.0.2 to date:
 
     Added to `cal/regress.cal`, regression test 9758 to test for
     the condition that issue #174 was about.
+
+    Improved the Common Address Sanitizer (ASAN) comments in
+    `Makefile.config` and `Makefile.local`.
+
+    Resolved issue #176.
 
 
 The following are the changes from calc version 2.16.0.1 to 2.16.0.2:
