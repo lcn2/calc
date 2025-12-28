@@ -38,8 +38,6 @@ cal/test082.cal
 charbit.h
 chatbit
 chk_c
-.clang-format
-clang-format-testee.c
 compile_commands.json
 compile_flags.txt
 conf.h

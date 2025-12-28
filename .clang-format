@@ -1,0 +1,129 @@
+
+######################
+# clang-format options
+######################
+
+# ############################################################## #
+#
+# The Landon Noll C style is somewhat similar to the LLVM style,
+# and is also somewhat similar to the "classic kernel" style.
+#
+# As of 2025, we restrict ourselves to clang-format options no
+# later than version 20.  In particular, the minimum supported
+# clang-format option set are those options support by:
+#
+#     clang-format version 20.1.8
+#
+# The original LLVM style may be determined by:
+#
+#     clang-format --dump-config --style=LLVM
+#
+# When installed as .clang-format, the style may be shown by:
+#
+#     clang-format --dump-config --style=file
+#
+# In some cases we set the SAME option as LLVM when a given
+# style is deemed important, and in case LLVM changes later.
+#
+# See also:
+#
+#       https://clang.llvm.org/docs/ClangFormatStyleOptions.html
+#       https://llvm.org/docs/CodingStandards.html
+#
+# ############################################################## #
+
+# ############################### #
+# LLVM - We start with LLVM style #
+# ############################### #
+#
+BasedOnStyle: LLVM
+
+# Never put short ifs on the same line
+#
+# LLVM: AllowShortIfStatementsOnASingleLine: Never
+#
+AllowShortIfStatementsOnASingleLine: Never
+
+# Use the same indentation level as for the switch statement
+#
+# LLVM: IndentCaseLabels: false
+#
+IndentCaseLabels: false
+
+# Always attach braces to surrounding context
+#
+# LLVM: BreakBeforeBraces: Attach
+#
+BreakBeforeBraces: Linux
+
+# The number of columns to use for indentation
+#
+# LLVM: IndentWidth:     2
+#
+# NOTE: The "classic kernel" style often used an IndentWidth of 8.
+#
+IndentWidth: 4
+
+# Never use tab to indent
+#
+# LLVM: UseTab:          Never
+#
+UseTab: Always
+
+# Align escaped newlines as far left as possible, using the last line of the
+# preprocessor directive as the reference if it’s the longest.
+#
+# LLVM: AlignEscapedNewlines: Right
+#
+AlignEscapedNewlines: LeftWithLastLine
+
+# The column limit
+#
+# This allows us to create terminal windows 132 columns wide without lines
+# reaching the far right and edge of the window, and for editors that like to
+# line wrap, avoids such line wrapping.
+#
+# LLVM: ColumnLimit:     80
+#
+# NOTE: The "classic kernel" style often used an ColumnLimit of 80.
+#
+ColumnLimit: 131
+
+# The number of columns to use for indentation of preprocessor statements
+#
+# When set to -1 (default) IndentWidth is used also for preprocessor statements.
+#
+# Kernel style uses: PPIndentWidth: -1
+#
+PPIndentWidth: 2
+
+# Indents directives after the hash
+#
+# LLVM: PPIndentWidth:   -1
+#
+IndentPPDirectives: AfterHash
+
+# Add a return between function return type and the function name
+#
+# LLVM: BreakAfterReturnType: None
+#
+BreakAfterReturnType: All
+
+# Leave the order of include alone
+#
+# In some cases the order of includes is critical.  Moreover we tend to include
+# <system.h> header files before our own.
+#
+# LLVM: SortIncludes:    CaseSensitive
+#
+SortIncludes: Never
+
+# Insert braces after control statements (if, else, for, do, and while) in
+#
+# LLVM: InsertBraces:    false
+#
+# WARNING: Setting this option to true could lead to incorrect code formatting
+#	   due to clang-format’s lack of complete semantic information. As such,
+#	   extra care should be taken to review code changes made by this option!
+#
+InsertBraces: true

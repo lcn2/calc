@@ -12584,6 +12584,7 @@ f_cis(int count, VALUE **vals)
  *      b_desc          description of function
  */
 STATIC CONST struct builtin builtins[] = {
+    /* clang-format off */
         {"abs", 1, 2, 0, OP_ABS, {.null = NULL}, {.null = NULL},
          "absolute value, within accuracy b"},
         {"access", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_access},
@@ -13302,6 +13303,7 @@ STATIC CONST struct builtin builtins[] = {
         /* end of table */
         {NULL, 0, 0, 0, 0, {.null = NULL}, {.null = NULL},
          NULL}
+    /* clang-format on */
 };
 
 

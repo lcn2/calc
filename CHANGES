@@ -1,3 +1,18 @@
+The following are the changes from calc version 2.16.0.3 to date:
+
+    Added a new `.clang-format` file as the basis for using the
+    `clang-format(1)` tool to format calc source in a consistent way.
+    This code re-formatting will make it easier to work in calc v3 code
+    changes in the future by making the calc source much more consistent.
+
+    Removed `.clang-format` exclusion from `.gitignore`.
+
+    Modified `func.c` to prevent the `clang-format(1)` tool from formatting
+    the `builtins[]` table that builtin make rule in `help/Makefile` uses to
+    format the `help/builtin` file.  We can live with the `builtins[]`
+    table as it is today, for now.
+
+
 The following are the changes from calc version 2.16.0.2 to 2.16.0.3:
 
     The segmentation fault as reported in issue #174 has been fixed.
