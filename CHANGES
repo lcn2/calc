@@ -1,4 +1,4 @@
-The following are the changes from calc version 2.16.0.3 to date:
+The following are the changes from calc version 2.16.0.3 to 2.16.1.0:
 
     Added a new `.clang-format` file as the basis for using the
     `clang-format(1)` tool to format calc source in a consistent way.
