@@ -42,27 +42,25 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 
-
-#include "banned.h"     /* include after system header <> includes */
-
+#include "banned.h" /* include after system header <> includes */
 
 int
 main(void)
 {
 #if defined(HAVE_NO_GETRUSAGE)
 
-        printf("#undef HAVE_GETRUSAGE /* no */\n");
+    printf("#undef HAVE_GETRUSAGE /* no */\n");
 
 #else /* HAVE_NO_GETRUSAGE */
 
-        struct rusage rusage;           /* resource utilization */
+    struct rusage rusage; /* resource utilization */
 
-        (void) getrusage(RUSAGE_SELF, &rusage);
+    (void)getrusage(RUSAGE_SELF, &rusage);
 
-        printf("#define HAVE_GETRUSAGE /* yes */\n");
+    printf("#define HAVE_GETRUSAGE /* yes */\n");
 
 #endif /* HAVE_NO_GETRUSAGE */
 
-        /* exit(0); */
-        return 0;
+    /* exit(0); */
+    return 0;
 }

@@ -23,26 +23,23 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-
 #if !defined(INCLUDE_QMATH_H)
-#define INCLUDE_QMATH_H
+#  define INCLUDE_QMATH_H
 
-
-#if defined(CALC_SRC)   /* if we are building from the calc source tree */
-# include "zmath.h"
-#else
-# include <calc/zmath.h>
-#endif
-
+#  if defined(CALC_SRC) /* if we are building from the calc source tree */
+#    include "zmath.h"
+#  else
+#    include <calc/zmath.h>
+#  endif
 
 /*
  * Rational arithmetic definitions.
  */
 struct number {
-        ZVALUE num;             /* numerator (containing sign) */
-        ZVALUE den;             /* denominator (always positive) */
-        long links;             /* number of links to this value */
-        struct number *next;    /* pointer to next number */
+    ZVALUE num;		 /* numerator (containing sign) */
+    ZVALUE den;		 /* denominator (always positive) */
+    long links;		 /* number of links to this value */
+    struct number *next; /* pointer to next number */
 };
 
 typedef struct number NUMBER;
@@ -78,8 +75,6 @@ E_FUNC void shownumbers(void);
 E_FUNC void showredcdata(void);
 E_FUNC void freeredcdata(void);
 E_FUNC void fitprint(NUMBER *, long);
-
-
 
 /*
  * Basic numeric routines.
@@ -126,7 +121,6 @@ E_FUNC FLAG qrel(NUMBER *q1, NUMBER *q2);
 E_FUNC FLAG qreli(NUMBER *q, long i);
 E_FUNC bool qisset(NUMBER *q, long i);
 
-
 /*
  * More complicated numeric functions.
  */
@@ -159,8 +153,7 @@ E_FUNC long qilog2(NUMBER *q);
 E_FUNC long qilog10(NUMBER *q);
 E_FUNC NUMBER *qilog(NUMBER *q, ZVALUE base);
 E_FUNC bool qcmpmod(NUMBER *q1, NUMBER *q2, NUMBER *q3);
-E_FUNC bool qquomod(NUMBER *q1, NUMBER *q2, NUMBER **quo, NUMBER **mod,
-                    long rnd);
+E_FUNC bool qquomod(NUMBER *q1, NUMBER *q2, NUMBER **quo, NUMBER **mod, long rnd);
 E_FUNC FLAG qnear(NUMBER *q1, NUMBER *q2, NUMBER *epsilon);
 E_FUNC NUMBER *qdigit(NUMBER *q, ZVALUE dpos, ZVALUE base);
 E_FUNC long qprecision(NUMBER *q);
@@ -173,7 +166,6 @@ E_FUNC NUMBER *qbitvalue(long i);
 E_FUNC NUMBER *qqbitvalue(NUMBER pos);
 E_FUNC NUMBER *qtenpow(long i);
 E_FUNC bool qispowerof2(NUMBER *q, NUMBER **qlog2);
-
 
 /*
  * Transcendental functions.  These all take an epsilon argument to
@@ -274,47 +266,54 @@ E_FUNC NUMBER *swap_b8_in_NUMBER(NUMBER *dest, NUMBER *src, bool all);
 E_FUNC NUMBER *swap_b16_in_NUMBER(NUMBER *dest, NUMBER *src, bool all);
 E_FUNC NUMBER *swap_HALF_in_NUMBER(NUMBER *dest, NUMBER *src, bool all);
 
-
 /*
  * macro expansions to speed this thing up
  */
-#define qiszero(q)      (ziszero((q)->num))
-#define qisneg(q)       (zisneg((q)->num))
-#define qispos(q)       (zispos((q)->num))
-#define qisint(q)       (zisunit((q)->den))
-#define qisfrac(q)      (!zisunit((q)->den))
-#define qisunit(q)      (zisunit((q)->num) && zisunit((q)->den))
-#define qisone(q)       (zisone((q)->num) && zisunit((q)->den))
-#define qisnegone(q)    (zisnegone((q)->num) && zisunit((q)->den))
-#define qistwo(q)       (zistwo((q)->num) && zisunit((q)->den))
-#define qiseven(q)      (zisunit((q)->den) && ziseven((q)->num))
-#define qisodd(q)       (zisunit((q)->den) && zisodd((q)->num))
-#define qistiny(q)      (zistiny((q)->num))
+#  define qiszero(q) (ziszero((q)->num))
+#  define qisneg(q) (zisneg((q)->num))
+#  define qispos(q) (zispos((q)->num))
+#  define qisint(q) (zisunit((q)->den))
+#  define qisfrac(q) (!zisunit((q)->den))
+#  define qisunit(q) (zisunit((q)->num) && zisunit((q)->den))
+#  define qisone(q) (zisone((q)->num) && zisunit((q)->den))
+#  define qisnegone(q) (zisnegone((q)->num) && zisunit((q)->den))
+#  define qistwo(q) (zistwo((q)->num) && zisunit((q)->den))
+#  define qiseven(q) (zisunit((q)->den) && ziseven((q)->num))
+#  define qisodd(q) (zisunit((q)->den) && zisodd((q)->num))
+#  define qistiny(q) (zistiny((q)->num))
 
-#define qhighbit(q)     (zhighbit((q)->num))
-#define qlowbit(q)      (zlowbit((q)->num))
-#define qdivcount(q1, q2)       (zdivcount((q1)->num, (q2)->num))
-#define qisreciprocal(q)        (zisunit((q)->num) && !ziszero((q)->den))
+#  define qhighbit(q) (zhighbit((q)->num))
+#  define qlowbit(q) (zlowbit((q)->num))
+#  define qdivcount(q1, q2) (zdivcount((q1)->num, (q2)->num))
+#  define qisreciprocal(q) (zisunit((q)->num) && !ziszero((q)->den))
 /* operation on #q may be undefined, so replace with an inline-function */
 /* was: #define qlink(q)        ((q)->links++, (q)) */
-static inline NUMBER* qlink(NUMBER* q) { if(q) { (q)->links++; } return q; }
+static inline NUMBER *
+qlink(NUMBER *q)
+{
+    if (q) {
+	(q)->links++;
+    }
+    return q;
+}
 
-#define qfree(q)        {if (--((q)->links) <= 0) qfreenum(q);}
-
+#  define qfree(q)                 \
+      {                            \
+	  if (--((q)->links) <= 0) \
+	      qfreenum(q);         \
+      }
 
 /*
  * Flags for qparse calls
  */
-#define QPF_SLASH       0x1     /* allow slash for fractional number */
-#define QPF_IMAG        0x2     /* allow trailing 'i' for imaginary number */
-
+#  define QPF_SLASH 0x1 /* allow slash for fractional number */
+#  define QPF_IMAG 0x2	/* allow trailing 'i' for imaginary number */
 
 /*
  * constants used often by the arithmetic routines
  */
 EXTERN NUMBER _qzero_, _qone_, _qnegone_, _qonehalf_, _qneghalf_, _qonesqbase_;
 EXTERN NUMBER _qtwo_, _qten_;
-EXTERN NUMBER * initnumbs[];
-
+EXTERN NUMBER *initnumbs[];
 
 #endif /* !INCLUDE_QMATH_H */

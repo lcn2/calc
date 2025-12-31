@@ -26,89 +26,84 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-
 #if !defined(INCLUDE_CONFIG_H)
-#define INCLUDE_CONFIG_H
+#  define INCLUDE_CONFIG_H
 
-
-#if defined(CALC_SRC)   /* if we are building from the calc source tree */
-# include "decl.h"
-# include "nametype.h"
-# include "qmath.h"
-#else
-# include <calc/decl.h>
-# include <calc/nametype.h>
-# include <calc/qmath.h>
-#endif
-
+#  if defined(CALC_SRC) /* if we are building from the calc source tree */
+#    include "decl.h"
+#    include "nametype.h"
+#    include "qmath.h"
+#  else
+#    include <calc/decl.h>
+#    include <calc/nametype.h>
+#    include <calc/qmath.h>
+#  endif
 
 /*
  * configuration element types
  */
-#define CONFIG_ALL      0       /* not a real configuration parameter */
-#define CONFIG_MODE     1       /* types of configuration parameters */
-#define CONFIG_DISPLAY  2
-#define CONFIG_EPSILON  3
-#define CONFIG_EPSILONPREC 3    /* not a real type -- tied to CONFIG_EPSILON */
-#define CONFIG_TRACE    4
-#define CONFIG_MAXPRINT 5
-#define CONFIG_MUL2     6
-#define CONFIG_SQ2      7
-#define CONFIG_POW2     8
-#define CONFIG_REDC2    9
-#define CONFIG_TILDE    10
-#define CONFIG_TAB      11
-#define CONFIG_QUOMOD   12
-#define CONFIG_QUO      13
-#define CONFIG_MOD      14
-#define CONFIG_SQRT     15
-#define CONFIG_APPR     16
-#define CONFIG_CFAPPR   17
-#define CONFIG_CFSIM    18
-#define CONFIG_OUTROUND 19
-#define CONFIG_ROUND    20
-#define CONFIG_LEADZERO 21
-#define CONFIG_FULLZERO 22
-#define CONFIG_MAXSCAN  23
-#define CONFIG_PROMPT   24
-#define CONFIG_MORE     25
-#define CONFIG_BLKMAXPRINT 26
-#define CONFIG_BLKVERBOSE 27
-#define CONFIG_BLKBASE  28
-#define CONFIG_BLKFMT   29
-#define CONFIG_RESOURCE_DEBUG 30
-#define CONFIG_LIB_DEBUG CONFIG_RESOURCE_DEBUG
-#define CONFIG_CALC_DEBUG 31
-#define CONFIG_USER_DEBUG 32
-#define CONFIG_VERBOSE_QUIT 33
-#define CONFIG_CTRL_D   34
-#define CONFIG_PROGRAM  35
-#define CONFIG_BASENAME 36
-#define CONFIG_VERSION  37
-#define CONFIG_WINDOWS  38
-#define CONFIG_MODE2    39
-#define CONFIG_CYGWIN   40
-#define CONFIG_COMPILE_CUSTOM   41
-#define CONFIG_ALLOW_CUSTOM     42
-#define CONFIG_BASEB    43
-#define CONFIG_REDECL_WARN      44
-#define CONFIG_DUPVAR_WARN      45
-#define CONFIG_HZ       46
-#define CONFIG_TILDE_SPACE      47
-#define CONFIG_FRACTION_SPACE   48
-#define CONFIG_COMPLEX_SPACE    49
-#define CONFIG_TRIGROUND        50
-
+#  define CONFIG_ALL 0	/* not a real configuration parameter */
+#  define CONFIG_MODE 1 /* types of configuration parameters */
+#  define CONFIG_DISPLAY 2
+#  define CONFIG_EPSILON 3
+#  define CONFIG_EPSILONPREC 3 /* not a real type -- tied to CONFIG_EPSILON */
+#  define CONFIG_TRACE 4
+#  define CONFIG_MAXPRINT 5
+#  define CONFIG_MUL2 6
+#  define CONFIG_SQ2 7
+#  define CONFIG_POW2 8
+#  define CONFIG_REDC2 9
+#  define CONFIG_TILDE 10
+#  define CONFIG_TAB 11
+#  define CONFIG_QUOMOD 12
+#  define CONFIG_QUO 13
+#  define CONFIG_MOD 14
+#  define CONFIG_SQRT 15
+#  define CONFIG_APPR 16
+#  define CONFIG_CFAPPR 17
+#  define CONFIG_CFSIM 18
+#  define CONFIG_OUTROUND 19
+#  define CONFIG_ROUND 20
+#  define CONFIG_LEADZERO 21
+#  define CONFIG_FULLZERO 22
+#  define CONFIG_MAXSCAN 23
+#  define CONFIG_PROMPT 24
+#  define CONFIG_MORE 25
+#  define CONFIG_BLKMAXPRINT 26
+#  define CONFIG_BLKVERBOSE 27
+#  define CONFIG_BLKBASE 28
+#  define CONFIG_BLKFMT 29
+#  define CONFIG_RESOURCE_DEBUG 30
+#  define CONFIG_LIB_DEBUG CONFIG_RESOURCE_DEBUG
+#  define CONFIG_CALC_DEBUG 31
+#  define CONFIG_USER_DEBUG 32
+#  define CONFIG_VERBOSE_QUIT 33
+#  define CONFIG_CTRL_D 34
+#  define CONFIG_PROGRAM 35
+#  define CONFIG_BASENAME 36
+#  define CONFIG_VERSION 37
+#  define CONFIG_WINDOWS 38
+#  define CONFIG_MODE2 39
+#  define CONFIG_CYGWIN 40
+#  define CONFIG_COMPILE_CUSTOM 41
+#  define CONFIG_ALLOW_CUSTOM 42
+#  define CONFIG_BASEB 43
+#  define CONFIG_REDECL_WARN 44
+#  define CONFIG_DUPVAR_WARN 45
+#  define CONFIG_HZ 46
+#  define CONFIG_TILDE_SPACE 47
+#  define CONFIG_FRACTION_SPACE 48
+#  define CONFIG_COMPLEX_SPACE 49
+#  define CONFIG_TRIGROUND 50
 
 /*
  * config default symbols
  */
-#define DISPLAY_DEFAULT 20      /* default digits for float display */
-#define EPSILON_DEFAULT "1e-20" /* allowed error for float calculations */
-#define EPSILONPREC_DEFAULT 67  /* 67 ==> 2^-67 <= EPSILON_DEFAULT < 2^-66 */
-#define MAXPRINT_DEFAULT 16     /* default number of elements printed */
-#define MAXSCANCOUNT 20         /* default max scan errors before an abort */
-
+#  define DISPLAY_DEFAULT 20	  /* default digits for float display */
+#  define EPSILON_DEFAULT "1e-20" /* allowed error for float calculations */
+#  define EPSILONPREC_DEFAULT 67  /* 67 ==> 2^-67 <= EPSILON_DEFAULT < 2^-66 */
+#  define MAXPRINT_DEFAULT 16	  /* default number of elements printed */
+#  define MAXSCANCOUNT 20	  /* default max scan errors before an abort */
 
 /*
  * configuration object
@@ -124,101 +119,97 @@
  *      help/config     - document new config option
  */
 struct config {
-        int outmode;            /* current output mode */
-        int outmode2;           /* current secondary output mode */
-        LEN outdigits;          /* current output digits for float or exp */
-        NUMBER *epsilon;        /* default error for real functions */
-        long epsilonprec;       /* epsilon binary precision (tied to epsilon) */
-        FLAG traceflags;        /* tracing flags */
-        LEN maxprint;           /* number of elements to print */
-        LEN mul2;               /* size of number to use multiply algorithm 2 */
-        LEN sq2;                /* size of number to use square algorithm 2 */
-        LEN pow2;               /* size of modulus to use REDC for powers */
-        LEN redc2;              /* size of modulus to use REDC algorithm 2 */
-        bool tilde_ok;          /* OK to print a tilde on approximations */
-        bool tilde_space;       /* print space after tilde on approximations */
-        bool fraction_space;    /* true => print spaces around / in fractions */
-        bool complex_space;     /* true => print spaces around + or - in complex values */
-        bool tab_ok;            /* OK to print tab before numeric values */
-        LEN quomod;             /* quomod() default rounding mode */
-        LEN quo;                /* quotient // default rounding mode */
-        LEN mod;                /* mod % default rounding mode */
-        LEN sqrt;               /* sqrt() default rounding mode */
-        LEN appr;               /* appr() default rounding mode */
-        LEN cfappr;             /* cfappr() default rounding mode */
-        LEN cfsim;              /* cfsim() default rounding mode */
-        LEN outround;           /* output default rounding mode */
-        LEN round;              /* round()/bround() default rounding mode */
-        LEN triground;          /* trigonometric and hyperbolic function rounding mode */
-        bool leadzero;          /* OK to print leading 0 before decimal pt */
-        bool fullzero;          /* OK to print trailing 0's */
-        long maxscancount;      /* max scan errors before abort */
-        char *prompt1;          /* normal prompt */
-        char *prompt2;          /* prompt when inside multi-line input */
-        int blkmaxprint;        /* octets of a block to print, 0 => all */
-        bool blkverbose;        /* true => print all lines if a block */
-        int blkbase;            /* block output base */
-        int blkfmt;             /* block output style */
-        long calc_debug;        /* internal debug, see CALC_DEBUG_XYZ below */
-        long resource_debug;    /* resource debug, see RSCDBG_XYZ below */
-        long user_debug;        /* user defined debug value: 0 default */
-        bool verbose_quit;      /* true => print Quit or abort executed msg */
-        int ctrl_d;             /* see CTRL_D_xyz below */
-        char *program;          /* our name */
-        char *base_name;        /* basename of our name */
-        bool windows;           /* true => running under MS windows */
-        bool cygwin;            /* true => compiled with cygwin */
-        bool compile_custom;    /* true => compiled with -DCUSTOM */
-        bool *allow_custom;     /* ptr to if custom functions are allowed */
-        char *version;          /* calc version string */
-        int baseb;              /* base for calculations */
-        bool redecl_warn;       /* true => warn of redeclaring variables */
-        bool dupvar_warn;       /* true => warn of var name collisions */
+    int outmode;	 /* current output mode */
+    int outmode2;	 /* current secondary output mode */
+    LEN outdigits;	 /* current output digits for float or exp */
+    NUMBER *epsilon;	 /* default error for real functions */
+    long epsilonprec;	 /* epsilon binary precision (tied to epsilon) */
+    FLAG traceflags;	 /* tracing flags */
+    LEN maxprint;	 /* number of elements to print */
+    LEN mul2;		 /* size of number to use multiply algorithm 2 */
+    LEN sq2;		 /* size of number to use square algorithm 2 */
+    LEN pow2;		 /* size of modulus to use REDC for powers */
+    LEN redc2;		 /* size of modulus to use REDC algorithm 2 */
+    bool tilde_ok;	 /* OK to print a tilde on approximations */
+    bool tilde_space;	 /* print space after tilde on approximations */
+    bool fraction_space; /* true => print spaces around / in fractions */
+    bool complex_space;	 /* true => print spaces around + or - in complex values */
+    bool tab_ok;	 /* OK to print tab before numeric values */
+    LEN quomod;		 /* quomod() default rounding mode */
+    LEN quo;		 /* quotient // default rounding mode */
+    LEN mod;		 /* mod % default rounding mode */
+    LEN sqrt;		 /* sqrt() default rounding mode */
+    LEN appr;		 /* appr() default rounding mode */
+    LEN cfappr;		 /* cfappr() default rounding mode */
+    LEN cfsim;		 /* cfsim() default rounding mode */
+    LEN outround;	 /* output default rounding mode */
+    LEN round;		 /* round()/bround() default rounding mode */
+    LEN triground;	 /* trigonometric and hyperbolic function rounding mode */
+    bool leadzero;	 /* OK to print leading 0 before decimal pt */
+    bool fullzero;	 /* OK to print trailing 0's */
+    long maxscancount;	 /* max scan errors before abort */
+    char *prompt1;	 /* normal prompt */
+    char *prompt2;	 /* prompt when inside multi-line input */
+    int blkmaxprint;	 /* octets of a block to print, 0 => all */
+    bool blkverbose;	 /* true => print all lines if a block */
+    int blkbase;	 /* block output base */
+    int blkfmt;		 /* block output style */
+    long calc_debug;	 /* internal debug, see CALC_DEBUG_XYZ below */
+    long resource_debug; /* resource debug, see RSCDBG_XYZ below */
+    long user_debug;	 /* user defined debug value: 0 default */
+    bool verbose_quit;	 /* true => print Quit or abort executed msg */
+    int ctrl_d;		 /* see CTRL_D_xyz below */
+    char *program;	 /* our name */
+    char *base_name;	 /* basename of our name */
+    bool windows;	 /* true => running under MS windows */
+    bool cygwin;	 /* true => compiled with cygwin */
+    bool compile_custom; /* true => compiled with -DCUSTOM */
+    bool *allow_custom;	 /* ptr to if custom functions are allowed */
+    char *version;	 /* calc version string */
+    int baseb;		 /* base for calculations */
+    bool redecl_warn;	 /* true => warn of redeclaring variables */
+    bool dupvar_warn;	 /* true => warn of var name collisions */
 };
 typedef struct config CONFIG;
-
 
 /*
  * resource_debug bit masks
  */
-#define RSCDBG_STDIN_FUNC   (0x00000001)    /* interactive func define debug */
-#define RSCDBG_FILE_FUNC    (0x00000002)    /* file read func define debug */
-#define RSCDBG_FUNC_INFO    (0x00000004)    /* print extra info for show func */
-#define RSCDBG_PRINT_DBG    (0x00000008)    /* print debug messages */
-#define RSCDBG_MASK         (0x0000000f)
-
+#  define RSCDBG_STDIN_FUNC (0x00000001) /* interactive func define debug */
+#  define RSCDBG_FILE_FUNC (0x00000002)	 /* file read func define debug */
+#  define RSCDBG_FUNC_INFO (0x00000004)	 /* print extra info for show func */
+#  define RSCDBG_PRINT_DBG (0x00000008)	 /* print debug messages */
+#  define RSCDBG_MASK (0x0000000f)
 
 /*
  * calc_debug bit masks
  */
-#define CALCDBG_SYSTEM      (0x00000001)    /* print system cmd prior to exec */
-#define CALCDBG_FUNC_QUIT   (0x00000002)    /* active functions when quit */
-#define CALCDBG_HASH_STATE  (0x00000004)    /* hash state details */
-#define CALCDBG_BLOCK       (0x00000008)    /* block debug */
-#define CALCDBG_TTY         (0x00000010)    /* report TTY state changes */
-#define CALCDBG_RUNSTATE    (0x00000020)    /* report run_state changes */
-#define CALCDBG_RAND        (0x00000040)    /* report rand() activity */
-#define CALCDBG_CUSTOM      (0x00000080)    /* custom function debug */
-#define CALCDBG_MASK        (0x000000ff)
+#  define CALCDBG_SYSTEM (0x00000001)	  /* print system cmd prior to exec */
+#  define CALCDBG_FUNC_QUIT (0x00000002)  /* active functions when quit */
+#  define CALCDBG_HASH_STATE (0x00000004) /* hash state details */
+#  define CALCDBG_BLOCK (0x00000008)	  /* block debug */
+#  define CALCDBG_TTY (0x00000010)	  /* report TTY state changes */
+#  define CALCDBG_RUNSTATE (0x00000020)	  /* report run_state changes */
+#  define CALCDBG_RAND (0x00000040)	  /* report rand() activity */
+#  define CALCDBG_CUSTOM (0x00000080)	  /* custom function debug */
+#  define CALCDBG_MASK (0x000000ff)
 
 /*
  * ctrl-d meanings
  */
-#define CTRL_D_VIRGIN_EOF  (0)  /* ^D only exits on virgin command lines */
-#define CTRL_D_NEVER_EOF   (1)  /* ^D never exits, emacs binding meaning only */
-#define CTRL_D_EMPTY_EOF   (2)  /* ^D always exits at start of line */
-
+#  define CTRL_D_VIRGIN_EOF (0) /* ^D only exits on virgin command lines */
+#  define CTRL_D_NEVER_EOF (1)	/* ^D never exits, emacs binding meaning only */
+#  define CTRL_D_EMPTY_EOF (2)	/* ^D always exits at start of line */
 
 /*
  * global configuration states and aliases
  */
-EXTERN CONFIG *conf;    /* current configuration */
-EXTERN CONFIG oldstd;   /* old classic standard configuration */
-EXTERN CONFIG newstd;   /* default compatible configuration */
-E_FUNC char *calc_debug;        /* !=NULL => value of config("calc_debug") */
+EXTERN CONFIG *conf;	     /* current configuration */
+EXTERN CONFIG oldstd;	     /* old classic standard configuration */
+EXTERN CONFIG newstd;	     /* default compatible configuration */
+E_FUNC char *calc_debug;     /* !=NULL => value of config("calc_debug") */
 E_FUNC char *resource_debug; /* !=NULL => config("resource_debug") value */
-E_FUNC char *user_debug;        /* !=NULL => value of config("user_debug") */
-
+E_FUNC char *user_debug;     /* !=NULL => value of config("user_debug") */
 
 /*
  * configuration externals
@@ -226,9 +217,8 @@ E_FUNC char *user_debug;        /* !=NULL => value of config("user_debug") */
 E_FUNC CONFIG *config_copy(CONFIG *src);
 E_FUNC void config_free(CONFIG *cfg);
 E_FUNC void config_print(CONFIG *cfg);
-E_FUNC int configtype(char*);
-E_FUNC void config_print(CONFIG*);
-E_FUNC bool config_cmp(CONFIG*, CONFIG*);
-
+E_FUNC int configtype(char *);
+E_FUNC void config_print(CONFIG *);
+E_FUNC bool config_cmp(CONFIG *, CONFIG *);
 
 #endif /* !INCLUDE_CONFIG_H */

@@ -23,30 +23,25 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-
 #if !defined(INCLUDE_LABEL_H)
-#define INCLUDE_LABEL_H
+#  define INCLUDE_LABEL_H
 
+#  if defined(CALC_SRC) /* if we are building from the calc source tree */
+#    include "zmath.h"
+#  else
+#    include <calc/zmath.h>
+#  endif
 
-#if defined(CALC_SRC)   /* if we are building from the calc source tree */
-# include "zmath.h"
-#else
-# include <calc/zmath.h>
-#endif
-
-
-#define NULL_LABEL      ((LABEL *) 0)
-
+#  define NULL_LABEL ((LABEL *)0)
 
 /*
  * Label structures.
  */
 typedef struct {
-        long l_offset;            /* offset into code of label */
-        long l_chain;             /* offset into code of undefined chain */
-        char *l_name;             /* name of label if any */
+    long l_offset; /* offset into code of label */
+    long l_chain;  /* offset into code of undefined chain */
+    char *l_name;  /* name of label if any */
 } LABEL;
-
 
 E_FUNC void initlabels(void);
 E_FUNC void definelabel(char *name);
@@ -55,6 +50,5 @@ E_FUNC void clearlabel(LABEL *lp);
 E_FUNC void setlabel(LABEL *lp);
 E_FUNC void uselabel(LABEL *lp);
 E_FUNC void checklabels(void);
-
 
 #endif /* !INCLUDE_LABEL_H */

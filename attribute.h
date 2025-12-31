@@ -24,10 +24,8 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-
 #if !defined(INCLUDE_ATTRIBUTE_H)
-#define INCLUDE_ATTRIBUTE_H
-
+#  define INCLUDE_ATTRIBUTE_H
 
 /*
  * backward compatibility
@@ -38,14 +36,12 @@
  *
  * Not all compiles have __has_builtin
  */
-#if !defined(__attribute__) && \
-    (defined(__cplusplus) || !defined(__GNUC__)  || __GNUC__ == 2 && __GNUC_MINOR__ < 8)
+#  if !defined(__attribute__) && (defined(__cplusplus) || !defined(__GNUC__) || __GNUC__ == 2 && __GNUC_MINOR__ < 8)
 #    define __attribute__(A)
-#endif
-#if !defined __has_builtin
+#  endif
+#  if !defined __has_builtin
 #    define __has_builtin(x) 0
-#endif
-
+#  endif
 
 /*
  * not_reached
@@ -59,11 +55,10 @@
  * The not_reached will either yield a __builtin_unreachable() feature call,
  * or it will call abort from stdlib.
  */
-#if __has_builtin(__builtin_unreachable)
+#  if __has_builtin(__builtin_unreachable)
 #    define not_reached() __builtin_unreachable()
-#else
+#  else
 #    define not_reached() abort()
-#endif /* __has_builtin(__builtin_unreachable) */
-
+#  endif /* __has_builtin(__builtin_unreachable) */
 
 #endif /* !INCLUDE_ATTRIBUTE_H */

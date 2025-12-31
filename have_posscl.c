@@ -46,51 +46,49 @@
 #include <sys/stat.h>
 #include "have_unistd.h"
 #if defined(HAVE_UNISTD_H)
-#include <unistd.h>
+#  include <unistd.h>
 #endif
 #include "have_fgetsetpos.h"
 
-
-#include "banned.h"     /* include after system header <> includes */
-
+#include "banned.h" /* include after system header <> includes */
 
 int
 main(void)
 {
 #if !defined(FILEPOS_NON_SCALAR)
-        FILEPOS value;  /* an FILEPOS to perform arithmetic on */
-        FILEPOS value2; /* an FILEPOS to perform arithmetic on */
+    FILEPOS value;  /* an FILEPOS to perform arithmetic on */
+    FILEPOS value2; /* an FILEPOS to perform arithmetic on */
 
-        /*
-         * do some math opts on an FILEPOS
-         */
-        value = (FILEPOS)getpid();
-        value2 = (FILEPOS)-1;
-        if (value > (FILEPOS)1) {
-                --value;
-        }
-#if !defined(_WIN32) && !defined(_WIN64)
-        if (value <= (FILEPOS)getppid()) {
-                --value;
-        }
-#endif
-        if (value == value2) {
-                value += value2;
-        }
-        value <<= 1;
-        if (!value) {
-                printf("/* something for the FILEPOS to do */\n");
-        }
+    /*
+     * do some math opts on an FILEPOS
+     */
+    value = (FILEPOS)getpid();
+    value2 = (FILEPOS)-1;
+    if (value > (FILEPOS)1) {
+	--value;
+    }
+#  if !defined(_WIN32) && !defined(_WIN64)
+    if (value <= (FILEPOS)getppid()) {
+	--value;
+    }
+#  endif
+    if (value == value2) {
+	value += value2;
+    }
+    value <<= 1;
+    if (!value) {
+	printf("/* something for the FILEPOS to do */\n");
+    }
 
-        /*
-         * report FILEPOS as a scalar
-         */
-        printf("#undef HAVE_FILEPOS_SCALAR\n");
-        printf("#define HAVE_FILEPOS_SCALAR /* FILEPOS is a simple value */\n");
+    /*
+     * report FILEPOS as a scalar
+     */
+    printf("#undef HAVE_FILEPOS_SCALAR\n");
+    printf("#define HAVE_FILEPOS_SCALAR /* FILEPOS is a simple value */\n");
 #else
-        printf("#undef HAVE_FILEPOS_SCALAR "
-               "/* FILEPOS is not a simple value */\n");
+    printf("#undef HAVE_FILEPOS_SCALAR "
+	   "/* FILEPOS is not a simple value */\n");
 #endif
-        /* exit(0); */
-        return 0;
+    /* exit(0); */
+    return 0;
 }

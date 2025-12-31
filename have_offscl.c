@@ -47,49 +47,47 @@
 #include <sys/stat.h>
 #include "have_unistd.h"
 #if defined(HAVE_UNISTD_H)
-#include <unistd.h>
+#  include <unistd.h>
 #endif
 
-
-#include "banned.h"     /* include after system header <> includes */
-
+#include "banned.h" /* include after system header <> includes */
 
 int
 main(void)
 {
 #if !defined(OFF_T_NON_SCALAR)
-        off_t value;    /* an off_t to perform arithmetic on */
-        off_t value2;   /* an off_t to perform arithmetic on */
+    off_t value;  /* an off_t to perform arithmetic on */
+    off_t value2; /* an off_t to perform arithmetic on */
 
-        /*
-         * do some math opts on an off_t
-         */
-        value = (off_t)getpid();
-        value2 = (off_t)-1;
-        if (value > (off_t)1) {
-                --value;
-        }
-#if !defined(_WIN32) && !defined(_WIN64)
-        if (value <= (off_t)getppid()) {
-                --value;
-        }
-#endif
-        if (value == value2) {
-                value += value2;
-        }
-        value <<= 1;
-        if (!value) {
-                printf("/* something for the off_t to do */\n");
-        }
+    /*
+     * do some math opts on an off_t
+     */
+    value = (off_t)getpid();
+    value2 = (off_t)-1;
+    if (value > (off_t)1) {
+	--value;
+    }
+#  if !defined(_WIN32) && !defined(_WIN64)
+    if (value <= (off_t)getppid()) {
+	--value;
+    }
+#  endif
+    if (value == value2) {
+	value += value2;
+    }
+    value <<= 1;
+    if (!value) {
+	printf("/* something for the off_t to do */\n");
+    }
 
-        /*
-         * report off_t as a scalar
-         */
-        printf("#undef HAVE_OFF_T_SCALAR\n");
-        printf("#define HAVE_OFF_T_SCALAR /* off_t is a simple value */\n");
+    /*
+     * report off_t as a scalar
+     */
+    printf("#undef HAVE_OFF_T_SCALAR\n");
+    printf("#define HAVE_OFF_T_SCALAR /* off_t is a simple value */\n");
 #else
-        printf("#undef HAVE_OFF_T_SCALAR /* off_t is not a simple value */\n");
+    printf("#undef HAVE_OFF_T_SCALAR /* off_t is not a simple value */\n");
 #endif
-        /* exit(0); */
-        return 0;
+    /* exit(0); */
+    return 0;
 }

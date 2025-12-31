@@ -26,11 +26,10 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-
 #include <stdio.h>
 #include "have_string.h"
 #ifdef HAVE_STRING_H
-# include <string.h>
+#  include <string.h>
 #endif
 #include "alloc.h"
 #include "value.h"
@@ -40,10 +39,8 @@
 #include "nametype.h"
 #include "str.h"
 
-
 #include "errtbl.h"
-#include "banned.h"     /* include after system header <> includes */
-
+#include "banned.h" /* include after system header <> includes */
 
 #define NBLOCKCHUNK 16
 
@@ -52,10 +49,8 @@ STATIC long maxnblockcount = 0;
 STATIC STRINGHEAD nblocknames;
 STATIC NBLOCK **nblocks;
 
-
 /* forward declarations */
-S_FUNC void blkchk(BLOCK*);
-
+S_FUNC void blkchk(BLOCK *);
 
 /*
  * blkalloc - allocate a block
@@ -71,47 +66,48 @@ S_FUNC void blkchk(BLOCK*);
 BLOCK *
 blkalloc(int len, int chunk)
 {
-        BLOCK *nblk;    /* new block allocated */
+    BLOCK *nblk; /* new block allocated */
 
-        /*
-         * firewall
-         */
-        if (len < 0)
-                len = 0;
-        if (chunk <= 0)
-                chunk = BLK_CHUNKSIZE;
+    /*
+     * firewall
+     */
+    if (len < 0) {
+	len = 0;
+    }
+    if (chunk <= 0) {
+	chunk = BLK_CHUNKSIZE;
+    }
 
-        /*
-         * allocate BLOCK
-         */
-        nblk = (BLOCK *)malloc(sizeof(BLOCK));
-        if (nblk == NULL) {
-                math_error("cannot allocate block");
-                not_reached();
-        }
+    /*
+     * allocate BLOCK
+     */
+    nblk = (BLOCK *)malloc(sizeof(BLOCK));
+    if (nblk == NULL) {
+	math_error("cannot allocate block");
+	not_reached();
+    }
 
-        /*
-         * initialize BLOCK
-         */
-        nblk->blkchunk = chunk;
-        nblk->maxsize = ((len+chunk)/chunk)*chunk;
-        nblk->data = (USB8*)malloc(nblk->maxsize);
-        if (nblk->data == NULL) {
-                math_error("cannot allocate block data storage");
-                not_reached();
-        }
-        memset(nblk->data, 0, nblk->maxsize);
-        nblk->datalen = len;
+    /*
+     * initialize BLOCK
+     */
+    nblk->blkchunk = chunk;
+    nblk->maxsize = ((len + chunk) / chunk) * chunk;
+    nblk->data = (USB8 *)malloc(nblk->maxsize);
+    if (nblk->data == NULL) {
+	math_error("cannot allocate block data storage");
+	not_reached();
+    }
+    memset(nblk->data, 0, nblk->maxsize);
+    nblk->datalen = len;
 
-        /*
-         * return BLOCK
-         */
-        if (conf->calc_debug & CALCDBG_BLOCK) {
-                blkchk(nblk);
-        }
-        return nblk;
+    /*
+     * return BLOCK
+     */
+    if (conf->calc_debug & CALCDBG_BLOCK) {
+	blkchk(nblk);
+    }
+    return nblk;
 }
-
 
 /*
  * blk_free - free a block
@@ -125,20 +121,19 @@ blkalloc(int len, int chunk)
 void
 blk_free(BLOCK *blk)
 {
-        /* free if non-NULL */
-        if (blk != NULL) {
+    /* free if non-NULL */
+    if (blk != NULL) {
 
-                /* free data storage */
-                if (blk->data != NULL) {
-                        free(blk->data);
-                }
+	/* free data storage */
+	if (blk->data != NULL) {
+	    free(blk->data);
+	}
 
-                /* free the block */
-                free(blk);
-        }
-        return;
+	/* free the block */
+	free(blk);
+    }
+    return;
 }
-
 
 /*
  * blkchk - check the sanity of a block
@@ -163,44 +158,43 @@ S_FUNC void
 blkchk(BLOCK *blk)
 {
 
-        /*
-         * firewall - general sanity check
-         */
-        if ((conf->calc_debug & CALCDBG_BLOCK) == 0) {
-                /* do nothing when debugging is disabled */
-                return;
-        }
-        if (blk == NULL) {
-                math_error("internal: blk ptr is NULL");
-                not_reached();
-        }
+    /*
+     * firewall - general sanity check
+     */
+    if ((conf->calc_debug & CALCDBG_BLOCK) == 0) {
+	/* do nothing when debugging is disabled */
+	return;
+    }
+    if (blk == NULL) {
+	math_error("internal: blk ptr is NULL");
+	not_reached();
+    }
 
-        /*
-         * pointers must not be NULL
-         */
-        if (blk->data == NULL) {
-                math_error("internal: blk->data ptr is NULL");
-                not_reached();
-        }
+    /*
+     * pointers must not be NULL
+     */
+    if (blk->data == NULL) {
+	math_error("internal: blk->data ptr is NULL");
+	not_reached();
+    }
 
-        /*
-         * check data lengths
-         */
-        if (blk->datalen < 0) {
-                math_error("internal: blk->datalen < 0");
-                not_reached();
-        }
+    /*
+     * check data lengths
+     */
+    if (blk->datalen < 0) {
+	math_error("internal: blk->datalen < 0");
+	not_reached();
+    }
 
-        /*
-         * check the datalen and datalen2 values
-         */
-        if (blk->datalen < 0) {
-                math_error("internal: blk->datalen < 0");
-                not_reached();
-        }
-        return;
+    /*
+     * check the datalen and datalen2 values
+     */
+    if (blk->datalen < 0) {
+	math_error("internal: blk->datalen < 0");
+	not_reached();
+    }
+    return;
 }
-
 
 /*
  * blkrealloc - reallocate a block
@@ -225,108 +219,107 @@ blkchk(BLOCK *blk)
 BLOCK *
 blkrealloc(BLOCK *blk, int newlen, int newchunk)
 {
-        USB8 *nblk;     /* realloced storage */
-        int newmax;     /* new maximum stoage size */
+    USB8 *nblk; /* realloced storage */
+    int newmax; /* new maximum stoage size */
 
-        /*
-         * firewall
-         */
-        if (conf->calc_debug & CALCDBG_BLOCK) {
-                blkchk(blk);
-        }
+    /*
+     * firewall
+     */
+    if (conf->calc_debug & CALCDBG_BLOCK) {
+	blkchk(blk);
+    }
 
-        /*
-         * process args
-         */
-        /* newlen < 0 means do not change the length */
-        if (newlen < 0) {
-                newlen = blk->datalen;
-        }
-        /* newchunk <= 0 means do not change the chunk size */
-        if (newchunk < 0) {
-                newchunk = blk->blkchunk;
-        } else if (newchunk == 0) {
-                newchunk = BLK_CHUNKSIZE;
-        }
+    /*
+     * process args
+     */
+    /* newlen < 0 means do not change the length */
+    if (newlen < 0) {
+	newlen = blk->datalen;
+    }
+    /* newchunk <= 0 means do not change the chunk size */
+    if (newchunk < 0) {
+	newchunk = blk->blkchunk;
+    } else if (newchunk == 0) {
+	newchunk = BLK_CHUNKSIZE;
+    }
 
-        /*
-         * reallocate storage if we have a different allocation size
-         */
-        newmax = ((newlen+newchunk)/newchunk)*newchunk;
-        if (newmax != blk->maxsize) {
+    /*
+     * reallocate storage if we have a different allocation size
+     */
+    newmax = ((newlen + newchunk) / newchunk) * newchunk;
+    if (newmax != blk->maxsize) {
 
-                /* reallocate new storage */
-                nblk = (USB8*)realloc(blk->data, newmax);
-                if (nblk == NULL) {
-                        math_error("cannot reallocate block storage");
-                        not_reached();
-                }
+	/* reallocate new storage */
+	nblk = (USB8 *)realloc(blk->data, newmax);
+	if (nblk == NULL) {
+	    math_error("cannot reallocate block storage");
+	    not_reached();
+	}
 
-                /* clear any new storage */
-                if (newmax > blk->maxsize) {
-                        memset(nblk+blk->maxsize, 0, (newmax-blk->maxsize));
-                }
-                blk->maxsize = newmax;
+	/* clear any new storage */
+	if (newmax > blk->maxsize) {
+	    memset(nblk + blk->maxsize, 0, (newmax - blk->maxsize));
+	}
+	blk->maxsize = newmax;
 
-                /* restore the data pointers */
-                blk->data = nblk;
-        }
+	/* restore the data pointers */
+	blk->data = nblk;
+    }
 
-        /*
-         * deal the case of a newlen == 0 early and return
-         */
-        if (newlen == 0) {
+    /*
+     * deal the case of a newlen == 0 early and return
+     */
+    if (newlen == 0) {
 
-                /*
-                 * setup the empty buffer
-                 *
-                 * We know that newtype is not circular since we force
-                 * newlen to be at least 1 (because circular blocks
-                 * always have at least one unused octet).
-                 */
-                if (blk->datalen < blk->maxsize) {
-                        memset(blk->data, 0, blk->datalen);
-                } else {
-                        memset(blk->data, 0, blk->maxsize);
-                }
-                blk->datalen = 0;
-                if (conf->calc_debug & CALCDBG_BLOCK) {
-                        blkchk(blk);
-                }
-                return blk;
-        }
+	/*
+	 * setup the empty buffer
+	 *
+	 * We know that newtype is not circular since we force
+	 * newlen to be at least 1 (because circular blocks
+	 * always have at least one unused octet).
+	 */
+	if (blk->datalen < blk->maxsize) {
+	    memset(blk->data, 0, blk->datalen);
+	} else {
+	    memset(blk->data, 0, blk->maxsize);
+	}
+	blk->datalen = 0;
+	if (conf->calc_debug & CALCDBG_BLOCK) {
+	    blkchk(blk);
+	}
+	return blk;
+    }
 
-        /*
-         * Set the data length
-         *
-         * We also know that the new block is not empty since we have
-         * already dealt with that case above.
-         *
-         * After this section of code, limit and datalen will be
-         * correct in terms of the new type.
-         */
-        if (newlen > blk->datalen) {
+    /*
+     * Set the data length
+     *
+     * We also know that the new block is not empty since we have
+     * already dealt with that case above.
+     *
+     * After this section of code, limit and datalen will be
+     * correct in terms of the new type.
+     */
+    if (newlen > blk->datalen) {
 
-                /* there is new storage, clear it */
-                memset(blk->data + blk->datalen, 0, newlen-blk->datalen);
-                /* growing storage for blocks grows the data */
-                blk->datalen = newlen;
+	/* there is new storage, clear it */
+	memset(blk->data + blk->datalen, 0, newlen - blk->datalen);
+	/* growing storage for blocks grows the data */
+	blk->datalen = newlen;
 
-        } else if (newlen <= blk->datalen) {
+    } else if (newlen <= blk->datalen) {
 
-                /* the block will be full */
-                blk->datalen = newlen;
-        }
+	/* the block will be full */
+	blk->datalen = newlen;
+    }
 
-        /*
-         * return realloced type
-         */
-        if (conf->calc_debug & CALCDBG_BLOCK) {
-                blkchk(blk);
-        }
-        return blk;
+    /*
+     * return realloced type
+     */
+    if (conf->calc_debug & CALCDBG_BLOCK) {
+	blkchk(blk);
+    }
+    return blk;
 }
-
 
 /*
  * blktrunc - truncate a BLOCK down to a minimal fixed block
@@ -346,36 +339,35 @@ blkrealloc(BLOCK *blk, int newlen, int newchunk)
 void
 blktrunc(BLOCK *blk)
 {
-        /*
-         * firewall
-         */
-        if (conf->calc_debug & CALCDBG_BLOCK) {
-                blkchk(blk);
-        }
+    /*
+     * firewall
+     */
+    if (conf->calc_debug & CALCDBG_BLOCK) {
+	blkchk(blk);
+    }
 
-        /*
-         * free the old storage
-         */
-        free(blk->data);
+    /*
+     * free the old storage
+     */
+    free(blk->data);
 
-        /*
-         * setup as a zero length fixed block
-         */
-        blk->blkchunk = 1;
-        blk->maxsize = 1;
-        blk->datalen = 0;
-        blk->data = (USB8*)malloc(1);
-        if (blk->data == NULL) {
-                math_error("cannot allocate truncated block storage");
-                not_reached();
-        }
-        blk->data[0] = (USB8)0;
-        if (conf->calc_debug & CALCDBG_BLOCK) {
-                blkchk(blk);
-        }
-        return;
+    /*
+     * setup as a zero length fixed block
+     */
+    blk->blkchunk = 1;
+    blk->maxsize = 1;
+    blk->datalen = 0;
+    blk->data = (USB8 *)malloc(1);
+    if (blk->data == NULL) {
+	math_error("cannot allocate truncated block storage");
+	not_reached();
+    }
+    blk->data[0] = (USB8)0;
+    if (conf->calc_debug & CALCDBG_BLOCK) {
+	blkchk(blk);
+    }
+    return;
 }
-
 
 /*
  * blk_copy - copy a block
@@ -389,34 +381,33 @@ blktrunc(BLOCK *blk)
 BLOCK *
 blk_copy(BLOCK *blk)
 {
-        BLOCK *nblk;            /* copy of blk */
+    BLOCK *nblk; /* copy of blk */
 
-        /*
-         * malloc new block
-         */
-        nblk = (BLOCK *)malloc(sizeof(BLOCK));
-        if (nblk == NULL) {
-                math_error("blk_copy: cannot malloc BLOCK");
-                not_reached();
-        }
+    /*
+     * malloc new block
+     */
+    nblk = (BLOCK *)malloc(sizeof(BLOCK));
+    if (nblk == NULL) {
+	math_error("blk_copy: cannot malloc BLOCK");
+	not_reached();
+    }
 
-        /*
-         * duplicate most of the block
-         */
-        *nblk = *blk;
+    /*
+     * duplicate most of the block
+     */
+    *nblk = *blk;
 
-        /*
-         * duplicate block data
-         */
-        nblk->data = (USB8 *)malloc(blk->maxsize);
-        if (nblk->data == NULL) {
-                math_error("blk_copy: cannot duplicate block data");
-                not_reached();
-        }
-        memcpy(nblk->data, blk->data, blk->maxsize);
-        return nblk;
+    /*
+     * duplicate block data
+     */
+    nblk->data = (USB8 *)malloc(blk->maxsize);
+    if (nblk->data == NULL) {
+	math_error("blk_copy: cannot duplicate block data");
+	not_reached();
+    }
+    memcpy(nblk->data, blk->data, blk->maxsize);
+    return nblk;
 }
-
 
 /*
  * blk_cmp - compare blocks
@@ -432,42 +423,41 @@ blk_copy(BLOCK *blk)
 int
 blk_cmp(BLOCK *a, BLOCK *b)
 {
-        /*
-         * firewall and quick check
-         */
-        if (a == b) {
-                /* pointers to the same object */
-                return false;
-        }
-        if (a == NULL || b == NULL) {
-                /* one pointer is NULL, so they differ */
-                return true;
-        }
+    /*
+     * firewall and quick check
+     */
+    if (a == b) {
+	/* pointers to the same object */
+	return false;
+    }
+    if (a == NULL || b == NULL) {
+	/* one pointer is NULL, so they differ */
+	return true;
+    }
 
-        /*
-         * compare lengths
-         */
-        if (a->datalen != b->datalen) {
-                /* different lengths are different */
-                return true;
-        }
+    /*
+     * compare lengths
+     */
+    if (a->datalen != b->datalen) {
+	/* different lengths are different */
+	return true;
+    }
 
-        /*
-         * compare the section
-         *
-         * We have the same lengths and types, so compare the data sections.
-         */
-        if (memcmp(a->data, b->data, a->datalen) != 0) {
-                /* different sections are different */
-                return true;
-        }
+    /*
+     * compare the section
+     *
+     * We have the same lengths and types, so compare the data sections.
+     */
+    if (memcmp(a->data, b->data, a->datalen) != 0) {
+	/* different sections are different */
+	return true;
+    }
 
-        /*
-         * the blocks are the same
-         */
-        return false;
+    /*
+     * the blocks are the same
+     */
+    return false;
 }
-
 
 /*
  * Print chunksize, maxsize, datalen on line line and if datalen > 0,
@@ -477,25 +467,26 @@ blk_cmp(BLOCK *a, BLOCK *b)
 void
 blk_print(BLOCK *blk)
 {
-        long i;
-        bool havetail;
-        USB8 *ptr;
+    long i;
+    bool havetail;
+    USB8 *ptr;
 
-        /* XXX - should use the config parameters for better print control */
+    /* XXX - should use the config parameters for better print control */
 
-        printf("chunksize = %d, maxsize = %d, datalen = %d\n\t",
-                (int)blk->blkchunk, (int)blk->maxsize, (int)blk->datalen);
-        i = blk->datalen;
-        havetail = (i > 30);
-        if (havetail)
-                i = 30;
-        ptr = blk->data;
-        while (i-- > 0)
-                printf("%02x", *ptr++);
-        if (havetail)
-                printf("...");
+    printf("chunksize = %d, maxsize = %d, datalen = %d\n\t", (int)blk->blkchunk, (int)blk->maxsize, (int)blk->datalen);
+    i = blk->datalen;
+    havetail = (i > 30);
+    if (havetail) {
+	i = 30;
+    }
+    ptr = blk->data;
+    while (i-- > 0) {
+	printf("%02x", *ptr++);
+    }
+    if (havetail) {
+	printf("...");
+    }
 }
-
 
 /*
  * Routine to print id and name of a named block and details of its
@@ -504,21 +495,19 @@ blk_print(BLOCK *blk)
 void
 nblock_print(NBLOCK *nblk)
 {
-        BLOCK *blk;
+    BLOCK *blk;
 
-        /* XXX - use the config parameters for better print control */
+    /* XXX - use the config parameters for better print control */
 
-        blk = nblk->blk;
-        printf("block %d: %s\n\t", nblk->id, nblk->name);
-        if (blk->data == NULL) {
-                printf("chunksize = %d, maxsize = %d, datalen = %d\n\t",
-                (int)blk->blkchunk, (int)blk->maxsize, (int)blk->datalen);
-                printf("NULL");
-        } else {
-                blk_print(blk);
-        }
+    blk = nblk->blk;
+    printf("block %d: %s\n\t", nblk->id, nblk->name);
+    if (blk->data == NULL) {
+	printf("chunksize = %d, maxsize = %d, datalen = %d\n\t", (int)blk->blkchunk, (int)blk->maxsize, (int)blk->datalen);
+	printf("NULL");
+    } else {
+	blk_print(blk);
+    }
 }
-
 
 /*
  * realloc a named block specified by its id.  The new datalen and
@@ -531,49 +520,50 @@ nblock_print(NBLOCK *nblk)
 NBLOCK *
 reallocnblock(int id, int len, int chunk)
 {
-        BLOCK *blk;
-        int newsize;
-        int oldsize;
-        USB8* newdata;
+    BLOCK *blk;
+    int newsize;
+    int oldsize;
+    USB8 *newdata;
 
-        /* Fire wall */
-        if (id < 0 || id >= nblockcount) {
-                math_error("Bad id in call to reallocnblock");
-                not_reached();
-        }
+    /* Fire wall */
+    if (id < 0 || id >= nblockcount) {
+	math_error("Bad id in call to reallocnblock");
+	not_reached();
+    }
 
-        blk = nblocks[id]->blk;
-        if (len < 0)
-                len = blk->datalen;
-        if (chunk < 0)
-                chunk = blk->blkchunk;
-        else if (chunk == 0)
-                chunk = BLK_CHUNKSIZE;
-        newsize = (1 + len/chunk) * chunk;
-        oldsize = blk->maxsize;
-        newdata = blk->data;
-        if (newdata == NULL) {
-                newdata = malloc(newsize);
-                if (newdata == NULL) {
-                        math_error("Allocation failed");
-                        not_reached();
-                }
-        } else if (newsize != oldsize) {
-                newdata = realloc(blk->data, newsize);
-                if (newdata == NULL) {
-                        math_error("Reallocation failed");
-                        not_reached();
-                }
-        }
-        memset(newdata + len, 0, newsize - len);
+    blk = nblocks[id]->blk;
+    if (len < 0) {
+	len = blk->datalen;
+    }
+    if (chunk < 0) {
+	chunk = blk->blkchunk;
+    } else if (chunk == 0) {
+	chunk = BLK_CHUNKSIZE;
+    }
+    newsize = (1 + len / chunk) * chunk;
+    oldsize = blk->maxsize;
+    newdata = blk->data;
+    if (newdata == NULL) {
+	newdata = malloc(newsize);
+	if (newdata == NULL) {
+	    math_error("Allocation failed");
+	    not_reached();
+	}
+    } else if (newsize != oldsize) {
+	newdata = realloc(blk->data, newsize);
+	if (newdata == NULL) {
+	    math_error("Reallocation failed");
+	    not_reached();
+	}
+    }
+    memset(newdata + len, 0, newsize - len);
 
-        blk->maxsize = newsize;
-        blk->datalen = len;
-        blk->blkchunk = chunk;
-        blk->data = newdata;
-        return nblocks[id];
+    blk->maxsize = newsize;
+    blk->datalen = len;
+    blk->blkchunk = chunk;
+    blk->data = newdata;
+    return nblocks[id];
 }
-
 
 /*
  * Create and return a new namedblock with specified name, len and
@@ -582,66 +572,63 @@ reallocnblock(int id, int len, int chunk)
 NBLOCK *
 createnblock(char *name, int len, int chunk)
 {
-        NBLOCK *res;
-        char *newname;
+    NBLOCK *res;
+    char *newname;
 
-        if (nblockcount >= maxnblockcount) {
-                if (maxnblockcount <= 0) {
-                        maxnblockcount = NBLOCKCHUNK;
-                        nblocks = (NBLOCK **)malloc(NBLOCKCHUNK *
-                                                    sizeof(NBLOCK *));
-                        if (nblocks == NULL) {
-                                maxnblockcount = 0;
-                                math_error("unable to malloc new named blocks");
-                                not_reached();
-                        }
-                } else {
-                        maxnblockcount += NBLOCKCHUNK;
-                        nblocks = (NBLOCK **)realloc(nblocks, maxnblockcount *
-                                                     sizeof(NBLOCK *));
-                        if (nblocks == NULL) {
-                                maxnblockcount = 0;
-                                math_error("cannot malloc more named blocks");
-                                not_reached();
-                        }
-                }
-        }
-        if (nblockcount == 0)
-                initstr(&nblocknames);
-        if (findstr(&nblocknames, name) >= 0) {
-                math_error("Named block already exists!!!");
-                not_reached();
-        }
-        newname = addstr(&nblocknames, name);
-        if (newname == NULL) {
-                math_error("Block name allocation failed");
-                not_reached();
-        }
+    if (nblockcount >= maxnblockcount) {
+	if (maxnblockcount <= 0) {
+	    maxnblockcount = NBLOCKCHUNK;
+	    nblocks = (NBLOCK **)malloc(NBLOCKCHUNK * sizeof(NBLOCK *));
+	    if (nblocks == NULL) {
+		maxnblockcount = 0;
+		math_error("unable to malloc new named blocks");
+		not_reached();
+	    }
+	} else {
+	    maxnblockcount += NBLOCKCHUNK;
+	    nblocks = (NBLOCK **)realloc(nblocks, maxnblockcount * sizeof(NBLOCK *));
+	    if (nblocks == NULL) {
+		maxnblockcount = 0;
+		math_error("cannot malloc more named blocks");
+		not_reached();
+	    }
+	}
+    }
+    if (nblockcount == 0) {
+	initstr(&nblocknames);
+    }
+    if (findstr(&nblocknames, name) >= 0) {
+	math_error("Named block already exists!!!");
+	not_reached();
+    }
+    newname = addstr(&nblocknames, name);
+    if (newname == NULL) {
+	math_error("Block name allocation failed");
+	not_reached();
+    }
 
-        res = (NBLOCK *) malloc(sizeof(NBLOCK));
-        if (res == NULL) {
-                math_error("Named block allocation failed");
-                not_reached();
-        }
+    res = (NBLOCK *)malloc(sizeof(NBLOCK));
+    if (res == NULL) {
+	math_error("Named block allocation failed");
+	not_reached();
+    }
 
-        nblocks[nblockcount] = res;
-        res->name = newname;
-        res->subtype = V_NOSUBTYPE;
-        res->id = nblockcount++;
-        res->blk = blkalloc(len, chunk);
-        return res;
+    nblocks[nblockcount] = res;
+    res->name = newname;
+    res->subtype = V_NOSUBTYPE;
+    res->id = nblockcount++;
+    res->blk = blkalloc(len, chunk);
+    return res;
 }
-
 
 /*
  * find a named block
  */
 int
-findnblockid(char * name)
+findnblockid(char *name)
 {
-        return findstr(&nblocknames, name);
+    return findstr(&nblocknames, name);
 }
-
 
 /*
  * free data block for named block with specified id
@@ -649,22 +636,24 @@ findnblockid(char * name)
 int
 removenblock(int id)
 {
-        NBLOCK *nblk;
+    NBLOCK *nblk;
 
-        if (id < 0 || id >= nblockcount)
-                return E_BLKFREE_3;
-        nblk = nblocks[id];
-        if (nblk->blk->data == NULL)
-                return 0;
-        if (nblk->subtype & V_NOREALLOC)
-                return E_BLKFREE_5;
-        free(nblk->blk->data);
-        nblk->blk->data = NULL;
-        nblk->blk->maxsize = 0;
-        nblk->blk->datalen = 0;
-        return 0;
+    if (id < 0 || id >= nblockcount) {
+	return E_BLKFREE_3;
+    }
+    nblk = nblocks[id];
+    if (nblk->blk->data == NULL) {
+	return 0;
+    }
+    if (nblk->subtype & V_NOREALLOC) {
+	return E_BLKFREE_5;
+    }
+    free(nblk->blk->data);
+    nblk->blk->data = NULL;
+    nblk->blk->maxsize = 0;
+    nblk->blk->datalen = 0;
+    return 0;
 }
-
 
 /*
  * count number of current unfreed named blocks
@@ -672,16 +661,16 @@ removenblock(int id)
 int
 countnblocks(void)
 {
-        int n;
-        int id;
+    int n;
+    int id;
 
-        for (n = 0, id = 0; id < nblockcount; id++) {
-                if (nblocks[id]->blk->data != NULL)
-                        n++;
-        }
-        return n;
+    for (n = 0, id = 0; id < nblockcount; id++) {
+	if (nblocks[id]->blk->data != NULL) {
+	    n++;
+	}
+    }
+    return n;
 }
-
 
 /*
  * display id and name for each unfreed named block
@@ -689,21 +678,21 @@ countnblocks(void)
 void
 shownblocks(void)
 {
-        int id;
+    int id;
 
-        if (countnblocks() == 0) {
-                printf("No unfreed named blocks\n\n");
-                return;
-        }
-        printf(" id   name\n");
-        printf("----  -----\n");
-        for (id = 0; id < nblockcount; id++) {
-                if (nblocks[id]->blk->data != NULL)
-                        printf("%3d   %s\n", id, nblocks[id]->name);
-        }
-        printf("\n");
+    if (countnblocks() == 0) {
+	printf("No unfreed named blocks\n\n");
+	return;
+    }
+    printf(" id   name\n");
+    printf("----  -----\n");
+    for (id = 0; id < nblockcount; id++) {
+	if (nblocks[id]->blk->data != NULL) {
+	    printf("%3d   %s\n", id, nblocks[id]->name);
+	}
+    }
+    printf("\n");
 }
-
 
 /*
  * Return pointer to nblock with specified id, NULL if never created.
@@ -712,11 +701,11 @@ shownblocks(void)
 NBLOCK *
 findnblock(int id)
 {
-        if (id < 0 || id >= nblockcount)
-                return NULL;
-        return nblocks[id];
+    if (id < 0 || id >= nblockcount) {
+	return NULL;
+    }
+    return nblocks[id];
 }
-
 
 /*
  * Create a new block with specified newlen and new chunksize and copy
@@ -726,27 +715,30 @@ findnblock(int id)
 BLOCK *
 copyrealloc(BLOCK *blk, int newlen, int newchunk)
 {
-        BLOCK * newblk;
-        int oldlen;
+    BLOCK *newblk;
+    int oldlen;
 
-        oldlen = blk->datalen;
+    oldlen = blk->datalen;
 
-        if (newlen < 0)                 /* retain length */
-                newlen = oldlen;
+    if (newlen < 0) { /* retain length */
+	newlen = oldlen;
+    }
 
-        if (newchunk < 0)               /* retain chunksize */
-                newchunk = blk->blkchunk;
-        else if (newchunk == 0)         /* use default chunksize */
-                newchunk = BLK_CHUNKSIZE;
+    if (newchunk < 0) { /* retain chunksize */
+	newchunk = blk->blkchunk;
+    } else if (newchunk == 0) { /* use default chunksize */
+	newchunk = BLK_CHUNKSIZE;
+    }
 
+    newblk = blkalloc(newlen, newchunk);
 
-        newblk = blkalloc(newlen, newchunk);
+    if (newlen < oldlen) {
+	oldlen = newlen;
+    }
 
-        if (newlen < oldlen)
-                oldlen = newlen;
+    if (newlen > 0) {
+	memcpy(newblk->data, blk->data, oldlen);
+    }
 
-        if (newlen > 0)
-                memcpy(newblk->data, blk->data, oldlen);
-
-        return newblk;
+    return newblk;
 }

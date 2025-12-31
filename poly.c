@@ -26,136 +26,136 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-
 #include "value.h"
 
-
-#include "banned.h"     /* include after system header <> includes */
-
+#include "banned.h" /* include after system header <> includes */
 
 bool
 evp(LISTELEM *cp, LISTELEM *x, VALUE *vres)
 {
-        VALUE v, tmp1, tmp2;
-        bool s;
+    VALUE v, tmp1, tmp2;
+    bool s;
 
-        s = false;
-        while (cp) {
-                if (s) {
-                        mulvalue(vres, &x->e_value, &tmp1);
-                        freevalue(vres);
-                        *vres = tmp1;
-                }
-                v = cp->e_value;
-                if (v.v_type == V_LIST) {
-                        if (evalpoly(v.v_list, x->e_next, &tmp1)) {
-                                if (s) {
-                                        addvalue(&tmp1, vres, &tmp2);
-                                        freevalue(&tmp1);
-                                        freevalue(vres);
-                                        *vres = tmp2;
-                                } else {
-                                        s = true;
-                                        *vres = tmp1;
-                                }
-                        }
-                } else {
-                        if (s) {
-                                addvalue(&v, vres, &tmp1);
-                                freevalue(vres);
-                                *vres = tmp1;
-                        } else {
-                                s = true;
-                                copyvalue(&v, vres);
-                        }
-                }
-                cp = cp->e_prev;
-        }
-        return s;
+    s = false;
+    while (cp) {
+	if (s) {
+	    mulvalue(vres, &x->e_value, &tmp1);
+	    freevalue(vres);
+	    *vres = tmp1;
+	}
+	v = cp->e_value;
+	if (v.v_type == V_LIST) {
+	    if (evalpoly(v.v_list, x->e_next, &tmp1)) {
+		if (s) {
+		    addvalue(&tmp1, vres, &tmp2);
+		    freevalue(&tmp1);
+		    freevalue(vres);
+		    *vres = tmp2;
+		} else {
+		    s = true;
+		    *vres = tmp1;
+		}
+	    }
+	} else {
+	    if (s) {
+		addvalue(&v, vres, &tmp1);
+		freevalue(vres);
+		*vres = tmp1;
+	    } else {
+		s = true;
+		copyvalue(&v, vres);
+	    }
+	}
+	cp = cp->e_prev;
+    }
+    return s;
 }
-
 
 bool
 evalpoly(LIST *clist, LISTELEM *x, VALUE *vres)
 {
-        LISTELEM *cp;
-        VALUE v;
+    LISTELEM *cp;
+    VALUE v;
 
-        cp = clist->l_first;
-        if (cp == NULL)
-                return false;
-        if (x == NULL) {
-                v = cp->e_value;
-                if (v.v_type == V_LIST)
-                        return evalpoly(v.v_list, x->e_next, vres);
-                copyvalue(&v, vres);
-                return true;
-        }
-        return evp(clist->l_last, x, vres);
+    cp = clist->l_first;
+    if (cp == NULL) {
+	return false;
+    }
+    if (x == NULL) {
+	v = cp->e_value;
+	if (v.v_type == V_LIST) {
+	    return evalpoly(v.v_list, x->e_next, vres);
+	}
+	copyvalue(&v, vres);
+	return true;
+    }
+    return evp(clist->l_last, x, vres);
 }
 
 void
 insertitems(LIST *lp1, LIST *lp2)
 {
-        LISTELEM *ep;
+    LISTELEM *ep;
 
-        for (ep = lp2->l_first; ep; ep = ep->e_next) {
-                if (ep->e_value.v_type == V_LIST)
-                        insertitems(lp1, ep->e_value.v_list);
-                else
-                        insertlistlast(lp1, &ep->e_value);
-        }
+    for (ep = lp2->l_first; ep; ep = ep->e_next) {
+	if (ep->e_value.v_type == V_LIST) {
+	    insertitems(lp1, ep->e_value.v_list);
+	} else {
+	    insertlistlast(lp1, &ep->e_value);
+	}
+    }
 }
-
 
 long
 countlistitems(LIST *lp)
 {
-        LISTELEM *ep;
+    LISTELEM *ep;
 
-        long n = 0;
-        for (ep = lp->l_first; ep; ep = ep->e_next) {
-                if (ep->e_value.v_type == V_LIST)
-                        n += countlistitems(ep->e_value.v_list);
-                else
-                        n++;
-        }
-        return n;
+    long n = 0;
+    for (ep = lp->l_first; ep; ep = ep->e_next) {
+	if (ep->e_value.v_type == V_LIST) {
+	    n += countlistitems(ep->e_value.v_list);
+	} else {
+	    n++;
+	}
+    }
+    return n;
 }
-
 
 void
 addlistitems(LIST *lp, VALUE *vres)
 {
-        LISTELEM *ep;
-        VALUE tmp;
+    LISTELEM *ep;
+    VALUE tmp;
 
-        for (ep = lp->l_first; ep; ep = ep->e_next) {
-                addvalue(vres, &ep->e_value, &tmp);
-                freevalue(vres);
-                *vres = tmp;
-                if (vres->v_type < 0)
-                        return;
-        }
+    for (ep = lp->l_first; ep; ep = ep->e_next) {
+	addvalue(vres, &ep->e_value, &tmp);
+	freevalue(vres);
+	*vres = tmp;
+	if (vres->v_type < 0) {
+	    return;
+	}
+    }
 }
 
 void
 addlistinv(LIST *lp, VALUE *vres)
 {
-        LISTELEM *ep;
-        VALUE tmp1, tmp2;
+    LISTELEM *ep;
+    VALUE tmp1, tmp2;
 
-        for (ep = lp->l_first; ep; ep = ep->e_next) {
-                if (ep->e_value.v_type == V_LIST) {
-                        addlistinv(ep->e_value.v_list, vres);
-                } else {
-                        invertvalue(&ep->e_value, &tmp1);
-                        addvalue(vres, &tmp1, &tmp2);
-                        freevalue(&tmp1);
-                        freevalue(vres);
-                        *vres = tmp2;
-                }
-                if (vres->v_type < 0)
-                        return;
-        }
+    for (ep = lp->l_first; ep; ep = ep->e_next) {
+	if (ep->e_value.v_type == V_LIST) {
+	    addlistinv(ep->e_value.v_list, vres);
+	} else {
+	    invertvalue(&ep->e_value, &tmp1);
+	    addvalue(vres, &tmp1, &tmp2);
+	    freevalue(&tmp1);
+	    freevalue(vres);
+	    *vres = tmp2;
+	}
+	if (vres->v_type < 0) {
+	    return;
+	}
+    }
 }

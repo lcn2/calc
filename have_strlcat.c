@@ -41,36 +41,33 @@
 #include <stdio.h>
 #include "have_string.h"
 #ifdef HAVE_STRING_H
-# include <string.h>
+#  include <string.h>
 #endif
 
-
-#include "banned.h"     /* include after system header <> includes */
-
+#include "banned.h" /* include after system header <> includes */
 
 #define BUF_SIZ 5
 
-char src[BUF_SIZ+1] = "abcde";
-
+char src[BUF_SIZ + 1] = "abcde";
 
 int
 main(void)
 {
 #if defined(HAVE_NO_STRLCAT)
 
-        printf("#undef HAVE_STRLCAT /* no */\n");
+    printf("#undef HAVE_STRLCAT /* no */\n");
 
 #else /* HAVE_NO_STRLCAT */
-        char dst[BUF_SIZ+1+1];
+    char dst[BUF_SIZ + 1 + 1];
 
-        dst[0] = 'S';
-        dst[1] = '\0';
-        (void) strlcat(dst, src, sizeof(dst));
+    dst[0] = 'S';
+    dst[1] = '\0';
+    (void)strlcat(dst, src, sizeof(dst));
 
-        printf("#define HAVE_STRLCAT /* yes */\n");
+    printf("#define HAVE_STRLCAT /* yes */\n");
 
 #endif /* HAVE_NO_STRLCAT */
 
-        /* exit(0); */
-        return 0;
+    /* exit(0); */
+    return 0;
 }

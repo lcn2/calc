@@ -54,14 +54,13 @@
  * Endian order of the hardware.
  */
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "have_string.h"
 #ifdef HAVE_STRING_H
-# include <string.h>
+#  include <string.h>
 #endif
 #include "decl.h"
 #include "have_fgetsetpos.h"
@@ -73,214 +72,196 @@
 #include "have_unused.h"
 #include "zmath.h"
 
+#include "banned.h" /* include after system header <> includes */
 
-#include "banned.h"     /* include after system header <> includes */
-
-
-char *program;                  /* our name */
+char *program; /* our name */
 
 int
 main(int UNUSED(argc), char **argv)
 {
-        int stsizelen;          /* bit length of st_size in buf */
-        int fileposlen;         /* bit length of FILEPOS */
-        int devlen;             /* bit length of st_dev in buf */
-        int inodelen;           /* bit length of st_ino in buf */
-        struct stat buf;        /* file status */
+    int stsizelen;   /* bit length of st_size in buf */
+    int fileposlen;  /* bit length of FILEPOS */
+    int devlen;	     /* bit length of st_dev in buf */
+    int inodelen;    /* bit length of st_ino in buf */
+    struct stat buf; /* file status */
 
-        /*
-         * parse args
-         */
-        program = argv[0];
+    /*
+     * parse args
+     */
+    program = argv[0];
 
-        /*
-         * print the file position information
-         */
+    /*
+     * print the file position information
+     */
 #if defined(HAVE_FPOS_POS) && defined(FPOS_POS_BITS)
-        fileposlen = FPOS_POS_BITS;
+    fileposlen = FPOS_POS_BITS;
 #else /* ! HAVE_FPOS_POS */
-# if defined(FPOS_BITS)
-        fileposlen = FPOS_BITS;
-# else
-        fileposlen = sizeof(FILEPOS)*8;
-# endif
+#  if defined(FPOS_BITS)
+    fileposlen = FPOS_BITS;
+#  else
+    fileposlen = sizeof(FILEPOS) * 8;
+#  endif
 #endif /* ! HAVE_FPOS_POS */
-        printf("#undef FILEPOS_BITS\n");
-        printf("#define FILEPOS_BITS %d\n", fileposlen);
-        printf("#undef FILEPOS_LEN\n");
-        printf("#define FILEPOS_LEN %d\n", fileposlen/8);
+    printf("#undef FILEPOS_BITS\n");
+    printf("#define FILEPOS_BITS %d\n", fileposlen);
+    printf("#undef FILEPOS_LEN\n");
+    printf("#define FILEPOS_LEN %d\n", fileposlen / 8);
 #if CALC_BYTE_ORDER == BIG_ENDIAN
-        /*
-         * Big Endian
-         */
-        /*
-         * Use casts to (HALF *) because SWAP_HALF_IN_B* might expand to
-         * a simple assignment and SWAP_HALF_IN_FILEPOS might get a
-         * (HALF *) and a (FILEPOS *) which are not assignment-compatible.
-         */
-        if (fileposlen == 64) {
-                printf("#define SWAP_HALF_IN_FILEPOS(dest, src) \\\n"
-                       "\tSWAP_HALF_IN_B64((HALF *)dest, (HALF *)src)\n");
-        } else if (fileposlen == 32) {
-                printf("#define SWAP_HALF_IN_FILEPOS(dest, src) \\\n"
-                       "\tSWAP_HALF_IN_B32((HALF *)dest, (HALF *)src)\n");
-        } else if (fileposlen%BASEB == 0) {
-                printf("#define SWAP_HALF_IN_FILEPOS(dest, src) \\\n"
-                       "\tswap_HALFs((HALF *)dest, (HALF *)src, %d)\n",
-                       fileposlen/BASEB);
-        } else {
-                fprintf(stderr, "%s: unexpected BIG_ENDIAN FILEPOS bit size: %d\n",
-                    program, fileposlen);
-                exit(1);
-        }
+    /*
+     * Big Endian
+     */
+    /*
+     * Use casts to (HALF *) because SWAP_HALF_IN_B* might expand to
+     * a simple assignment and SWAP_HALF_IN_FILEPOS might get a
+     * (HALF *) and a (FILEPOS *) which are not assignment-compatible.
+     */
+    if (fileposlen == 64) {
+	printf("#define SWAP_HALF_IN_FILEPOS(dest, src) \\\n"
+	       "\tSWAP_HALF_IN_B64((HALF *)dest, (HALF *)src)\n");
+    } else if (fileposlen == 32) {
+	printf("#define SWAP_HALF_IN_FILEPOS(dest, src) \\\n"
+	       "\tSWAP_HALF_IN_B32((HALF *)dest, (HALF *)src)\n");
+    } else if (fileposlen % BASEB == 0) {
+	printf("#define SWAP_HALF_IN_FILEPOS(dest, src) \\\n"
+	       "\tswap_HALFs((HALF *)dest, (HALF *)src, %d)\n",
+	       fileposlen / BASEB);
+    } else {
+	fprintf(stderr, "%s: unexpected BIG_ENDIAN FILEPOS bit size: %d\n", program, fileposlen);
+	exit(1);
+    }
 #else /* CALC_BYTE_ORDER == BIG_ENDIAN */
-        /*
-         * Little Endian
-         */
-#if defined(HAVE_FILEPOS_SCALAR)
-        printf("#define SWAP_HALF_IN_FILEPOS(dest, src) \\\n"
-               "\t(*((HALF *)(dest)) = *((HALF *)(src)))\n");
-#else /* HAVE_FILEPOS_SCALAR */
-        /*
-         * Normally a "(*(dest) = *(src))" would do, but on some
-         * systems a FILEPOS is not a scalar hence we must memcpy.
-         */
-        printf("#define SWAP_HALF_IN_FILEPOS(dest, src) \\\n"
-               "\tmemcpy((void *)(dest), (void *)(src), FILEPOS_LEN)\n");
-#endif /* HAVE_FILEPOS_SCALAR */
-#endif /* CALC_BYTE_ORDER == BIG_ENDIAN */
-        putchar('\n');
+    /*
+     * Little Endian
+     */
+#  if defined(HAVE_FILEPOS_SCALAR)
+    printf("#define SWAP_HALF_IN_FILEPOS(dest, src) \\\n"
+	   "\t(*((HALF *)(dest)) = *((HALF *)(src)))\n");
+#  else	 /* HAVE_FILEPOS_SCALAR */
+    /*
+     * Normally a "(*(dest) = *(src))" would do, but on some
+     * systems a FILEPOS is not a scalar hence we must memcpy.
+     */
+    printf("#define SWAP_HALF_IN_FILEPOS(dest, src) \\\n"
+	   "\tmemcpy((void *)(dest), (void *)(src), FILEPOS_LEN)\n");
+#  endif /* HAVE_FILEPOS_SCALAR */
+#endif	 /* CALC_BYTE_ORDER == BIG_ENDIAN */
+    putchar('\n');
 
-        /*
-         * print the stat file size information
-         */
+    /*
+     * print the stat file size information
+     */
 #if defined(OFF_T_BITS)
-        stsizelen = OFF_T_BITS;
+    stsizelen = OFF_T_BITS;
 #else
-        stsizelen = sizeof(buf.st_size)*8;
+    stsizelen = sizeof(buf.st_size) * 8;
 #endif
-        printf("#undef OFF_T_BITS\n");
-        printf("#define OFF_T_BITS %d\n", stsizelen);
-        printf("#undef OFF_T_LEN\n");
-        printf("#define OFF_T_LEN %d\n", stsizelen/8);
+    printf("#undef OFF_T_BITS\n");
+    printf("#define OFF_T_BITS %d\n", stsizelen);
+    printf("#undef OFF_T_LEN\n");
+    printf("#define OFF_T_LEN %d\n", stsizelen / 8);
 #if CALC_BYTE_ORDER == BIG_ENDIAN
-        /*
-         * Big Endian
-         */
-        if (stsizelen == 64) {
-                printf("#define SWAP_HALF_IN_OFF_T(dest, src)\t\t%s\n",
-                    "SWAP_HALF_IN_B64(dest, src)");
-        } else if (stsizelen == 32) {
-                printf("#define SWAP_HALF_IN_OFF_T(dest, src)\t\t%s\n",
-                    "SWAP_HALF_IN_B32(dest, src)");
-        } else {
-                fprintf(stderr, "%s: unexpected st_size bit size: %d\n",
-                    program, stsizelen);
-                exit(2);
-        }
+    /*
+     * Big Endian
+     */
+    if (stsizelen == 64) {
+	printf("#define SWAP_HALF_IN_OFF_T(dest, src)\t\t%s\n", "SWAP_HALF_IN_B64(dest, src)");
+    } else if (stsizelen == 32) {
+	printf("#define SWAP_HALF_IN_OFF_T(dest, src)\t\t%s\n", "SWAP_HALF_IN_B32(dest, src)");
+    } else {
+	fprintf(stderr, "%s: unexpected st_size bit size: %d\n", program, stsizelen);
+	exit(2);
+    }
 #else /* CALC_BYTE_ORDER == BIG_ENDIAN */
-        /*
-         * Little Endian
-         *
-         * Normally a "(*(dest) = *(src))" would do, but on some
-         * systems an off_t is not a scalar hence we must memcpy.
-         */
-#if defined(HAVE_OFF_T_SCALAR)
-        printf("#define SWAP_HALF_IN_OFF_T(dest, src)\t\t%s\n",
-            "(*(dest) = *(src))");
-#else /* HAVE_OFF_T_SCALAR */
-        /*
-         * Normally a "(*(dest) = *(src))" would do, but on some
-         * systems, a off_t is not a scalar hence we must memcpy.
-         */
-        printf("#define SWAP_HALF_IN_OFF_T(dest, src)\t%s%d%s\n",
-            "memcpy((void *)(dest), (void *)(src), ", stsizelen/8, ")");
-#endif /* HAVE_OFF_T_SCALAR */
-#endif /* CALC_BYTE_ORDER == BIG_ENDIAN */
-        putchar('\n');
+    /*
+     * Little Endian
+     *
+     * Normally a "(*(dest) = *(src))" would do, but on some
+     * systems an off_t is not a scalar hence we must memcpy.
+     */
+#  if defined(HAVE_OFF_T_SCALAR)
+    printf("#define SWAP_HALF_IN_OFF_T(dest, src)\t\t%s\n", "(*(dest) = *(src))");
+#  else	 /* HAVE_OFF_T_SCALAR */
+    /*
+     * Normally a "(*(dest) = *(src))" would do, but on some
+     * systems, a off_t is not a scalar hence we must memcpy.
+     */
+    printf("#define SWAP_HALF_IN_OFF_T(dest, src)\t%s%d%s\n", "memcpy((void *)(dest), (void *)(src), ", stsizelen / 8, ")");
+#  endif /* HAVE_OFF_T_SCALAR */
+#endif	 /* CALC_BYTE_ORDER == BIG_ENDIAN */
+    putchar('\n');
 
-        /*
-         * print the dev_t size
-         */
+    /*
+     * print the dev_t size
+     */
 #if defined(DEV_BITS)
-        devlen = DEV_BITS;
+    devlen = DEV_BITS;
 #else
-        devlen = sizeof(buf.st_dev)*8;
+    devlen = sizeof(buf.st_dev) * 8;
 #endif
-        printf("#undef DEV_BITS\n");
-        printf("#define DEV_BITS %d\n", devlen);
-        printf("#undef DEV_LEN\n");
-        printf("#define DEV_LEN %d\n", devlen/8);
+    printf("#undef DEV_BITS\n");
+    printf("#define DEV_BITS %d\n", devlen);
+    printf("#undef DEV_LEN\n");
+    printf("#define DEV_LEN %d\n", devlen / 8);
 #if CALC_BYTE_ORDER == BIG_ENDIAN
-        /*
-         * Big Endian
-         */
-        if (devlen == 64) {
-                printf("#define SWAP_HALF_IN_DEV(dest, src)\t\t%s\n",
-                    "SWAP_HALF_IN_B64(dest, src)");
-        } else if (devlen == 32) {
-                printf("#define SWAP_HALF_IN_DEV(dest, src)\t\t%s\n",
-                    "SWAP_HALF_IN_B32(dest, src)");
-        } else if (devlen == 16) {
-                printf("#define SWAP_HALF_IN_DEV(dest, src)\t\t%s\n",
-                    "(*(dest) = *(src))");
-        } else {
-                fprintf(stderr, "%s: unexpected st_dev bit size: %d\n",
-                    program, devlen);
-                exit(3);
-        }
-#else /* CALC_BYTE_ORDER == BIG_ENDIAN */
-        /*
-         * Little Endian
-         *
-         * Normally a "(*(dest) = *(src))" would do, but on some
-         * systems, a DEV is not a scalar hence we must memcpy.
-         */
-        printf("#define SWAP_HALF_IN_DEV(dest, src)\t%s%d%s\n",
-            "memcpy((void *)(dest), (void *)(src), ", devlen/8, ")");
+    /*
+     * Big Endian
+     */
+    if (devlen == 64) {
+	printf("#define SWAP_HALF_IN_DEV(dest, src)\t\t%s\n", "SWAP_HALF_IN_B64(dest, src)");
+    } else if (devlen == 32) {
+	printf("#define SWAP_HALF_IN_DEV(dest, src)\t\t%s\n", "SWAP_HALF_IN_B32(dest, src)");
+    } else if (devlen == 16) {
+	printf("#define SWAP_HALF_IN_DEV(dest, src)\t\t%s\n", "(*(dest) = *(src))");
+    } else {
+	fprintf(stderr, "%s: unexpected st_dev bit size: %d\n", program, devlen);
+	exit(3);
+    }
+#else  /* CALC_BYTE_ORDER == BIG_ENDIAN */
+    /*
+     * Little Endian
+     *
+     * Normally a "(*(dest) = *(src))" would do, but on some
+     * systems, a DEV is not a scalar hence we must memcpy.
+     */
+    printf("#define SWAP_HALF_IN_DEV(dest, src)\t%s%d%s\n", "memcpy((void *)(dest), (void *)(src), ", devlen / 8, ")");
 #endif /* CALC_BYTE_ORDER == BIG_ENDIAN */
-        putchar('\n');
+    putchar('\n');
 
-        /*
-         * print the ino_t size
-         */
+    /*
+     * print the ino_t size
+     */
 #if defined(INODE_BITS)
-        inodelen = INODE_BITS;
+    inodelen = INODE_BITS;
 #else
-        inodelen = sizeof(buf.st_ino)*8;
+    inodelen = sizeof(buf.st_ino) * 8;
 #endif
-        printf("#undef INODE_BITS\n");
-        printf("#define INODE_BITS %d\n", inodelen);
-        printf("#undef INODE_LEN\n");
-        printf("#define INODE_LEN %d\n", inodelen/8);
+    printf("#undef INODE_BITS\n");
+    printf("#define INODE_BITS %d\n", inodelen);
+    printf("#undef INODE_LEN\n");
+    printf("#define INODE_LEN %d\n", inodelen / 8);
 #if CALC_BYTE_ORDER == BIG_ENDIAN
-        /*
-         * Big Endian
-         */
-        if (inodelen == 64) {
-                printf("#define SWAP_HALF_IN_INODE(dest, src)\t\t%s\n",
-                    "SWAP_HALF_IN_B64(dest, src)");
-        } else if (inodelen == 32) {
-                printf("#define SWAP_HALF_IN_INODE(dest, src)\t\t%s\n",
-                    "SWAP_HALF_IN_B32(dest, src)");
-        } else if (inodelen == 16) {
-                printf("#define SWAP_HALF_IN_INODE(dest, src)\t\t%s\n",
-                    "(*(dest) = *(src))");
-        } else {
-                fprintf(stderr, "%s: unexpected st_ino bit size: %d\n",
-                    program, inodelen);
-                exit(4);
-        }
-#else /* CALC_BYTE_ORDER == BIG_ENDIAN */
-        /*
-         * Little Endian
-         *
-         * Normally a "(*(dest) = *(src))" would do, but on some
-         * systems, a INODE is not a scalar hence we must memcpy.
-         */
-        printf("#define SWAP_HALF_IN_INODE(dest, src)\t%s%d%s\n",
-            "memcpy((void *)(dest), (void *)(src), ", inodelen/8, ")");
+    /*
+     * Big Endian
+     */
+    if (inodelen == 64) {
+	printf("#define SWAP_HALF_IN_INODE(dest, src)\t\t%s\n", "SWAP_HALF_IN_B64(dest, src)");
+    } else if (inodelen == 32) {
+	printf("#define SWAP_HALF_IN_INODE(dest, src)\t\t%s\n", "SWAP_HALF_IN_B32(dest, src)");
+    } else if (inodelen == 16) {
+	printf("#define SWAP_HALF_IN_INODE(dest, src)\t\t%s\n", "(*(dest) = *(src))");
+    } else {
+	fprintf(stderr, "%s: unexpected st_ino bit size: %d\n", program, inodelen);
+	exit(4);
+    }
+#else  /* CALC_BYTE_ORDER == BIG_ENDIAN */
+    /*
+     * Little Endian
+     *
+     * Normally a "(*(dest) = *(src))" would do, but on some
+     * systems, a INODE is not a scalar hence we must memcpy.
+     */
+    printf("#define SWAP_HALF_IN_INODE(dest, src)\t%s%d%s\n", "memcpy((void *)(dest), (void *)(src), ", inodelen / 8, ")");
 #endif /* CALC_BYTE_ORDER == BIG_ENDIAN */
-        /* exit(0); */
-        return 0;
+    /* exit(0); */
+    return 0;
 }

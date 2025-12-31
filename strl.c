@@ -23,22 +23,19 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-
 #include "have_string.h"
 #ifdef HAVE_STRING_H
-# include <string.h>
+#  include <string.h>
 #endif
 #include "strl.h"
 #include "alloc.h"
 
 #if defined(STRL_TEST)
-#include <stdio.h>
-#include <stdlib.h>
+#  include <stdio.h>
+#  include <stdlib.h>
 #endif /* STRL_TEST */
 
-
-#include "banned.h"     /* include after system header <> includes */
-
+#include "banned.h" /* include after system header <> includes */
 
 #if !defined(HAVE_STRLCPY) || defined(STRL_TEST)
 /*
@@ -64,61 +61,58 @@
  *       I.e., there was not enough room in dst and so the copy
  *       was stopped before it would have overflowed and was NUL terminated.
  */
-#if defined(STRL_TEST)
+#  if defined(STRL_TEST)
 size_t
-calc_strlcpy(char * dst, const char * src, size_t dstsize)
-#else /* STRL_TEST */
+calc_strlcpy(char *dst, const char *src, size_t dstsize)
+#  else	 /* STRL_TEST */
 size_t
-strlcpy(char * dst, const char * src, size_t dstsize)
-#endif /* STRL_TEST */
+strlcpy(char *dst, const char *src, size_t dstsize)
+#  endif /* STRL_TEST */
 {
-        size_t srclen;  /* src string length not including NUL */
+    size_t srclen; /* src string length not including NUL */
 
-        /*
-         * firewall
-         */
-        if (dst == NULL || src == NULL || dstsize <= 0) {
-                /* nothing can be copied */
-#if defined(STRL_TEST)
-                printf("in %s: return 0\n", __FUNCTION__);
-#endif /* STRL_TEST */
-                return 0;
-        }
+    /*
+     * firewall
+     */
+    if (dst == NULL || src == NULL || dstsize <= 0) {
+	/* nothing can be copied */
+#  if defined(STRL_TEST)
+	printf("in %s: return 0\n", __FUNCTION__);
+#  endif /* STRL_TEST */
+	return 0;
+    }
 
-        /*
-         * determine how much string we could copy
-         */
-        srclen = strlen(src);
+    /*
+     * determine how much string we could copy
+     */
+    srclen = strlen(src);
 
-        /*
-         * perform the size limited copy and NUL terminate
-         */
-        if (srclen+1 > dstsize) {
-            memcpy(dst, src, dstsize-1);
-            dst[dstsize-1] = '\0';
-#if defined(STRL_TEST)
-            printf("in %s: if memcpy(\"%s\", \"%s\", %zu)\n",
-                    __FUNCTION__, dst, src, dstsize-1);
-#endif /* STRL_TEST */
-        } else {
-            memcpy(dst, src, srclen);
-            dst[srclen] = '\0';
-#if defined(STRL_TEST)
-            printf("in %s: else memcpy(\"%s\", \"%s\", %zu)\n",
-                    __FUNCTION__, dst, src, srclen);
-#endif /* STRL_TEST */
-        }
+    /*
+     * perform the size limited copy and NUL terminate
+     */
+    if (srclen + 1 > dstsize) {
+	memcpy(dst, src, dstsize - 1);
+	dst[dstsize - 1] = '\0';
+#  if defined(STRL_TEST)
+	printf("in %s: if memcpy(\"%s\", \"%s\", %zu)\n", __FUNCTION__, dst, src, dstsize - 1);
+#  endif /* STRL_TEST */
+    } else {
+	memcpy(dst, src, srclen);
+	dst[srclen] = '\0';
+#  if defined(STRL_TEST)
+	printf("in %s: else memcpy(\"%s\", \"%s\", %zu)\n", __FUNCTION__, dst, src, srclen);
+#  endif /* STRL_TEST */
+    }
 
-        /*
-         * return the length we tried to copy, not including NUL
-         */
-#if defined(STRL_TEST)
-        printf("in %s: return %zu\n", __FUNCTION__, srclen);
-#endif /* STRL_TEST */
-        return srclen;
+    /*
+     * return the length we tried to copy, not including NUL
+     */
+#  if defined(STRL_TEST)
+    printf("in %s: return %zu\n", __FUNCTION__, srclen);
+#  endif /* STRL_TEST */
+    return srclen;
 }
 #endif /* !HAVE_STRLCPY || STRL_TEST */
-
 
 #if !defined(HAVE_STRLCAT) || defined(STRL_TEST)
 /*
@@ -144,92 +138,86 @@ strlcpy(char * dst, const char * src, size_t dstsize)
  *       I.e., there was not enough room and so the result was truncated
  *       and NUL terminated.
  */
-#if defined(STRL_TEST)
+#  if defined(STRL_TEST)
 size_t
-calc_strlcat(char * dst, const char * src, size_t dstsize)
-#else /* STRL_TEST */
+calc_strlcat(char *dst, const char *src, size_t dstsize)
+#  else	 /* STRL_TEST */
 size_t
-strlcat(char * dst, const char * src, size_t dstsize)
-#endif /* STRL_TEST */
+strlcat(char *dst, const char *src, size_t dstsize)
+#  endif /* STRL_TEST */
 {
-        size_t srclen;  /* src string length not including NUL */
-        size_t dstlen;  /* dst string length not including NUL */
-        size_t catlen;  /* amount from src we can copy */
+    size_t srclen; /* src string length not including NUL */
+    size_t dstlen; /* dst string length not including NUL */
+    size_t catlen; /* amount from src we can copy */
 
-        /*
-         * firewall
-         */
-        if (dst == NULL || src == NULL || dstsize <= 0) {
-                /* nothing can be concatenated */
-#if defined(STRL_TEST)
-                printf("in %s: return 0\n", __FUNCTION__);
-#endif /* STRL_TEST */
-                return 0;
-        }
+    /*
+     * firewall
+     */
+    if (dst == NULL || src == NULL || dstsize <= 0) {
+	/* nothing can be concatenated */
+#  if defined(STRL_TEST)
+	printf("in %s: return 0\n", __FUNCTION__);
+#  endif /* STRL_TEST */
+	return 0;
+    }
 
-        /*
-         * prep to determine the room we have
-         */
-        dstlen = strlen(dst);
-        srclen = strlen(src);
-#if defined(STRL_TEST)
-        printf("in %s: dst = ((%s)) src = ((%s)) dstsize = %zu\n",
-                __FUNCTION__, dst, src, dstsize);
-        printf("in %s: dstlen = %zu srclen = %zu\n",
-                __FUNCTION__, dstlen, srclen);
-#endif /* STRL_TEST */
-        if (dstsize <= dstlen+1) {
-                /* dst is already full */
-#if defined(STRL_TEST)
-                printf("in %s: dstsize: %zu <= dstlen+1: %zu\n",
-                        __FUNCTION__, dstsize, dstlen+1);
-                printf("in %s: already full return %zu\n",
-                        __FUNCTION__, srclen+dstlen);
-#endif /* STRL_TEST */
-                return srclen+dstlen;
-        }
+    /*
+     * prep to determine the room we have
+     */
+    dstlen = strlen(dst);
+    srclen = strlen(src);
+#  if defined(STRL_TEST)
+    printf("in %s: dst = ((%s)) src = ((%s)) dstsize = %zu\n", __FUNCTION__, dst, src, dstsize);
+    printf("in %s: dstlen = %zu srclen = %zu\n", __FUNCTION__, dstlen, srclen);
+#  endif /* STRL_TEST */
+    if (dstsize <= dstlen + 1) {
+	/* dst is already full */
+#  if defined(STRL_TEST)
+	printf("in %s: dstsize: %zu <= dstlen+1: %zu\n", __FUNCTION__, dstsize, dstlen + 1);
+	printf("in %s: already full return %zu\n", __FUNCTION__, srclen + dstlen);
+#  endif /* STRL_TEST */
+	return srclen + dstlen;
+    }
 
-        /*
-         * determine the amount data we can copy
-         */
-        catlen = dstsize - dstlen;
+    /*
+     * determine the amount data we can copy
+     */
+    catlen = dstsize - dstlen;
 
-        /*
-         * perform the concatenation
-         */
-        dst += dstlen;
-#if defined(STRL_TEST)
-        printf("in %s: catlen = %zu\n", __FUNCTION__, catlen);
-#endif /* STRL_TEST */
-        if (catlen > srclen+1) {
-            memcpy(dst, src, srclen);
-            dst[srclen] = '\0';
-#if defined(STRL_TEST)
-            printf("in %s: if memcpy(\"%s\", \"%s\", %zu)\n",
-                    __FUNCTION__, dst, src, srclen);
-#endif /* STRL_TEST */
-        } else {
-            memcpy(dst, src, catlen);
-            dst[catlen] = '\0';
-#if defined(STRL_TEST)
-            printf("in %s: if memcpy(\"%s\", \"%s\", %zu)\n",
-                    __FUNCTION__, dst, src, catlen);
-#endif /* STRL_TEST */
-        }
+    /*
+     * perform the concatenation
+     */
+    dst += dstlen;
+#  if defined(STRL_TEST)
+    printf("in %s: catlen = %zu\n", __FUNCTION__, catlen);
+#  endif /* STRL_TEST */
+    if (catlen > srclen + 1) {
+	memcpy(dst, src, srclen);
+	dst[srclen] = '\0';
+#  if defined(STRL_TEST)
+	printf("in %s: if memcpy(\"%s\", \"%s\", %zu)\n", __FUNCTION__, dst, src, srclen);
+#  endif /* STRL_TEST */
+    } else {
+	memcpy(dst, src, catlen);
+	dst[catlen] = '\0';
+#  if defined(STRL_TEST)
+	printf("in %s: if memcpy(\"%s\", \"%s\", %zu)\n", __FUNCTION__, dst, src, catlen);
+#  endif /* STRL_TEST */
+    }
 
-        /*
-         * return the length, not including NUL, of what could have been formed
-         */
-#if defined(STRL_TEST)
-        printf("in %s: return %zu\n", __FUNCTION__, srclen+dstlen);
-#endif /* STRL_TEST */
-        return srclen+dstlen;
+    /*
+     * return the length, not including NUL, of what could have been formed
+     */
+#  if defined(STRL_TEST)
+    printf("in %s: return %zu\n", __FUNCTION__, srclen + dstlen);
+#  endif /* STRL_TEST */
+    return srclen + dstlen;
 }
 #endif /* !HAVE_STRLCAT || STRL_TEST */
 
 #if defined(STRL_TEST)
 
-static char src[] = "abcde";    /* test source string */
+static char src[] = "abcde"; /* test source string */
 
 /*
  * Main routine to test the strlcpy() and strlcat() functions.
@@ -237,65 +225,65 @@ static char src[] = "abcde";    /* test source string */
 int
 main(int argc, char **argv)
 {
-        char dst[sizeof(src)];  /* test destination string */
-        size_t ret;             /* strlcpy() or strlcat() return */
+    char dst[sizeof(src)]; /* test destination string */
+    size_t ret;		   /* strlcpy() or strlcat() return */
 
-        /*
-         * normal copy
-         */
-        memset(dst, 0, sizeof(dst));
-        printf("src: %s\n", src);
-        ret = calc_strlcpy(dst, src, sizeof(dst));
-        printf("ret: %zu\n", ret);
-        printf("dst: %s\n\n", dst);
+    /*
+     * normal copy
+     */
+    memset(dst, 0, sizeof(dst));
+    printf("src: %s\n", src);
+    ret = calc_strlcpy(dst, src, sizeof(dst));
+    printf("ret: %zu\n", ret);
+    printf("dst: %s\n\n", dst);
 
-        /*
-         * truncated copy
-         */
-        memset(dst, 0, sizeof(dst));
-        printf("src: %s\n", src);
-        ret = calc_strlcpy(dst, src, sizeof(dst)-3);
-        printf("ret: %zu\n", ret);
-        printf("dst: %s\n\n", dst);
+    /*
+     * truncated copy
+     */
+    memset(dst, 0, sizeof(dst));
+    printf("src: %s\n", src);
+    ret = calc_strlcpy(dst, src, sizeof(dst) - 3);
+    printf("ret: %zu\n", ret);
+    printf("dst: %s\n\n", dst);
 
-        /*
-         * overcat
-         */
-        printf("src: %s\n", src);
-        ret = calc_strlcat(dst, src, sizeof(dst));
-        printf("ret: %zu\n", ret);
-        printf("dst: %s\n\n", dst);
+    /*
+     * overcat
+     */
+    printf("src: %s\n", src);
+    ret = calc_strlcat(dst, src, sizeof(dst));
+    printf("ret: %zu\n", ret);
+    printf("dst: %s\n\n", dst);
 
-        /*
-         * fullcat
-         */
-        printf("src: %s\n", src);
-        ret = calc_strlcat(dst, src, sizeof(dst));
-        printf("ret: %zu\n", ret);
-        printf("dst: %s\n\n", dst);
+    /*
+     * fullcat
+     */
+    printf("src: %s\n", src);
+    ret = calc_strlcat(dst, src, sizeof(dst));
+    printf("ret: %zu\n", ret);
+    printf("dst: %s\n\n", dst);
 
-        /*
-         * nilcat
-         */
-        dst[0] = '\0';
-        printf("src: %s\n", src);
-        ret = calc_strlcat(dst, src, sizeof(dst));
-        printf("ret: %zu\n", ret);
-        printf("dst: %s\n\n", dst);
+    /*
+     * nilcat
+     */
+    dst[0] = '\0';
+    printf("src: %s\n", src);
+    ret = calc_strlcat(dst, src, sizeof(dst));
+    printf("ret: %zu\n", ret);
+    printf("dst: %s\n\n", dst);
 
-        /*
-         * shortcat
-         */
-        dst[1] = '\0';
-        printf("src: %s\n", src);
-        ret = calc_strlcat(dst, src, sizeof(dst)-3);
-        printf("ret: %zu\n", ret);
-        printf("dst: %s\n\n", dst);
+    /*
+     * shortcat
+     */
+    dst[1] = '\0';
+    printf("src: %s\n", src);
+    ret = calc_strlcat(dst, src, sizeof(dst) - 3);
+    printf("ret: %zu\n", ret);
+    printf("dst: %s\n\n", dst);
 
-        /*
-         * all done
-         */
-        exit(0);
+    /*
+     * all done
+     */
+    exit(0);
 }
 
 #endif /* STRL_TEST */

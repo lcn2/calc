@@ -39,45 +39,40 @@
  * stuff in this file!
  */
 
-
 #if !defined(CUSTOM_H)
-#define CUSTOM_H
-
+#  define CUSTOM_H
 
 /*
  * arg count definitions
  */
-#define MAX_CUSTOM_ARGS 100     /* maximum number of custom arguments */
-
+#  define MAX_CUSTOM_ARGS 100 /* maximum number of custom arguments */
 
 /*
  * register count
  */
-#define CUSTOM_REG_MAX 31       /* maximum custom register number */
-
+#  define CUSTOM_REG_MAX 31 /* maximum custom register number */
 
 /*
  * custom function interface
  */
 struct custom {
-        char *name;             /* name of the custom builtin */
-        char *desc;             /* very brief description of custom builtin */
-        short minargs;          /* minimum number of arguments */
-        short maxargs;          /* maximum number of arguments */
-        VALUE (*func)(char *name, int argc, VALUE **argv);  /* custom func */
+    char *name;					       /* name of the custom builtin */
+    char *desc;					       /* very brief description of custom builtin */
+    short minargs;				       /* minimum number of arguments */
+    short maxargs;				       /* maximum number of arguments */
+    VALUE (*func)(char *name, int argc, VALUE **argv); /* custom func */
 };
-
 
 /*
  * external declarations
  *
  * These are the required interfaces.  The dummy.c stubs these interfaces too.
  */
-E_FUNC bool custom_compiled(void);      /* return true if libcustcalc compiled CUSTOM defined, false otherwise */
-E_FUNC VALUE custom(char*, int, VALUE**);       /* master custom interface */
-EXTERN bool allow_custom;               /* true => custom builtins allowed */
-E_FUNC void showcustom(void);           /* print custom functions */
-E_FUNC void customhelp(char *);         /* direct custom help */
-E_FUNC void init_custreg(void);         /* initialize custom registers */
+E_FUNC bool custom_compiled(void);	    /* return true if libcustcalc compiled CUSTOM defined, false otherwise */
+E_FUNC VALUE custom(char *, int, VALUE **); /* master custom interface */
+EXTERN bool allow_custom;		    /* true => custom builtins allowed */
+E_FUNC void showcustom(void);		    /* print custom functions */
+E_FUNC void customhelp(char *);		    /* direct custom help */
+E_FUNC void init_custreg(void);		    /* initialize custom registers */
 
 #endif /* !CUSTOM_H */

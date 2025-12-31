@@ -43,29 +43,27 @@
 
 #include <stdio.h>
 
-
 /* undef UNBAN to be undefined to force use of banned.h */
 #undef UNBAN
 
 /* prevent banned.h from including have_ban_pragma.h */
 #define PRE_HAVE_BAN_PRAGMA_H
 
-#include "banned.h"     /* include after system header <> includes */
-
+#include "banned.h" /* include after system header <> includes */
 
 int
 main(void)
 {
 #if defined(HAVE_NO_PRAGMA_GCC_POSION)
 
-        printf("#undef HAVE_PRAGMA_GCC_POSION /* no */\n");
+    printf("#undef HAVE_PRAGMA_GCC_POSION /* no */\n");
 
 #else /* HAVE_NO_PRAGMA_GCC_POSION */
 
-        printf("#define HAVE_PRAGMA_GCC_POSION /* yes */\n");
+    printf("#define HAVE_PRAGMA_GCC_POSION /* yes */\n");
 
 #endif /* HAVE_NO_PRAGMA_GCC_POSION */
 
-        /* exit(0); */
-        return 0;
+    /* exit(0); */
+    return 0;
 }

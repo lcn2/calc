@@ -24,17 +24,14 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-
 #include <unistd.h>
 
 #include "../have_const.h"
 #include "../value.h"
 #include "../custom.h"
 
-
 #include "../errtbl.h"
-#include "../banned.h"  /* include after system header <> includes */
-
+#include "../banned.h" /* include after system header <> includes */
 
 /*
  * custom_compiled - determine if custom functions are compiled into libcustcalc
@@ -47,20 +44,17 @@ E_FUNC bool
 custom_compiled(void)
 {
 #if defined(CUSTOM)
-        return true;
-#else /* CUSTOM */
-        return false;
+    return true;
+#else  /* CUSTOM */
+    return false;
 #endif /* CUSTOM */
 }
-
 
 /*
  * NOTE: See the file HOW_TO_ADD for instructions on how to add custom functions.
  */
 
-
 #if defined(CUSTOM)
-
 
 /*
  * add your forward custom function declarations here
@@ -71,15 +65,15 @@ custom_compiled(void)
  *
  * We suggest that you sort the entries below by name.
  */
-E_FUNC VALUE c_argv(char*, int, VALUE**);
-E_FUNC VALUE c_devnull(char*, int, VALUE**);
-E_FUNC VALUE c_help(char*, int, VALUE**);
-E_FUNC VALUE c_sysinfo(char*, int, VALUE**);
-E_FUNC VALUE c_pzasusb8(char*, int, VALUE**);
-E_FUNC VALUE c_pmodm127(char*, int, VALUE**);
-E_FUNC VALUE c_register(char*, int, VALUE**);
+E_FUNC VALUE c_argv(char *, int, VALUE **);
+E_FUNC VALUE c_devnull(char *, int, VALUE **);
+E_FUNC VALUE c_help(char *, int, VALUE **);
+E_FUNC VALUE c_sysinfo(char *, int, VALUE **);
+E_FUNC VALUE c_pzasusb8(char *, int, VALUE **);
+E_FUNC VALUE c_pmodm127(char *, int, VALUE **);
+E_FUNC VALUE c_register(char *, int, VALUE **);
 
-#define U_FUNC(name) E_FUNC VALUE name(char*, int, VALUE**);
+#  define U_FUNC(name) E_FUNC VALUE name(char *, int, VALUE **);
 
 // pipe/fork/exec
 U_FUNC(u_pfe_fork)
@@ -105,10 +99,9 @@ U_FUNC(u_vadd_dirname)
 U_FUNC(u_vadd_getcwd)
 U_FUNC(u_vadd_getpid)
 U_FUNC(u_vadd_getppid)
-U_FUNC(u_vadd_inputname) //cspell:ignore inputname
+U_FUNC(u_vadd_inputname) // cspell:ignore inputname
 
 #endif /* CUSTOM */
-
 
 /*
  * custom interface table
@@ -134,85 +127,54 @@ CONST struct custom cust[] = {
 
 #if defined(CUSTOM)
 
+    /*
+     * add your own custom functions here
+     *
+     * We suggest that you sort the entries below by name
+     * so that show custom will produce a nice sorted list.
+     */
 
-        /*
-         * add your own custom functions here
-         *
-         * We suggest that you sort the entries below by name
-         * so that show custom will produce a nice sorted list.
-         */
+    {"argv", "information about its args, returns arg count", 0, MAX_CUSTOM_ARGS, c_argv},
 
-        { "argv", "information about its args, returns arg count",
-         0, MAX_CUSTOM_ARGS, c_argv },
+    {"devnull", "does nothing", 0, MAX_CUSTOM_ARGS, c_devnull},
 
-        { "devnull", "does nothing",
-         0, MAX_CUSTOM_ARGS, c_devnull },
+    {"help", "help for custom functions", 1, 1, c_help},
 
-        { "help", "help for custom functions",
-         1, 1, c_help },
+    {"sysinfo", "return a calc #define value", 0, 1, c_sysinfo},
 
-        { "sysinfo", "return a calc #define value",
-         0, 1, c_sysinfo },
+    {"pzasusb8", "print ZVALUE as USB8", 0, 1, c_pzasusb8},
 
-        { "pzasusb8", "print ZVALUE as USB8",
-         0, 1, c_pzasusb8 },
+    {"pmodm127", "calculate q mod 2^(2^127-1)", 1, 1, c_pmodm127},
 
-        { "pmodm127", "calculate q mod 2^(2^127-1)",
-         1, 1, c_pmodm127 },
+    {"register", "get or set customer registers", 1, 2, c_register},
 
-        { "register", "get or set customer registers",
-         1, 2, c_register },
+    {"fork", "create process", 0, 0, u_pfe_fork},
+    {"pipe", "create descriptor pair for interprocess communication", 0, 0, u_pfe_pipe},
+    {"dup", "duplicate a file descriptor", 1, 1, u_pfe_dup},
+    {"dup2", "duplicate a file descriptor", 2, 2, u_pfe_dup2},
+    {"close", "remove a file descriptor", 1, 1, u_pfe_close},
+    {"execvp", "execute a file", 2, 2, u_pfe_execvp},
+    {"write", "write output", 2, 2, u_pfe_write},
+    {"read", "read input", 1, 2, u_pfe_read},
+    {"select", "examine file descriptors", 3, 4, u_pfe_select},
+    {"poll", "synchronous I/O multiplexing", 2, 3, u_pfe_poll},
 
-        { "fork", "create process",
-         0, 0, u_pfe_fork },
-        { "pipe", "create descriptor pair for interprocess communication",
-         0, 0, u_pfe_pipe },
-        { "dup", "duplicate a file descriptor",
-         1, 1, u_pfe_dup },
-        { "dup2", "duplicate a file descriptor",
-         2, 2, u_pfe_dup2 },
-        { "close", "remove a file descriptor",
-         1, 1, u_pfe_close },
-        { "execvp", "execute a file",
-         2, 2, u_pfe_execvp },
-        { "write", "write output",
-         2, 2, u_pfe_write },
-        { "read", "read input",
-         1, 2, u_pfe_read },
-        { "select", "examine file descriptors",
-         3, 4, u_pfe_select },
-        { "poll", "synchronous I/O multiplexing",
-         2, 3, u_pfe_poll },
+    {"wait4", "wait for process", 1, 4, u_pfe_wait4},
 
-        { "wait4", "wait for process",
-         1, 4, u_pfe_wait4 },
+    {"pfe", "pipe/fork/exec", 4, 4, u_pfe_pfe},
+    {"pwrite", "write and close", 2, 2, u_pfe_pwrite},
+    {"pread", "read until eof, close and wait for exit status", 3, 3, u_pfe_pread},
 
-        { "pfe", "pipe/fork/exec",
-         4, 4, u_pfe_pfe },
-        { "pwrite", "write and close",
-         2, 2, u_pfe_pwrite },
-        { "pread", "read until eof, close and wait for exit status",
-         3, 3, u_pfe_pread },
-
-        { "getpid", "get calling process identification",
-         0, 0, u_vadd_getpid },
-        { "getppid", "get parent process identification",
-         0, 0, u_vadd_getppid },
-        { "getcwd", "get working directory pathname",
-         0, 0, u_vadd_getcwd },
-        { "inputname", "get name of input",
-         0, 0, u_vadd_inputname },
-        { "basename", "extract the base portion of a pathname",
-         1, 1, u_vadd_basename },
-        { "dirname", "extract the directory part of a pathname",
-         1, 1, u_vadd_dirname },
-
+    {"getpid", "get calling process identification", 0, 0, u_vadd_getpid},
+    {"getppid", "get parent process identification", 0, 0, u_vadd_getppid},
+    {"getcwd", "get working directory pathname", 0, 0, u_vadd_getcwd},
+    {"inputname", "get name of input", 0, 0, u_vadd_inputname},
+    {"basename", "extract the base portion of a pathname", 1, 1, u_vadd_basename},
+    {"dirname", "extract the directory part of a pathname", 1, 1, u_vadd_dirname},
 
 #endif /* CUSTOM */
 
-        /*
-         * This must be at the end of this table!!!
-         */
-        {NULL, NULL,
-         0, 0, NULL}
-};
+    /*
+     * This must be at the end of this table!!!
+     */
+    {NULL, NULL, 0, 0, NULL}};

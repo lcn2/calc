@@ -57,44 +57,41 @@
  * average reduces the values we need to test by a factor of at least 2.4.
  */
 
-
 #if !defined(INCLUDE_JUMP_H)
-#define INCLUDE_JUMP_H
+#  define INCLUDE_JUMP_H
 
-
-#if defined(CALC_SRC)   /* if we are building from the calc source tree */
-# include "have_const.h"
-# include "decl.h"
-#else
-# include <calc/have_const.h>
-# include <calc/decl.h>
-#endif
-
+#  if defined(CALC_SRC) /* if we are building from the calc source tree */
+#    include "have_const.h"
+#    include "decl.h"
+#  else
+#    include <calc/have_const.h>
+#    include <calc/decl.h>
+#  endif
 
 /*
  * trivial prime CONSTants
  */
-#define JMPMOD (3*5*7*11)       /* product of odd trivial primes */
-#define JMPSIZE (2*4*6*10)      /* ints mod JMPMOD not div by trivial primes */
-#define JPRIME (prime+4)        /* pointer to first non-trivial prime */
+#  define JMPMOD (3 * 5 * 7 * 11)  /* product of odd trivial primes */
+#  define JMPSIZE (2 * 4 * 6 * 10) /* ints mod JMPMOD not div by trivial primes */
+#  define JPRIME (prime + 4)	   /* pointer to first non-trivial prime */
 
 /* given x, return the index within jmpindx that applies */
-#define jmpmod(x) (((x)>>1)%JMPMOD)
+#  define jmpmod(x) (((x) >> 1) % JMPMOD)
 
 /* jmpindx table value */
-#define jmpindxval(x) (jmpindx[jmpmod(x)])
+#  define jmpindxval(x) (jmpindx[jmpmod(x)])
 
 /* return the smallest value >= x not divisible by a trivial prime */
-#define firstjmp(x,tmp) ((tmp) = jmpindxval(x), ((tmp) > 0) ? ((x)+(tmp)) : (x))
+#  define firstjmp(x, tmp) ((tmp) = jmpindxval(x), ((tmp) > 0) ? ((x) + (tmp)) : (x))
 
 /* given x not divisible by a trivial prime, return jmp[] index */
-#define jmpptr(x) (-jmpindxval(x))
+#  define jmpptr(x) (-jmpindxval(x))
 
 /* given a jmp pointer, return current jump increment and bump the pointer */
-#define nxtjmp(p) ( *( ((p)<lastjmp) ? ((p)++) : (((p)=jmp),lastjmp) ) )
+#  define nxtjmp(p) (*(((p) < lastjmp) ? ((p)++) : (((p) = jmp), lastjmp)))
 
 /* given a jmp pointer, return dec pointer and return previous jump increment */
-#define prevjmp(p) ( *( ((p)>jmp) ? (--(p)) : ((p)=lastjmp) ) )
+#  define prevjmp(p) (*(((p) > jmp) ? (--(p)) : ((p) = lastjmp)))
 
 /*
  * external jump tables

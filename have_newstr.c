@@ -43,35 +43,33 @@
 #include <stdio.h>
 #include "have_string.h"
 #ifdef HAVE_STRING_H
-# include <string.h>
+#  include <string.h>
 #endif
 
-
-#include "banned.h"     /* include after system header <> includes */
-
+#include "banned.h" /* include after system header <> includes */
 
 #define MOVELEN 3
 
 char src[] = "chongo was here";
-char dest[MOVELEN+1];
+char dest[MOVELEN + 1];
 
 int
 main(void)
 {
 #if defined(HAVE_NO_NEWSTR)
 
-        printf("#undef HAVE_NEWSTR /* no */\n");
+    printf("#undef HAVE_NEWSTR /* no */\n");
 
 #else /* HAVE_NO_NEWSTR */
 
-        (void) memcpy(dest, src, MOVELEN);
-        (void) memset(dest, 0, MOVELEN);
-        (void) strchr(src, 'e');
+    (void)memcpy(dest, src, MOVELEN);
+    (void)memset(dest, 0, MOVELEN);
+    (void)strchr(src, 'e');
 
-        printf("#define HAVE_NEWSTR /* yes */\n");
+    printf("#define HAVE_NEWSTR /* yes */\n");
 
 #endif /* HAVE_NO_NEWSTR */
 
-        /* exit(0); */
-        return 0;
+    /* exit(0); */
+    return 0;
 }

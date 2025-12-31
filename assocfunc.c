@@ -32,25 +32,20 @@
  * quick access.
  */
 
-
 #include "value.h"
 
-
 #include "errtbl.h"
-#include "banned.h"     /* include after system header <> includes */
+#include "banned.h" /* include after system header <> includes */
 
-
-#define MINHASHSIZE     31      /* minimum size of hash tables */
-#define GROWHASHSIZE    50      /* approximate growth for hash tables */
-#define CHAINLENGTH     10      /* desired number of elements on a hash chain */
-#define ELEMSIZE(n)     (sizeof(ASSOCELEM) + (sizeof(VALUE) * ((n) - 1)))
-
+#define MINHASHSIZE 31	/* minimum size of hash tables */
+#define GROWHASHSIZE 50 /* approximate growth for hash tables */
+#define CHAINLENGTH 10	/* desired number of elements on a hash chain */
+#define ELEMSIZE(n) (sizeof(ASSOCELEM) + (sizeof(VALUE) * ((n) - 1)))
 
 S_FUNC ASSOCELEM *elemindex(ASSOC *ap, long index);
 S_FUNC bool compareindices(VALUE *v1, VALUE *v2, long dim);
 S_FUNC void resize(ASSOC *ap, long newsize);
 S_FUNC void assoc_elemfree(ASSOCELEM *ep);
-
 
 /*
  * Return the address of the value specified by normal indexing of
@@ -67,69 +62,72 @@ S_FUNC void assoc_elemfree(ASSOCELEM *ep);
 VALUE *
 associndex(ASSOC *ap, bool create, long dim, VALUE *indices)
 {
-        ASSOCELEM **listhead;
-        ASSOCELEM *ep;
-        STATIC VALUE val;
-        QCKHASH hash;
-        int i;
+    ASSOCELEM **listhead;
+    ASSOCELEM *ep;
+    STATIC VALUE val;
+    QCKHASH hash;
+    int i;
 
-        if (dim < 0) {
-                math_error("Negative dimension for indexing association");
-                not_reached();
-        }
+    if (dim < 0) {
+	math_error("Negative dimension for indexing association");
+	not_reached();
+    }
 
-        /*
-         * Calculate the hash value to use for this set of indices
-         * so that we can first select the correct hash chain, and
-         * also so we can quickly compare each element for a match.
-         */
-        hash = QUICKHASH_BASIS;
-        for (i = 0; i < dim; i++)
-                hash = hashvalue(&indices[i], hash);
+    /*
+     * Calculate the hash value to use for this set of indices
+     * so that we can first select the correct hash chain, and
+     * also so we can quickly compare each element for a match.
+     */
+    hash = QUICKHASH_BASIS;
+    for (i = 0; i < dim; i++) {
+	hash = hashvalue(&indices[i], hash);
+    }
 
-        /*
-         * Search the correct hash chain for the specified set of indices.
-         * If found, return the address of the found element's value.
-         */
-        listhead = &ap->a_table[hash % ap->a_size];
-        for (ep = *listhead; ep; ep = ep->e_next) {
-                if ((ep->e_hash != hash) || (ep->e_dim != dim))
-                        continue;
-                if (compareindices(ep->e_indices, indices, dim))
-                        return &ep->e_value;
-        }
+    /*
+     * Search the correct hash chain for the specified set of indices.
+     * If found, return the address of the found element's value.
+     */
+    listhead = &ap->a_table[hash % ap->a_size];
+    for (ep = *listhead; ep; ep = ep->e_next) {
+	if ((ep->e_hash != hash) || (ep->e_dim != dim)) {
+	    continue;
+	}
+	if (compareindices(ep->e_indices, indices, dim)) {
+	    return &ep->e_value;
+	}
+    }
 
-        /*
-         * The set of indices was not found.
-         * Either return a pointer to a NULL value for a read reference,
-         * or allocate a new element in the list for a write reference.
-         */
-        if (!create) {
-                val.v_type = V_NULL;
-                val.v_subtype = V_NOSUBTYPE;
-                return &val;
-        }
+    /*
+     * The set of indices was not found.
+     * Either return a pointer to a NULL value for a read reference,
+     * or allocate a new element in the list for a write reference.
+     */
+    if (!create) {
+	val.v_type = V_NULL;
+	val.v_subtype = V_NOSUBTYPE;
+	return &val;
+    }
 
-        ep = (ASSOCELEM *) malloc(ELEMSIZE(dim));
-        if (ep == NULL) {
-                math_error("Cannot allocate association element");
-                not_reached();
-        }
-        ep->e_dim = dim;
-        ep->e_hash = hash;
-        ep->e_value.v_type = V_NULL;
-        ep->e_value.v_subtype = V_NOSUBTYPE;
-        for (i = 0; i < dim; i++)
-                copyvalue(&indices[i], &ep->e_indices[i]);
-        ep->e_next = *listhead;
-        *listhead = ep;
-        ap->a_count++;
+    ep = (ASSOCELEM *)malloc(ELEMSIZE(dim));
+    if (ep == NULL) {
+	math_error("Cannot allocate association element");
+	not_reached();
+    }
+    ep->e_dim = dim;
+    ep->e_hash = hash;
+    ep->e_value.v_type = V_NULL;
+    ep->e_value.v_subtype = V_NOSUBTYPE;
+    for (i = 0; i < dim; i++) {
+	copyvalue(&indices[i], &ep->e_indices[i]);
+    }
+    ep->e_next = *listhead;
+    *listhead = ep;
+    ap->a_count++;
 
-        resize(ap, ap->a_count / CHAINLENGTH);
+    resize(ap, ap->a_count / CHAINLENGTH);
 
-        return &ep->e_value;
+    return &ep->e_value;
 }
-
 
 /*
  * Search an association for the specified value starting at the
@@ -139,27 +137,26 @@ associndex(ASSOC *ap, bool create, long dim, VALUE *indices)
 int
 assocsearch(ASSOC *ap, VALUE *vp, long i, long j, ZVALUE *index)
 {
-        ASSOCELEM *ep;
+    ASSOCELEM *ep;
 
-        if (i < 0 || j > ap->a_count) {
-                math_error("This should not happen in assocsearch");
-                not_reached();
-        }
-        while (i < j) {
-                ep = elemindex(ap, i);
-                if (ep == NULL) {
-                        math_error("This should not happen in assocsearch");
-                        not_reached();
-                }
-                if (acceptvalue(&ep->e_value, vp)) {
-                        utoz(i, index);
-                        return 0;
-                }
-                i++;
-        }
-        return 1;
+    if (i < 0 || j > ap->a_count) {
+	math_error("This should not happen in assocsearch");
+	not_reached();
+    }
+    while (i < j) {
+	ep = elemindex(ap, i);
+	if (ep == NULL) {
+	    math_error("This should not happen in assocsearch");
+	    not_reached();
+	}
+	if (acceptvalue(&ep->e_value, vp)) {
+	    utoz(i, index);
+	    return 0;
+	}
+	i++;
+    }
+    return 1;
 }
-
 
 /*
  * Search an association backwards for the specified value starting at the
@@ -169,28 +166,27 @@ assocsearch(ASSOC *ap, VALUE *vp, long i, long j, ZVALUE *index)
 int
 assocrsearch(ASSOC *ap, VALUE *vp, long i, long j, ZVALUE *index)
 {
-        ASSOCELEM *ep;
+    ASSOCELEM *ep;
 
-        if (i < 0 || j > ap->a_count) {
-                math_error("This should not happen in assocsearch");
-                not_reached();
-        }
-        j--;
-        while (j >= i) {
-                ep = elemindex(ap, j);
-                if (ep == NULL) {
-                        math_error("This should not happen in assocsearch");
-                        not_reached();
-                }
-                if (acceptvalue(&ep->e_value, vp)) {
-                        utoz(j, index);
-                        return 0;
-                }
-                j--;
-        }
-        return 1;
+    if (i < 0 || j > ap->a_count) {
+	math_error("This should not happen in assocsearch");
+	not_reached();
+    }
+    j--;
+    while (j >= i) {
+	ep = elemindex(ap, j);
+	if (ep == NULL) {
+	    math_error("This should not happen in assocsearch");
+	    not_reached();
+	}
+	if (acceptvalue(&ep->e_value, vp)) {
+	    utoz(j, index);
+	    return 0;
+	}
+	j--;
+    }
+    return 1;
 }
-
 
 /*
  * Return the address of an element of an association indexed by the
@@ -203,25 +199,26 @@ assocrsearch(ASSOC *ap, VALUE *vp, long i, long j, ZVALUE *index)
 S_FUNC ASSOCELEM *
 elemindex(ASSOC *ap, long index)
 {
-        ASSOCELEM *ep;
-        int i;
+    ASSOCELEM *ep;
+    int i;
 
-        if ((index < 0) || (index > ap->a_count))
-                return NULL;
+    if ((index < 0) || (index > ap->a_count)) {
+	return NULL;
+    }
 
-        /*
-         * This loop should be made more efficient by remembering
-         * previously requested locations within the association.
-         */
-        for (i = 0; i < ap->a_size; i++) {
-                for (ep = ap->a_table[i]; ep; ep = ep->e_next) {
-                        if (index-- == 0)
-                                return ep;
-                }
-        }
-        return NULL;
+    /*
+     * This loop should be made more efficient by remembering
+     * previously requested locations within the association.
+     */
+    for (i = 0; i < ap->a_size; i++) {
+	for (ep = ap->a_table[i]; ep; ep = ep->e_next) {
+	    if (index-- == 0) {
+		return ep;
+	    }
+	}
+    }
+    return NULL;
 }
-
 
 /*
  * Return the address of the value specified by double-bracket indexing
@@ -234,14 +231,14 @@ elemindex(ASSOC *ap, long index)
 VALUE *
 assocfindex(ASSOC *ap, long index)
 {
-        ASSOCELEM *ep;
+    ASSOCELEM *ep;
 
-        ep = elemindex(ap, index);
-        if (ep == NULL)
-                return NULL;
-        return &ep->e_value;
+    ep = elemindex(ap, index);
+    if (ep == NULL) {
+	return NULL;
+    }
+    return &ep->e_value;
 }
-
 
 /*
  * Returns the list of indices for an association element with specified
@@ -250,19 +247,20 @@ assocfindex(ASSOC *ap, long index)
 LIST *
 associndices(ASSOC *ap, long index)
 {
-        ASSOCELEM *ep;
-        LIST *lp;
-        int i;
+    ASSOCELEM *ep;
+    LIST *lp;
+    int i;
 
-        ep = elemindex(ap, index);
-        if (ep == NULL)
-                return NULL;
-        lp = listalloc();
-        for (i = 0; i < ep->e_dim; i++)
-                insertlistlast(lp, &ep->e_indices[i]);
-        return lp;
+    ep = elemindex(ap, index);
+    if (ep == NULL) {
+	return NULL;
+    }
+    lp = listalloc();
+    for (i = 0; i < ep->e_dim; i++) {
+	insertlistlast(lp, &ep->e_indices[i]);
+    }
+    return lp;
 }
-
 
 /*
  * Compare two associations to see if they are identical.
@@ -271,45 +269,49 @@ associndices(ASSOC *ap, long index)
 bool
 assoccmp(ASSOC *ap1, ASSOC *ap2)
 {
-        ASSOCELEM **table1;
-        ASSOCELEM *ep1;
-        ASSOCELEM *ep2;
-        long size1;
-        long size2;
-        QCKHASH hash;
-        long dim;
+    ASSOCELEM **table1;
+    ASSOCELEM *ep1;
+    ASSOCELEM *ep2;
+    long size1;
+    long size2;
+    QCKHASH hash;
+    long dim;
 
-        if (ap1 == ap2)
-                return false;
-        if (ap1->a_count != ap2->a_count)
-                return true;
+    if (ap1 == ap2) {
+	return false;
+    }
+    if (ap1->a_count != ap2->a_count) {
+	return true;
+    }
 
-        table1 = ap1->a_table;
-        size1 = ap1->a_size;
-        size2 = ap2->a_size;
-        while (size1-- > 0) {
-                for (ep1 = *table1++; ep1; ep1 = ep1->e_next) {
-                        hash = ep1->e_hash;
-                        dim = ep1->e_dim;
-                        for (ep2 = ap2->a_table[hash % size2]; ;
-                                ep2 = ep2->e_next) {
-                                if (ep2 == NULL)
-                                        return true;
-                                if (ep2->e_hash != hash)
-                                        continue;
-                                if (ep2->e_dim != dim)
-                                        continue;
-                                if (compareindices(ep1->e_indices,
-                                        ep2->e_indices, dim))
-                                                break;
-                        }
-                        if (comparevalue(&ep1->e_value, &ep2->e_value))
-                                return true;
-                }
-        }
-        return false;
+    table1 = ap1->a_table;
+    size1 = ap1->a_size;
+    size2 = ap2->a_size;
+    while (size1-- > 0) {
+	for (ep1 = *table1++; ep1; ep1 = ep1->e_next) {
+	    hash = ep1->e_hash;
+	    dim = ep1->e_dim;
+	    for (ep2 = ap2->a_table[hash % size2];; ep2 = ep2->e_next) {
+		if (ep2 == NULL) {
+		    return true;
+		}
+		if (ep2->e_hash != hash) {
+		    continue;
+		}
+		if (ep2->e_dim != dim) {
+		    continue;
+		}
+		if (compareindices(ep1->e_indices, ep2->e_indices, dim)) {
+		    break;
+		}
+	    }
+	    if (comparevalue(&ep1->e_value, &ep2->e_value)) {
+		return true;
+	    }
+	}
+    }
+    return false;
 }
-
 
 /*
  * Copy an association value.
@@ -317,41 +319,39 @@ assoccmp(ASSOC *ap1, ASSOC *ap2)
 ASSOC *
 assoccopy(ASSOC *oldap)
 {
-        ASSOC *ap;
-        ASSOCELEM *oldep;
-        ASSOCELEM *ep;
-        ASSOCELEM **listhead;
-        int oldhi;
-        int i;
+    ASSOC *ap;
+    ASSOCELEM *oldep;
+    ASSOCELEM *ep;
+    ASSOCELEM **listhead;
+    int oldhi;
+    int i;
 
-        ap = assocalloc(oldap->a_count / CHAINLENGTH);
-        ap->a_count = oldap->a_count;
+    ap = assocalloc(oldap->a_count / CHAINLENGTH);
+    ap->a_count = oldap->a_count;
 
-        for (oldhi = 0; oldhi < oldap->a_size; oldhi++) {
-                for (oldep = oldap->a_table[oldhi]; oldep;
-                        oldep = oldep->e_next) {
-                        ep = (ASSOCELEM *) malloc(ELEMSIZE(oldep->e_dim));
-                        if (ep == NULL) {
-                                math_error("Cannot allocate "
-                                           "association element");
-                                not_reached();
-                        }
-                        ep->e_dim = oldep->e_dim;
-                        ep->e_hash = oldep->e_hash;
-                        ep->e_value.v_type = V_NULL;
-                        ep->e_value.v_subtype = V_NOSUBTYPE;
-                        for (i = 0; i < ep->e_dim; i++)
-                                copyvalue(&oldep->e_indices[i],
-                                          &ep->e_indices[i]);
-                        copyvalue(&oldep->e_value, &ep->e_value);
-                        listhead = &ap->a_table[ep->e_hash % ap->a_size];
-                        ep->e_next = *listhead;
-                        *listhead = ep;
-                }
-        }
-        return ap;
+    for (oldhi = 0; oldhi < oldap->a_size; oldhi++) {
+	for (oldep = oldap->a_table[oldhi]; oldep; oldep = oldep->e_next) {
+	    ep = (ASSOCELEM *)malloc(ELEMSIZE(oldep->e_dim));
+	    if (ep == NULL) {
+		math_error("Cannot allocate "
+			   "association element");
+		not_reached();
+	    }
+	    ep->e_dim = oldep->e_dim;
+	    ep->e_hash = oldep->e_hash;
+	    ep->e_value.v_type = V_NULL;
+	    ep->e_value.v_subtype = V_NOSUBTYPE;
+	    for (i = 0; i < ep->e_dim; i++) {
+		copyvalue(&oldep->e_indices[i], &ep->e_indices[i]);
+	    }
+	    copyvalue(&oldep->e_value, &ep->e_value);
+	    listhead = &ap->a_table[ep->e_hash % ap->a_size];
+	    ep->e_next = *listhead;
+	    *listhead = ep;
+	}
+    }
+    return ap;
 }
-
 
 /*
  * Resize the hash table for an association to be the specified size.
@@ -361,43 +361,44 @@ assoccopy(ASSOC *oldap)
 S_FUNC void
 resize(ASSOC *ap, long newsize)
 {
-        ASSOCELEM **oldtable;
-        ASSOCELEM **newtable;
-        ASSOCELEM **oldlist;
-        ASSOCELEM **newlist;
-        ASSOCELEM *ep;
-        int i;
+    ASSOCELEM **oldtable;
+    ASSOCELEM **newtable;
+    ASSOCELEM **oldlist;
+    ASSOCELEM **newlist;
+    ASSOCELEM *ep;
+    int i;
 
-        if (newsize < ap->a_size + GROWHASHSIZE)
-                return;
+    if (newsize < ap->a_size + GROWHASHSIZE) {
+	return;
+    }
 
-        newsize = (long) next_prime((FULL)newsize);
-        newtable = (ASSOCELEM **) malloc(sizeof(ASSOCELEM *) * newsize);
-        if (newtable == NULL) {
-                math_error("No memory to grow association");
-                not_reached();
-        }
-        for (i = 0; i < newsize; i++)
-                newtable[i] = NULL;
+    newsize = (long)next_prime((FULL)newsize);
+    newtable = (ASSOCELEM **)malloc(sizeof(ASSOCELEM *) * newsize);
+    if (newtable == NULL) {
+	math_error("No memory to grow association");
+	not_reached();
+    }
+    for (i = 0; i < newsize; i++) {
+	newtable[i] = NULL;
+    }
 
-        oldtable = ap->a_table;
-        oldlist = oldtable;
-        for (i = 0; i < ap->a_size; i++) {
-                while (*oldlist) {
-                        ep = *oldlist;
-                        *oldlist = ep->e_next;
-                        newlist = &newtable[ep->e_hash % newsize];
-                        ep->e_next = *newlist;
-                        *newlist = ep;
-                }
-                oldlist++;
-        }
+    oldtable = ap->a_table;
+    oldlist = oldtable;
+    for (i = 0; i < ap->a_size; i++) {
+	while (*oldlist) {
+	    ep = *oldlist;
+	    *oldlist = ep->e_next;
+	    newlist = &newtable[ep->e_hash % newsize];
+	    ep->e_next = *newlist;
+	    *newlist = ep;
+	}
+	oldlist++;
+    }
 
-        ap->a_table = newtable;
-        ap->a_size = newsize;
-        free((char *) oldtable);
+    ap->a_table = newtable;
+    ap->a_size = newsize;
+    free((char *)oldtable);
 }
-
 
 /*
  * Free an association element, along with any contained values.
@@ -405,16 +406,16 @@ resize(ASSOC *ap, long newsize)
 S_FUNC void
 assoc_elemfree(ASSOCELEM *ep)
 {
-        int i;
+    int i;
 
-        for (i = 0; i < ep->e_dim; i++)
-                freevalue(&ep->e_indices[i]);
-        freevalue(&ep->e_value);
-        ep->e_dim = 0;
-        ep->e_next = NULL;
-        free((char *) ep);
+    for (i = 0; i < ep->e_dim; i++) {
+	freevalue(&ep->e_indices[i]);
+    }
+    freevalue(&ep->e_value);
+    ep->e_dim = 0;
+    ep->e_next = NULL;
+    free((char *)ep);
 }
-
 
 /*
  * Allocate a new association value with an initial hash table.
@@ -423,29 +424,30 @@ assoc_elemfree(ASSOCELEM *ep)
 ASSOC *
 assocalloc(long initsize)
 {
-        register ASSOC *ap;
-        int i;
+    register ASSOC *ap;
+    int i;
 
-        if (initsize < MINHASHSIZE)
-                initsize = MINHASHSIZE;
-        ap = (ASSOC *) malloc(sizeof(ASSOC));
-        if (ap == NULL) {
-                math_error("No memory for association");
-                not_reached();
-        }
-        ap->a_count = 0;
-        ap->a_size = initsize;
-        ap->a_table = (ASSOCELEM **) malloc(sizeof(ASSOCELEM *) * initsize);
-        if (ap->a_table == NULL) {
-                free((char *) ap);
-                math_error("No memory for association");
-                not_reached();
-        }
-        for (i = 0; i < initsize; i++)
-                ap->a_table[i] = NULL;
-        return ap;
+    if (initsize < MINHASHSIZE) {
+	initsize = MINHASHSIZE;
+    }
+    ap = (ASSOC *)malloc(sizeof(ASSOC));
+    if (ap == NULL) {
+	math_error("No memory for association");
+	not_reached();
+    }
+    ap->a_count = 0;
+    ap->a_size = initsize;
+    ap->a_table = (ASSOCELEM **)malloc(sizeof(ASSOCELEM *) * initsize);
+    if (ap->a_table == NULL) {
+	free((char *)ap);
+	math_error("No memory for association");
+	not_reached();
+    }
+    for (i = 0; i < initsize; i++) {
+	ap->a_table[i] = NULL;
+    }
+    return ap;
 }
-
 
 /*
  * Free an association value, along with all of its elements.
@@ -453,27 +455,26 @@ assocalloc(long initsize)
 void
 assocfree(ASSOC *ap)
 {
-        ASSOCELEM **listhead;
-        ASSOCELEM *ep;
-        ASSOCELEM *nextep;
-        int i;
+    ASSOCELEM **listhead;
+    ASSOCELEM *ep;
+    ASSOCELEM *nextep;
+    int i;
 
-        listhead = ap->a_table;
-        for (i = 0; i < ap->a_size; i++) {
-                nextep = *listhead;
-                *listhead = NULL;
-                while (nextep) {
-                        ep = nextep;
-                        nextep = ep->e_next;
-                        assoc_elemfree(ep);
-                }
-                listhead++;
-        }
-        free((char *) ap->a_table);
-        ap->a_table = NULL;
-        free((char *) ap);
+    listhead = ap->a_table;
+    for (i = 0; i < ap->a_size; i++) {
+	nextep = *listhead;
+	*listhead = NULL;
+	while (nextep) {
+	    ep = nextep;
+	    nextep = ep->e_next;
+	    assoc_elemfree(ep);
+	}
+	listhead++;
+    }
+    free((char *)ap->a_table);
+    ap->a_table = NULL;
+    free((char *)ap);
 }
-
 
 /*
  * Print out an association along with the specified number of
@@ -482,41 +483,39 @@ assocfree(ASSOC *ap)
 void
 assocprint(ASSOC *ap, long max_print)
 {
-        ASSOCELEM *ep;
-        long index;
-        long i;
-        int savemode;
+    ASSOCELEM *ep;
+    long index;
+    long i;
+    int savemode;
 
-        if (max_print <= 0) {
-                math_fmt("assoc (%ld element%s)", ap->a_count,
-                        ((ap->a_count == 1) ? "" : "s"));
-                return;
-        }
-        math_fmt("\n  assoc (%ld element%s):\n", ap->a_count,
-                ((ap->a_count == 1) ? "" : "s"));
+    if (max_print <= 0) {
+	math_fmt("assoc (%ld element%s)", ap->a_count, ((ap->a_count == 1) ? "" : "s"));
+	return;
+    }
+    math_fmt("\n  assoc (%ld element%s):\n", ap->a_count, ((ap->a_count == 1) ? "" : "s"));
 
-        for (index = 0; ((index < max_print) && (index < ap->a_count));
-                index++) {
-                ep = elemindex(ap, index);
-                if (ep == NULL)
-                        continue;
-                math_str("  [");
-                for (i = 0; i < ep->e_dim; i++) {
-                        if (i)
-                                math_chr(',');
-                        savemode = math_setmode(MODE_FRAC);
-                        printvalue(&ep->e_indices[i],
-                                (PRINT_SHORT | PRINT_UNAMBIG));
-                        math_setmode(savemode);
-                }
-                math_str("] = ");
-                printvalue(&ep->e_value, PRINT_SHORT | PRINT_UNAMBIG);
-                math_chr('\n');
-        }
-        if (max_print < ap->a_count)
-                math_str("  ...\n");
+    for (index = 0; ((index < max_print) && (index < ap->a_count)); index++) {
+	ep = elemindex(ap, index);
+	if (ep == NULL) {
+	    continue;
+	}
+	math_str("  [");
+	for (i = 0; i < ep->e_dim; i++) {
+	    if (i) {
+		math_chr(',');
+	    }
+	    savemode = math_setmode(MODE_FRAC);
+	    printvalue(&ep->e_indices[i], (PRINT_SHORT | PRINT_UNAMBIG));
+	    math_setmode(savemode);
+	}
+	math_str("] = ");
+	printvalue(&ep->e_value, PRINT_SHORT | PRINT_UNAMBIG);
+	math_chr('\n');
+    }
+    if (max_print < ap->a_count) {
+	math_str("  ...\n");
+    }
 }
-
 
 /*
  * Compare two lists of index values to see if they are identical.
@@ -525,15 +524,19 @@ assocprint(ASSOC *ap, long max_print)
 S_FUNC bool
 compareindices(VALUE *v1, VALUE *v2, long dim)
 {
-        int i;
+    int i;
 
-        for (i = 0; i < dim; i++)
-                if (v1[i].v_type != v2[i].v_type)
-                        return false;
+    for (i = 0; i < dim; i++) {
+	if (v1[i].v_type != v2[i].v_type) {
+	    return false;
+	}
+    }
 
-        while (dim-- > 0)
-                if (comparevalue(v1++, v2++))
-                        return false;
+    while (dim-- > 0) {
+	if (comparevalue(v1++, v2++)) {
+	    return false;
+	}
+    }
 
-        return true;
+    return true;
 }
