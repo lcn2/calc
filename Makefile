@@ -270,7 +270,8 @@ LICENSE= COPYING COPYING-LGPL
 DISTLIST= ${C_SRC} ${H_SRC} ${MK_SET} ${UTIL_MISC_SRC} ${LICENSE} \
 	BUGS calc.man calc.spec.in CHANGES check.awk chk_tree CONTRIB-CODE \
 	HOWTO.INSTALL LIBRARY .lldbinit QUESTIONS README.FIRST README.md \
-	README.RELEASE README.WINDOWS rpm.mk sample.README trailblank update_ver
+	README.RELEASE README.WINDOWS rpm.mk sample.README trailblank update_ver \
+	.clang-format
 
 # These files are used to make (but not build) a calc .a link library
 #
