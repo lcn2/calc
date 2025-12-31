@@ -40,31 +40,34 @@
 
 #include "have_stdlib.h"
 #if defined(HAVE_STDLIB_H)
-#  include <stdlib.h>
+#include <stdlib.h>
 #endif
 #include <stdio.h>
 
-#include "banned.h" /* include after system header <> includes */
 
-#define BUFLEN (32) /* length of the buffer to fill */
+#include "banned.h"     /* include after system header <> includes */
+
+
+#define BUFLEN (32)             /* length of the buffer to fill */
+
 
 int
 main(void)
 {
 #if defined(HAVE_NO_ARC4RANDOM)
 
-    printf("#undef HAVE_ARC4RANDOM /* no */\n");
+        printf("#undef HAVE_ARC4RANDOM /* no */\n");
 
 #else /* HAVE_NO_ARC4RANDOM */
 
-    /* buffer for arc4random_buf() to fill */
-    static char buf[BUFLEN];
+        /* buffer for arc4random_buf() to fill */
+        static char buf[BUFLEN];
 
-    arc4random_buf(buf, BUFLEN);
-    printf("#define HAVE_ARC4RANDOM /* yes */\n");
+        arc4random_buf(buf, BUFLEN);
+        printf("#define HAVE_ARC4RANDOM /* yes */\n");
 
 #endif /* HAVE_NO_ARC4RANDOM */
 
-    /* exit(0); */
-    return 0;
+        /* exit(0); */
+        return 0;
 }

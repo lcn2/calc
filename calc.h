@@ -23,77 +23,80 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-#if !defined(INCLUDE_CALC_H)
-#  define INCLUDE_CALC_H
 
-#  include <setjmp.h>
-#  if defined(CALC_SRC) /* if we are building from the calc source tree */
-#    include "decl.h"
-#    include "value.h"
-#    include "have_const.h"
-#  else
-#    include <calc/decl.h>
-#    include <calc/value.h>
-#    include <calc/have_const.h>
-#  endif
+#if !defined(INCLUDE_CALC_H)
+#define INCLUDE_CALC_H
+
+#include <setjmp.h>
+#if defined(CALC_SRC)   /* if we are building from the calc source tree */
+# include "decl.h"
+# include "value.h"
+# include "have_const.h"
+#else
+# include <calc/decl.h>
+# include <calc/value.h>
+# include <calc/have_const.h>
+#endif
+
 
 /*
  * Configuration definitions
  */
-#  define CALCPATH "CALCPATH"		  /* environment variable for files */
-#  define CALCRC "CALCRC"		  /* environment variable for startup */
-#  define CALCBINDINGS "CALCBINDINGS"	  /* env variable for hist bindings */
-#  define HOME "HOME"			  /* environment variable for home dir */
-#  define PAGER "PAGER"			  /* environment variable for help */
-#  define SHELL "SHELL"			  /* environment variable for shell */
-#  define CALCHISTFILE "CALCHISTFILE"	  /* history file environment variable */
-#  define CALCHELP "CALCHELP"		  /* help directory env variable */
-#  define CALCCUSTOMHELP "CALCCUSTOMHELP" /* custom help directory env variable */
-#  define DEFAULTCALCBINDINGS "bindings"  /* default calc bindings file */
-#  define DEFAULTCALCHELP "help"	  /* help file that -h prints */
-#  define DEFAULTSHELL "sh"		  /* default shell to use */
-#  define CALCEXT ".cal"		  /* extension for files read in */
-#  define MAX_CALCRC 1024		  /* maximum length of $CALCRC */
-#  define HOMECHAR '~'			  /* char which indicates home directory */
-#  define DOTCHAR '.'			  /* char which indicates current directory */
-#  define PATHCHAR '/'			  /* char which separates path components */
-#  if defined(_WIN32) || defined(_WIN64)
-#    define LISTCHAR ';' /* char which separates paths in a list */
-#  else
-#    define LISTCHAR ':' /* char which separates paths in a list */
-#  endif
-#  define MAXCMD 5120 /* maximum length of command invocation */
+#define CALCPATH        "CALCPATH"      /* environment variable for files */
+#define CALCRC          "CALCRC"        /* environment variable for startup */
+#define CALCBINDINGS    "CALCBINDINGS"  /* env variable for hist bindings */
+#define HOME            "HOME"          /* environment variable for home dir */
+#define PAGER           "PAGER"         /* environment variable for help */
+#define SHELL           "SHELL"         /* environment variable for shell */
+#define CALCHISTFILE    "CALCHISTFILE"  /* history file environment variable */
+#define CALCHELP        "CALCHELP"      /* help directory env variable */
+#define CALCCUSTOMHELP  "CALCCUSTOMHELP"/* custom help directory env variable */
+#define DEFAULTCALCBINDINGS "bindings"  /* default calc bindings file */
+#define DEFAULTCALCHELP "help"          /* help file that -h prints */
+#define DEFAULTSHELL    "sh"            /* default shell to use */
+#define CALCEXT         ".cal"  /* extension for files read in */
+#define MAX_CALCRC      1024    /* maximum length of $CALCRC */
+#define HOMECHAR        '~'     /* char which indicates home directory */
+#define DOTCHAR         '.'     /* char which indicates current directory */
+#define PATHCHAR        '/'     /* char which separates path components */
+#if defined(_WIN32) || defined(_WIN64)
+#define LISTCHAR        ';'     /* char which separates paths in a list */
+#else
+#define LISTCHAR        ':'     /* char which separates paths in a list */
+#endif
+#define MAXCMD          5120    /* maximum length of command invocation */
 
-#  define SYMBOLSIZE 256 /* maximum symbol name size */
-#  define MAXLABELS 100	 /* maximum number of user labels in function */
-#  define MAXSTACK 2048	 /* maximum depth of evaluation stack */
-#  define MAXFILES 20	 /* maximum number of opened files */
-#  define PROMPT1 "> "	 /* default normal prompt*/
-#  define PROMPT2 ">> "	 /* default prompt inside multi-line input */
+#define SYMBOLSIZE      256     /* maximum symbol name size */
+#define MAXLABELS       100     /* maximum number of user labels in function */
+#define MAXSTACK        2048    /* maximum depth of evaluation stack */
+#define MAXFILES        20      /* maximum number of opened files */
+#define PROMPT1         "> "    /* default normal prompt*/
+#define PROMPT2         ">> "   /* default prompt inside multi-line input */
 
-#  define TRACE_NORMAL 0x00  /* normal trace flags */
-#  define TRACE_OPCODES 0x01 /* trace every opcode */
-#  define TRACE_NODEBUG 0x02 /* suppress debugging opcodes */
-#  define TRACE_LINKS 0x04   /* display links for real and complex numbers */
-#  define TRACE_FNCODES 0x08 /* display code for newly defined function */
-#  define TRACE_MAX 0x0f     /* maximum value for trace flag */
 
-#  define ABORT_NONE 0	    /* abort not needed yet */
-#  define ABORT_STATEMENT 1 /* abort on statement boundary */
-#  define ABORT_OPCODE 2    /* abort on any opcode boundary */
-#  define ABORT_MATH 3	    /* abort on any math operation */
-#  define ABORT_NOW 4	    /* abort right away */
+#define TRACE_NORMAL    0x00    /* normal trace flags */
+#define TRACE_OPCODES   0x01    /* trace every opcode */
+#define TRACE_NODEBUG   0x02    /* suppress debugging opcodes */
+#define TRACE_LINKS     0x04    /* display links for real and complex numbers */
+#define TRACE_FNCODES   0x08    /* display code for newly defined function */
+#define TRACE_MAX       0x0f    /* maximum value for trace flag */
 
-#  define ERRMAX 20 /* default errmax value */
-#  define E_OK 0    /* no error */
+#define ABORT_NONE      0       /* abort not needed yet */
+#define ABORT_STATEMENT 1       /* abort on statement boundary */
+#define ABORT_OPCODE    2       /* abort on any opcode boundary */
+#define ABORT_MATH      3       /* abort on any math operation */
+#define ABORT_NOW       4       /* abort right away */
+
+#define ERRMAX 20               /* default errmax value */
+#define E_OK 0                  /* no error */
 
 /*
  * File ids corresponding to standard in, out, error, and when not in use.
  */
-#  define FILEID_STDIN ((FILEID)0)
-#  define FILEID_STDOUT ((FILEID)1)
-#  define FILEID_STDERR ((FILEID)2)
-#  define FILEID_NONE ((FILEID) - 1) /* must be < 0 */
+#define FILEID_STDIN    ((FILEID) 0)
+#define FILEID_STDOUT   ((FILEID) 1)
+#define FILEID_STDERR   ((FILEID) 2)
+#define FILEID_NONE     ((FILEID) -1)   /* must be < 0 */
 
 /*
  * File I/O routines.
@@ -120,9 +123,9 @@ E_FUNC int get_inode(FILEID id, ZVALUE *ino);
 E_FUNC FILEID reopenid(FILEID id, char *mode, char *name);
 E_FUNC int closeall(void);
 
-#  if !defined(_WIN32) && !defined(_WIN64)
+#if !defined(_WIN32) && !defined(_WIN64)
 E_FUNC int flushall(void);
-#  endif
+#endif
 
 E_FUNC int idfputstr(FILEID id, char *str);
 E_FUNC int rewindid(FILEID id);
@@ -135,7 +138,8 @@ E_FUNC int ftellid(FILEID id, ZVALUE *res);
 E_FUNC int fseekid(FILEID id, ZVALUE offset, int whence);
 E_FUNC int isattyid(FILEID id);
 E_FUNC int fsearch(FILEID id, char *str, ZVALUE start, ZVALUE end, ZVALUE *res);
-E_FUNC int frsearch(FILEID id, char *str, ZVALUE first, ZVALUE last, ZVALUE *res);
+E_FUNC int frsearch(FILEID id, char *str, ZVALUE first, ZVALUE last,
+                    ZVALUE *res);
 E_FUNC void showconstants(void);
 E_FUNC void freeconstant(unsigned long);
 E_FUNC void freestringconstant(long);
@@ -146,7 +150,8 @@ E_FUNC void trimconstants(void);
  */
 E_FUNC int openstring(char *str, size_t num);
 E_FUNC int openterminal(void);
-E_FUNC int opensearchfile(char *name, char *pathlist, char *exten, int reopen_ok);
+E_FUNC int opensearchfile(char *name, char *pathlist, char *exten,
+                          int reopen_ok);
 E_FUNC char *nextline(void);
 E_FUNC int nextchar(void);
 E_FUNC void reread(void);
@@ -181,71 +186,71 @@ E_FUNC char *calc_strdup(CONST char *);
  */
 E_FUNC void initialize(void);
 E_FUNC void reinitialize(void);
-#  if !defined(_WIN32) && !defined(_WIN64)
-E_FUNC int isatty(int tty); /* true if fd is a tty */
-#  endif
-E_FUNC char *version(void); /* return version string */
+#if !defined(_WIN32) && !defined(_WIN64)
+E_FUNC int isatty(int tty);     /* true if fd is a tty */
+#endif
+E_FUNC char *version(void);     /* return version string */
 
 /*
  * global flags and definitions
  */
-EXTERN int abortlevel; /* current level of aborts */
-EXTERN bool inputwait; /* true if in a terminal input wait */
+EXTERN int abortlevel;  /* current level of aborts */
+EXTERN bool inputwait;  /* true if in a terminal input wait */
 
-EXTERN int p_flag;	 /* true => pipe mode */
-EXTERN int q_flag;	 /* true => don't execute rc files */
-EXTERN int u_flag;	 /* true => unbuffer stdin and stdout */
-EXTERN int d_flag;	 /* true => disable heading, resource_debug */
-EXTERN int c_flag;	 /* true => continue after error if permitted */
-EXTERN int i_flag;	 /* true => try to go interactive after error */
-E_FUNC int s_flag;	 /* true => keep args as strings for argv() */
-EXTERN long stoponerror; /* >0 => stop, <0 => continue, ==0 => use -c */
-EXTERN bool abort_now;	 /* true => try to go interactive */
+EXTERN int p_flag;              /* true => pipe mode */
+EXTERN int q_flag;              /* true => don't execute rc files */
+EXTERN int u_flag;              /* true => unbuffer stdin and stdout */
+EXTERN int d_flag;              /* true => disable heading, resource_debug */
+EXTERN int c_flag;              /* true => continue after error if permitted */
+EXTERN int i_flag;              /* true => try to go interactive after error */
+E_FUNC int s_flag;              /* true => keep args as strings for argv() */
+EXTERN long stoponerror;        /* >0 => stop, <0 => continue, ==0 => use -c */
+EXTERN bool abort_now;  /* true => try to go interactive */
 
-E_FUNC int argc_value;	  /* count of argv[] strings for argv() builtin */
-E_FUNC char **argv_value; /* argv[] strings for argv() builtin */
+E_FUNC int argc_value;  /* count of argv[] strings for argv() builtin */
+E_FUNC char **argv_value;       /* argv[] strings for argv() builtin */
 
-EXTERN char *pager;	  /* $PAGER or default */
-EXTERN int stdin_tty;	  /* true if stdin is a tty */
-EXTERN int havecommands;  /* true if have cmd args) */
-EXTERN char *program;	  /* our name */
-EXTERN char *base_name;	  /* basename of our name */
-EXTERN char cmdbuf[];	  /* command line expression */
-EXTERN char *script_name; /* program name or -f filename arg or NULL */
+EXTERN char *pager;             /* $PAGER or default */
+EXTERN int stdin_tty;   /* true if stdin is a tty */
+EXTERN int havecommands;        /* true if have cmd args) */
+EXTERN char *program;   /* our name */
+EXTERN char *base_name; /* basename of our name */
+EXTERN char cmdbuf[];   /* command line expression */
+EXTERN char *script_name;       /* program name or -f filename arg or NULL */
 
-EXTERN int abortlevel; /* current level of aborts */
-EXTERN bool inputwait; /* true if in a terminal input wait */
-EXTERN VALUE *stack;   /* execution stack */
-EXTERN int dumpnames;  /* true => dump names rather than indices */
-EXTERN int calc_errno; /* global calc_errno value */
+EXTERN int abortlevel;  /* current level of aborts */
+EXTERN bool inputwait;  /* true if in a terminal input wait */
+EXTERN VALUE *stack;    /* execution stack */
+EXTERN int dumpnames;   /* true => dump names rather than indices */
+EXTERN int calc_errno;  /* global calc_errno value */
 
-EXTERN char *calcpath;	   /* $CALCPATH or default */
-EXTERN char *calcrc;	   /* $CALCRC or default */
-EXTERN char *calcbindings; /* $CALCBINDINGS or default */
-EXTERN char *home;	   /* $HOME or default */
-EXTERN char *shell;	   /* $SHELL or default */
+EXTERN char *calcpath;  /* $CALCPATH or default */
+EXTERN char *calcrc;    /* $CALCRC or default */
+EXTERN char *calcbindings;      /* $CALCBINDINGS or default */
+EXTERN char *home;              /* $HOME or default */
+EXTERN char *shell;             /* $SHELL or default */
 
-EXTERN int no_env;	/* true (-e) => ignore env vars on startup */
-EXTERN long errmax;	/* if >= 0, error when errcount exceeds errmax */
+EXTERN int no_env;      /* true (-e) => ignore env vars on startup */
+EXTERN long errmax;     /* if >= 0, error when errcount exceeds errmax */
 EXTERN int use_old_std; /* true (-O) => use classic configuration */
 
-EXTERN int allow_read;	/* false => don't open any files for reading */
-EXTERN int allow_write; /* false => don't open any files for writing */
-EXTERN int allow_exec;	/* false => may not execute any commands */
+EXTERN int allow_read;  /* false => don't open any files for reading */
+EXTERN int allow_write;         /* false => don't open any files for writing */
+EXTERN int allow_exec;  /* false => may not execute any commands */
 
 /*
  * calc startup and run state
  */
 typedef enum {
-    RUN_ZERO,		/* unknown or unset start state */
-    RUN_BEGIN,		/* calc execution starts */
-    RUN_RCFILES,	/* rc files being evaluated */
-    RUN_PRE_CMD_ARGS,	/* prepare to evaluate cmd args */
-    RUN_CMD_ARGS,	/* cmd args being evaluated */
-    RUN_PRE_TOP_LEVEL,	/* prepare to start top level activity */
-    RUN_TOP_LEVEL,	/* running at top level */
-    RUN_EXIT,		/* normal exit from calc */
-    RUN_EXIT_WITH_ERROR /* exit with error */
+    RUN_ZERO,                   /* unknown or unset start state */
+    RUN_BEGIN,                  /* calc execution starts */
+    RUN_RCFILES,                /* rc files being evaluated */
+    RUN_PRE_CMD_ARGS,           /* prepare to evaluate cmd args */
+    RUN_CMD_ARGS,               /* cmd args being evaluated */
+    RUN_PRE_TOP_LEVEL,          /* prepare to start top level activity */
+    RUN_TOP_LEVEL,              /* running at top level */
+    RUN_EXIT,                   /* normal exit from calc */
+    RUN_EXIT_WITH_ERROR         /* exit with error */
 } run;
 EXTERN run run_state;
 E_FUNC char *run_state_name(run state);
@@ -253,12 +258,13 @@ E_FUNC char *run_state_name(run state);
 /*
  * calc version information
  */
-#  define CALC_TITLE "C-style arbitrary precision calculator"
+#define CALC_TITLE "C-style arbitrary precision calculator"
 EXTERN int calc_major_ver;
 EXTERN int calc_minor_ver;
 EXTERN int calc_major_patch;
 EXTERN int calc_minor_patch;
 EXTERN char *Copyright;
 E_FUNC char *version(void);
+
 
 #endif /* !INCLUDE_CALC_H */

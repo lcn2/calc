@@ -41,29 +41,31 @@
 #include <stdio.h>
 #include "have_string.h"
 #ifdef HAVE_STRING_H
-#  include <string.h>
+# include <string.h>
 #endif
 
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h"     /* include after system header <> includes */
+
 
 int
 main(void)
 {
 #if defined(HAVE_NO_STRDUP)
 
-    printf("#undef HAVE_STRDUP /* no */\n");
+        printf("#undef HAVE_STRDUP /* no */\n");
 
 #else /* HAVE_NO_STRDUP */
 
-    char *p;
+        char *p;
 
-    p = strdup("#define HAVE_STRDUP /* yes */");
-    if (p != NULL) {
-	printf("%s\n", p);
-    }
+        p = strdup("#define HAVE_STRDUP /* yes */");
+        if (p != NULL) {
+                printf("%s\n", p);
+        }
 
 #endif /* HAVE_NO_STRDUP */
 
-    /* exit(0); */
-    return 0;
+        /* exit(0); */
+        return 0;
 }

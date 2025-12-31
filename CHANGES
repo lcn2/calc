@@ -15,9 +15,6 @@ The following are the changes from calc version 2.16.0.3 to date:
     Add `make clang-format` make rule to top level `Makefile` and
     to the `custom/Makefile`.
 
-    Reformatted C code as per the `clang-format(1)` and the
-    `.clang-format` file: using the `make clang-format` make rule.
-
 
 The following are the changes from calc version 2.16.0.2 to 2.16.0.3:
 

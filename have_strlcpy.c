@@ -41,31 +41,34 @@
 #include <stdio.h>
 #include "have_string.h"
 #ifdef HAVE_STRING_H
-#  include <string.h>
+# include <string.h>
 #endif
 
-#include "banned.h" /* include after system header <> includes */
 
-#define BUF_SIZ (sizeof("abcde") - 1)
+#include "banned.h"     /* include after system header <> includes */
 
-char src[BUF_SIZ + 1] = "abcde";
+
+#define BUF_SIZ (sizeof("abcde")-1)
+
+char src[BUF_SIZ+1] = "abcde";
+
 
 int
 main(void)
 {
 #if defined(HAVE_NO_STRLCPY)
 
-    printf("#undef HAVE_STRLCPY /* no */\n");
+        printf("#undef HAVE_STRLCPY /* no */\n");
 
 #else /* HAVE_NO_STRLCPY */
-    char dst[BUF_SIZ + 1];
+        char dst[BUF_SIZ+1];
 
-    (void)strlcpy(dst, src, sizeof(dst));
+        (void) strlcpy(dst, src, sizeof(dst));
 
-    printf("#define HAVE_STRLCPY /* yes */\n");
+        printf("#define HAVE_STRLCPY /* yes */\n");
 
 #endif /* HAVE_NO_STRLCPY */
 
-    /* exit(0); */
-    return 0;
+        /* exit(0); */
+        return 0;
 }

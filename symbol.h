@@ -23,36 +23,41 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-#if !defined(INCLUDE_SYMBOL_H)
-#  define INCLUDE_SYMBOL_H
 
-#  if defined(CALC_SRC) /* if we are building from the calc source tree */
-#    include "zmath.h"
-#  else
-#    include <calc/zmath.h>
-#  endif
+#if !defined(INCLUDE_SYMBOL_H)
+#define INCLUDE_SYMBOL_H
+
+
+#if defined(CALC_SRC)   /* if we are building from the calc source tree */
+# include "zmath.h"
+#else
+# include <calc/zmath.h>
+#endif
+
 
 /*
  * Symbol Declarations.
  */
-#  define SYM_UNDEFINED 0 /* undefined symbol */
-#  define SYM_PARAM 1	  /* parameter symbol */
-#  define SYM_LOCAL 2	  /* local symbol */
-#  define SYM_GLOBAL 3	  /* global symbol */
-#  define SYM_STATIC 4	  /* static symbol */
+#define SYM_UNDEFINED   0       /* undefined symbol */
+#define SYM_PARAM       1       /* parameter symbol */
+#define SYM_LOCAL       2       /* local symbol */
+#define SYM_GLOBAL      3       /* global symbol */
+#define SYM_STATIC      4       /* static symbol */
 
-#  define SCOPE_GLOBAL 0 /* file scope level for global variables */
-#  define SCOPE_STATIC 1 /* lowest file scope for static variables */
+#define SCOPE_GLOBAL    0       /* file scope level for global variables */
+#define SCOPE_STATIC    1       /* lowest file scope for static variables */
+
 
 typedef struct global GLOBAL;
 struct global {
-    size_t g_len;      /* length of symbol name */
-    short g_filescope; /* file scope level of symbol (0 if global) */
-    short g_funcscope; /* function scope level of symbol */
-    char *g_name;      /* global symbol name */
-    VALUE g_value;     /* global symbol value */
-    GLOBAL *g_next;    /* next symbol in hash chain */
+        size_t g_len;           /* length of symbol name */
+        short g_filescope;      /* file scope level of symbol (0 if global) */
+        short g_funcscope;      /* function scope level of symbol */
+        char *g_name;           /* global symbol name */
+        VALUE g_value;          /* global symbol value */
+        GLOBAL *g_next;         /* next symbol in hash chain */
 };
+
 
 /*
  * Routines to search for global symbols.
@@ -60,12 +65,14 @@ struct global {
 E_FUNC GLOBAL *addglobal(char *name, bool isstatic);
 E_FUNC GLOBAL *findglobal(char *name);
 
+
 /*
  * Routines to return names of variables.
  */
 E_FUNC char *localname(long n);
 E_FUNC char *paramname(long n);
 E_FUNC char *globalname(GLOBAL *sp);
+
 
 /*
  * Routines to handle entering and leaving of scope levels.
@@ -75,7 +82,8 @@ E_FUNC void enterfilescope(void);
 E_FUNC void exitfilescope(void);
 E_FUNC void enterfuncscope(void);
 E_FUNC void exitfuncscope(void);
-E_FUNC void endscope(char *name, bool isglobal);
+E_FUNC void endscope (char *name, bool isglobal);
+
 
 /*
  * Other routines.
@@ -93,5 +101,6 @@ E_FUNC void showallglobals(void);
 E_FUNC void freeglobals(void);
 E_FUNC void showstatics(void);
 E_FUNC void freestatics(void);
+
 
 #endif /* !INCLUDE_SYMBOL_H */

@@ -26,36 +26,40 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-#if !defined(INCLUDE_BOOL_H)
-#  define INCLUDE_BOOL_H
 
-#  include "have_stdbool.h"
-#  if defined(HAVE_STDBOOL_H)
-#    include <stdbool.h>
-#  endif /* HAVE_STDBOOL_H */
+#if !defined(INCLUDE_BOOL_H)
+#define INCLUDE_BOOL_H
+
+#include "have_stdbool.h"
+#if defined(HAVE_STDBOOL_H)
+#include <stdbool.h>
+#endif /* HAVE_STDBOOL_H */
+
 
 /*
  * standard truth :-)
  */
-#  if !defined(HAVE_STDBOOL_H)
+#if !defined(HAVE_STDBOOL_H)
 
 /* fake a <stdbool.h> header file */
-typedef unsigned char bool; /* fake boolean typedef */
-#    undef true
-#    define true ((bool)(1))
-#    undef false
-#    define false ((bool)(0))
+typedef unsigned char bool;     /* fake boolean typedef */
+#undef true
+#define true ((bool)(1))
+#undef false
+#define false ((bool)(0))
 
-#  endif /* !HAVE_STDBOOL_H */
+#endif /* !HAVE_STDBOOL_H */
+
 
 /*
  * calc historic booleans
  */
-#  undef TRUE
-#  define TRUE (true)
-#  undef FALSE
-#  define FALSE (false)
-#  undef BOOL
-#  define BOOL bool
+#undef TRUE
+#define TRUE (true)
+#undef FALSE
+#define FALSE (false)
+#undef BOOL
+#define BOOL bool
+
 
 #endif /* !INCLUDE_BOOL_H*/

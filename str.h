@@ -23,29 +23,34 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-#if !defined(INCLUDE_STR_H)
-#  define INCLUDE_STR_H
 
-#  if defined(CALC_SRC) /* if we are building from the calc source tree */
-#    include "zmath.h"
-#  else
-#    include <calc/zmath.h>
-#  endif
+#if !defined(INCLUDE_STR_H)
+#define INCLUDE_STR_H
+
+
+#if defined(CALC_SRC)   /* if we are building from the calc source tree */
+# include "zmath.h"
+#else
+# include <calc/zmath.h>
+#endif
+
+
 
 struct string {
-    char *s_str;
-    size_t s_len;
-    long s_links;
-    struct string *s_next;
+        char *s_str;
+        size_t s_len;
+        long s_links;
+        struct string *s_next;
 };
 
 typedef struct string STRING;
 
+
 typedef struct {
-    char *h_list;   /* list of strings separated by nulls */
-    size_t h_used;  /* characters used so far */
-    size_t h_avail; /* characters available for use */
-    long h_count;   /* number of strings */
+        char *h_list;   /* list of strings separated by nulls */
+        size_t h_used;  /* characters used so far */
+        size_t h_avail; /* characters available for use */
+        long h_count;   /* number of strings */
 } STRINGHEAD;
 
 EXTERN STRING _nullstring_;
@@ -67,5 +72,6 @@ E_FUNC void fitstring(char *, long, long);
 E_FUNC void strprint(STRING *);
 E_FUNC void showstrings(void);
 E_FUNC void showliterals(void);
+
 
 #endif /* !INCLUDE_STR_H */

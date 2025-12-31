@@ -29,13 +29,14 @@
  * are not directly used by calc itself, however.
  */
 
+
 #if !defined(INCLUDE_LIB_UTIL_H)
-#  define INCLUDE_LIB_UTIL_H
+#define INCLUDE_LIB_UTIL_H
 
 /* external functions in lib_util.c */
 EXTERN int lowhex2bin[256];
 EXTERN char lowbin2hex[256];
-E_FUNC ZVALUE convstr2z(char *);
+E_FUNC ZVALUE convstr2z(char*);
 E_FUNC ZVALUE convhex2z(char *hex);
 E_FUNC char *convz2hex(ZVALUE z);
 

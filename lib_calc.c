@@ -24,12 +24,13 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+
 #include <stdio.h>
 #include <setjmp.h>
 #include <signal.h>
 
 #if !defined(_WIN32) && !defined(_WIN64)
-#  include <pwd.h>
+# include <pwd.h>
 #endif
 
 #include "lib_calc.h"
@@ -43,120 +44,124 @@
 #include "strl.h"
 
 #if defined(CUSTOM)
-#  include "custom.h"
+#include "custom.h"
 #endif /* CUSTOM */
 
 #include "have_strdup.h"
 #if !defined(HAVE_STRDUP)
-#  define strdup(x) calc_strdup((CONST char *)(x))
+# define strdup(x) calc_strdup((CONST char *)(x))
 #endif /* HAVE_STRDUP */
 
 #include "have_unistd.h"
 #if defined(HAVE_UNISTD_H)
-#  include <unistd.h>
+#include <unistd.h>
 #endif
 
 #include "have_stdlib.h"
 #if defined(HAVE_STDLIB_H)
-#  include <stdlib.h>
+#include <stdlib.h>
 #endif
 
 #include "terminal.h"
 #if defined(USE_TERMIOS)
 
-#  include <termios.h>
+# include <termios.h>
 typedef struct termios ttystruct;
 
 #elif defined(USE_TERMIO)
 
-#  include <termio.h>
+# include <termio.h>
 typedef struct termio ttystruct;
 
 #elif defined(USE_SGTTY)
 
-#  include <sys/ioctl.h>
+# include <sys/ioctl.h>
 typedef struct sgttyb ttystruct;
 
 #else
 
-typedef struct {
-    int fd;
-} ttystruct;
+typedef struct {int fd;} ttystruct;
 
 #endif
 
 #if !defined(_WIN32) && !defined(_WIN64)
-#  if !defined(USE_SGTTY) && !defined(USE_TERMIOS) && !defined(USE_TERMIO)
+# if !defined(USE_SGTTY) && !defined (USE_TERMIOS) && !defined(USE_TERMIO)
 
 -=*#*=- A Windows free system without termio, termios or sgtty!!! -=*#*=-
 -=*#*=- We do not know how to compile for such a host, sorry!!!! -=*#*=-
 
-#  endif
+# endif
 #endif /* Windows */
 
+
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+#include "banned.h"     /* include after system header <> includes */
+
 
 /*
  * in case we do not have certain .h files
  */
 #if !defined(HAVE_STDLIB_H) && !defined(HAVE_UNISTD_H)
-#  if !defined(HAVE_UID_T) && !defined(_UID_T)
+#if !defined(HAVE_UID_T) && !defined(_UID_T)
 typedef unsigned short uid_t;
-#  endif
+#endif
 E_FUNC char *getenv();
 E_FUNC uid_t geteuid();
 #endif
 
+
 /*
  * Common definitions
  */
-int use_old_std = false;	 /* true => use old classic configuration */
-int abortlevel;			 /* current level of aborts */
-bool inputwait;			 /* true if in a terminal input wait */
-char *program = "calc";		 /* our name */
-char *base_name = "calc";	 /* basename of our name */
-char cmdbuf[MAXCMD + 1 + 1 + 1]; /* command line expression + "\n\0" + guard */
-run run_state = RUN_ZERO;	 /* calc startup run state */
-char *script_name = NULL;	 /* program name or -f filename arg or NULL */
+int use_old_std = false;        /* true => use old classic configuration */
+int abortlevel;                 /* current level of aborts */
+bool inputwait;                 /* true if in a terminal input wait */
+char *program = "calc";         /* our name */
+char *base_name = "calc";       /* basename of our name */
+char cmdbuf[MAXCMD+1+1+1];      /* command line expression + "\n\0" + guard */
+run run_state = RUN_ZERO;       /* calc startup run state */
+char *script_name = NULL;       /* program name or -f filename arg or NULL */
+
 
 /*
  * global permissions
  */
-int allow_read = true;	/* false => may not open any files for reading */
+int allow_read = true;  /* false => may not open any files for reading */
 int allow_write = true; /* false => may not open any files for writing */
-int allow_exec = true;	/* false => may not execute any commands */
+int allow_exec = true;  /* false => may not execute any commands */
+
 
 /*
  * global flags
  */
-int p_flag = false; /* true => pipe mode */
-int q_flag = false; /* true => don't execute rc files */
-int u_flag = false; /* true => unbuffer stdin and stdout */
-int d_flag = false; /* true => disable heading, resource_debug == 0 */
-int c_flag = false; /* true => continue on error if permitted */
-int i_flag = false; /* true => go interactive if permitted */
-int s_flag = false; /* true => keep args as strings for argv() */
+int p_flag = false;     /* true => pipe mode */
+int q_flag = false;     /* true => don't execute rc files */
+int u_flag = false;     /* true => unbuffer stdin and stdout */
+int d_flag = false;     /* true => disable heading, resource_debug == 0 */
+int c_flag = false;     /* true => continue on error if permitted */
+int i_flag = false;     /* true => go interactive if permitted */
+int s_flag = false;     /* true => keep args as strings for argv() */
+
 
 /*
  * global values
  */
-char *calcpath = NULL;	   /* $CALCPATH or default */
-char *calcrc = NULL;	   /* $CALCRC or default */
-char *calcbindings = NULL; /* $CALCBINDINGS or default */
-char *home = NULL;	   /* $HOME or default */
-char *pager = NULL;	   /* $PAGER or default */
-char *shell = NULL;	   /* $SHELL or default */
-char *calc_history = NULL; /* $CALCHISTFILE or ~/.calc_history */
-char *calc_helpdir = NULL; /* $CALCHELP or /usr/local/share/calc/help */
+char *calcpath = NULL;          /* $CALCPATH or default */
+char *calcrc = NULL;            /* $CALCRC or default */
+char *calcbindings = NULL;      /* $CALCBINDINGS or default */
+char *home = NULL;              /* $HOME or default */
+char *pager = NULL;             /* $PAGER or default */
+char *shell = NULL;             /* $SHELL or default */
+char *calc_history = NULL;      /* $CALCHISTFILE or ~/.calc_history */
+char *calc_helpdir = NULL;      /* $CALCHELP or /usr/local/share/calc/help */
 /* $CALCCUSTOMHELP or /usr/local/share/calc/custhelp */
 #if defined(CUSTOM)
 char *calc_customhelpdir = NULL;
-#endif			  /* CUSTOM */
-int stdin_tty = false;	  /* true if stdin is a tty */
-int havecommands = false; /* true if have one or more cmd args */
-long stoponerror = 0;	  /* >0 => stop, <0 => continue, ==0 => use -c */
-bool abort_now = false;	  /* true => go interactive now, if permitted */
+#endif /* CUSTOM */
+int stdin_tty = false;          /* true if stdin is a tty */
+int havecommands = false;       /* true if have one or more cmd args */
+long stoponerror = 0;           /* >0 => stop, <0 => continue, ==0 => use -c */
+bool abort_now = false;         /* true => go interactive now, if permitted */
 
 /* non-zero => calc_scanerr_jmpbuf ready */
 int calc_use_scanerr_jmpbuf = 0;
@@ -169,28 +174,29 @@ int calc_use_matherr_jmpbuf = 0;
 jmp_buf calc_matherr_jmpbuf;
 
 /* last calc error message, also parse/scan errors use this buffer */
-char calc_err_msg[MAXERROR + 1];
+char calc_err_msg[MAXERROR+1];
 /* 0 ==> do not print parse/scan errors */
 int calc_print_scanerr_msg = 1;
 
 /* last parse/scan warning message */
-char calc_warn_msg[MAXERROR + 1];
+char calc_warn_msg[MAXERROR+1];
 /* 0 ==> do not print parse/scan warnings */
 int calc_print_scanwarn_msg = 1;
 /* number of parse/scan warnings found */
 unsigned long calc_warn_cnt = 0;
 
-int argc_value = 0;	  /* count of argv[] strings for argv() builtin */
-char **argv_value = NULL; /* argv[] strings for argv() builtin */
+int argc_value = 0;             /* count of argv[] strings for argv() builtin */
+char **argv_value = NULL;       /* argv[] strings for argv() builtin */
 
-int no_env = false;   /* true (-e) => ignore env vars on startup */
-long errmax = ERRMAX; /* if >= 0,  maximum value for errcount */
+int no_env = false;             /* true (-e) => ignore env vars on startup */
+long errmax = ERRMAX;           /* if >= 0,  maximum value for errcount */
 
-NUMBER *epsilon_default; /* default allowed error for float calcs */
+NUMBER *epsilon_default;        /* default allowed error for float calcs */
 
-char *calc_debug = NULL;     /* !=NULL => value of config("calc_debug") */
-char *resource_debug = NULL; /* !=NULL => config("resource_debug") value */
-char *user_debug = NULL;     /* !=NULL => value of config("user_debug") */
+char *calc_debug = NULL;        /* !=NULL => value of config("calc_debug") */
+char *resource_debug = NULL;    /* !=NULL => config("resource_debug") value */
+char *user_debug = NULL;        /* !=NULL => value of config("user_debug") */
+
 
 /*
  * initialization functions
@@ -201,17 +207,19 @@ E_FUNC void zio_init(void);
 E_FUNC void initialize(void);
 E_FUNC void reinitialize(void);
 
+
 /*
  * static declarations
  */
-STATIC int init_done = 0;	   /* 1 => we already initialized */
-STATIC int *fd_setup = NULL;	   /* fd's setup for interaction or -1 */
-STATIC int fd_setup_len = 0;	   /* number of fd's in fd_setup */
-STATIC ttystruct *fd_orig = NULL;  /* fd original state */
-STATIC ttystruct *fd_cur = NULL;   /* fd current state */
-S_FUNC void initenv(void);	   /* setup calc environment */
-S_FUNC int find_tty_state(int fd); /* find slot for saved tty state */
-STATIC bool initialized = false;   /* true => initialize() has been run */
+STATIC int init_done = 0;               /* 1 => we already initialized */
+STATIC int *fd_setup = NULL;            /* fd's setup for interaction or -1 */
+STATIC int fd_setup_len = 0;            /* number of fd's in fd_setup */
+STATIC ttystruct *fd_orig = NULL;       /* fd original state */
+STATIC ttystruct *fd_cur = NULL;        /* fd current state */
+S_FUNC void initenv(void);              /* setup calc environment */
+S_FUNC int find_tty_state(int fd);      /* find slot for saved tty state */
+STATIC bool initialized = false;        /* true => initialize() has been run */
+
 
 /*
  * libcalc_call_me_first - users of libcalc.a must call this function first!
@@ -222,142 +230,145 @@ STATIC bool initialized = false;   /* true => initialize() has been run */
 void
 libcalc_call_me_first(void)
 {
-    char *p;
+        char *p;
 
-    /*
-     * do nothing if we are initialized already
-     */
-    if (init_done) {
-	return;
-    }
+        /*
+         * do nothing if we are initialized already
+         */
+        if (init_done) {
+                return;
+        }
 
-    /*
-     * Disable SIGPIPE so that the pipe to the help file pager will
-     * not stop calc.
-     */
+        /*
+         * Disable SIGPIPE so that the pipe to the help file pager will
+         * not stop calc.
+         */
 #if !defined(_WIN32) && !defined(_WIN64)
-    (void)signal(SIGPIPE, SIG_IGN);
+        (void) signal(SIGPIPE, SIG_IGN);
 #endif
 
-    /*
-     * determine the basename
-     */
-    if (program != NULL) {
-	p = strrchr(program, '/');
+        /*
+         * determine the basename
+         */
+        if (program != NULL) {
+                p = strrchr(program, '/');
 #if defined(_WIN32) || defined(_WIN64)
-	if (p == NULL) {
-	    p = strrchr(program, '\\');
-	}
+                if (p == NULL) {
+                        p = strrchr(program, '\\');
+                }
 #endif
-	if (p == NULL) {
-	    base_name = program;
-	} else {
-	    base_name = p + 1;
-	}
-    }
+                if (p == NULL) {
+                        base_name = program;
+                } else {
+                        base_name = p+1;
+                }
+        }
 
-    /*
-     * initialize old and new configuration values
-     */
-    newstd.epsilon = &_qonesqbase_; /* magic to fake early str2q() */
-    if (program == NULL) {
-	fprintf(stderr, "libcalc_call_me_first: FATAL: "
-			"program is NULL\n");
-	exit(80);
-    }
-    newstd.program = strdup(program);
-    if (newstd.program == NULL) {
-	fprintf(stderr, "libcalc_call_me_first: FATAL: "
-			"cannot strdup program string\n");
-	exit(81);
-    }
-    if (base_name == NULL) {
-	fprintf(stderr, "libcalc_call_me_first: FATAL: "
-			"base_name is NULL\n");
-	exit(82);
-    }
-    newstd.base_name = strdup(base_name);
-    if (newstd.base_name == NULL) {
-	fprintf(stderr, "libcalc_call_me_first: FATAL: "
-			"cannot strdup base_name string\n");
-	exit(83);
-    }
-    p = version();
-    if (p == NULL) {
-	fprintf(stderr, "libcalc_call_me_first: FATAL: "
-			"version() returned NULL\n");
-	exit(84);
-    }
-    newstd.version = strdup(p);
-    if (newstd.version == NULL) {
-	fprintf(stderr, "libcalc_call_me_first: FATAL: "
-			"cannot strdup return from version()\n");
-	exit(85);
-    }
-    conf = config_copy(&newstd); /* more magic to fake early str2q() */
-    conf->tab_ok = false;
-    newstd.epsilon = str2q(EPSILON_DEFAULT);
-    oldstd.epsilon = str2q(EPSILON_DEFAULT);
+        /*
+         * initialize old and new configuration values
+         */
+        newstd.epsilon = &_qonesqbase_; /* magic to fake early str2q() */
+        if (program == NULL) {
+                fprintf(stderr, "libcalc_call_me_first: FATAL: "
+                                "program is NULL\n");
+                exit(80);
+        }
+        newstd.program = strdup(program);
+        if (newstd.program == NULL) {
+                fprintf(stderr, "libcalc_call_me_first: FATAL: "
+                                "cannot strdup program string\n");
+                exit(81);
+        }
+        if (base_name == NULL) {
+                fprintf(stderr, "libcalc_call_me_first: FATAL: "
+                                "base_name is NULL\n");
+                exit(82);
+        }
+        newstd.base_name = strdup(base_name);
+        if (newstd.base_name == NULL) {
+                fprintf(stderr, "libcalc_call_me_first: FATAL: "
+                                "cannot strdup base_name string\n");
+                exit(83);
+        }
+        p = version();
+        if (p == NULL) {
+                fprintf(stderr, "libcalc_call_me_first: FATAL: "
+                                "version() returned NULL\n");
+                exit(84);
+        }
+        newstd.version = strdup(p);
+        if (newstd.version == NULL) {
+                fprintf(stderr, "libcalc_call_me_first: FATAL: "
+                                "cannot strdup return from version()\n");
+                exit(85);
+        }
+        conf = config_copy(&newstd); /* more magic to fake early str2q() */
+        conf->tab_ok = false;
+        newstd.epsilon = str2q(EPSILON_DEFAULT);
+        oldstd.epsilon = str2q(EPSILON_DEFAULT);
 
-    /*
-     * make newstd our default config, unless -O
-     */
-    config_free(conf);
-    if (use_old_std) {
-	conf = config_copy(&oldstd);
-    } else {
-	conf = config_copy(&newstd);
-    }
+        /*
+         * make newstd our default config, unless -O
+         */
+        config_free(conf);
+        if (use_old_std) {
+                conf = config_copy(&oldstd);
+        } else {
+                conf = config_copy(&newstd);
+        }
 
-    /*
-     * -d turns off resource_debug and tilde
-     */
-    if (d_flag) {
-	conf->resource_debug = 0;
-	conf->tilde_ok = 0;
-	conf->tilde_space = 0;
-    }
+        /*
+         * -d turns off resource_debug and tilde
+         */
+        if (d_flag) {
+                conf->resource_debug = 0;
+                conf->tilde_ok = 0;
+                conf->tilde_space = 0;
+        }
 
-    /*
-     * -p turns off tab
-     */
-    if (p_flag) {
-	conf->tab_ok = 0;
-    }
+        /*
+         * -p turns off tab
+         */
+        if (p_flag) {
+                conf->tab_ok = 0;
+        }
 
-    /*
-     * -D flags can change calc_debug, resource_debug of user_debug
-     */
-    if (calc_debug) {
-	conf->calc_debug = strtol(calc_debug, NULL, 0);
-    }
-    if (resource_debug) {
-	conf->resource_debug = strtol(resource_debug, NULL, 0);
-    }
-    if (user_debug) {
-	conf->user_debug = strtol(user_debug, NULL, 0);
-    }
+        /*
+         * -D flags can change calc_debug, resource_debug of user_debug
+         */
+        if (calc_debug) {
+                conf->calc_debug = strtol(calc_debug, NULL, 0);
+        }
+        if (resource_debug) {
+                conf->resource_debug = strtol(resource_debug, NULL, 0);
+        }
+        if (user_debug) {
+                conf->user_debug = strtol(user_debug, NULL, 0);
+        }
 
-    /*
-     * initialize
-     */
-    initialize();
+        /*
+         * initialize
+         */
+        initialize();
 
-    /*
-     * verify error_table[] array and setup private_error_alias[] array
-     */
-    verify_error_table();
+        /*
+         * verify error_table[] array and setup private_error_alias[] array
+         */
+        verify_error_table();
 
-    /*
-     * ready to rock & roll ..
-     */
-    if (conf->calc_debug & CALCDBG_RUNSTATE) {
-	printf("libcalc_call_me_first: run_state from %s to %s\n", run_state_name(run_state), run_state_name(RUN_BEGIN));
-    }
-    run_state = RUN_BEGIN;
-    init_done = 1;
-    return;
+        /*
+         * ready to rock & roll ..
+         */
+        if (conf->calc_debug & CALCDBG_RUNSTATE) {
+                printf("libcalc_call_me_first: run_state from %s to %s\n",
+                    run_state_name(run_state),
+                    run_state_name(RUN_BEGIN));
+        }
+        run_state = RUN_BEGIN;
+        init_done = 1;
+        return;
 }
+
 
 /*
  * initialize - perform the required calc initializations
@@ -365,64 +376,65 @@ libcalc_call_me_first(void)
 void
 initialize(void)
 {
-    /*
-     * firewall
-     */
-    if (initialized) {
-	return;
-    }
+        /*
+         * firewall
+         */
+        if (initialized) {
+                return;
+        }
 
-    /*
-     * ZVALUE io initialization
-     */
-    zio_init();
+        /*
+         * ZVALUE io initialization
+         */
+        zio_init();
 
-    /*
-     * process the environment
-     */
-    initenv();
+        /*
+         * process the environment
+         */
+        initenv();
 
-    /*
-     * initialize I/O
-     */
-    file_init();
+        /*
+         * initialize I/O
+         */
+        file_init();
 
-    /*
-     * initialize file I/O
-     */
-    resetinput();
+        /*
+         * initialize file I/O
+         */
+        resetinput();
 
-    /*
-     * initialize calc internal data structures
-     */
-    inittokens();
-    initglobals();
-    initfunctions();
-    initstack();
+        /*
+         * initialize calc internal data structures
+         */
+        inittokens();
+        initglobals();
+        initfunctions();
+        initstack();
 
-    /*
-     * initialize calc math
-     */
-    math_cleardiversions();
-    math_setfp(stdout);
-    math_setmode(MODE_INITIAL);
-    math_setdigits(DISPLAY_DEFAULT);
-    conf->maxprint = MAXPRINT_DEFAULT;
+        /*
+         * initialize calc math
+         */
+        math_cleardiversions();
+        math_setfp(stdout);
+        math_setmode(MODE_INITIAL);
+        math_setdigits(DISPLAY_DEFAULT);
+        conf->maxprint = MAXPRINT_DEFAULT;
 
 #if defined(CUSTOM)
-    /*
-     * initialize custom registers
-     */
-    if (allow_custom) {
-	init_custreg();
-    }
+        /*
+         * initialize custom registers
+         */
+        if (allow_custom) {
+                init_custreg();
+        }
 #endif /* CUSTOM */
 
-    /*
-     * note that we are done
-     */
-    initialized = true;
+        /*
+         * note that we are done
+         */
+        initialized = true;
 }
+
 
 /*
  * reinitialize - reinitialize after a longjmp
@@ -430,19 +442,20 @@ initialize(void)
 void
 reinitialize(void)
 {
-    /*
-     * process commands (from stdin, not the command line)
-     */
-    abortlevel = 0;
-    _math_abort_ = false;
-    inputwait = false;
-    math_cleardiversions();
-    math_setfp(stdout);
-    resetscopes();
-    resetinput();
-    inittokens();
-    (void)openterminal();
+        /*
+         * process commands (from stdin, not the command line)
+         */
+        abortlevel = 0;
+        _math_abort_ = false;
+        inputwait = false;
+        math_cleardiversions();
+        math_setfp(stdout);
+        resetscopes();
+        resetinput();
+        inittokens();
+        (void) openterminal();
 }
+
 
 /*
  * cvmalloc_error - for users of the SGI Workshop Debugger
@@ -453,16 +466,17 @@ reinitialize(void)
 void
 cvmalloc_error(char *message)
 {
-    /* firewall */
-    if (message == NULL) {
-	fprintf(stderr, "cvmalloc_error message is NULL\n");
-	return;
-    }
+        /* firewall */
+        if (message == NULL) {
+                fprintf(stderr, "cvmalloc_error message is NULL\n");
+                return;
+        }
 
-    /* print message and return */
-    fprintf(stderr, "cvmalloc_error: %s\n", message);
-    return;
+        /* print message and return */
+        fprintf(stderr, "cvmalloc_error: %s\n", message);
+        return;
 }
+
 
 /*
  * initenv - obtain various environment variable values.
@@ -499,139 +513,142 @@ S_FUNC void
 initenv(void)
 {
 #if !defined(_WIN32) && !defined(_WIN64)
-    struct passwd *ent; /* our password entry */
+        struct passwd *ent;             /* our password entry */
 #endif
-    char *c;
+        char *c;
 
-    /* determine the $CALCPATH value */
-    c = (no_env ? NULL : getenv(CALCPATH));
-    calcpath = (c ? strdup(c) : NULL);
-    if (calcpath == NULL || *calcpath == '\0') {
-	calcpath = strdup(DEFAULTCALCPATH);
-    }
-    if (calcpath == NULL) {
-	math_error("Unable to allocate string for calcpath");
-	not_reached();
-    }
+        /* determine the $CALCPATH value */
+        c = (no_env ? NULL : getenv(CALCPATH));
+        calcpath = (c ? strdup(c) : NULL);
+        if (calcpath == NULL || *calcpath == '\0') {
+                calcpath = strdup(DEFAULTCALCPATH);
+        }
+        if (calcpath == NULL) {
+                math_error("Unable to allocate string for calcpath");
+                not_reached();
+        }
 
-    /* determine the $CALCRC value */
-    c = (no_env ? NULL : getenv(CALCRC));
-    calcrc = (c ? strdup(c) : NULL);
-    if (calcrc == NULL || *calcrc == '\0') {
-	calcrc = strdup(DEFAULTCALCRC);
-    }
-    if (calcrc == NULL) {
-	math_error("Unable to allocate string for calcrc");
-	not_reached();
-    }
-    if (strlen(calcrc) > MAX_CALCRC) {
-	math_error("The $CALCRC variable is longer than %d chars", MAX_CALCRC);
-	not_reached();
-    }
+        /* determine the $CALCRC value */
+        c = (no_env ? NULL : getenv(CALCRC));
+        calcrc = (c ? strdup(c) : NULL);
+        if (calcrc == NULL || *calcrc == '\0') {
+                calcrc = strdup(DEFAULTCALCRC);
+        }
+        if (calcrc == NULL) {
+                math_error("Unable to allocate string for calcrc");
+                not_reached();
+        }
+        if (strlen(calcrc) > MAX_CALCRC) {
+                math_error("The $CALCRC variable is longer than %d chars",
+                           MAX_CALCRC);
+                not_reached();
+        }
 
-    /* determine the $CALCBINDINGS value */
-    c = (no_env ? NULL : getenv(CALCBINDINGS));
-    calcbindings = (c ? strdup(c) : NULL);
-    if (calcbindings == NULL || *calcbindings == '\0') {
-	calcbindings = strdup(DEFAULTCALCBINDINGS);
-    }
-    if (calcbindings == NULL) {
-	math_error("Unable to allocate string for calcbindings");
-	not_reached();
-    }
+        /* determine the $CALCBINDINGS value */
+        c = (no_env ? NULL : getenv(CALCBINDINGS));
+        calcbindings = (c ? strdup(c) : NULL);
+        if (calcbindings == NULL || *calcbindings == '\0') {
+                calcbindings = strdup(DEFAULTCALCBINDINGS);
+        }
+        if (calcbindings == NULL) {
+                math_error("Unable to allocate string for calcbindings");
+                not_reached();
+        }
 
-    /* determine the $HOME value */
-    c = (no_env ? NULL : getenv(HOME));
-    home = (c ? strdup(c) : NULL);
+        /* determine the $HOME value */
+        c = (no_env ? NULL : getenv(HOME));
+        home = (c ? strdup(c) : NULL);
 #if defined(_WIN32) || defined(_WIN64)
-    if (home == NULL || home[0] == '\0') {
-	/* free home if it was previously allocated, but empty */
-	if (home != NULL) {
-	    free(home);
-	    home = NULL;
-	}
-	/* just assume . is home if all else fails */
-	home = strdup(".");
-    }
-#else  /* Windows free systems */
-    if (home == NULL || home[0] == '\0') {
-	/* free home if it was previously allocated, but empty */
-	if (home != NULL) {
-	    free(home);
-	    home = NULL;
-	}
-	/* try using the home directory of current effective UID */
-	ent = (struct passwd *)getpwuid(geteuid());
-	if (ent == NULL || ent->pw_dir == NULL || ent->pw_dir[0] == '\0') {
-	    /* just assume . is home if all else fails */
-	    home = strdup(".");
-	} else {
-	    /* use home directory of current effective UID */
-	    home = strdup(ent->pw_dir);
-	}
-    }
+        if (home == NULL || home[0] == '\0') {
+                /* free home if it was previously allocated, but empty */
+                if (home != NULL) {
+                        free(home);
+                        home = NULL;
+                }
+                /* just assume . is home if all else fails */
+                home = strdup(".");
+        }
+#else /* Windows free systems */
+        if (home == NULL || home[0] == '\0') {
+                /* free home if it was previously allocated, but empty */
+                if (home != NULL) {
+                        free(home);
+                        home = NULL;
+                }
+                /* try using the home directory of current effective UID */
+                ent = (struct passwd *)getpwuid(geteuid());
+                if (ent == NULL || ent->pw_dir == NULL ||
+                    ent->pw_dir[0] == '\0') {
+                        /* just assume . is home if all else fails */
+                        home = strdup(".");
+                } else {
+                        /* use home directory of current effective UID */
+                        home = strdup(ent->pw_dir);
+                }
+        }
 #endif /* Windows free systems */
-    if (home == NULL) {
-	math_error("Unable to allocate string for home");
-	not_reached();
-    }
+        if (home == NULL) {
+                math_error("Unable to allocate string for home");
+                not_reached();
+        }
 
-    /* determine the $PAGER value */
-    c = (no_env ? NULL : getenv(PAGER));
-    pager = (c ? strdup(c) : NULL);
-    if (pager == NULL || *pager == '\0') {
-	pager = strdup(DEFAULTCALCPAGER);
-    }
-    if (pager == NULL) {
-	math_error("Unable to allocate string for pager");
-	not_reached();
-    }
+        /* determine the $PAGER value */
+        c = (no_env ? NULL : getenv(PAGER));
+        pager = (c ? strdup(c) : NULL);
+        if (pager == NULL || *pager == '\0') {
+                pager = strdup(DEFAULTCALCPAGER);
+        }
+        if (pager == NULL) {
+                math_error("Unable to allocate string for pager");
+                not_reached();
+        }
 
-    /* determine the $SHELL value */
-    c = (no_env ? NULL : getenv(SHELL));
-    shell = (c ? strdup(c) : NULL);
-    if (shell == NULL || *shell == '\0') {
-	shell = strdup(DEFAULTSHELL);
-    }
-    if (shell == NULL) {
-	math_error("Unable to allocate string for shell");
-	not_reached();
-    }
+        /* determine the $SHELL value */
+        c = (no_env ? NULL : getenv(SHELL));
+        shell = (c ? strdup(c) : NULL);
+        if (shell == NULL || *shell == '\0') {
+                shell = strdup(DEFAULTSHELL);
+        }
+        if (shell == NULL) {
+                math_error("Unable to allocate string for shell");
+                not_reached();
+        }
 
-    /* determine the $CALCHISTFILE value */
-    c = (no_env ? NULL : getenv(CALCHISTFILE));
-    calc_history = (c ? strdup(c) : NULL);
-    if (calc_history == NULL || *calc_history == '\0') {
-	calc_history = NULL; /* will use ~/.calc_history */
-    }
-    /* NOTE: calc_history may be set to NULL in which case hist_init() may set it later on */
+        /* determine the $CALCHISTFILE value */
+        c = (no_env ? NULL : getenv(CALCHISTFILE));
+        calc_history = (c ? strdup(c) : NULL);
+        if (calc_history == NULL || *calc_history == '\0') {
+                calc_history = NULL;    /* will use ~/.calc_history */
+        }
+        /* NOTE: calc_history may be set to NULL in which case hist_init() may set it later on */
 
-    /* determine the $CALCHELP value */
-    c = (no_env ? NULL : getenv(CALCHELP));
-    calc_helpdir = (c ? strdup(c) : NULL);
-    if (calc_helpdir == NULL || *calc_helpdir == '\0') {
-	/* will use /usr/local/share/calc/help */
-	calc_helpdir = strdup(HELPDIR);
-    }
-    if (calc_helpdir == NULL) {
-	math_error("Unable to allocate string for calc_helpdir");
-	not_reached();
-    }
+        /* determine the $CALCHELP value */
+        c = (no_env ? NULL : getenv(CALCHELP));
+        calc_helpdir = (c ? strdup(c) : NULL);
+        if (calc_helpdir == NULL || *calc_helpdir == '\0') {
+                /* will use /usr/local/share/calc/help */
+                calc_helpdir = strdup(HELPDIR);
+        }
+        if (calc_helpdir == NULL) {
+                math_error("Unable to allocate string for calc_helpdir");
+                not_reached();
+        }
 
 #if defined(CUSTOM)
-    /* determine the $CALCCUSTOMHELP value */
-    c = (no_env ? NULL : getenv(CALCCUSTOMHELP));
-    calc_customhelpdir = (c ? strdup(c) : NULL);
-    if (calc_customhelpdir == NULL || *calc_customhelpdir == '\0') {
-	/* will use /usr/local/share/calc/custhelp */
-	calc_customhelpdir = strdup(CUSTOMHELPDIR);
-    }
-    if (calc_customhelpdir == NULL) {
-	math_error("Unable to allocate string for calc_customhelpdir");
-	not_reached();
-    }
+        /* determine the $CALCCUSTOMHELP value */
+        c = (no_env ? NULL : getenv(CALCCUSTOMHELP));
+        calc_customhelpdir = (c ? strdup(c) : NULL);
+        if (calc_customhelpdir == NULL || *calc_customhelpdir == '\0') {
+                /* will use /usr/local/share/calc/custhelp */
+                calc_customhelpdir = strdup(CUSTOMHELPDIR);
+        }
+        if (calc_customhelpdir == NULL) {
+                math_error("Unable to allocate string for calc_customhelpdir");
+                not_reached();
+        }
 #endif /* CUSTOM */
 }
+
 
 /*
  * libcalc_call_me_last - users of libcalc.a can call this function when done
@@ -648,101 +665,100 @@ initenv(void)
 void
 libcalc_call_me_last(void)
 {
-    int i;
+        int i;
 
-    /*
-     * firewall
-     */
-    if (init_done == 0) {
-	return;
-    }
+        /*
+         * firewall
+         */
+        if (init_done == 0) {
+                return;
+        }
 
-    /*
-     * free the configuration
-     */
-    config_free(conf);
+        /*
+         * free the configuration
+         */
+        config_free(conf);
 
-    /*
-     * free Blum generator state
-     */
-    random_libcalc_cleanup();
+        /*
+         * free Blum generator state
+         */
+        random_libcalc_cleanup();
 
-    /*
-     * free script_name
-     */
-    if (script_name != NULL) {
-	free(script_name);
-	script_name = NULL;
-    }
+        /*
+         * free script_name
+         */
+        if (script_name != NULL) {
+                free(script_name);
+                script_name = NULL;
+        }
 
-    /*
-     * restore all changed descriptor states
-     */
-    for (i = 0; i < fd_setup_len; ++i) {
-	if (fd_setup[i] >= 0) {
-	    if (conf->calc_debug & CALCDBG_TTY) {
-		printf("libcalc_call_me_last: fd %d "
-		       "not in original state, "
-		       "restoring it",
-		       fd_setup[i]);
-	    }
-	    orig_tty(fd_setup[i]);
-	}
-    }
+        /*
+         * restore all changed descriptor states
+         */
+        for (i=0; i < fd_setup_len; ++i) {
+                if (fd_setup[i] >= 0) {
+                        if (conf->calc_debug & CALCDBG_TTY)
+                                printf("libcalc_call_me_last: fd %d "
+                                       "not in original state, "
+                                       "restoring it", fd_setup[i]);
+                        orig_tty(fd_setup[i]);
+                }
+        }
 
-    /*
-     * free all globals
-     */
-    freeglobals();
+        /*
+         * free all globals
+         */
+        freeglobals();
 
-    /*
-     * free non-NULL strdup values set by initenv()
-     */
-    if (calcpath != NULL) {
-	free(calcpath);
-	calcpath = NULL;
-    }
-    if (calcrc != NULL) {
-	free(calcrc);
-	calcrc = NULL;
-    }
-    if (calcbindings != NULL) {
-	free(calcbindings);
-	calcbindings = NULL;
-    }
-    if (home != NULL) {
-	free(home);
-	home = NULL;
-    }
-    if (pager != NULL) {
-	free(pager);
-	pager = NULL;
-    }
-    if (shell != NULL) {
-	free(shell);
-	shell = NULL;
-    }
-    if (calc_history != NULL) {
-	free(calc_history);
-	calc_history = NULL;
-    }
-    if (calc_helpdir != NULL) {
-	free(calc_helpdir);
-	calc_helpdir = NULL;
-    }
+        /*
+         * free non-NULL strdup values set by initenv()
+         */
+        if (calcpath != NULL) {
+            free(calcpath);
+            calcpath = NULL;
+        }
+        if (calcrc != NULL) {
+            free(calcrc);
+            calcrc = NULL;
+        }
+        if (calcbindings != NULL) {
+            free(calcbindings);
+            calcbindings = NULL;
+        }
+        if (home != NULL) {
+            free(home);
+            home = NULL;
+        }
+        if (pager != NULL) {
+            free(pager);
+            pager = NULL;
+        }
+        if (shell != NULL) {
+            free(shell);
+            shell = NULL;
+        }
+        if (calc_history != NULL) {
+            free(calc_history);
+            calc_history = NULL;
+        }
+        if (calc_helpdir != NULL) {
+            free(calc_helpdir);
+            calc_helpdir = NULL;
+        }
 #if defined(CUSTOM)
-    if (calc_customhelpdir != NULL) {
-	free(calc_customhelpdir);
-	calc_customhelpdir = NULL;
-    }
+        if (calc_customhelpdir != NULL) {
+            free(calc_customhelpdir);
+            calc_customhelpdir = NULL;
+        }
 #endif /* CUSTOM */
 
-    /*
-     * all done
-     */
-    init_done = 0;
-    return;
+        /*
+         * all done
+         */
+        init_done = 0;
+        return;
 }
+
 
 /*
  * run_state_name - return a constant string given a run_state
@@ -750,28 +766,29 @@ libcalc_call_me_last(void)
 char *
 run_state_name(run state)
 {
-    switch (state) {
-    case RUN_ZERO:
-	return "ZERO";
-    case RUN_BEGIN:
-	return "BEGIN";
-    case RUN_RCFILES:
-	return "RCFILES";
-    case RUN_PRE_CMD_ARGS:
-	return "PRE_CMD_ARGS";
-    case RUN_CMD_ARGS:
-	return "CMD_ARGS";
-    case RUN_PRE_TOP_LEVEL:
-	return "PRE_TOP_LEVEL";
-    case RUN_TOP_LEVEL:
-	return "TOP_LEVEL";
-    case RUN_EXIT:
-	return "EXIT";
-    case RUN_EXIT_WITH_ERROR:
-	return "EXIT_WITH_ERROR";
-    }
-    return "RUN_invalid";
+        switch (state) {
+        case RUN_ZERO:
+                return "ZERO";
+        case RUN_BEGIN:
+                return "BEGIN";
+        case RUN_RCFILES:
+                return "RCFILES";
+        case RUN_PRE_CMD_ARGS:
+                return "PRE_CMD_ARGS";
+        case RUN_CMD_ARGS:
+                return "CMD_ARGS";
+        case RUN_PRE_TOP_LEVEL:
+                return "PRE_TOP_LEVEL";
+        case RUN_TOP_LEVEL:
+                return "TOP_LEVEL";
+        case RUN_EXIT:
+                return "EXIT";
+        case RUN_EXIT_WITH_ERROR:
+                return "EXIT_WITH_ERROR";
+        }
+        return "RUN_invalid";
 }
+
 
 /*
  * calc_strdup - calc interface to provide or simulate strdup()
@@ -781,40 +798,41 @@ calc_strdup(CONST char *s1)
 {
 #if defined(HAVE_STRDUP)
 
-    return strdup(s1);
+        return strdup(s1);
 
 #else /* HAVE_STRDUP */
 
-    char *ret;	   /* return string */
-    size_t s1_len; /* length of string to duplicate */
+        char *ret;      /* return string */
+        size_t s1_len;  /* length of string to duplicate */
 
-    /*
-     * firewall
-     */
-    if (s1 == NULL) {
-	return NULL;
-    }
+        /*
+         * firewall
+         */
+        if (s1 == NULL) {
+                return NULL;
+        }
 
-    /*
-     * allocate duplicate storage
-     */
-    s1_len = strlen(s1);
-    ret = (char *)malloc(s1_len + 1);
+        /*
+         * allocate duplicate storage
+         */
+        s1_len = strlen(s1);
+        ret = (char *)malloc(s1_len+1);
 
-    /*
-     * if we have storage, duplicate the string
-     */
-    if (ret != NULL) {
-	strlcpy(ret, s1, s1_len + 1);
-    }
+        /*
+         * if we have storage, duplicate the string
+         */
+        if (ret != NULL) {
+                strlcpy(ret, s1, s1_len+1);
+        }
 
-    /*
-     * return the new string, or NULL if malloc failed
-     */
-    return ret;
+        /*
+         * return the new string, or NULL if malloc failed
+         */
+        return ret;
 
 #endif /* HAVE_STRDUP */
 }
+
 
 /*
  * find_tty_state - establish a new tty state
@@ -828,95 +846,99 @@ calc_strdup(CONST char *s1)
 S_FUNC int
 find_tty_state(int fd)
 {
-    int *new_fd_setup;	    /* new fd_setup array */
-    ttystruct *new_fd_orig; /* new fd_orig array */
-    ttystruct *new_fd_cur;  /* new fd_cur array */
-    int i;
+        int *new_fd_setup;              /* new fd_setup array */
+        ttystruct *new_fd_orig;         /* new fd_orig array */
+        ttystruct *new_fd_cur;          /* new fd_cur array */
+        int i;
 
-    /*
-     * firewall: must be > 0
-     */
-    if (fd < 0) {
-	/* bad descriptor */
-	return -1;
-    }
+        /*
+         * firewall: must be > 0
+         */
+        if (fd < 0) {
+                /* bad descriptor */
+                return -1;
+        }
 
-    /*
-     * case: need to initially malloc some state
-     */
-    if (fd_setup_len <= 0 || fd_setup == NULL || fd_orig == NULL) {
+        /*
+         * case: need to initially malloc some state
+         */
+        if (fd_setup_len <= 0 || fd_setup == NULL || fd_orig == NULL) {
 
-	/* setup for a single descriptor */
-	fd_setup = (int *)malloc(sizeof(fd_setup[0]));
-	if (fd_setup == NULL) {
-	    return -1;
-	}
-	fd_setup[0] = -1;
-	fd_orig = (ttystruct *)malloc(sizeof(fd_orig[0]));
-	if (fd_orig == NULL) {
-	    return -1;
-	}
-	fd_cur = (ttystruct *)malloc(sizeof(fd_cur[0]));
-	if (fd_cur == NULL) {
-	    return -1;
-	}
-	fd_setup_len = 1;
-    }
+                /* setup for a single descriptor */
+                fd_setup = (int *)malloc(sizeof(fd_setup[0]));
+                if (fd_setup == NULL) {
+                        return -1;
+                }
+                fd_setup[0] = -1;
+                fd_orig = (ttystruct *)malloc(sizeof(fd_orig[0]));
+                if (fd_orig == NULL) {
+                        return -1;
+                }
+                fd_cur = (ttystruct *)malloc(sizeof(fd_cur[0]));
+                if (fd_cur == NULL) {
+                        return -1;
+                }
+                fd_setup_len = 1;
+        }
 
-    /*
-     * look for an existing tty state for the descriptor
-     */
-    for (i = 0; i < fd_setup_len; ++i) {
+        /*
+         * look for an existing tty state for the descriptor
+         */
+        for (i=0; i < fd_setup_len; ++i) {
 
-	/* case: found existing tty state, return index */
-	if (fd_setup[i] == fd) {
-	    return i;
-	}
-    }
+                /* case: found existing tty state, return index */
+                if (fd_setup[i] == fd) {
+                        return i;
+                }
+        }
 
-    /*
-     * no tty state exists for the descriptor, look for empty slot
-     */
-    for (i = 0; i < fd_setup_len; ++i) {
+        /*
+         * no tty state exists for the descriptor, look for empty slot
+         */
+        for (i=0; i < fd_setup_len; ++i) {
 
-	/* case: found an empty slot, so return it */
-	if (fd_setup[i] < 0) {
-	    return i;
-	}
-    }
+                /* case: found an empty slot, so return it */
+                if (fd_setup[i] < 0) {
+                        return i;
+                }
+        }
 
-    /*
-     * no empty slots exist, realloc another slot
-     */
-    /* expand fd_orig as an original pre-modified copy of fd_setup */
-    new_fd_orig = (ttystruct *)realloc(fd_orig, sizeof(fd_orig[0]) * (fd_setup_len + 1));
-    if (new_fd_orig == NULL) {
-	return -1;
-    }
-    fd_orig = new_fd_orig;
-    memcpy(fd_orig, fd_setup, sizeof(fd_orig[0]) * (fd_setup_len + 1));
+        /*
+         * no empty slots exist, realloc another slot
+         */
+        /* expand fd_orig as an original pre-modified copy of fd_setup */
+        new_fd_orig = (ttystruct *)realloc(fd_orig, sizeof(fd_orig[0]) *
+                                            (fd_setup_len+1));
+        if (new_fd_orig == NULL) {
+                return -1;
+        }
+        fd_orig = new_fd_orig;
+        memcpy(fd_orig, fd_setup, sizeof(fd_orig[0]) * (fd_setup_len+1));
 
-    /* expand fd_setup */
-    new_fd_setup = (int *)realloc(fd_setup, sizeof(fd_setup[0]) * (fd_setup_len + 1));
-    if (new_fd_setup == NULL) {
-	return -1;
-    }
-    fd_setup = new_fd_setup;
-    new_fd_setup[fd_setup_len] = -1;
+        /* expand fd_setup */
+        new_fd_setup = (int *)realloc(fd_setup, sizeof(fd_setup[0]) *
+                                      (fd_setup_len+1));
+        if (new_fd_setup == NULL) {
+                return -1;
+        }
+        fd_setup = new_fd_setup;
+        new_fd_setup[fd_setup_len] = -1;
 
-    /* expand fd_cur */
-    new_fd_cur = (ttystruct *)realloc(fd_cur, sizeof(fd_cur[0]) * (fd_setup_len + 1));
-    if (new_fd_cur == NULL) {
-	return -1;
-    }
-    fd_cur = new_fd_cur;
+        /* expand fd_cur */
+        new_fd_cur = (ttystruct *)realloc(fd_cur, sizeof(fd_cur[0]) *
+                                          (fd_setup_len+1));
+        if (new_fd_cur == NULL) {
+                return -1;
+        }
+        fd_cur = new_fd_cur;
 
-    /* expand fd setup length */
-    ++fd_setup_len;
+        /* expand fd setup length */
+        ++fd_setup_len;
 
-    /* return the new slot */
-    return fd_setup_len - 1;
+        /* return the new slot */
+        return fd_setup_len-1;
 }
+
 
 /*
  * calc_tty - setup a file descriptor for calc's interactive use
@@ -933,119 +955,108 @@ find_tty_state(int fd)
 bool
 calc_tty(int fd)
 {
-    int slot; /* the saved descriptor slot or -1 */
+        int slot;       /* the saved descriptor slot or -1 */
 
-    /*
-     * grab the saved slot for this descriptor
-     */
-    slot = find_tty_state(fd);
-    if (slot < 0) {
-	if (conf->calc_debug & CALCDBG_TTY) {
-	    printf("calc_tty: Cannot get saved descriptor slot\n");
-	}
-	return false;
-    }
+        /*
+         * grab the saved slot for this descriptor
+         */
+        slot = find_tty_state(fd);
+        if (slot < 0) {
+                if (conf->calc_debug & CALCDBG_TTY)
+                        printf("calc_tty: Cannot get saved descriptor slot\n");
+                return false;
+        }
 
 #if defined(USE_SGTTY)
 
-    /*
-     * USE_SGTTY tty state method
-     */
-    /* save original state if needed */
-    if (fd_setup[slot] < 0 && ioctl(fd, TIOCGETP, fd_orig + slot) < 0) {
-	if (conf->calc_debug & CALCDBG_TTY) {
-	    printf("calc_tty: Cannot TIOCGETP fd %d\n", fd);
-	}
-	return false;
-    }
-    /* setup for new state */
-    fd_cur[slot] = fd_orig[slot];
-    fd_cur[slot].sg_flags &= ~ECHO;
-    fd_cur[slot].sg_flags |= CBREAK;
-    /* enable new state */
-    if (ioctl(fd, TIOCSETP, fd_cur + slot) < 0) {
-	if (conf->calc_debug & CALCDBG_TTY) {
-	    printf("calc_tty: Cannot TIOCSETP fd %d\n", fd);
-	}
-	return false;
-    }
-    if (conf->calc_debug & CALCDBG_TTY) {
-	printf("calc_tty: stty -ECHO +CBREAK: fd %d\n", fd);
-    }
+        /*
+         * USE_SGTTY tty state method
+         */
+        /* save original state if needed */
+        if (fd_setup[slot] < 0 && ioctl(fd, TIOCGETP, fd_orig+slot) < 0) {
+                if (conf->calc_debug & CALCDBG_TTY)
+                        printf("calc_tty: Cannot TIOCGETP fd %d\n", fd);
+                return false;
+        }
+        /* setup for new state */
+        fd_cur[slot] = fd_orig[slot];
+        fd_cur[slot].sg_flags &= ~ECHO;
+        fd_cur[slot].sg_flags |= CBREAK;
+        /* enable new state */
+        if (ioctl(fd, TIOCSETP, fd_cur+slot) < 0) {
+                if (conf->calc_debug & CALCDBG_TTY)
+                        printf("calc_tty: Cannot TIOCSETP fd %d\n", fd);
+                return false;
+        }
+        if (conf->calc_debug & CALCDBG_TTY)
+                printf("calc_tty: stty -ECHO +CBREAK: fd %d\n", fd);
 
 #elif defined(USE_TERMIO)
 
-    /*
-     * USE_TERMIO tty state method
-     */
-    if (fd_setup[slot] < 0 && ioctl(fd, TCGETA, fd_orig + slot) < 0) {
-	if (conf->calc_debug & CALCDBG_TTY) {
-	    printf("calc_tty: Cannot TCGETA fd %d\n", fd);
-	}
-	return false;
-    }
-    /* setup for new state */
-    fd_cur[slot] = fd_orig[slot];
-    fd_cur[slot].c_lflag &= ~(ECHO | ECHOE | ECHOK);
-    fd_cur[slot].c_iflag |= ISTRIP;
-    fd_cur[slot].c_lflag &= ~ICANON;
-    fd_cur[slot].c_cc[VMIN] = 1;
-    fd_cur[slot].c_cc[VTIME] = 0;
-    /* enable new state */
-    if (ioctl(fd, TCSETAW, fd_cur + slot) < 0) {
-	if (conf->calc_debug & CALCDBG_TTY) {
-	    printf("calc_tty: Cannot TCSETAW fd %d\n", fd);
-	}
-	return false;
-    }
-    if (conf->calc_debug & CALCDBG_TTY) {
-	printf("calc_tty: stty -ECHO -ECHOE -ECHOK -ICANON +ISTRIP "
-	       "VMIN=1 VTIME=0: fd %d\n",
-	       fd);
-    }
+        /*
+         * USE_TERMIO tty state method
+         */
+        if (fd_setup[slot] < 0 && ioctl(fd, TCGETA, fd_orig+slot) < 0) {
+                if (conf->calc_debug & CALCDBG_TTY)
+                        printf("calc_tty: Cannot TCGETA fd %d\n", fd);
+                return false;
+        }
+        /* setup for new state */
+        fd_cur[slot] = fd_orig[slot];
+        fd_cur[slot].c_lflag &= ~(ECHO | ECHOE | ECHOK);
+        fd_cur[slot].c_iflag |= ISTRIP;
+        fd_cur[slot].c_lflag &= ~ICANON;
+        fd_cur[slot].c_cc[VMIN] = 1;
+        fd_cur[slot].c_cc[VTIME] = 0;
+        /* enable new state */
+        if (ioctl(fd, TCSETAW, fd_cur+slot) < 0) {
+                if (conf->calc_debug & CALCDBG_TTY)
+                        printf("calc_tty: Cannot TCSETAW fd %d\n", fd);
+                return false;
+        }
+        if (conf->calc_debug & CALCDBG_TTY)
+                printf("calc_tty: stty -ECHO -ECHOE -ECHOK -ICANON +ISTRIP "
+                       "VMIN=1 VTIME=0: fd %d\n", fd);
 
-#elif defined(USE_TERMIOS)
+#elif defined (USE_TERMIOS)
 
-    /*
-     * USE_TERMIOS tty state method
-     */
-    if (fd_setup[slot] < 0 && tcgetattr(fd, fd_orig + slot) < 0) {
-	if (conf->calc_debug & CALCDBG_TTY) {
-	    printf("calc_tty: Cannot tcgetattr fd %d\n", fd);
-	}
-	return false;
-    }
-    /* setup for new state */
-    fd_cur[slot] = fd_orig[slot];
-    fd_cur[slot].c_lflag &= ~(ECHO | ECHOE | ECHOK);
-    fd_cur[slot].c_iflag |= ISTRIP;
-    fd_cur[slot].c_lflag &= ~ICANON;
-    fd_cur[slot].c_cc[VMIN] = 1;
-    fd_cur[slot].c_cc[VTIME] = 0;
-    /* enable new state */
-    if (tcsetattr(fd, TCSANOW, fd_cur + slot) < 0) {
-	if (conf->calc_debug & CALCDBG_TTY) {
-	    printf("calc_tty: Cannot tcsetattr fd %d\n", fd);
-	}
-	return false;
-    }
-    if (conf->calc_debug & CALCDBG_TTY) {
-	printf("calc_tty: stty -ECHO -ECHOE -ECHOK -ICANON +ISTRIP "
-	       "VMIN=1 VTIME=0: fd %d\n",
-	       fd);
-    }
+        /*
+         * USE_TERMIOS tty state method
+         */
+        if (fd_setup[slot] < 0 && tcgetattr(fd, fd_orig+slot) < 0) {
+                if (conf->calc_debug & CALCDBG_TTY)
+                        printf("calc_tty: Cannot tcgetattr fd %d\n", fd);
+                return false;
+        }
+        /* setup for new state */
+        fd_cur[slot] = fd_orig[slot];
+        fd_cur[slot].c_lflag &= ~(ECHO | ECHOE | ECHOK);
+        fd_cur[slot].c_iflag |= ISTRIP;
+        fd_cur[slot].c_lflag &= ~ICANON;
+        fd_cur[slot].c_cc[VMIN] = 1;
+        fd_cur[slot].c_cc[VTIME] = 0;
+        /* enable new state */
+        if (tcsetattr(fd, TCSANOW, fd_cur+slot) < 0) {
+                if (conf->calc_debug & CALCDBG_TTY)
+                        printf("calc_tty: Cannot tcsetattr fd %d\n", fd);
+                return false;
+        }
+        if (conf->calc_debug & CALCDBG_TTY)
+                printf("calc_tty: stty -ECHO -ECHOE -ECHOK -ICANON +ISTRIP "
+                       "VMIN=1 VTIME=0: fd %d\n", fd);
 
 #else /* Using none of the above */
-    fd_cur[slot] = fd_orig[slot];
+        fd_cur[slot] = fd_orig[slot];
 
 #endif
 
-    /*
-     * note that the tty slot is on use
-     */
-    fd_setup[slot] = fd;
-    return true;
+        /*
+         * note that the tty slot is on use
+         */
+        fd_setup[slot] = fd;
+        return true;
 }
+
 
 /*
  * orig_tty - restore the original state of a file descriptor
@@ -1063,77 +1074,71 @@ calc_tty(int fd)
 bool
 orig_tty(int fd)
 {
-    int slot; /* the saved descriptor slot or -1 */
+        int slot;       /* the saved descriptor slot or -1 */
 
-    /*
-     * find the saved slot for this descriptor
-     */
-    slot = find_tty_state(fd);
-    if (slot < 0) {
-	if (conf->calc_debug & CALCDBG_TTY) {
-	    printf("orig_tty: Cannot get saved descriptor slot\n");
-	}
-	return false;
-    }
+        /*
+         * find the saved slot for this descriptor
+         */
+        slot = find_tty_state(fd);
+        if (slot < 0) {
+                if (conf->calc_debug & CALCDBG_TTY)
+                        printf("orig_tty: Cannot get saved descriptor slot\n");
+                return false;
+        }
 
-    /*
-     * do nothing if no state was saved for this descriptor
-     */
-    if (fd_setup[slot] < 0) {
-	if (conf->calc_debug & CALCDBG_TTY) {
-	    printf("orig_tty: no state saved for fd %d\n", fd);
-	}
-	return false;
-    }
+        /*
+         * do nothing if no state was saved for this descriptor
+         */
+        if (fd_setup[slot] < 0) {
+                if (conf->calc_debug & CALCDBG_TTY)
+                        printf("orig_tty: no state saved for fd %d\n", fd);
+                return false;
+        }
 
 #if defined(USE_SGTTY)
 
-    /*
-     * USE_SGTTY tty state method
-     */
-    (void)ioctl(fd, TIOCSETP, fd_orig + slot);
-    if (conf->calc_debug & CALCDBG_TTY) {
-	printf("orig_tty: TIOCSETP restored fd %d\n", fd);
-    }
+        /*
+         * USE_SGTTY tty state method
+         */
+        (void) ioctl(fd, TIOCSETP, fd_orig+slot);
+        if (conf->calc_debug & CALCDBG_TTY)
+                printf("orig_tty: TIOCSETP restored fd %d\n", fd);
 
 #elif defined(USE_TERMIO)
 
-    /*
-     * USE_TERMIO tty state method
-     */
-    (void)ioctl(fd, TCSETAW, fd_orig + slot);
-    if (conf->calc_debug & CALCDBG_TTY) {
-	printf("orig_tty: TCSETAW restored fd %d\n", fd);
-    }
+        /*
+         * USE_TERMIO tty state method
+         */
+        (void) ioctl(fd, TCSETAW, fd_orig+slot);
+        if (conf->calc_debug & CALCDBG_TTY)
+                printf("orig_tty: TCSETAW restored fd %d\n", fd);
 
-#elif defined(USE_TERMIOS)
+#elif defined (USE_TERMIOS)
 
-    /*
-     * assume USE_SGTTY tty state method
-     */
-    (void)tcsetattr(fd, TCSANOW, fd_orig + slot);
-    if (conf->calc_debug & CALCDBG_TTY) {
-	printf("orig_tty: TCSANOW restored fd %d\n", fd);
-    }
+        /*
+         * assume USE_SGTTY tty state method
+         */
+        (void) tcsetattr(fd, TCSANOW, fd_orig+slot);
+        if (conf->calc_debug & CALCDBG_TTY)
+                printf("orig_tty: TCSANOW restored fd %d\n", fd);
 
 #else /* nothing assigned */
 
-    if (conf->calc_debug & CALCDBG_TTY) {
-	printf("orig_tty: nothing restored to fd %d\n", fd);
-    }
+        if (conf->calc_debug & CALCDBG_TTY)
+                printf ("orig_tty: nothing restored to fd %d\n", fd);
 
 #endif
 
-    /*
-     * note new current state
-     */
-    fd_cur[slot] = fd_orig[slot];
+        /*
+         * note new current state
+         */
+        fd_cur[slot] = fd_orig[slot];
 
-    /*
-     * Since current state is the original state, we can free up
-     * this slot.  This also prevents functions such as the
-     * libcalc_call_me_last() function from re-restoring it.
-     */
-    fd_setup[slot] = -1;
-    return true;
+        /*
+         * Since current state is the original state, we can free up
+         * this slot.  This also prevents functions such as the
+         * libcalc_call_me_last() function from re-restoring it.
+         */
+        fd_setup[slot] = -1;
+        return true;
 }

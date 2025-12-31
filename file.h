@@ -26,36 +26,40 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+
 #if !defined(INCLUDE_FILE_H)
-#  define INCLUDE_FILE_H
+#define INCLUDE_FILE_H
 
-#  include <stdio.h>
 
-#  if defined(CALC_SRC) /* if we are building from the calc source tree */
-#    include "value.h"
-#    include "have_fgetsetpos.h"
-#  else
-#    include <calc/value.h>
-#    include <calc/have_fgetsetpos.h>
-#  endif
+#include <stdio.h>
+
+#if defined(CALC_SRC)   /* if we are building from the calc source tree */
+# include "value.h"
+# include "have_fgetsetpos.h"
+#else
+# include <calc/value.h>
+# include <calc/have_fgetsetpos.h>
+#endif
+
 
 /*
  * Definition of opened files.
  */
-#  define MODE_LEN (sizeof("rb+") - 1)
+#define MODE_LEN (sizeof("rb+")-1)
 typedef struct {
-    FILEID id;		     /* id to identify this file */
-    FILE *fp;		     /* real file structure for I/O */
-    dev_t dev;		     /* file device */
-    ino_t inode;	     /* file inode */
-    char *name;		     /* file name */
-    bool reading;	     /* true if opened for reading */
-    bool writing;	     /* true if opened for writing */
-    bool appending;	     /* true if also opened for appending */
-    bool binary;	     /* true if binary mode - mode ignored/unused */
-    char action;	     /* most recent use for 'r', 'w' or 0 */
-    char mode[MODE_LEN + 1]; /* open mode */
+        FILEID id;              /* id to identify this file */
+        FILE *fp;               /* real file structure for I/O */
+        dev_t dev;              /* file device */
+        ino_t inode;            /* file inode */
+        char *name;             /* file name */
+        bool reading;           /* true if opened for reading */
+        bool writing;           /* true if opened for writing */
+        bool appending;         /* true if also opened for appending */
+        bool binary;            /* true if binary mode - mode ignored/unused */
+        char action;            /* most recent use for 'r', 'w' or 0 */
+        char mode[MODE_LEN+1];  /* open mode */
 } FILEIO;
+
 
 /*
  * fgetpos/fsetpos vs fseek/ftell interface
@@ -71,26 +75,30 @@ typedef struct {
  * Some obscure systems without fgetpos/fsetpos may not have a simple
  * scalar type.  In these cases the f_tell macro below will fail.
  */
-#  if defined(HAVE_FGETSETPOS)
+#if defined(HAVE_FGETSETPOS)
 
-#    define f_seek_set(stream, loc) fsetpos((FILE *)(stream), (FILEPOS *)(loc))
-#    define f_tell(stream, loc) fgetpos((FILE *)(stream), (FILEPOS *)(loc))
+#define f_seek_set(stream, loc) fsetpos((FILE*)(stream), (FILEPOS*)(loc))
+#define f_tell(stream, loc) fgetpos((FILE*)(stream), (FILEPOS*)(loc))
 
-#  else
+#else
 
-#    define f_seek_set(stream, loc) fseek((FILE *)(stream), *(FILEPOS *)(loc), SEEK_SET)
-#    define f_tell(stream, loc) (*((FILEPOS *)(loc)) = ftell((FILE *)(stream)))
+#define f_seek_set(stream, loc)  \
+        fseek((FILE*)(stream), *(FILEPOS*)(loc), SEEK_SET)
+#define f_tell(stream, loc) (*((FILEPOS*)(loc)) = ftell((FILE*)(stream)))
 
-#  endif
+#endif
+
 
 /*
  * external functions
  */
-E_FUNC FILEIO *findid(FILEID id, int writable);
+E_FUNC FILEIO * findid(FILEID id, int writable);
 E_FUNC int fgetposid(FILEID id, FILEPOS *ptr);
 E_FUNC int fsetposid(FILEID id, FILEPOS *ptr);
 E_FUNC int get_open_siz(FILE *fp, ZVALUE *res);
-E_FUNC char *findfname(FILEID);
-E_FUNC FILE *f_pathopen(char *name, char *mode, char *pathlist, char **openpath);
+E_FUNC char* findfname(FILEID);
+E_FUNC FILE *f_pathopen(char *name, char *mode, char *pathlist,
+                        char **openpath);
+
 
 #endif /* !INCLUDE_FILE_H */

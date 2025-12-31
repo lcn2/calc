@@ -38,28 +38,30 @@
 #include <stdio.h>
 #include "have_limits.h"
 #if defined(HAVE_LIMITS_H)
-#  include <limits.h>
+#include <limits.h>
 #endif
 
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h"     /* include after system header <> includes */
+
 
 int
 main(void)
 {
-    printf("#include \"have_limits.h\"\n");
-    printf("#if defined(HAVE_LIMITS_H)\n");
-    printf("#include <limits.h>\n");
-    printf("#endif\n\n");
+        printf("#include \"have_limits.h\"\n");
+        printf("#if defined(HAVE_LIMITS_H)\n");
+        printf("#include <limits.h>\n");
+        printf("#endif\n\n");
 #if defined(CHAR_BIT)
 
-    printf("#define CALC_CHARBIT (CHAR_BIT) /* from <limits.h> */\n");
+        printf("#define CALC_CHARBIT (CHAR_BIT) /* from <limits.h> */\n");
 
 #else /* CHAR_BIT */
 
-    printf("#define CALC_CHARBIT (8) /* no CHAR_BIT, assume 8 */\n");
+        printf("#define CALC_CHARBIT (8) /* no CHAR_BIT, assume 8 */\n");
 
 #endif /* CHAR_BIT */
 
-    /* exit(0); */
-    return 0;
+        /* exit(0); */
+        return 0;
 }

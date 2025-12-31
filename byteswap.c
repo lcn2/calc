@@ -24,11 +24,14 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+
 #include "cmath.h"
 #include "byteswap.h"
 
+
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+#include "banned.h"     /* include after system header <> includes */
+
 
 /*
  * swap_b8_in_HALFs - swap 8 and if needed, 16 bits in an array of HALFs
@@ -45,29 +48,30 @@
 HALF *
 swap_b8_in_HALFs(HALF *dest, HALF *src, LEN len)
 {
-    HALF *ret;
-    LEN i;
+        HALF *ret;
+        LEN i;
 
-    /*
-     * allocate storage if needed
-     */
-    if (dest == NULL) {
-	dest = alloc(len);
-    }
-    ret = dest;
+        /*
+         * allocate storage if needed
+         */
+        if (dest == NULL) {
+                dest = alloc(len);
+        }
+        ret = dest;
 
-    /*
-     * swap the array
-     */
-    for (i = 0; i < len; ++i, ++dest, ++src) {
-	SWAP_B8_IN_HALF(dest, src);
-    }
+        /*
+         * swap the array
+         */
+        for (i=0; i < len; ++i, ++dest, ++src) {
+                SWAP_B8_IN_HALF(dest, src);
+        }
 
-    /*
-     * return the result
-     */
-    return ret;
+        /*
+         * return the result
+         */
+        return ret;
 }
+
 
 /*
  * swap_b8_in_ZVALUE - swap 8 and if needed, 16 bits in a ZVALUE
@@ -88,53 +92,54 @@ swap_b8_in_HALFs(HALF *dest, HALF *src, LEN len)
 ZVALUE *
 swap_b8_in_ZVALUE(ZVALUE *dest, ZVALUE *src, bool all)
 {
-    /*
-     * allocate storage if needed
-     */
-    if (dest == NULL) {
+        /*
+         * allocate storage if needed
+         */
+        if (dest == NULL) {
 
-	/*
-	 * allocate the storage
-	 */
-	dest = malloc(sizeof(ZVALUE));
-	if (dest == NULL) {
-	    math_error("swap_b8_in_ZVALUE: swap_b8_in_ZVALUE: "
-		       "Not enough memory");
-	    not_reached();
-	}
+                /*
+                 * allocate the storage
+                 */
+                dest = malloc(sizeof(ZVALUE));
+                if (dest == NULL) {
+                        math_error("swap_b8_in_ZVALUE: swap_b8_in_ZVALUE: "
+                                    "Not enough memory");
+                        not_reached();
+                }
 
-	/*
-	 * allocate (by forcing swap_b8_in_ZVALUE) and swap storage
-	 */
-	dest->v = swap_b8_in_HALFs(NULL, src->v, src->len);
+                /*
+                 * allocate (by forcing swap_b8_in_ZVALUE) and swap storage
+                 */
+                dest->v = swap_b8_in_HALFs(NULL, src->v, src->len);
 
-    } else {
+        } else {
 
-	/*
-	 * swap storage
-	 */
-	if (dest->v != NULL) {
-	    zfree(*dest);
-	}
-	dest->v = swap_b8_in_HALFs(NULL, src->v, src->len);
-    }
+                /*
+                 * swap storage
+                 */
+                if (dest->v != NULL) {
+                        zfree(*dest);
+                }
+                dest->v = swap_b8_in_HALFs(NULL, src->v, src->len);
+        }
 
-    /*
-     * swap or copy the rest of the ZVALUE elements
-     */
-    if (all) {
-	SWAP_B8_IN_LEN(&dest->len, &src->len);
-	SWAP_B8_IN_bool(&dest->sign, &src->sign);
-    } else {
-	dest->len = src->len;
-	dest->sign = src->sign;
-    }
+        /*
+         * swap or copy the rest of the ZVALUE elements
+         */
+        if (all) {
+                SWAP_B8_IN_LEN(&dest->len, &src->len);
+                SWAP_B8_IN_bool(&dest->sign, &src->sign);
+        } else {
+                dest->len = src->len;
+                dest->sign = src->sign;
+        }
 
-    /*
-     * return the result
-     */
-    return dest;
+        /*
+         * return the result
+         */
+        return dest;
 }
+
 
 /*
  * swap_b8_in_NUMBER - swap 8 and if needed, 16 bits in a NUMBER
@@ -155,49 +160,50 @@ swap_b8_in_ZVALUE(ZVALUE *dest, ZVALUE *src, bool all)
 NUMBER *
 swap_b8_in_NUMBER(NUMBER *dest, NUMBER *src, bool all)
 {
-    /*
-     * allocate storage if needed
-     */
-    if (dest == NULL) {
+        /*
+         * allocate storage if needed
+         */
+        if (dest == NULL) {
 
-	/*
-	 * allocate the storage
-	 */
-	dest = malloc(sizeof(NUMBER));
-	if (dest == NULL) {
-	    math_error("swap_b8_in_NUMBER: Not enough memory");
-	    not_reached();
-	}
+                /*
+                 * allocate the storage
+                 */
+                dest = malloc(sizeof(NUMBER));
+                if (dest == NULL) {
+                        math_error("swap_b8_in_NUMBER: Not enough memory");
+                        not_reached();
+                }
 
-	/*
-	 * allocate (by forcing swap_b8_in_ZVALUE) and swap storage
-	 */
-	dest->num = *swap_b8_in_ZVALUE(NULL, &src->num, all);
-	dest->den = *swap_b8_in_ZVALUE(NULL, &src->den, all);
+                /*
+                 * allocate (by forcing swap_b8_in_ZVALUE) and swap storage
+                 */
+                dest->num = *swap_b8_in_ZVALUE(NULL, &src->num, all);
+                dest->den = *swap_b8_in_ZVALUE(NULL, &src->den, all);
 
-    } else {
+        } else {
 
-	/*
-	 * swap storage
-	 */
-	dest->num = *swap_b8_in_ZVALUE(&dest->num, &src->num, all);
-	dest->den = *swap_b8_in_ZVALUE(&dest->den, &src->den, all);
-    }
+                /*
+                 * swap storage
+                 */
+                dest->num = *swap_b8_in_ZVALUE(&dest->num, &src->num, all);
+                dest->den = *swap_b8_in_ZVALUE(&dest->den, &src->den, all);
+        }
 
-    /*
-     * swap or copy the rest of the NUMBER elements
-     */
-    if (all) {
-	SWAP_B8_IN_LONG(&dest->links, &src->links);
-    } else {
-	dest->links = src->links;
-    }
+        /*
+         * swap or copy the rest of the NUMBER elements
+         */
+        if (all) {
+                SWAP_B8_IN_LONG(&dest->links, &src->links);
+        } else {
+                dest->links = src->links;
+        }
 
-    /*
-     * return the result
-     */
-    return dest;
+        /*
+         * return the result
+         */
+        return dest;
 }
+
 
 /*
  * swap_b8_in_COMPLEX - swap 8 and if needed, 16 bits in a COMPLEX
@@ -218,49 +224,50 @@ swap_b8_in_NUMBER(NUMBER *dest, NUMBER *src, bool all)
 COMPLEX *
 swap_b8_in_COMPLEX(COMPLEX *dest, COMPLEX *src, bool all)
 {
-    /*
-     * allocate storage if needed
-     */
-    if (dest == NULL) {
+        /*
+         * allocate storage if needed
+         */
+        if (dest == NULL) {
 
-	/*
-	 * allocate the storage
-	 */
-	dest = malloc(sizeof(COMPLEX));
-	if (dest == NULL) {
-	    math_error("swap_b8_in_COMPLEX: Not enough memory");
-	    not_reached();
-	}
+                /*
+                 * allocate the storage
+                 */
+                dest = malloc(sizeof(COMPLEX));
+                if (dest == NULL) {
+                        math_error("swap_b8_in_COMPLEX: Not enough memory");
+                        not_reached();
+                }
 
-	/*
-	 * allocate (by forcing swap_b8_in_ZVALUE) and swap storage
-	 */
-	dest->real = swap_b8_in_NUMBER(NULL, src->real, all);
-	dest->imag = swap_b8_in_NUMBER(NULL, src->imag, all);
+                /*
+                 * allocate (by forcing swap_b8_in_ZVALUE) and swap storage
+                 */
+                dest->real = swap_b8_in_NUMBER(NULL, src->real, all);
+                dest->imag = swap_b8_in_NUMBER(NULL, src->imag, all);
 
-    } else {
+        } else {
 
-	/*
-	 * swap storage
-	 */
-	dest->real = swap_b8_in_NUMBER(dest->real, src->real, all);
-	dest->imag = swap_b8_in_NUMBER(dest->imag, src->imag, all);
-    }
+                /*
+                 * swap storage
+                 */
+                dest->real = swap_b8_in_NUMBER(dest->real, src->real, all);
+                dest->imag = swap_b8_in_NUMBER(dest->imag, src->imag, all);
+        }
 
-    /*
-     * swap or copy the rest of the NUMBER elements
-     */
-    if (all) {
-	SWAP_B8_IN_LONG(&dest->links, &src->links);
-    } else {
-	dest->links = src->links;
-    }
+        /*
+         * swap or copy the rest of the NUMBER elements
+         */
+        if (all) {
+                SWAP_B8_IN_LONG(&dest->links, &src->links);
+        } else {
+                dest->links = src->links;
+        }
 
-    /*
-     * return the result
-     */
-    return dest;
+        /*
+         * return the result
+         */
+        return dest;
 }
+
 
 /*
  * swap_b16_in_HALFs - swap 16 bits in an array of HALFs
@@ -277,29 +284,30 @@ swap_b8_in_COMPLEX(COMPLEX *dest, COMPLEX *src, bool all)
 HALF *
 swap_b16_in_HALFs(HALF *dest, HALF *src, LEN len)
 {
-    HALF *ret;
-    LEN i;
+        HALF *ret;
+        LEN i;
 
-    /*
-     * allocate storage if needed
-     */
-    if (dest == NULL) {
-	dest = alloc(len);
-    }
-    ret = dest;
+        /*
+         * allocate storage if needed
+         */
+        if (dest == NULL) {
+                dest = alloc(len);
+        }
+        ret = dest;
 
-    /*
-     * swap the array
-     */
-    for (i = 0; i < len; ++i, ++dest, ++src) {
-	SWAP_B16_IN_HALF(dest, src);
-    }
+        /*
+         * swap the array
+         */
+        for (i=0; i < len; ++i, ++dest, ++src) {
+                SWAP_B16_IN_HALF(dest, src);
+        }
 
-    /*
-     * return the result
-     */
-    return ret;
+        /*
+         * return the result
+         */
+        return ret;
 }
+
 
 /*
  * swap_HALFs - swap HALFs in an array of HALFs
@@ -316,33 +324,34 @@ swap_b16_in_HALFs(HALF *dest, HALF *src, LEN len)
 HALF *
 swap_HALFs(HALF *dest, HALF *src, LEN len)
 {
-    HALF *s; /* src swap pointer */
-    HALF *d; /* dest swap pointer */
-    HALF *ret;
-    LEN i;
+        HALF *s;        /* src swap pointer */
+        HALF *d;        /* dest swap pointer */
+        HALF *ret;
+        LEN i;
 
-    /*
-     * allocate storage if needed
-     */
-    if (dest == NULL) {
-	dest = alloc(len);
-    }
-    ret = dest;
+        /*
+         * allocate storage if needed
+         */
+        if (dest == NULL) {
+                dest = alloc(len);
+        }
+        ret = dest;
 
-    /*
-     * swap HALFs in the array
-     */
-    s = src;
-    d = &dest[len - 1];
-    for (i = 0; i < len; ++i, --d, ++s) {
-	*d = *s;
-    }
+        /*
+         * swap HALFs in the array
+         */
+        s = src;
+        d = &dest[len-1];
+        for (i=0; i < len; ++i, --d, ++s) {
+                *d = *s;
+        }
 
-    /*
-     * return the result
-     */
-    return ret;
+        /*
+         * return the result
+         */
+        return ret;
 }
+
 
 /*
  * swap_b16_in_ZVALUE - swap 16 bits in a ZVALUE
@@ -363,52 +372,53 @@ swap_HALFs(HALF *dest, HALF *src, LEN len)
 ZVALUE *
 swap_b16_in_ZVALUE(ZVALUE *dest, ZVALUE *src, bool all)
 {
-    /*
-     * allocate storage if needed
-     */
-    if (dest == NULL) {
+        /*
+         * allocate storage if needed
+         */
+        if (dest == NULL) {
 
-	/*
-	 * allocate the storage
-	 */
-	dest = malloc(sizeof(ZVALUE));
-	if (dest == NULL) {
-	    math_error("swap_b16_in_ZVALUE: Not enough memory");
-	    not_reached();
-	}
+                /*
+                 * allocate the storage
+                 */
+                dest = malloc(sizeof(ZVALUE));
+                if (dest == NULL) {
+                        math_error("swap_b16_in_ZVALUE: Not enough memory");
+                        not_reached();
+                }
 
-	/*
-	 * allocate (by forcing swap_b16_in_ZVALUE) and swap storage
-	 */
-	dest->v = swap_b16_in_HALFs(NULL, src->v, src->len);
+                /*
+                 * allocate (by forcing swap_b16_in_ZVALUE) and swap storage
+                 */
+                dest->v = swap_b16_in_HALFs(NULL, src->v, src->len);
 
-    } else {
+        } else {
 
-	/*
-	 * swap storage
-	 */
-	if (dest->v != NULL) {
-	    zfree(*dest);
-	}
-	dest->v = swap_b16_in_HALFs(NULL, src->v, src->len);
-    }
+                /*
+                 * swap storage
+                 */
+                if (dest->v != NULL) {
+                        zfree(*dest);
+                }
+                dest->v = swap_b16_in_HALFs(NULL, src->v, src->len);
+        }
 
-    /*
-     * swap or copy the rest of the ZVALUE elements
-     */
-    if (all) {
-	SWAP_B16_IN_LEN(&dest->len, &src->len);
-	SWAP_B16_IN_bool(&dest->sign, &src->sign);
-    } else {
-	dest->len = src->len;
-	dest->sign = src->sign;
-    }
+        /*
+         * swap or copy the rest of the ZVALUE elements
+         */
+        if (all) {
+                SWAP_B16_IN_LEN(&dest->len, &src->len);
+                SWAP_B16_IN_bool(&dest->sign, &src->sign);
+        } else {
+                dest->len = src->len;
+                dest->sign = src->sign;
+        }
 
-    /*
-     * return the result
-     */
-    return dest;
+        /*
+         * return the result
+         */
+        return dest;
 }
+
 
 /*
  * swap_b16_in_NUMBER - swap 16 bits in a NUMBER
@@ -429,49 +439,50 @@ swap_b16_in_ZVALUE(ZVALUE *dest, ZVALUE *src, bool all)
 NUMBER *
 swap_b16_in_NUMBER(NUMBER *dest, NUMBER *src, bool all)
 {
-    /*
-     * allocate storage if needed
-     */
-    if (dest == NULL) {
+        /*
+         * allocate storage if needed
+         */
+        if (dest == NULL) {
 
-	/*
-	 * allocate the storage
-	 */
-	dest = malloc(sizeof(NUMBER));
-	if (dest == NULL) {
-	    math_error("swap_b16_in_NUMBER: Not enough memory");
-	    not_reached();
-	}
+                /*
+                 * allocate the storage
+                 */
+                dest = malloc(sizeof(NUMBER));
+                if (dest == NULL) {
+                        math_error("swap_b16_in_NUMBER: Not enough memory");
+                        not_reached();
+                }
 
-	/*
-	 * allocate (by forcing swap_b16_in_ZVALUE) and swap storage
-	 */
-	dest->num = *swap_b16_in_ZVALUE(NULL, &src->num, all);
-	dest->den = *swap_b16_in_ZVALUE(NULL, &src->den, all);
+                /*
+                 * allocate (by forcing swap_b16_in_ZVALUE) and swap storage
+                 */
+                dest->num = *swap_b16_in_ZVALUE(NULL, &src->num, all);
+                dest->den = *swap_b16_in_ZVALUE(NULL, &src->den, all);
 
-    } else {
+        } else {
 
-	/*
-	 * swap storage
-	 */
-	dest->num = *swap_b16_in_ZVALUE(&dest->num, &src->num, all);
-	dest->den = *swap_b16_in_ZVALUE(&dest->den, &src->den, all);
-    }
+                /*
+                 * swap storage
+                 */
+                dest->num = *swap_b16_in_ZVALUE(&dest->num, &src->num, all);
+                dest->den = *swap_b16_in_ZVALUE(&dest->den, &src->den, all);
+        }
 
-    /*
-     * swap or copy the rest of the NUMBER elements
-     */
-    if (all) {
-	SWAP_B16_IN_LONG(&dest->links, &src->links);
-    } else {
-	dest->links = src->links;
-    }
+        /*
+         * swap or copy the rest of the NUMBER elements
+         */
+        if (all) {
+                SWAP_B16_IN_LONG(&dest->links, &src->links);
+        } else {
+                dest->links = src->links;
+        }
 
-    /*
-     * return the result
-     */
-    return dest;
+        /*
+         * return the result
+         */
+        return dest;
 }
+
 
 /*
  * swap_b16_in_COMPLEX - swap 16 bits in a COMPLEX
@@ -492,49 +503,50 @@ swap_b16_in_NUMBER(NUMBER *dest, NUMBER *src, bool all)
 COMPLEX *
 swap_b16_in_COMPLEX(COMPLEX *dest, COMPLEX *src, bool all)
 {
-    /*
-     * allocate storage if needed
-     */
-    if (dest == NULL) {
+        /*
+         * allocate storage if needed
+         */
+        if (dest == NULL) {
 
-	/*
-	 * allocate the storage
-	 */
-	dest = malloc(sizeof(COMPLEX));
-	if (dest == NULL) {
-	    math_error("swap_b16_in_COMPLEX: Not enough memory");
-	    not_reached();
-	}
+                /*
+                 * allocate the storage
+                 */
+                dest = malloc(sizeof(COMPLEX));
+                if (dest == NULL) {
+                        math_error("swap_b16_in_COMPLEX: Not enough memory");
+                        not_reached();
+                }
 
-	/*
-	 * allocate (by forcing swap_b16_in_ZVALUE) and swap storage
-	 */
-	dest->real = swap_b16_in_NUMBER(NULL, src->real, all);
-	dest->imag = swap_b16_in_NUMBER(NULL, src->imag, all);
+                /*
+                 * allocate (by forcing swap_b16_in_ZVALUE) and swap storage
+                 */
+                dest->real = swap_b16_in_NUMBER(NULL, src->real, all);
+                dest->imag = swap_b16_in_NUMBER(NULL, src->imag, all);
 
-    } else {
+        } else {
 
-	/*
-	 * swap storage
-	 */
-	dest->real = swap_b16_in_NUMBER(dest->real, src->real, all);
-	dest->imag = swap_b16_in_NUMBER(dest->imag, src->imag, all);
-    }
+                /*
+                 * swap storage
+                 */
+                dest->real = swap_b16_in_NUMBER(dest->real, src->real, all);
+                dest->imag = swap_b16_in_NUMBER(dest->imag, src->imag, all);
+        }
 
-    /*
-     * swap or copy the rest of the NUMBER elements
-     */
-    if (all) {
-	SWAP_B16_IN_LONG(&dest->links, &src->links);
-    } else {
-	dest->links = src->links;
-    }
+        /*
+         * swap or copy the rest of the NUMBER elements
+         */
+        if (all) {
+                SWAP_B16_IN_LONG(&dest->links, &src->links);
+        } else {
+                dest->links = src->links;
+        }
 
-    /*
-     * return the result
-     */
-    return dest;
+        /*
+         * return the result
+         */
+        return dest;
 }
+
 
 /*
  * swap_HALF_in_ZVALUE - swap HALFs in a ZVALUE
@@ -555,53 +567,54 @@ swap_b16_in_COMPLEX(COMPLEX *dest, COMPLEX *src, bool all)
 ZVALUE *
 swap_HALF_in_ZVALUE(ZVALUE *dest, ZVALUE *src, bool all)
 {
-    /*
-     * allocate storage if needed
-     */
-    if (dest == NULL) {
+        /*
+         * allocate storage if needed
+         */
+        if (dest == NULL) {
 
-	/*
-	 * allocate the storage
-	 */
-	dest = calloc(1, sizeof(ZVALUE));
-	if (dest == NULL) {
-	    math_error("swap_HALF_in_ZVALUE: Not enough memory");
-	    not_reached();
-	}
+                /*
+                 * allocate the storage
+                 */
+                dest = calloc(1, sizeof(ZVALUE));
+                if (dest == NULL) {
+                        math_error("swap_HALF_in_ZVALUE: Not enough memory");
+                        not_reached();
+                }
 
-	/*
-	 * copy storage because we are dealing with HALFs
-	 */
-	dest->v = (HALF *)zcopyval(*src, *dest);
+                /*
+                 * copy storage because we are dealing with HALFs
+                 */
+                dest->v = (HALF *) zcopyval(*src, *dest);
 
-    } else {
+        } else {
 
-	/*
-	 * copy storage because we are dealing with HALFs
-	 */
-	if (dest->v != NULL) {
-	    zfree(*dest);
-	    dest->v = alloc(src->len);
-	}
-	zcopyval(*src, *dest);
-    }
+                /*
+                 * copy storage because we are dealing with HALFs
+                 */
+                if (dest->v != NULL) {
+                        zfree(*dest);
+                        dest->v = alloc(src->len);
+                }
+                zcopyval(*src, *dest);
+        }
 
-    /*
-     * swap or copy the rest of the ZVALUE elements
-     */
-    if (all) {
-	SWAP_HALF_IN_LEN(&dest->len, &src->len);
-	SWAP_HALF_IN_bool(&dest->sign, &src->sign);
-    } else {
-	dest->len = src->len;
-	dest->sign = src->sign;
-    }
+        /*
+         * swap or copy the rest of the ZVALUE elements
+         */
+        if (all) {
+                SWAP_HALF_IN_LEN(&dest->len, &src->len);
+                SWAP_HALF_IN_bool(&dest->sign, &src->sign);
+        } else {
+                dest->len = src->len;
+                dest->sign = src->sign;
+        }
 
-    /*
-     * return the result
-     */
-    return dest;
+        /*
+         * return the result
+         */
+        return dest;
 }
+
 
 /*
  * swap_HALF_in_NUMBER - swap HALFs in a NUMBER
@@ -622,49 +635,50 @@ swap_HALF_in_ZVALUE(ZVALUE *dest, ZVALUE *src, bool all)
 NUMBER *
 swap_HALF_in_NUMBER(NUMBER *dest, NUMBER *src, bool all)
 {
-    /*
-     * allocate storage if needed
-     */
-    if (dest == NULL) {
+        /*
+         * allocate storage if needed
+         */
+        if (dest == NULL) {
 
-	/*
-	 * allocate the storage
-	 */
-	dest = malloc(sizeof(NUMBER));
-	if (dest == NULL) {
-	    math_error("swap_HALF_in_NUMBER: Not enough memory");
-	    not_reached();
-	}
+                /*
+                 * allocate the storage
+                 */
+                dest = malloc(sizeof(NUMBER));
+                if (dest == NULL) {
+                        math_error("swap_HALF_in_NUMBER: Not enough memory");
+                        not_reached();
+                }
 
-	/*
-	 * allocate (by forcing swap_HALF_in_ZVALUE) and swap storage
-	 */
-	dest->num = *swap_HALF_in_ZVALUE(NULL, &src->num, all);
-	dest->den = *swap_HALF_in_ZVALUE(NULL, &src->den, all);
+                /*
+                 * allocate (by forcing swap_HALF_in_ZVALUE) and swap storage
+                 */
+                dest->num = *swap_HALF_in_ZVALUE(NULL, &src->num, all);
+                dest->den = *swap_HALF_in_ZVALUE(NULL, &src->den, all);
 
-    } else {
+        } else {
 
-	/*
-	 * swap storage
-	 */
-	dest->num = *swap_HALF_in_ZVALUE(&dest->num, &src->num, all);
-	dest->den = *swap_HALF_in_ZVALUE(&dest->den, &src->den, all);
-    }
+                /*
+                 * swap storage
+                 */
+                dest->num = *swap_HALF_in_ZVALUE(&dest->num, &src->num, all);
+                dest->den = *swap_HALF_in_ZVALUE(&dest->den, &src->den, all);
+        }
 
-    /*
-     * swap or copy the rest of the NUMBER elements
-     */
-    if (all) {
-	SWAP_HALF_IN_LONG(&dest->links, &src->links);
-    } else {
-	dest->links = src->links;
-    }
+        /*
+         * swap or copy the rest of the NUMBER elements
+         */
+        if (all) {
+                SWAP_HALF_IN_LONG(&dest->links, &src->links);
+        } else {
+                dest->links = src->links;
+        }
 
-    /*
-     * return the result
-     */
-    return dest;
+        /*
+         * return the result
+         */
+        return dest;
 }
+
 
 /*
  * swap_HALF_in_COMPLEX - swap HALFs in a COMPLEX
@@ -685,46 +699,46 @@ swap_HALF_in_NUMBER(NUMBER *dest, NUMBER *src, bool all)
 COMPLEX *
 swap_HALF_in_COMPLEX(COMPLEX *dest, COMPLEX *src, bool all)
 {
-    /*
-     * allocate storage if needed
-     */
-    if (dest == NULL) {
+        /*
+         * allocate storage if needed
+         */
+        if (dest == NULL) {
 
-	/*
-	 * allocate the storage
-	 */
-	dest = malloc(sizeof(COMPLEX));
-	if (dest == NULL) {
-	    math_error("swap_HALF_in_COMPLEX: Not enough memory");
-	    not_reached();
-	}
+                /*
+                 * allocate the storage
+                 */
+                dest = malloc(sizeof(COMPLEX));
+                if (dest == NULL) {
+                        math_error("swap_HALF_in_COMPLEX: Not enough memory");
+                        not_reached();
+                }
 
-	/*
-	 * allocate (by forcing swap_HALF_in_ZVALUE) and swap storage
-	 */
-	dest->real = swap_HALF_in_NUMBER(NULL, src->real, all);
-	dest->imag = swap_HALF_in_NUMBER(NULL, src->imag, all);
+                /*
+                 * allocate (by forcing swap_HALF_in_ZVALUE) and swap storage
+                 */
+                dest->real = swap_HALF_in_NUMBER(NULL, src->real, all);
+                dest->imag = swap_HALF_in_NUMBER(NULL, src->imag, all);
 
-    } else {
+        } else {
 
-	/*
-	 * swap storage
-	 */
-	dest->real = swap_HALF_in_NUMBER(dest->real, src->real, all);
-	dest->imag = swap_HALF_in_NUMBER(dest->imag, src->imag, all);
-    }
+                /*
+                 * swap storage
+                 */
+                dest->real = swap_HALF_in_NUMBER(dest->real, src->real, all);
+                dest->imag = swap_HALF_in_NUMBER(dest->imag, src->imag, all);
+        }
 
-    /*
-     * swap or copy the rest of the NUMBER elements
-     */
-    if (all) {
-	SWAP_HALF_IN_LONG(&dest->links, &src->links);
-    } else {
-	dest->links = src->links;
-    }
+        /*
+         * swap or copy the rest of the NUMBER elements
+         */
+        if (all) {
+                SWAP_HALF_IN_LONG(&dest->links, &src->links);
+        } else {
+                dest->links = src->links;
+        }
 
-    /*
-     * return the result
-     */
-    return dest;
+        /*
+         * return the result
+         */
+        return dest;
 }

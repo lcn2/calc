@@ -44,13 +44,15 @@
 
 #include <stdio.h>
 
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h"     /* include after system header <> includes */
+
 
 #if !defined(HAVE_NO_UNUSED)
 
 /* make sure that we can use the __attribute__((x)) in #define's */
-#  undef UNUSED
-#  define UNUSED(x) UNUSED_##x __attribute__((unused))
+#undef UNUSED
+#define UNUSED(x) UNUSED_ ## x __attribute__((unused))
 
 /*
  * unused_str - a function with an unused argument
@@ -63,25 +65,26 @@ unused_str(char *UNUSED(str))
 
 #endif /* !HAVE_NO_UNUSED */
 
+
 int
 main(void)
 {
 #if defined(HAVE_NO_UNUSED)
 
-    printf("#undef UNUSED\n");
-    printf("#if defined(__LCLINT__)\n");
-    printf("# define UNUSED(x) /*@unused@*/ x\n");
-    printf("#else\n");
-    printf("# define UNUSED(x) x\n");
-    printf("#endif\n");
+        printf("#undef UNUSED\n");
+        printf("#if defined(__LCLINT__)\n");
+        printf("# define UNUSED(x) /*@unused@*/ x\n");
+        printf("#else\n");
+        printf("# define UNUSED(x) x\n");
+        printf("#endif\n");
 
 #else /* HAVE_NO_UNUSED */
 
-    printf("#undef UNUSED\n");
-    printf("#define UNUSED(x) %s\n", unused_str(NULL));
+        printf("#undef UNUSED\n");
+        printf("#define UNUSED(x) %s\n", unused_str(NULL));
 
 #endif /* HAVE_NO_UNUSED */
 
-    /* exit(0); */
-    return 0;
+        /* exit(0); */
+        return 0;
 }

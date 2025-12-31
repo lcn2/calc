@@ -65,17 +65,19 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+
 #if !defined(PRE_HAVE_BAN_PRAGMA_H)
-#  include "have_ban_pragma.h"
+#include "have_ban_pragma.h"
 #endif /* ! PRE_HAVE_BAN_PRAGMA_H */
 
+
 #if !defined(INCLUDE_BANNED_H)
-#  define INCLUDE_BANNED_H
+#define INCLUDE_BANNED_H
 
 /*
  * If we define UNBAN, then the effect of this file is disabled.
  */
-#  if !defined(UNBAN)
+#if !defined(UNBAN)
 
 /*
  * In the spirit of:
@@ -102,55 +104,55 @@
  * If one is not careful, strcpy() can lead to buffer overflows.
  * Use strlcpy() instead.
  */
-#    if defined(HAVE_PRAGMA_GCC_POSION)
-#      undef strcpy
-#      pragma GCC poison strcpy
-#    endif /* HAVE_PRAGMA_GCC_POSION */
+#if defined(HAVE_PRAGMA_GCC_POSION)
+#undef strcpy
+#pragma GCC poison strcpy
+#endif /* HAVE_PRAGMA_GCC_POSION */
 
 /*
  * If one is not careful, strcat() can lead to buffer overflows.
  * Use strlcat() instead.
  */
-#    if defined(HAVE_PRAGMA_GCC_POSION)
-#      undef strcat
-#      pragma GCC poison strcat
-#    endif /* HAVE_PRAGMA_GCC_POSION */
+#if defined(HAVE_PRAGMA_GCC_POSION)
+#undef strcat
+#pragma GCC poison strcat
+#endif /* HAVE_PRAGMA_GCC_POSION */
 
 /*
  * If one is not careful, strncpy() can lead to buffer overflows.
  * Use memccpy() instead.
  */
-#    if defined(HAVE_PRAGMA_GCC_POSION)
-#      undef strncpy
-#      pragma GCC poison strncpy
-#    endif /* HAVE_PRAGMA_GCC_POSION */
+#if defined(HAVE_PRAGMA_GCC_POSION)
+#undef strncpy
+#pragma GCC poison strncpy
+#endif /* HAVE_PRAGMA_GCC_POSION */
 
 /*
  * If one is not careful, strncat() can lead to buffer overflows.
  * Use memccpy() instead.
  */
-#    if defined(HAVE_PRAGMA_GCC_POSION)
-#      undef strncat
-#      pragma GCC poison strncat
-#    endif /* HAVE_PRAGMA_GCC_POSION */
+#if defined(HAVE_PRAGMA_GCC_POSION)
+#undef strncat
+#pragma GCC poison strncat
+#endif /* HAVE_PRAGMA_GCC_POSION */
 
 /*
  * If one is not careful, sprintf() can lead to buffer overflows.
  * Use snprintf() instead.
  */
-#    if defined(HAVE_PRAGMA_GCC_POSION)
-#      undef sprintf
-#      pragma GCC poison sprintf
-#    endif /* HAVE_PRAGMA_GCC_POSION */
+#if defined(HAVE_PRAGMA_GCC_POSION)
+#undef sprintf
+#pragma GCC poison sprintf
+#endif /* HAVE_PRAGMA_GCC_POSION */
 
 /*
  * If one is not careful, vsprintf() can lead to buffer overflows.
  * Use vsnprintf() instead.
  */
-#    if defined(HAVE_PRAGMA_GCC_POSION)
-#      undef vsprintf
-#      pragma GCC poison vsprintf
-#    endif /* HAVE_PRAGMA_GCC_POSION */
+#if defined(HAVE_PRAGMA_GCC_POSION)
+#undef vsprintf
+#pragma GCC poison vsprintf
+#endif /* HAVE_PRAGMA_GCC_POSION */
 
 /*
  * XXX - As of 2021, functions such as:
@@ -173,6 +175,6 @@
  *      asctime_r
  */
 
-#  endif /* !UNBAN */
+#endif /* !UNBAN */
 
 #endif /* !INCLUDE_BANNED_H */

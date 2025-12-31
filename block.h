@@ -26,8 +26,10 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+
 #if !defined(INCLUDE_BLOCK_H)
-#  define INCLUDE_BLOCK_H
+#define INCLUDE_BLOCK_H
+
 
 /*
  * block - the basic block structure
@@ -134,79 +136,86 @@
  *                  "hd_style"} position, spaces between octets, chars on end
  */
 struct block {
-    LEN blkchunk; /* allocation chunk size */
-    LEN maxsize;  /* octets actually malloced for this block */
-    LEN datalen;  /* octets of data held this block */
-    USB8 *data;	  /* pointer to the 1st octet of the allocated data */
+        LEN blkchunk;   /* allocation chunk size */
+        LEN maxsize;    /* octets actually malloced for this block */
+        LEN datalen;    /* octets of data held this block */
+        USB8 *data;     /* pointer to the 1st octet of the allocated data */
 };
 typedef struct block BLOCK;
 
+
 struct nblock {
-    char *name;
-    int subtype;
-    int id;
-    BLOCK *blk;
+        char *name;
+        int subtype;
+        int id;
+        BLOCK *blk;
 };
 typedef struct nblock NBLOCK;
+
 
 /*
  * block debug
  */
-EXTERN int blk_debug; /* 0 => debug off */
+EXTERN int blk_debug;   /* 0 => debug off */
+
 
 /*
  * block defaults
  */
-#  define BLK_CHUNKSIZE 256 /* default allocation chunk size for blocks */
+#define BLK_CHUNKSIZE 256       /* default allocation chunk size for blocks */
 
-#  define BLK_DEF_MAXPRINT 256 /* default octets to print */
+#define BLK_DEF_MAXPRINT 256    /* default octets to print */
 
-#  define BLK_BASE_HEX 0    /* output octets in a block in hex */
-#  define BLK_BASE_OCT 1    /* output octets in a block in octal */
-#  define BLK_BASE_CHAR 2   /* output octets in a block in characters */
-#  define BLK_BASE_BINARY 3 /* output octets in a block in base 2 chars */
-#  define BLK_BASE_RAW 4    /* output octets in a block in raw binary */
+#define BLK_BASE_HEX 0          /* output octets in a block in hex */
+#define BLK_BASE_OCT 1          /* output octets in a block in octal */
+#define BLK_BASE_CHAR 2         /* output octets in a block in characters */
+#define BLK_BASE_BINARY 3       /* output octets in a block in base 2 chars */
+#define BLK_BASE_RAW 4          /* output octets in a block in raw binary */
 
-#  define BLK_FMT_HD_STYLE 0 /* output in base with chars on end of line */
-#  define BLK_FMT_LINE 1     /* output is lines of up to 79 chars */
-#  define BLK_FMT_STRING 2   /* output is one long string */
-#  define BLK_FMT_OD_STYLE 3 /* output in base with chars */
+#define BLK_FMT_HD_STYLE 0      /* output in base with chars on end of line */
+#define BLK_FMT_LINE 1          /* output is lines of up to 79 chars */
+#define BLK_FMT_STRING 2        /* output is one long string */
+#define BLK_FMT_OD_STYLE 3      /* output in base with chars */
+
 
 /*
  * block macros
  */
 /* length of data stored in a block */
-#  define blklen(blk) ((blk)->datalen)
+#define blklen(blk) ((blk)->datalen)
 
 /* block footprint in memory */
-#  define blksizeof(blk) ((blk)->maxsize)
+#define blksizeof(blk) ((blk)->maxsize)
 
 /* block allocation chunk size */
-#  define blkchunk(blk) ((blk)->blkchunk)
+#define blkchunk(blk) ((blk)->blkchunk)
+
 
 /*
  * OCTET - what the INDEXADDR produces from a blk[offset]
  */
 typedef USB8 OCTET;
 
+
 /*
  * external functions
  */
 E_FUNC BLOCK *blkalloc(int, int);
-E_FUNC void blk_free(BLOCK *);
-E_FUNC BLOCK *blkrealloc(BLOCK *, int, int);
-E_FUNC void blktrunc(BLOCK *);
-E_FUNC BLOCK *blk_copy(BLOCK *);
-E_FUNC int blk_cmp(BLOCK *, BLOCK *);
-E_FUNC void blk_print(BLOCK *);
+E_FUNC void blk_free(BLOCK*);
+E_FUNC BLOCK *blkrealloc(BLOCK*, int, int);
+E_FUNC void blktrunc(BLOCK*);
+E_FUNC BLOCK *blk_copy(BLOCK*);
+E_FUNC int blk_cmp(BLOCK*, BLOCK*);
+E_FUNC void blk_print(BLOCK*);
 E_FUNC void nblock_print(NBLOCK *);
 E_FUNC NBLOCK *createnblock(char *, int, int);
 E_FUNC NBLOCK *reallocnblock(int, int, int);
 E_FUNC int removenblock(int);
 E_FUNC int findnblockid(char *);
 E_FUNC NBLOCK *findnblock(int);
-E_FUNC BLOCK *copyrealloc(BLOCK *, int, int);
+E_FUNC BLOCK *copyrealloc(BLOCK*, int, int);
 E_FUNC int countnblocks(void);
 E_FUNC void shownblocks(void);
+
 
 #endif /* !INCLUDE_BLOCK_H */

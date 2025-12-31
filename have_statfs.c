@@ -44,38 +44,39 @@
 
 #include "have_sys_vfs.h"
 #if defined(HAVE_SYS_VFS_H)
-#  include <sys/vfs.h>
+# include <sys/vfs.h>
 #endif /* HAVE_SYS_VFS_H */
 
 #include "have_sys_param.h"
 #if defined(HAVE_SYS_PARAM_H)
-#  include <sys/param.h>
+# include <sys/param.h>
 #endif /* HAVE_SYS_PARAM_H */
 
 #include "have_sys_mount.h"
 #if defined(HAVE_SYS_MOUNT_H)
-#  include <sys/mount.h>
+# include <sys/mount.h>
 #endif /* HAVE_SYS_MOUNT_H */
 
-#include "banned.h" /* include after system header <> includes */
+#include "banned.h"     /* include after system header <> includes */
+
 
 int
 main(void)
 {
 #if defined(HAVE_NO_STATFS)
 
-    printf("#undef HAVE_STATFS /* no */\n");
+        printf("#undef HAVE_STATFS /* no */\n");
 
 #else /* HAVE_NO_STATFS */
 
-    struct statfs statfs_dot; /* usage stat of "." */
+        struct statfs statfs_dot;               /* usage stat of "." */
 
-    (void)statfs(".", &statfs_dot);
+        (void) statfs(".", &statfs_dot);
 
-    printf("#define HAVE_STATFS /* yes */\n");
+        printf("#define HAVE_STATFS /* yes */\n");
 
 #endif /* HAVE_NO_STATFS */
 
-    /* exit(0); */
-    return 0;
+        /* exit(0); */
+        return 0;
 }

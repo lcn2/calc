@@ -42,26 +42,28 @@
 #include <sys/types.h>
 #include "have_unistd.h"
 #if defined(HAVE_UNISTD_H)
-#  include <unistd.h>
+#include <unistd.h>
 #endif
 
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h"     /* include after system header <> includes */
+
 
 int
 main(void)
 {
 #if defined(HAVE_NO_GETPGID)
 
-    printf("#undef HAVE_GETPGID /* no */\n");
+        printf("#undef HAVE_GETPGID /* no */\n");
 
 #else /* HAVE_NO_GETPGID */
 
-    (void)getpgid((pid_t)0);
+        (void) getpgid((pid_t)0);
 
-    printf("#define HAVE_GETPGID /* yes */\n");
+        printf("#define HAVE_GETPGID /* yes */\n");
 
 #endif /* HAVE_NO_GETPGID */
 
-    /* exit(0); */
-    return 0;
+        /* exit(0); */
+        return 0;
 }

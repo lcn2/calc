@@ -23,46 +23,52 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+
 #if !defined(INCLUDE_HIST_H)
-#  define INCLUDE_HIST_H
+#define INCLUDE_HIST_H
+
 
 /*
  * Default binding file and history size.
  */
-#  ifndef HIST_BINDING_FILE
-#    define HIST_BINDING_FILE "/usr/lib/hist.bind"
-#  endif
+#ifndef HIST_BINDING_FILE
+#define HIST_BINDING_FILE       "/usr/lib/hist.bind"
+#endif
 
-#  ifndef HIST_SIZE
-#    define HIST_SIZE (1024 * 32)
-#  endif
+#ifndef HIST_SIZE
+#define HIST_SIZE               (1024*32)
+#endif
+
 
 /*
  * path search defines
  */
-#  define HOMECHAR '~' /* char which indicates home directory */
-#  define DOTCHAR '.'  /* char which indicates current directory */
-#  define PATHCHAR '/' /* char which separates path components */
-#  if defined(_WIN32) || defined(_WIN64)
-#    define LISTCHAR ';' /* char which separates paths in a list */
-#  else
-#    define LISTCHAR ':' /* char which separates paths in a list */
-#  endif
+#define HOMECHAR        '~'     /* char which indicates home directory */
+#define DOTCHAR         '.'     /* char which indicates current directory */
+#define PATHCHAR        '/'     /* char which separates path components */
+#if defined(_WIN32) || defined(_WIN64)
+#define LISTCHAR        ';'     /* char which separates paths in a list */
+#else
+#define LISTCHAR        ':'     /* char which separates paths in a list */
+#endif
+
 
 /*
  * Possible returns from hist_init.  Note that an error from hist_init does
  * not prevent calling the other routines, but fancy command line editing
  * is then disabled.
  */
-#  define HIST_SUCCESS 0   /* successfully initialized */
-#  define HIST_INITED 1	   /* initialization is already done */
-#  define HIST_NOFILE 2	   /* bindings file could not be read */
-#  define HIST_NOTTY 3	   /* terminal modes could not be set */
-#  define HIST_NULL_HIST 4 /* failed to set non-NULL name of history file in calc_history */
+#define HIST_SUCCESS    0       /* successfully initialized */
+#define HIST_INITED     1       /* initialization is already done */
+#define HIST_NOFILE     2       /* bindings file could not be read */
+#define HIST_NOTTY      3       /* terminal modes could not be set */
+#define HIST_NULL_HIST  4       /* failed to set non-NULL name of history file in calc_history */
 
-E_FUNC int hist_init(char *filename);
-E_FUNC void hist_term(void);
-E_FUNC size_t hist_getline(char *prompt, char *buf, size_t len);
-E_FUNC void hist_saveline(char *line, int len);
+
+E_FUNC  int     hist_init(char *filename);
+E_FUNC  void    hist_term(void);
+E_FUNC  size_t  hist_getline(char *prompt, char *buf, size_t len);
+E_FUNC  void    hist_saveline(char *line, int len);
+
 
 #endif /* !INCLUDE_HIST_H */

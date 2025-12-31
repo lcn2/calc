@@ -25,8 +25,9 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+
 #if !defined(INCLUDE_BLKCPY_H)
-#  define INCLUDE_BLKCPY_H
+#define INCLUDE_BLKCPY_H
 
 /*
  * the main copy gateway function

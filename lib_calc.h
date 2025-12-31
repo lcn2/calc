@@ -24,21 +24,22 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+
 #if !defined(INCLUDE_MATH_ERROR_H)
-#  define INCLUDE_MATH_ERROR_H
+#define INCLUDE_MATH_ERROR_H
 
-#  include <setjmp.h>
+#include <setjmp.h>
 
-#  if defined(CALC_SRC) /* if we are building from the calc source tree */
-#    include "decl.h"
-#  else
-#    include <calc/decl.h>
-#  endif
+#if defined(CALC_SRC)   /* if we are building from the calc source tree */
+# include "decl.h"
+#else
+# include <calc/decl.h>
+#endif
 
 /*
  * error buffer definitions
  */
-#  define MAXERROR 512 /* maximum length of error message string */
+#define MAXERROR        512     /* maximum length of error message string */
 
 /*
  * calc math error control
@@ -59,7 +60,7 @@ EXTERN jmp_buf calc_scanerr_jmpbuf;
 /*
  * last calc math error, parse/scan error message
  */
-EXTERN char calc_err_msg[MAXERROR + 1];
+EXTERN char calc_err_msg[MAXERROR+1];
 /* 0 ==> do not print parse/scan errors */
 EXTERN int calc_print_scanerr_msg;
 
@@ -67,7 +68,7 @@ EXTERN int calc_print_scanerr_msg;
  * calc parse/scan warning control
  */
 /* last parse/scan warning message */
-EXTERN char calc_warn_msg[MAXERROR + 1];
+EXTERN char calc_warn_msg[MAXERROR+1];
 /* 0 ==> do not print parse/scan warnings */
 EXTERN int calc_print_scanwarn_msg;
 /* number of parse/scan warnings found */
@@ -82,8 +83,8 @@ EXTERN char *calc_history;
  * calc help
  */
 EXTERN char *calc_helpdir;
-#  if defined(CUSTOM)
+#if defined(CUSTOM)
 EXTERN char *calc_customhelpdir;
-#  endif /* CUSTOM */
+#endif /* CUSTOM */
 
 #endif /* !INCLUDE_MATH_ERROR_H */

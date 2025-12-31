@@ -43,27 +43,29 @@
 #include <sys/stat.h>
 #include <ustat.h>
 
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h"     /* include after system header <> includes */
+
 
 int
 main(void)
 {
 #if defined(HAVE_NO_USTAT)
 
-    printf("#undef HAVE_USTAT /* no */\n");
+        printf("#undef HAVE_USTAT /* no */\n");
 
 #else /* HAVE_NO_USTAT */
 
-    struct stat stat_dot;   /* stat of "." */
-    struct ustat ustat_dot; /* usage stat of "." */
+        struct stat stat_dot;           /* stat of "." */
+        struct ustat ustat_dot;         /* usage stat of "." */
 
-    (void)stat(".", &stat_dot);
-    (void)ustat(stat_dot.st_dev, &ustat_dot);
+        (void) stat(".", &stat_dot);
+        (void) ustat(stat_dot.st_dev, &ustat_dot);
 
-    printf("#define HAVE_USTAT /* yes */\n");
+        printf("#define HAVE_USTAT /* yes */\n");
 
 #endif /* HAVE_NO_USTAT */
 
-    /* exit(0); */
-    return 0;
+        /* exit(0); */
+        return 0;
 }

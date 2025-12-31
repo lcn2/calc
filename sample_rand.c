@@ -32,6 +32,7 @@
  *      bits            number of bits to generate
  */
 
+
 #include <sys/types.h>
 #include <stdio.h>
 #include "calc.h"
@@ -39,77 +40,80 @@
 #include "have_const.h"
 #include "lib_util.h"
 
+
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+#include "banned.h"     /* include after system header <> includes */
 
-#define DEF_CNT 128 /* default number of bits to generate */
 
-extern char *program; /* our name */
+#define DEF_CNT 128     /* default number of bits to generate */
+
+extern char *program;   /* our name */
+
 
 int
 main(int argc, char **argv)
 {
-    RANDOM *prev_state; /* previous random number state */
-    ZVALUE seed;	/* seed for Blum-Blum-Shub */
-    ZVALUE random_val;	/* random number produced */
-    long cnt;		/* number of bits to generate */
-    char *hexstr;	/* random number as hex string */
+        RANDOM *prev_state;     /* previous random number state */
+        ZVALUE seed;            /* seed for Blum-Blum-Shub */
+        ZVALUE random_val;      /* random number produced */
+        long cnt;               /* number of bits to generate */
+        char *hexstr;           /* random number as hex string */
 
-    /*
-     * parse args
-     */
-    program = argv[0];
-    switch (argc) {
-    case 3:
-	seed = convstr2z(argv[2]);
-	cnt = strtol(argv[1], NULL, 0);
-	break;
-    case 2:
-	seed = _zero_; /* use the default seed */
-	cnt = strtol(argv[1], NULL, 0);
-	break;
-    case 1:
-	seed = _zero_; /* use the default seed */
-	cnt = DEF_CNT;
-	break;
-    default:
-	fprintf(stderr, "usage: %s [[bits] seed_string]\n", program);
-	exit(1);
-    }
-    if (cnt <= 0) {
-	fprintf(stderr, "%s: cnt:%d must be > 0\n", program, (int)cnt);
-	exit(2);
-    }
-    printf("seed= 0x%s\n", convz2hex(seed));
+        /*
+         * parse args
+         */
+        program = argv[0];
+        switch (argc) {
+        case 3:
+                seed = convstr2z(argv[2]);
+                cnt = strtol(argv[1], NULL, 0);
+                break;
+        case 2:
+                seed = _zero_;  /* use the default seed */
+                cnt = strtol(argv[1], NULL, 0);
+                break;
+        case 1:
+                seed = _zero_;  /* use the default seed */
+                cnt = DEF_CNT;
+                break;
+        default:
+                fprintf(stderr, "usage: %s [[bits] seed_string]\n", program);
+                exit(1);
+        }
+        if (cnt <= 0) {
+                fprintf(stderr, "%s: cnt:%d must be > 0\n", program, (int)cnt);
+                exit(2);
+        }
+        printf("seed= 0x%s\n", convz2hex(seed));
 
-    /*
-     * libcalc setup
-     */
-    libcalc_call_me_first();
+        /*
+         * libcalc setup
+         */
+        libcalc_call_me_first();
 
-    /*
-     * seed the generator
-     */
-    prev_state = zsrandom2(seed, _ten_);
-    if (prev_state == NULL) {
-	math_error("previous random state is NULL");
-	not_reached();
-    }
+        /*
+         * seed the generator
+         */
+        prev_state = zsrandom2(seed, _ten_);
+        if (prev_state == NULL) {
+                math_error("previous random state is NULL");
+                not_reached();
+        }
 
-    /*
-     * generate random bits
-     */
-    zrandom(cnt, &random_val);
+        /*
+         * generate random bits
+         */
+        zrandom(cnt, &random_val);
 
-    /*
-     * convert into hex string
-     */
-    hexstr = convz2hex(random_val);
-    printf("random= 0x%s\n", hexstr);
+        /*
+         * convert into hex string
+         */
+        hexstr = convz2hex(random_val);
+        printf("random= 0x%s\n", hexstr);
 
-    /*
-     * all done
-     */
-    /* exit(0); */
-    return 0;
+        /*
+         * all done
+         */
+        /* exit(0); */
+        return 0;
 }
