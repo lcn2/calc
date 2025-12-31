@@ -10,7 +10,7 @@
 #
 # As of 2025, we restrict ourselves to clang-format options no
 # later than version 20.  In particular, the minimum supported
-# clang-format option set are those options support by:
+# clang-format option set are those options supported by:
 #
 #     clang-format version 20.1.8
 #
@@ -71,7 +71,7 @@ IndentWidth: 4
 UseTab: Always
 
 # Align escaped newlines as far left as possible, using the last line of the
-# preprocessor directive as the reference if it’s the longest.
+# preprocessor directive as the reference if it is the longest.
 #
 # LLVM: AlignEscapedNewlines: Right
 #
@@ -91,7 +91,7 @@ ColumnLimit: 131
 
 # The number of columns to use for indentation of preprocessor statements
 #
-# When set to -1 (default) IndentWidth is used also for preprocessor statements.
+# When set to -1 (default), IndentWidth is used also for preprocessor statements.
 #
 # Kernel style uses: PPIndentWidth: -1
 #
@@ -111,7 +111,7 @@ BreakAfterReturnType: AllDefinitions
 
 # Leave the order of include alone
 #
-# In some cases the order of includes is critical.  Moreover we tend to include
+# In some cases, the order of includes is critical.  Moreover, we tend to include
 # <system.h> header files before our own.
 #
 # LLVM: SortIncludes:    CaseSensitive
@@ -123,7 +123,7 @@ SortIncludes: Never
 # LLVM: InsertBraces:    false
 #
 # WARNING: Setting this option to true could lead to incorrect code formatting
-#	   due to clang-format’s lack of complete semantic information. As such,
+#	   due to clang-format's lack of complete semantic information. As such,
 #	   extra care should be taken to review code changes made by this option!
 #
 InsertBraces: true
