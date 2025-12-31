@@ -12,6 +12,9 @@ The following are the changes from calc version 2.16.0.3 to date:
     format the `help/builtin` file.  We can live with the `builtins[]`
     table as it is today, for now.
 
+    Add `make clang-format` make rule to top level `Makefile` and
+    to the `custom/Makefile`.
+
 
 The following are the changes from calc version 2.16.0.2 to 2.16.0.3:
 

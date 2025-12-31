@@ -2838,6 +2838,7 @@ env:
 	@echo 'CCWERR=${CCWERR}'; echo ''
 	@echo 'CFLAGS=${CFLAGS}'; echo ''
 	@echo 'CHMOD=${CHMOD}'; echo ''
+	@echo 'CLANG_FORMAT=${CLANG_FORMAT}'; echo ''
 	@echo 'CMP=${CMP}'; echo ''
 	@echo 'CO=${CO}'; echo ''
 	@echo 'COMMON_ADD=${COMMON_ADD}'; echo ''
@@ -2939,9 +2940,9 @@ env:
 	@echo 'MAKEDEPEND=${MAKEDEPEND}'; echo ''
 	@echo 'MAKE_FILE=${MAKE_FILE}'; echo ''
 	@echo 'MAKE=${MAKE}'; echo ''
-	@echo 'MAN=${MAN}'; echo ''
 	@echo 'MANDIR=${MANDIR}'; echo ''
 	@echo 'MANEXT=${MANEXT}'; echo ''
+	@echo 'MAN=${MAN}'; echo ''
 	@echo 'MINGW=${MINGW}'; echo ''
 	@echo 'MKDIR=${MKDIR}'; echo ''
 	@echo 'MK_SET=${MK_SET}'; echo ''
@@ -4012,6 +4013,12 @@ calc-unsymlink:
 		      1>&2; \
 	    fi; \
 	fi
+
+# reformat primary (non-built) source using clang-format
+#
+clang-format: ${C_SRC} ${H_SRC}
+	${CLANG_FORMAT} -i --style=file:.clang-format ${C_SRC} ${H_SRC}
+	${MAKE} -C custom clang-format
 
 ###
 #

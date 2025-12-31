@@ -701,6 +701,11 @@ uninstall:
 	    fi; \
 	done
 
+# reformat primary (non-built) source using clang-format
+#
+clang-format: ${C_SRC} ${H_SRC}
+	${CLANG_FORMAT} -i --style=file:.clang-format ${C_SRC} ${H_SRC}
+
 ##
 #
 # make depend stuff

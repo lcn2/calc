@@ -107,7 +107,7 @@ IndentPPDirectives: AfterHash
 #
 # LLVM: BreakAfterReturnType: None
 #
-BreakAfterReturnType: All
+BreakAfterReturnType: AllDefinitions
 
 # Leave the order of include alone
 #
