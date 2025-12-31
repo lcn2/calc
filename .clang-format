@@ -68,7 +68,7 @@ IndentWidth: 4
 #
 # LLVM: UseTab:          Never
 #
-UseTab: Always
+UseTab: Never
 
 # Align escaped newlines as far left as possible, using the last line of the
 # preprocessor directive as the reference if it is the longest.
