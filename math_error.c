@@ -57,16 +57,13 @@
  *      calc_use_matherr_jmpbuf = 1;
  */
 
-
 #include <stdio.h>
 #include <setjmp.h>
 #include "args.h"
 #include "calc.h"
 #include "lib_calc.h"
 
-
-#include "banned.h"     /* include after system header <> includes */
-
+#include "banned.h" /* include after system header <> includes */
 
 /*
  * math_error - print a math error and exit
@@ -74,50 +71,53 @@
 void
 math_error(char *fmt, ...)
 {
-        va_list ap;
+    va_list ap;
 
-        /*
-         * format the error
-         */
+    /*
+     * format the error
+     */
 #ifdef VARARGS
-        va_start(ap);
+    va_start(ap);
 #else
-        va_start(ap, fmt);
+    va_start(ap, fmt);
 #endif
-        vsnprintf(calc_err_msg, MAXERROR, fmt, ap);
-        va_end(ap);
-        calc_err_msg[MAXERROR] = '\0';  /* paranoia */
+    vsnprintf(calc_err_msg, MAXERROR, fmt, ap);
+    va_end(ap);
+    calc_err_msg[MAXERROR] = '\0'; /* paranoia */
 
-        /*
-         * if we should longjmp, so do
-         */
-        if (calc_use_matherr_jmpbuf != 0) {
-                if (conf->calc_debug & CALCDBG_RUNSTATE)
-                        printf("math_error: longjmp calc_matherr_jmpbuf\n");
-                longjmp(calc_matherr_jmpbuf, calc_use_matherr_jmpbuf);
+    /*
+     * if we should longjmp, so do
+     */
+    if (calc_use_matherr_jmpbuf != 0) {
+        if (conf->calc_debug & CALCDBG_RUNSTATE) {
+            printf("math_error: longjmp calc_matherr_jmpbuf\n");
         }
+        longjmp(calc_matherr_jmpbuf, calc_use_matherr_jmpbuf);
+    }
 
-        /*
-         * print error message and edit
-         */
-        (void) fflush(stdout);
-        (void) fflush(stderr);
-        fprintf(stderr, "%s\n\n", calc_err_msg);
+    /*
+     * print error message and edit
+     */
+    (void)fflush(stdout);
+    (void)fflush(stderr);
+    fprintf(stderr, "%s\n\n", calc_err_msg);
 
-        /*
-         * if interactive, return to main via longjmp()
-         */
-        if (calc_use_scanerr_jmpbuf != 0) {
-                if (conf->calc_debug & CALCDBG_RUNSTATE)
-                        printf("math_error: longjmp calc_scanerr_jmpbuf\n");
-                longjmp(calc_scanerr_jmpbuf, calc_use_scanerr_jmpbuf);
+    /*
+     * if interactive, return to main via longjmp()
+     */
+    if (calc_use_scanerr_jmpbuf != 0) {
+        if (conf->calc_debug & CALCDBG_RUNSTATE) {
+            printf("math_error: longjmp calc_scanerr_jmpbuf\n");
         }
+        longjmp(calc_scanerr_jmpbuf, calc_use_scanerr_jmpbuf);
+    }
 
-        /*
-         * exit
-         */
-        if (conf->calc_debug & CALCDBG_RUNSTATE)
-                printf("math_error: about to exit\n");
-        libcalc_call_me_last();
-        exit(40);
+    /*
+     * exit
+     */
+    if (conf->calc_debug & CALCDBG_RUNSTATE) {
+        printf("math_error: about to exit\n");
+    }
+    libcalc_call_me_last();
+    exit(40);
 }

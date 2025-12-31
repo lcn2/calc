@@ -28,19 +28,16 @@
  * random number generator - see zrand.c for details
  */
 
-
 #if !defined(INCLUDE_ZRAND_H)
-#define INCLUDE_ZRAND_H
+#  define INCLUDE_ZRAND_H
 
-
-#if defined(CALC_SRC)   /* if we are building from the calc source tree */
-# include "value.h"
-# include "have_const.h"
-#else
-# include <calc/value.h>
-# include <calc/have_const.h>
-#endif
-
+#  if defined(CALC_SRC) /* if we are building from the calc source tree */
+#    include "value.h"
+#    include "have_const.h"
+#  else
+#    include <calc/value.h>
+#    include <calc/have_const.h>
+#  endif
 
 /*
  * s100 generator defines
@@ -48,29 +45,29 @@
  * NOTE: SBITS must be a power of two to make the (&= (SBITS-1))
  *       in slotcp() to work.
  */
-#define SBITS (64)       /* size of subtractive or shuffle entry in bits */
-#define SBYTES (SBITS/8) /* size of subtractive or shuffle entry in bytes */
-#define SHALFS (SBYTES/sizeof(HALF))    /* size in HALFs */
+#  define SBITS (64)                     /* size of subtractive or shuffle entry in bits */
+#  define SBYTES (SBITS / 8)             /* size of subtractive or shuffle entry in bytes */
+#  define SHALFS (SBYTES / sizeof(HALF)) /* size in HALFs */
 
 /*
  * seed defines
  */
-#define SEEDXORBITS 64          /* low bits of s100 seed devoted to xor */
+#  define SEEDXORBITS 64 /* low bits of s100 seed devoted to xor */
 
 /*
  * shuffle table defines
  */
-#define SHUFPOW 8               /* power of 2 size of the shuffle table */
-#define SHUFCNT (1 << SHUFPOW)  /* size of shuffle table */
-#define SHUFLEN (SLEN*SHUFCNT)  /* length of shuffle table in FULLs */
-#define SHUFMASK (SHUFLEN-1)    /* mask for shuffle table entry selection */
+#  define SHUFPOW 8                /* power of 2 size of the shuffle table */
+#  define SHUFCNT (1 << SHUFPOW)   /* size of shuffle table */
+#  define SHUFLEN (SLEN * SHUFCNT) /* length of shuffle table in FULLs */
+#  define SHUFMASK (SHUFLEN - 1)   /* mask for shuffle table entry selection */
 
 /*
  * subtractive 100 constants
  */
-#define S100 100        /* slots in an subtractive 100 table */
-#define INIT_J 36       /* initial first walking table index */
-#define INIT_K 99       /* initial second walking table index */
+#  define S100 100  /* slots in an subtractive 100 table */
+#  define INIT_J 36 /* initial first walking table index */
+#  define INIT_K 99 /* initial second walking table index */
 
 /*
  * subtractive 100 table defines
@@ -119,89 +116,101 @@
  *
  * SCNT         - length of an subtractive 100 table in FULLs
  */
-#if FULL_BITS == SBITS
+#  if FULL_BITS == SBITS
 
-# define SLEN 1         /* a 64 bit slot can be held in a FULL */
-#define SLOAD(s,i,z) ((s).slot[i] = ztofull(z))
-#define SSUB(s,k,j) ((s).slot[k] -= (s).slot[j])
-#define SINDX(s,k) ((int)((s).slot[k] >> (FULL_BITS - SHUFPOW)))
-#define SBUFFER(s,t) {(s).buffer[0] = ((s).shuf[t] & BASE1); \
-                      (s).buffer[1] = ((s).shuf[t] >> BASEB); \
-                     }
-#define SSHUF(s,t,k) ((s).shuf[t] = (s).slot[k])
-#define SSWAP(s,j,k) {FULL tmp = (s).slot[j]; \
-                      (s).slot[j] = (s).slot[k]; \
-                      (s).slot[k] = tmp; \
-                     }
-#define SMOD64(t,z) ((t)[0] = ztofull(z))
-#define SXOR(s,i,v) ((s).slot[i] ^= (v)[0])
+#    define SLEN 1 /* a 64 bit slot can be held in a FULL */
+#    define SLOAD(s, i, z) ((s).slot[i] = ztofull(z))
+#    define SSUB(s, k, j) ((s).slot[k] -= (s).slot[j])
+#    define SINDX(s, k) ((int)((s).slot[k] >> (FULL_BITS - SHUFPOW)))
+#    define SBUFFER(s, t)                           \
+        {                                           \
+            (s).buffer[0] = ((s).shuf[t] & BASE1);  \
+            (s).buffer[1] = ((s).shuf[t] >> BASEB); \
+        }
+#    define SSHUF(s, t, k) ((s).shuf[t] = (s).slot[k])
+#    define SSWAP(s, j, k)             \
+        {                              \
+            FULL tmp = (s).slot[j];    \
+            (s).slot[j] = (s).slot[k]; \
+            (s).slot[k] = tmp;         \
+        }
+#    define SMOD64(t, z) ((t)[0] = ztofull(z))
+#    define SXOR(s, i, v) ((s).slot[i] ^= (v)[0])
 
-#elif 2*FULL_BITS == SBITS
+#  elif 2 * FULL_BITS == SBITS
 
-# define SLEN 2                 /* a 64 bit slot needs 2 FULLs */
-#define SLOAD(s,i,z) {(s).slot[(i)<<1] = ztofull(z); \
-                      (s).slot[1+((i)<<1)] = \
-                        (((z).len <= 2) ? (FULL)0 : \
-                         (((z).len == 3) ? (FULL)((z).v[2]) : \
-                          ((FULL)((z).v[2]) + ((FULL)((z).v[3]) << BASEB)))); \
-                     }
-#define SSUB(s,k,j) {FULL tmp = (s).slot[(k)<<1]; \
-                     (s).slot[(k)<<1] -= (s).slot[(j)<<1]; \
-                     (s).slot[1+((k)<<1)] -= ((tmp <= (s).slot[(k)<<1]) ? \
-                                               (s).slot[1+((j)<<1)] : \
-                                               (s).slot[1+((j)<<1)] + 1); \
-                    }
-#define SINDX(s,k) ((int)((s).slot[1+((k)<<1)] >> (FULL_BITS - SHUFPOW)))
-#define SBUFFER(s,t) {(s).buffer[0] = ((s).shuf[(t)<<1] & BASE1); \
-                      (s).buffer[1] = ((s).shuf[(t)<<1] >> BASEB); \
-                      (s).buffer[2] = ((s).shuf[1+((t)<<1)] & BASE1); \
-                      (s).buffer[3] = ((s).shuf[1+((t)<<1)] >> BASEB); \
-                     }
-#define SSHUF(s,t,k) {(s).shuf[(t)<<1] = (s).slot[(k)<<1]; \
-                      (s).shuf[1+((t)<<1)] = (s).slot[1+((k)<<1)]; \
-                     }
-#define SSWAP(s,j,k) {FULL tmp = (s).slot[(j)<<1]; \
-                      (s).slot[(j)<<1] = (s).slot[(k)<<1]; \
-                      (s).slot[(k)<<1] = tmp; \
-                      tmp = (s).slot[1+((j)<<1)]; \
-                      (s).slot[1+((j)<<1)] = (s).slot[1+((k)<<1)]; \
-                      (s).slot[1+((k)<<1)] = tmp; \
-                     }
-#define SMOD64(t,z) {(t)[0] = ztofull(z); \
-                     (t)[1] = (((z).len <= 2) ? (FULL)0 : \
-                         (((z).len == 3) ? (FULL)((z).v[2]) : \
-                          ((FULL)((z).v[2]) + ((FULL)((z).v[3]) << BASEB)))); \
-                    }
-#define SXOR(s,i,v) {(s).slot[(i)<<1] ^= (v)[0]; \
-                     (s).slot[1+((i)<<1)] ^= (v)[1]; \
-                    }
+#    define SLEN 2 /* a 64 bit slot needs 2 FULLs */
+#    define SLOAD(s, i, z)                                                                                                 \
+        {                                                                                                                  \
+            (s).slot[(i) << 1] = ztofull(z);                                                                               \
+            (s).slot[1 + ((i) << 1)] =                                                                                     \
+                (((z).len <= 2) ? (FULL)0                                                                                  \
+                                : (((z).len == 3) ? (FULL)((z).v[2]) : ((FULL)((z).v[2]) + ((FULL)((z).v[3]) << BASEB)))); \
+        }
+#    define SSUB(s, k, j)                                                                                                        \
+        {                                                                                                                        \
+            FULL tmp = (s).slot[(k) << 1];                                                                                       \
+            (s).slot[(k) << 1] -= (s).slot[(j) << 1];                                                                            \
+            (s).slot[1 + ((k) << 1)] -= ((tmp <= (s).slot[(k) << 1]) ? (s).slot[1 + ((j) << 1)] : (s).slot[1 + ((j) << 1)] + 1); \
+        }
+#    define SINDX(s, k) ((int)((s).slot[1 + ((k) << 1)] >> (FULL_BITS - SHUFPOW)))
+#    define SBUFFER(s, t)                                        \
+        {                                                        \
+            (s).buffer[0] = ((s).shuf[(t) << 1] & BASE1);        \
+            (s).buffer[1] = ((s).shuf[(t) << 1] >> BASEB);       \
+            (s).buffer[2] = ((s).shuf[1 + ((t) << 1)] & BASE1);  \
+            (s).buffer[3] = ((s).shuf[1 + ((t) << 1)] >> BASEB); \
+        }
+#    define SSHUF(s, t, k)                                       \
+        {                                                        \
+            (s).shuf[(t) << 1] = (s).slot[(k) << 1];             \
+            (s).shuf[1 + ((t) << 1)] = (s).slot[1 + ((k) << 1)]; \
+        }
+#    define SSWAP(s, j, k)                                       \
+        {                                                        \
+            FULL tmp = (s).slot[(j) << 1];                       \
+            (s).slot[(j) << 1] = (s).slot[(k) << 1];             \
+            (s).slot[(k) << 1] = tmp;                            \
+            tmp = (s).slot[1 + ((j) << 1)];                      \
+            (s).slot[1 + ((j) << 1)] = (s).slot[1 + ((k) << 1)]; \
+            (s).slot[1 + ((k) << 1)] = tmp;                      \
+        }
+#    define SMOD64(t, z)                                                                                                        \
+        {                                                                                                                       \
+            (t)[0] = ztofull(z);                                                                                                \
+            (t)[1] = (((z).len <= 2) ? (FULL)0                                                                                  \
+                                     : (((z).len == 3) ? (FULL)((z).v[2]) : ((FULL)((z).v[2]) + ((FULL)((z).v[3]) << BASEB)))); \
+        }
+#    define SXOR(s, i, v)                       \
+        {                                       \
+            (s).slot[(i) << 1] ^= (v)[0];       \
+            (s).slot[1 + ((i) << 1)] ^= (v)[1]; \
+        }
 
-#else
+#  else
 
-   /\../\       FULL_BITS must be 32 or 64      /\../\   !!!
+/\../\ FULL_BITS must be 32 or 64 /\../\ !!!
 
-#endif
+#  endif
 
-#define SCNT (SLEN*S100)        /* length of subtractive 100 table in FULLs */
+#  define SCNT (SLEN * S100) /* length of subtractive 100 table in FULLs */
 
-#define RAND_CONSEQ_USE (100)             /* use this many before skipping */
-#define RAND_SKIP (1009-RAND_CONSEQ_USE)  /* skip this many after use */
-
+#  define RAND_CONSEQ_USE (100)              /* use this many before skipping */
+#  define RAND_SKIP (1009 - RAND_CONSEQ_USE) /* skip this many after use */
 
 /*
  * s100 generator state
  */
 struct rand {
-        int seeded;             /* 1 => state has been seeded */
-        int bits;               /* buffer bit count */
-        FULL buffer[SLEN];      /* unused random bits from last call */
-        int j;                  /* first walking table index */
-        int k;                  /* second walking table index */
-        int need_to_skip;       /* 1 => skip the next 909 values */
-        FULL slot[SCNT];        /* subtractive 100 table */
-        FULL shuf[SHUFLEN];     /* shuffle table entries */
+    int seeded;         /* 1 => state has been seeded */
+    int bits;           /* buffer bit count */
+    FULL buffer[SLEN];  /* unused random bits from last call */
+    int j;              /* first walking table index */
+    int k;              /* second walking table index */
+    int need_to_skip;   /* 1 => skip the next 909 values */
+    FULL slot[SCNT];    /* subtractive 100 table */
+    FULL shuf[SHUFLEN]; /* shuffle table entries */
 };
-
 
 /*
  * s100 generator function declarations
@@ -216,6 +225,5 @@ E_FUNC RAND *randcopy(CONST RAND *rand);
 E_FUNC void randfree(RAND *rand);
 E_FUNC bool randcmp(CONST RAND *s1, CONST RAND *s2);
 E_FUNC void randprint(CONST RAND *state, int flags);
-
 
 #endif /* !INCLUDE_ZRAND_H */

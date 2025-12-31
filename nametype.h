@@ -24,18 +24,15 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-
 #if !defined(INCLUDE_NAMETYPE_H)
-#define INCLUDE_NAMETYPE_H
-
+#  define INCLUDE_NAMETYPE_H
 
 /*
  * Configuration parameter name and type.
  */
 typedef struct {
-        char *name;     /* name of configuration string */
-        long type;      /* type for configuration */
+    char *name; /* name of configuration string */
+    long type;  /* type for configuration */
 } NAMETYPE;
-
 
 #endif /* !INCLUDE_NAMETYPE_H */

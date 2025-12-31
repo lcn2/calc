@@ -24,62 +24,55 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-
 #include <stdio.h>
 #include <signal.h>
 #include "have_stdlib.h"
 #if defined(HAVE_STDLIB_H)
-#include <stdlib.h>
+#  include <stdlib.h>
 #endif
 
 #include "longbits.h"
 
 #include "have_unistd.h"
 #if defined(HAVE_UNISTD_H)
-#include <unistd.h>
+#  include <unistd.h>
 #endif
 
 #include "have_unused.h"
 
+#include "banned.h" /* include after system header <> includes */
 
-#include "banned.h"     /* include after system header <> includes */
-
-
-static void buserr(int arg);    /* catch alignment errors */
-
+static void buserr(int arg); /* catch alignment errors */
 
 int
 main(void)
 {
-        char byte[2*sizeof(USB32)];     /* mis-alignment buffer */
-        USB32 *p;                       /* mis-alignment pointer */
-        unsigned long i;
+    char byte[2 * sizeof(USB32)]; /* mis-alignment buffer */
+    USB32 *p;                     /* mis-alignment pointer */
+    unsigned long i;
 
 #if defined(MUST_ALIGN32)
-        /* force alignment */
-        printf("#define MUST_ALIGN32\t%c* forced to align 32 bit values *%c\n",
-           '/', '/');
+    /* force alignment */
+    printf("#define MUST_ALIGN32\t%c* forced to align 32 bit values *%c\n", '/', '/');
 #else
-        /* setup to catch alignment bus errors */
-        signal(SIGBUS, buserr);
-        signal(SIGSEGV, buserr);  /* some systems will generate SEGV instead! */
+    /* setup to catch alignment bus errors */
+    signal(SIGBUS, buserr);
+    signal(SIGSEGV, buserr); /* some systems will generate SEGV instead! */
 
-        /* mis-align our long fetches */
-        for (i=0; i < sizeof(USB32); ++i) {
-                p = (USB32 *)(byte+i);
-                *p = i;
-                *p += 1;
-        }
+    /* mis-align our long fetches */
+    for (i = 0; i < sizeof(USB32); ++i) {
+        p = (USB32 *)(byte + i);
+        *p = i;
+        *p += 1;
+    }
 
-        /* if we got here, then we can mis-align longs */
-        printf("#undef MUST_ALIGN32\t%c* can mis-align 32 bit values *%c\n",
-           '/', '/');
+    /* if we got here, then we can mis-align longs */
+    printf("#undef MUST_ALIGN32\t%c* can mis-align 32 bit values *%c\n", '/', '/');
 
 #endif
-        /* exit(0); */
-        return 0;
+    /* exit(0); */
+    return 0;
 }
-
 
 /*
  * buserr - catch an alignment error
@@ -91,8 +84,7 @@ main(void)
 static void
 buserr(int UNUSED(arg))
 {
-        /* alignment is required */
-        printf("#define MUST_ALIGN32\t%c* must align 32 bit values *%c\n",
-          '/', '/');
-        exit(0);
+    /* alignment is required */
+    printf("#define MUST_ALIGN32\t%c* must align 32 bit values *%c\n", '/', '/');
+    exit(0);
 }

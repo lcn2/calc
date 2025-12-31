@@ -24,35 +24,31 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-
 /*
  * ISO C requires a translation unit to contain at least one declaration,
  * so we declare a global variable whose value is based on if CUSTOM is defined.
  */
 #if defined(CUSTOM)
-int c_help_allowed = 1;         /* CUSTOM defined */
-#else /* CUSTOM */
-int c_help_allowed = 0;         /* CUSTOM undefined */
-#endif /* CUSTOM */
-
+int c_help_allowed = 1; /* CUSTOM defined */
+#else                   /* CUSTOM */
+int c_help_allowed = 0; /* CUSTOM undefined */
+#endif                  /* CUSTOM */
 
 #if defined(CUSTOM)
 
-#include "../have_unistd.h"
-#if defined(HAVE_UNISTD_H)
-#include <unistd.h>
-#endif
+#  include "../have_unistd.h"
+#  if defined(HAVE_UNISTD_H)
+#    include <unistd.h>
+#  endif
 
-#include "../have_const.h"
-#include "../value.h"
-#include "../custom.h"
+#  include "../have_const.h"
+#  include "../value.h"
+#  include "../custom.h"
 
-#include "../have_unused.h"
+#  include "../have_unused.h"
 
-
-#include "../errtbl.h"
-#include "../banned.h"  /* include after system header <> includes */
-
+#  include "../errtbl.h"
+#  include "../banned.h" /* include after system header <> includes */
 
 /*
  * c_help - custom help function
@@ -75,26 +71,26 @@ int c_help_allowed = 0;         /* CUSTOM undefined */
 VALUE
 c_help(char *UNUSED(name), int UNUSED(count), VALUE **vals)
 {
-        VALUE result;           /* what we will return */
+    VALUE result; /* what we will return */
 
-        /*
-         * parse args
-         */
-        if (vals[0]->v_type != V_STR) {
-                math_error("custom help arg 1 must be a string");
-                not_reached();
-        }
+    /*
+     * parse args
+     */
+    if (vals[0]->v_type != V_STR) {
+        math_error("custom help arg 1 must be a string");
+        not_reached();
+    }
 
-        /*
-         * give the help
-         */
-        customhelp((char *)vals[0]->v_str->s_str);
+    /*
+     * give the help
+     */
+    customhelp((char *)vals[0]->v_str->s_str);
 
-        /*
-         * return NULL
-         */
-        result.v_type = V_NULL;
-        return result;
+    /*
+     * return NULL
+     */
+    result.v_type = V_NULL;
+    return result;
 }
 
 #endif /* CUSTOM */

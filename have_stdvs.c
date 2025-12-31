@@ -42,123 +42,116 @@
 
 #include "have_unistd.h"
 #if defined(HAVE_UNISTD_H)
-#include <unistd.h>
+#  include <unistd.h>
 #endif
 #include <stdarg.h>
 
 #include "have_string.h"
 #ifdef HAVE_STRING_H
-# include <string.h>
+#  include <string.h>
 #endif
 
 #include "have_stdlib.h"
 #ifdef HAVE_STDLIB_H
-# include <stdlib.h>
+#  include <stdlib.h>
 #endif
 
 #undef VSNPRINTF_SIZE_T
-#if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || \
-    defined(__cplusplus)
-# define VSNPRINTF_SIZE_T size_t
+#if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
+#  define VSNPRINTF_SIZE_T size_t
 #else
-# define VSNPRINTF_SIZE_T long
+#  define VSNPRINTF_SIZE_T long
 #endif
 
+#include "banned.h" /* include after system header <> includes */
 
-#include "banned.h"     /* include after system header <> includes */
-
-
-char buf[BUFSIZ+1];
-
+char buf[BUFSIZ + 1];
 
 void
 try_nthis(char *fmt, VSNPRINTF_SIZE_T size, ...)
 {
-        va_list ap;
+    va_list ap;
 
-        va_start(ap, size);
+    va_start(ap, size);
 #if !defined(DONT_HAVE_VSNPRINTF)
-        vsnprintf(buf, size, fmt, ap);
+    vsnprintf(buf, size, fmt, ap);
 #else
-        snprintf(buf, size, fmt, ap);
+    snprintf(buf, size, fmt, ap);
 #endif
-        va_end(ap);
+    va_end(ap);
 }
-
 
 int
 main(void)
 {
-        /*
-         * setup
-         */
-        buf[0] = '\0';
+    /*
+     * setup
+     */
+    buf[0] = '\0';
 
-        /*
-         * test variable args and vsnprintf/snprintf
-         */
-        try_nthis("@%d:%s:%d@", sizeof(buf)-1, 1, "hello", 5);
-        if (strcmp(buf, "@1:hello:5@") != 0) {
+    /*
+     * test variable args and vsnprintf/snprintf
+     */
+    try_nthis("@%d:%s:%d@", sizeof(buf) - 1, 1, "hello", 5);
+    if (strcmp(buf, "@1:hello:5@") != 0) {
 #if !defined(DONT_HAVE_VSNPRINTF)
-            /* <stdarg.h> with vsnprintf() didn't work */
+        /* <stdarg.h> with vsnprintf() didn't work */
 #else
-            /* <stdarg.h> with snprintf() simulating vsnprintf() didn't work */
+        /* <stdarg.h> with snprintf() simulating vsnprintf() didn't work */
 #endif
-            exit(1);
-        }
-        try_nthis("%s %d%s%d%d %s", sizeof(buf)-1,
-            "Landon Noll 1st proved that", 2, "^", 23209, -1, "was prime");
-        if (strcmp(buf,
-                   "Landon Noll 1st proved that 2^23209-1 was prime") != 0) {
+        exit(1);
+    }
+    try_nthis("%s %d%s%d%d %s", sizeof(buf) - 1, "Landon Noll 1st proved that", 2, "^", 23209, -1, "was prime");
+    if (strcmp(buf, "Landon Noll 1st proved that 2^23209-1 was prime") != 0) {
 #if !defined(DONT_HAVE_VSNPRINTF)
-            /* <stdarg.h> with vsnprintf() didn't work */
+        /* <stdarg.h> with vsnprintf() didn't work */
 #else
-            /* <stdarg.h> with snprintf() simulating vsnprintf() didn't work */
+        /* <stdarg.h> with snprintf() simulating vsnprintf() didn't work */
 #endif
-            exit(1);
-        }
+        exit(1);
+    }
 
-        /*
-         * report the result
-         */
-        puts("/* what type of variable args do we have? */");
+    /*
+     * report the result
+     */
+    puts("/* what type of variable args do we have? */");
 #if defined(DONT_HAVE_VSNPRINTF)
-        puts("/*");
-        puts(" * SIMULATE_STDARG");
-        puts(" *");
-        puts(" * WARNING: This type of stdarg makes assumptions "
-             "about the stack");
-        puts(" *            that may not be true on your system.  "
-             "You may want to");
-        puts(" *            define STDARG (if using ANSI C) or VARARGS.");
-        puts(" */");
-        puts("typedef char *va_list;");
-        puts("#define va_start(ap,parmn) (void)((ap) = (char*)(&(parmn) + 1))");
-        puts("#define va_end(ap) (void)((ap) = 0)");
-        puts("#define va_arg(ap, type) \\");
-        puts("        (((type*)((ap) = ((ap) + sizeof(type))))[-1])");
-        puts("#define SIMULATE_STDARG "
-             "/* use std_arg.h to simulate <stdarg.h> */");
+    puts("/*");
+    puts(" * SIMULATE_STDARG");
+    puts(" *");
+    puts(" * WARNING: This type of stdarg makes assumptions "
+         "about the stack");
+    puts(" *            that may not be true on your system.  "
+         "You may want to");
+    puts(" *            define STDARG (if using ANSI C) or VARARGS.");
+    puts(" */");
+    puts("typedef char *va_list;");
+    puts("#define va_start(ap,parmn) (void)((ap) = (char*)(&(parmn) + 1))");
+    puts("#define va_end(ap) (void)((ap) = 0)");
+    puts("#define va_arg(ap, type) \\");
+    puts("        (((type*)((ap) = ((ap) + sizeof(type))))[-1])");
+    puts("#define SIMULATE_STDARG "
+         "/* use std_arg.h to simulate <stdarg.h> */");
 #else
-        puts("#define STDARG /* use <stdarg.h> */");
-        puts("#include <stdarg.h>");
+    puts("#define STDARG /* use <stdarg.h> */");
+    puts("#include <stdarg.h>");
 #endif
-        puts("\n/* should we use vsnprintf() and vsnprintf()? */");
+    puts("\n/* should we use vsnprintf() and vsnprintf()? */");
 #if !defined(DONT_HAVE_VSNPRINTF)
-        puts("#define HAVE_VSNPRINTF /* yes */");
+    puts("#define HAVE_VSNPRINTF /* yes */");
 #else
-        puts("/*");
-        puts(" * Hack aleart!!!");
-        puts(" *");
-        puts(" * Systems that do not have vsnprintf() need something. In some");
-        puts(" * cases the snprintf function will deal correctly with the");
-        puts(" * va_alist 4th arg.  Same goes for a lack of an vsnprintf()");
-        puts(" * function.  In either case we use the #defines below and");
-        puts(" * hope for the best!");
-        puts(" */");
-        puts("#define vsnprintf snprintf");
-        puts("#undef HAVE_VSNPRINTF");
+    puts("/*");
+    puts(" * Hack aleart!!!");
+    puts(" *");
+    puts(" * Systems that do not have vsnprintf() need something. In some");
+    puts(" * cases the snprintf function will deal correctly with the");
+    puts(" * va_alist 4th arg.  Same goes for a lack of an vsnprintf()");
+    puts(" * function.  In either case we use the #defines below and");
+    puts(" * hope for the best!");
+    puts(" */");
+    puts("#define vsnprintf snprintf");
+    puts("#undef HAVE_VSNPRINTF");
 #endif
-        /* exit(0); */
-        return 0;
+    /* exit(0); */
+    return 0;
 }

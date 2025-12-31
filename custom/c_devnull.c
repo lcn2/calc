@@ -24,34 +24,30 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-
 /*
  * ISO C requires a translation unit to contain at least one declaration,
  * so we declare a global variable whose value is based on if CUSTOM is defined.
  */
 #if defined(CUSTOM)
-int c_devnull_allowed = 1;      /* CUSTOM defined */
-#else /* CUSTOM */
-int c_devnull_allowed = 0;      /* CUSTOM undefined */
-#endif /* CUSTOM */
-
+int c_devnull_allowed = 1; /* CUSTOM defined */
+#else                      /* CUSTOM */
+int c_devnull_allowed = 0; /* CUSTOM undefined */
+#endif                     /* CUSTOM */
 
 #if defined(CUSTOM)
 
-#include "../have_unistd.h"
-#if defined(HAVE_UNISTD_H)
-#include <unistd.h>
-#endif
+#  include "../have_unistd.h"
+#  if defined(HAVE_UNISTD_H)
+#    include <unistd.h>
+#  endif
 
-#include "../have_const.h"
-#include "../value.h"
-#include "../custom.h"
+#  include "../have_const.h"
+#  include "../value.h"
+#  include "../custom.h"
 
-#include "../have_unused.h"
+#  include "../have_unused.h"
 
-
-#include "../banned.h"  /* include after system header <> includes */
-
+#  include "../banned.h" /* include after system header <> includes */
 
 /*
  * c_devnull - a custom function that does nothing
@@ -63,13 +59,13 @@ int c_devnull_allowed = 0;      /* CUSTOM undefined */
 VALUE
 c_devnull(char *UNUSED(name), int UNUSED(count), VALUE **UNUSED(vals))
 {
-        VALUE result;           /* what we will return */
+    VALUE result; /* what we will return */
 
-        /*
-         * return NULL
-         */
-        result.v_type = V_NULL;
-        return result;
+    /*
+     * return NULL
+     */
+    result.v_type = V_NULL;
+    return result;
 }
 
 #endif /* CUSTOM */

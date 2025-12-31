@@ -42,27 +42,25 @@
 #include <sys/types.h>
 #include "have_unistd.h"
 #if defined(HAVE_UNISTD_H)
-#include <unistd.h>
+#  include <unistd.h>
 #endif
 
-
-#include "banned.h"     /* include after system header <> includes */
-
+#include "banned.h" /* include after system header <> includes */
 
 int
 main(void)
 {
 #if defined(HAVE_NO_GETPRID)
 
-        printf("#undef HAVE_GETPRID /* no */\n");
+    printf("#undef HAVE_GETPRID /* no */\n");
 
 #else /* HAVE_NO_GETPRID */
 
-        (void) getprid();
-        printf("#define HAVE_GETPRID /* yes */\n");
+    (void)getprid();
+    printf("#define HAVE_GETPRID /* yes */\n");
 
 #endif /* HAVE_NO_GETPRID */
 
-        /* exit(0); */
-        return 0;
+    /* exit(0); */
+    return 0;
 }

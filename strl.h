@@ -23,37 +23,34 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-
 #if !defined(INCLUDE_STRL_H)
-#define INCLUDE_STRL_H
+#  define INCLUDE_STRL_H
 
+#  if defined(CALC_SRC) /* if we are building from the calc source tree */
+#    include "have_string.h"
+#  else
+#    include <calc/have_string.h>
+#  endif
+#  ifdef HAVE_STRING_H
+#    include <string.h>
+#  endif
 
-#if defined(CALC_SRC)   /* if we are building from the calc source tree */
-#include "have_string.h"
-#else
-#include <calc/have_string.h>
-#endif
-#ifdef HAVE_STRING_H
-# include <string.h>
-#endif
+#  if defined(CALC_SRC) /* if we are building from the calc source tree */
+#    include "have_strlcpy.h"
+#    include "have_strlcat.h"
+#    include "decl.h"
+#  else
+#    include <calc/have_strlcpy.h>
+#    include <calc/have_strlcat.h>
+#    include <calc/decl.h>
+#  endif
 
-#if defined(CALC_SRC)   /* if we are building from the calc source tree */
-# include "have_strlcpy.h"
-# include "have_strlcat.h"
-# include "decl.h"
-#else
-# include <calc/have_strlcpy.h>
-# include <calc/have_strlcat.h>
-# include <calc/decl.h>
-#endif
+#  if !defined(HAVE_STRLCPY)
+E_FUNC size_t strlcpy(char *dst, const char *src, size_t dstsize);
+#  endif /* !HAVE_STRLCPY */
 
-#if !defined(HAVE_STRLCPY)
-E_FUNC size_t strlcpy(char * dst, const char * src, size_t dstsize);
-#endif /* !HAVE_STRLCPY */
-
-#if !defined(HAVE_STRLCAT)
-E_FUNC size_t strlcat(char * dst, const char * src, size_t dstsize);
-#endif /* !HAVE_STRLCAT */
-
+#  if !defined(HAVE_STRLCAT)
+E_FUNC size_t strlcat(char *dst, const char *src, size_t dstsize);
+#  endif /* !HAVE_STRLCAT */
 
 #endif /* !INCLUDE_STRL_H */

@@ -23,27 +23,23 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-
 #if !defined(INCLUDE_CMATH_H)
-#define INCLUDE_CMATH_H
+#  define INCLUDE_CMATH_H
 
-
-#if defined(CALC_SRC)   /* if we are building from the calc source tree */
-# include "qmath.h"
-#else
-# include <calc/qmath.h>
-#endif
-
+#  if defined(CALC_SRC) /* if we are building from the calc source tree */
+#    include "qmath.h"
+#  else
+#    include <calc/qmath.h>
+#  endif
 
 /*
  * Complex arithmetic definitions.
  */
 typedef struct {
-        NUMBER *real;           /* real part of number */
-        NUMBER *imag;           /* imaginary part of number */
-        long links;             /* link count */
+    NUMBER *real; /* real part of number */
+    NUMBER *imag; /* imaginary part of number */
+    long links;   /* link count */
 } COMPLEX;
-
 
 /*
  * Input, output, and conversion routines.
@@ -54,7 +50,6 @@ E_FUNC COMPLEX *qqtoc(NUMBER *q1, NUMBER *q2);
 E_FUNC void comfree(COMPLEX *c);
 E_FUNC void comprint(COMPLEX *c);
 E_FUNC void cprintfr(COMPLEX *c);
-
 
 /*
  * Basic numeric routines.
@@ -82,13 +77,11 @@ E_FUNC COMPLEX *c_int(COMPLEX *c);
 E_FUNC COMPLEX *c_frac(COMPLEX *c);
 E_FUNC bool c_cmp(COMPLEX *c1, COMPLEX *c2);
 
-
 /*
  * More complicated functions.
  */
 E_FUNC COMPLEX *c_powi(COMPLEX *c, NUMBER *q);
 E_FUNC NUMBER *c_ilog(COMPLEX *c, ZVALUE base);
-
 
 /*
  * Transcendental routines.  These all take an epsilon argument to
@@ -154,8 +147,6 @@ E_FUNC COMPLEX *c_acrd(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_cas(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_cis(COMPLEX *c, NUMBER *epsilon);
 
-
-
 /*
  * external functions
  */
@@ -163,29 +154,26 @@ E_FUNC COMPLEX *swap_b8_in_COMPLEX(COMPLEX *dest, COMPLEX *src, bool all);
 E_FUNC COMPLEX *swap_b16_in_COMPLEX(COMPLEX *dest, COMPLEX *src, bool all);
 E_FUNC COMPLEX *swap_HALF_in_COMPLEX(COMPLEX *dest, COMPLEX *src, bool all);
 
-
 /*
  * macro expansions to speed this thing up
  */
-#define cisreal(c)      (qiszero((c)->imag))
-#define cisimag(c)      (qiszero((c)->real) && !cisreal(c))
-#define ciszero(c)      (cisreal(c) && qiszero((c)->real))
-#define cisone(c)       (cisreal(c) && qisone((c)->real))
-#define cisnegone(c)    (cisreal(c) && qisnegone((c)->real))
-#define cisrunit(c)     (cisreal(c) && qisunit((c)->real))
-#define cisiunit(c)     (qiszero((c)->real) && qisunit((c)->imag))
-#define cisunit(c)      (cisrunit(c) || cisiunit(c))
-#define cistwo(c)       (cisreal(c) && qistwo((c)->real))
-#define cisint(c)       (qisint((c)->real) && qisint((c)->imag))
-#define ciseven(c)      (qiseven((c)->real) && qiseven((c)->imag))
-#define cisodd(c)       (qisodd((c)->real) || qisodd((c)->imag))
-#define clink(c)        ((c)->links++, (c))
-
+#  define cisreal(c) (qiszero((c)->imag))
+#  define cisimag(c) (qiszero((c)->real) && !cisreal(c))
+#  define ciszero(c) (cisreal(c) && qiszero((c)->real))
+#  define cisone(c) (cisreal(c) && qisone((c)->real))
+#  define cisnegone(c) (cisreal(c) && qisnegone((c)->real))
+#  define cisrunit(c) (cisreal(c) && qisunit((c)->real))
+#  define cisiunit(c) (qiszero((c)->real) && qisunit((c)->imag))
+#  define cisunit(c) (cisrunit(c) || cisiunit(c))
+#  define cistwo(c) (cisreal(c) && qistwo((c)->real))
+#  define cisint(c) (qisint((c)->real) && qisint((c)->imag))
+#  define ciseven(c) (qiseven((c)->real) && qiseven((c)->imag))
+#  define cisodd(c) (qisodd((c)->real) || qisodd((c)->imag))
+#  define clink(c) ((c)->links++, (c))
 
 /*
  * Pre-defined values.
  */
 EXTERN COMPLEX _czero_, _cone_, _conei_;
-
 
 #endif /* !INCLUDE_CMATH_H */

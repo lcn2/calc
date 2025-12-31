@@ -23,19 +23,16 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-
 #if !defined(INCLUDE_FUNC_H)
-#define INCLUDE_FUNC_H
+#  define INCLUDE_FUNC_H
 
-
-#if defined(CALC_SRC)   /* if we are building from the calc source tree */
-# include "calc.h"
-# include "label.h"
-#else
-# include <calc/calc.h>
-# include <calc/label.h>
-#endif
-
+#  if defined(CALC_SRC) /* if we are building from the calc source tree */
+#    include "calc.h"
+#    include "label.h"
+#  else
+#    include <calc/calc.h>
+#    include <calc/label.h>
+#  endif
 
 /*
  * Structure of a function.
@@ -43,33 +40,29 @@
  */
 typedef struct func FUNC;
 struct func {
-        FUNC *f_next;                   /* next function in list */
-        unsigned long f_opcodecount;    /* size of opcode array */
-        unsigned int f_localcount;      /* number of local variables */
-        unsigned int f_paramcount;      /* max number of parameters */
-        char *f_name;                   /* function name */
-        VALUE f_savedvalue;             /* saved value of last expression */
-        unsigned long f_opcodes[1];     /* array of opcodes (variable length) */
+    FUNC *f_next;                /* next function in list */
+    unsigned long f_opcodecount; /* size of opcode array */
+    unsigned int f_localcount;   /* number of local variables */
+    unsigned int f_paramcount;   /* max number of parameters */
+    char *f_name;                /* function name */
+    VALUE f_savedvalue;          /* saved value of last expression */
+    unsigned long f_opcodes[1];  /* array of opcodes (variable length) */
 };
-
 
 /*
  * Amount of space needed to allocate a function of n opcodes.
  */
-#define funcsize(n) (sizeof(FUNC) + ((n) * sizeof(unsigned long)))
-
+#  define funcsize(n) (sizeof(FUNC) + ((n) * sizeof(unsigned long)))
 
 /*
  * Size of a character pointer rounded up to a number of opcodes.
  */
-#define PTR_SIZE ((sizeof(char *) + sizeof(unsigned long) - 1) / sizeof(unsigned long))
-
+#  define PTR_SIZE ((sizeof(char *) + sizeof(unsigned long) - 1) / sizeof(unsigned long))
 
 /*
  * The current function being compiled.
  */
-E_FUNC FUNC *curfunc;   /* NOTE: This is a function pointer, we need E_FUNC */
-
+E_FUNC FUNC *curfunc; /* NOTE: This is a function pointer, we need E_FUNC */
 
 /*
  * Functions to handle functions.
@@ -105,6 +98,5 @@ E_FUNC void calculate(FUNC *fp, int argcount);
 E_FUNC VALUE builtinfunc(long index, int argcount, VALUE *stck);
 E_FUNC void freenumbers(FUNC *);
 E_FUNC void freefunc(FUNC *);
-
 
 #endif /* !INCLUDE_FUNC_H */

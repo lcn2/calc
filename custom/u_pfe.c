@@ -18,7 +18,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
 /* cspell:ignore qtoi itoq */
 /* cspell:ignore ARGSUSED */
 /* cspell:ignore custname */
@@ -39,7 +38,6 @@
 /* cspell:ignore inputname */
 /* cspell:ignore inputisterminal */
 
-
 /*
  * ISO C requires a translation unit to contain at least one declaration,
  * so we declare a global variable whose value is based on if CUSTOM is defined.
@@ -51,38 +49,35 @@ int u_pfe_allowed = 1; /* CUSTOM defined */
 int u_pfe_allowed = 0; /* CUSTOM undefined */
 #endif                 /* CUSTOM */
 
-
 #if defined(CUSTOM)
 
-#include <sys/wait.h>
-#include <sys/time.h>
-#include <sys/errno.h>
-#include <sys/param.h> /* MAXPATHLEN attow */
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <libgen.h>
-#include <poll.h>
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/resource.h>
+#  include <sys/wait.h>
+#  include <sys/time.h>
+#  include <sys/errno.h>
+#  include <sys/param.h> /* MAXPATHLEN attow */
+#  include <sys/types.h>
+#  include <sys/wait.h>
+#  include <libgen.h>
+#  include <poll.h>
+#  include <stdio.h>
+#  include <string.h>
+#  include <unistd.h>
+#  include <sys/resource.h>
 
-#include "../have_const.h"
-#include "../value.h"
-#include "../custom.h"
+#  include "../have_const.h"
+#  include "../value.h"
+#  include "../custom.h"
 
-#include "../config.h"
-#include "../calc.h"
+#  include "../config.h"
+#  include "../calc.h"
 
-#include "../have_unused.h"
+#  include "../have_unused.h"
 
-#include "../banned.h" /* include after system header <> includes */
+#  include "../banned.h" /* include after system header <> includes */
 
-
-#define u_pfe_read_STRL_DFLT 1024
-#define pfe_pfe_SIZE_BUFFER 4096
-#define pfe_pfe_SIZE_INIT   4096
-
+#  define u_pfe_read_STRL_DFLT 1024
+#  define pfe_pfe_SIZE_BUFFER 4096
+#  define pfe_pfe_SIZE_INIT 4096
 
 typedef enum {
     VALV_OPT_OOB,
@@ -92,85 +87,66 @@ typedef enum {
     VALV_OPT_REF_NULL,
 } valv_opt;
 
-
 /*
  * S_FUNC declations
  */
 S_FUNC VALUE *pfe_select_TIMEOUT_DFLT = NULL;
 S_FUNC VALUE *u_pfe_poll_TIMEOUT_DFLT = NULL;
 
-
 /*
  * forward declarations
  */
 S_FUNC size_t private_strlcat(char *dst, const char *src, size_t dsize);
 S_FUNC size_t private_strlcpy(char *dst, const char *src, size_t dsize);
-S_FUNC const char * type2str(short type);
-S_FUNC VALUE * associndex_int(ASSOC *assoc, long index);
-S_FUNC VALUE * associndex_str(ASSOC *assoc, STRING *index);
+S_FUNC const char *type2str(short type);
+S_FUNC VALUE *associndex_int(ASSOC *assoc, long index);
+S_FUNC VALUE *associndex_str(ASSOC *assoc, STRING *index);
 S_FUNC void associndex_int_int(ASSOC *assoc, long index, long value);
 S_FUNC void associndex_str_int(ASSOC *assoc, STRING *index, long value);
-S_FUNC valv_opt valv_optional_type_check(int count, VALUE **vals, int idx,
-    const char *UNUSED(name), short wanted);
-S_FUNC valv_opt valv_optional_ref_type_check(int count, VALUE **vals, int idx,
-    const char *UNUSED(name), short wanted);
-S_FUNC bool valv_type_check(int UNUSED(count), VALUE **vals, int idx,
-    const char *UNUSED(name), short wanted);
-S_FUNC void valv_type_require(const char *custname, int count, VALUE **vals, int idx,
-    const char *name, short wanted);
-S_FUNC bool valv_ref_type_check(int UNUSED(count), VALUE **vals, int idx,
-    const char *UNUSED(name), short wanted);
-S_FUNC void valv_ref_type_require(const char *custname, int count, VALUE **vals, int idx,
-    const char *name, short wanted);
-S_FUNC long valv_get_num_long(const char *custname, int count, VALUE **vals, int idx,
-    const char *name);
-S_FUNC VALUE * valv_optional_get_num(int count, VALUE **vals, int *idx, const char *name,
-    VALUE *dflt);
-#if 0 /* function defined but not used */
+S_FUNC valv_opt valv_optional_type_check(int count, VALUE **vals, int idx, const char *UNUSED(name), short wanted);
+S_FUNC valv_opt valv_optional_ref_type_check(int count, VALUE **vals, int idx, const char *UNUSED(name), short wanted);
+S_FUNC bool valv_type_check(int UNUSED(count), VALUE **vals, int idx, const char *UNUSED(name), short wanted);
+S_FUNC void valv_type_require(const char *custname, int count, VALUE **vals, int idx, const char *name, short wanted);
+S_FUNC bool valv_ref_type_check(int UNUSED(count), VALUE **vals, int idx, const char *UNUSED(name), short wanted);
+S_FUNC void valv_ref_type_require(const char *custname, int count, VALUE **vals, int idx, const char *name, short wanted);
+S_FUNC long valv_get_num_long(const char *custname, int count, VALUE **vals, int idx, const char *name);
+S_FUNC VALUE *valv_optional_get_num(int count, VALUE **vals, int *idx, const char *name, VALUE *dflt);
+#  if 0  /* function defined but not used */
 S_FUNC VALUE * valv_optional_ref_num(int count, VALUE **vals, int *idx, const char *name,
     VALUE *dflt);
-#endif /* function defined but not used */
-S_FUNC VALUE * valv_ref_num(const char *custname, int count, VALUE **vals, int idx,
-    const char *name);
-#if 0 /* function defined but not used */
+#  endif /* function defined but not used */
+S_FUNC VALUE *valv_ref_num(const char *custname, int count, VALUE **vals, int idx, const char *name);
+#  if 0  /* function defined but not used */
 S_FUNC VALUE * valv_get_num(const char *custname, int count, VALUE **vals, int idx,
     const char *name);
-#endif /* function defined but not used */
-S_FUNC char * valv_get_str(const char *custname, int count, VALUE **vals, int idx,
-    const char *name);
-S_FUNC VALUE * valv_get_strp(const char *custname, int count, VALUE **vals, int idx,
-    const char *name);
-#if 0 /* function defined but not used */
+#  endif /* function defined but not used */
+S_FUNC char *valv_get_str(const char *custname, int count, VALUE **vals, int idx, const char *name);
+S_FUNC VALUE *valv_get_strp(const char *custname, int count, VALUE **vals, int idx, const char *name);
+#  if 0  /* function defined but not used */
 S_FUNC VALUE * valv_optional_ref_list(int count, VALUE **vals, int *idx, const char *name,
     VALUE *dflt);
-#endif /* function defined but not used */
-S_FUNC VALUE * valv_optional_get_list(int count, VALUE **vals, int *idx, const char *name,
-    VALUE *dflt);
-S_FUNC VALUE * valv_get_list(const char *custname, int count, VALUE **vals, int idx,
-    const char *name);
-S_FUNC VALUE * valv_ref_list(const char *custname, int count, VALUE **vals, int idx,
-    const char *name);
-#if 0 /* function defined but not used */
+#  endif /* function defined but not used */
+S_FUNC VALUE *valv_optional_get_list(int count, VALUE **vals, int *idx, const char *name, VALUE *dflt);
+S_FUNC VALUE *valv_get_list(const char *custname, int count, VALUE **vals, int idx, const char *name);
+S_FUNC VALUE *valv_ref_list(const char *custname, int count, VALUE **vals, int idx, const char *name);
+#  if 0  /* function defined but not used */
 S_FUNC VALUE * valv_optional_get_assoc(int count, VALUE **vals, int *idx, const char *name,
     VALUE *dflt);
-#endif /* function defined but not used */
-S_FUNC VALUE * valv_optional_ref_assoc(int count, VALUE **vals, int *idx, const char *name,
-    VALUE *dflt);
-#if 0 /* function defined but not used */
+#  endif /* function defined but not used */
+S_FUNC VALUE *valv_optional_ref_assoc(int count, VALUE **vals, int *idx, const char *name, VALUE *dflt);
+#  if 0  /* function defined but not used */
 S_FUNC VALUE * valv_get_assoc(const char *custname, int count, VALUE **vals, int idx,
     const char *name);
-#endif /* function defined but not used */
-S_FUNC VALUE * valv_ref_assoc(const char *custname, int count, VALUE **vals, int idx,
-    const char *name);
-S_FUNC VALUE * optional_valv_ref_list2fd_set(const char *custname, int count, VALUE **vals,
-    int *idx, const char *name, fd_set *fds, int *setsize);
-S_FUNC VALUE * alloc_list(LIST *list);
-S_FUNC VALUE * alloc_assoc(ASSOC *assoc);
-S_FUNC VALUE * list_fd_get(LIST *in, fd_set *fds);
-S_FUNC VALUE * alloc_num(NUMBER *num);
-S_FUNC VALUE * alloc_str(STRING *str);
-S_FUNC char * strext(char **subject, char *with);
-
+#  endif /* function defined but not used */
+S_FUNC VALUE *valv_ref_assoc(const char *custname, int count, VALUE **vals, int idx, const char *name);
+S_FUNC VALUE *optional_valv_ref_list2fd_set(const char *custname, int count, VALUE **vals, int *idx, const char *name, fd_set *fds,
+                                            int *setsize);
+S_FUNC VALUE *alloc_list(LIST *list);
+S_FUNC VALUE *alloc_assoc(ASSOC *assoc);
+S_FUNC VALUE *list_fd_get(LIST *in, fd_set *fds);
+S_FUNC VALUE *alloc_num(NUMBER *num);
+S_FUNC VALUE *alloc_str(STRING *str);
+S_FUNC char *strext(char **subject, char *with);
 
 /*
  * private_strlcat - size-bounded string concatenation
@@ -203,7 +179,7 @@ private_strlcat(char *dst, const char *src, size_t dsize)
     n = dsize - dlen;
 
     if (n-- == 0) {
-        return(dlen + strlen(src));
+        return (dlen + strlen(src));
     }
     while (*src != '\0') {
         if (n != 0) {
@@ -219,7 +195,6 @@ private_strlcat(char *dst, const char *src, size_t dsize)
 
     return ret;
 }
-
 
 /*
  * private_strlcpy - size-bounded string copying
@@ -252,7 +227,7 @@ private_strlcpy(char *dst, const char *src, size_t dsize)
     /* Not enough room in dst, add NUL and traverse rest of src. */
     if (nleft == 0) {
         if (dsize != 0) {
-            *dst = '\0';            /* NUL-terminate dst */
+            *dst = '\0'; /* NUL-terminate dst */
         }
         while (*src++) {
             ;
@@ -265,51 +240,49 @@ private_strlcpy(char *dst, const char *src, size_t dsize)
     return ret;
 }
 
-
 S_FUNC const char *
 type2str(short type)
 {
     /* originally from c_argv.c */
     switch (type) {
-        case V_NULL:
-            return "null";           /* null value */
-        case V_INT:
-            return "int";            /* normal integer */
-        case V_NUM:
-            return "rational_value"; /* number */
-        case V_COM:
-            return "complex_value";  /* complex number */
-        case V_ADDR:
-            return "address";        /* address of variable value */
-        case V_STR:
-            return "string";         /* address of string */
-        case V_MAT:
-            return "matrix";         /* address of matrix structure */
-        case V_LIST:
-            return "list";           /* address of list structure */
-        case V_ASSOC:
-            return "assoc";          /* address of association structure */
-        case V_OBJ:
-            return "object";         /* address of object structure */
-        case V_FILE:
-            return "file";           /* opened file id */
-        case V_RAND:
-            return "rand_state";     /* subtractive 100 random state */
-        case V_RANDOM:
-            return "random_state";   /* address of Blum random state */
-        case V_CONFIG:
-            return "config_state";   /* configuration state */
-        case V_HASH:
-            return "hash_state";     /* hash state */
-        case V_BLOCK:
-            return "octet_block";    /* memory block */
-        case V_OCTET:
-            return "octet";          /* octet (unsigned char) */
-        default:
-            return "unknown";
+    case V_NULL:
+        return "null"; /* null value */
+    case V_INT:
+        return "int"; /* normal integer */
+    case V_NUM:
+        return "rational_value"; /* number */
+    case V_COM:
+        return "complex_value"; /* complex number */
+    case V_ADDR:
+        return "address"; /* address of variable value */
+    case V_STR:
+        return "string"; /* address of string */
+    case V_MAT:
+        return "matrix"; /* address of matrix structure */
+    case V_LIST:
+        return "list"; /* address of list structure */
+    case V_ASSOC:
+        return "assoc"; /* address of association structure */
+    case V_OBJ:
+        return "object"; /* address of object structure */
+    case V_FILE:
+        return "file"; /* opened file id */
+    case V_RAND:
+        return "rand_state"; /* subtractive 100 random state */
+    case V_RANDOM:
+        return "random_state"; /* address of Blum random state */
+    case V_CONFIG:
+        return "config_state"; /* configuration state */
+    case V_HASH:
+        return "hash_state"; /* hash state */
+    case V_BLOCK:
+        return "octet_block"; /* memory block */
+    case V_OCTET:
+        return "octet"; /* octet (unsigned char) */
+    default:
+        return "unknown";
     }
 }
-
 
 /*
  * u_pfe_fork - create process
@@ -322,17 +295,16 @@ VALUE
 u_pfe_fork(char *UNUSED(name), int UNUSED(count), VALUE **UNUSED(vals))
 {
     VALUE result;
-    int   pid;
+    int pid;
 
     pid = fork();
 
     result.v_subtype = 0;
-    result.v_type    = V_NUM;
-    result.v_num     = itoq(pid);
+    result.v_type = V_NUM;
+    result.v_num = itoq(pid);
 
     return result;
 }
-
 
 S_FUNC VALUE *
 associndex_int(ASSOC *assoc, long index)
@@ -342,7 +314,7 @@ associndex_int(ASSOC *assoc, long index)
     VALUE *ret;
 
     i.v_type = V_NUM;
-    i.v_num  = itoq(index);
+    i.v_num = itoq(index);
 
     indices[0] = i;
 
@@ -350,7 +322,6 @@ associndex_int(ASSOC *assoc, long index)
 
     return ret;
 }
-
 
 S_FUNC VALUE *
 associndex_str(ASSOC *assoc, STRING *index)
@@ -360,7 +331,7 @@ associndex_str(ASSOC *assoc, STRING *index)
     VALUE *ret;
 
     i.v_type = V_STR;
-    i.v_str  = index;
+    i.v_str = index;
 
     indices[0] = i;
 
@@ -369,32 +340,29 @@ associndex_str(ASSOC *assoc, STRING *index)
     return ret;
 }
 
-
 S_FUNC void
 associndex_int_int(ASSOC *assoc, long index, long value)
 {
     VALUE *i;
 
-    i  = associndex_int(assoc, index);
+    i = associndex_int(assoc, index);
     i->v_type = V_NUM;
-    i->v_num  = itoq(value);
+    i->v_num = itoq(value);
 
     return;
 }
-
 
 S_FUNC void
 associndex_str_int(ASSOC *assoc, STRING *index, long value)
 {
     VALUE *i;
 
-    i  = associndex_str(assoc, index);
+    i = associndex_str(assoc, index);
     i->v_type = V_NUM;
-    i->v_num  = itoq(value);
+    i->v_num = itoq(value);
 
     return;
 }
-
 
 /*
  * u_pfe_pipe - create descriptor pair for interprocess communication
@@ -412,8 +380,7 @@ u_pfe_pipe(char *UNUSED(name), int UNUSED(count), VALUE **UNUSED(vals))
     int fds[2];
 
     if (pipe(fds)) {
-        math_error("%s: "__FILE__ ": %d: %s", custname, __LINE__,
-            strerror(errno));
+        math_error("%s: " __FILE__ ": %d: %s", custname, __LINE__, strerror(errno));
     }
 
     assoc = assocalloc(2);
@@ -422,16 +389,14 @@ u_pfe_pipe(char *UNUSED(name), int UNUSED(count), VALUE **UNUSED(vals))
     associndex_int_int(assoc, 1, fds[1]);
 
     result.v_subtype = 0;
-    result.v_type    = V_ASSOC;
-    result.v_assoc   = assoc;
+    result.v_type = V_ASSOC;
+    result.v_assoc = assoc;
 
     return result;
 }
 
-
 S_FUNC valv_opt
-valv_optional_type_check(int count, VALUE **vals, int idx,
-    const char *UNUSED(name), short wanted)
+valv_optional_type_check(int count, VALUE **vals, int idx, const char *UNUSED(name), short wanted)
 {
     if (idx > count) {
         return VALV_OPT_OOB;
@@ -446,10 +411,8 @@ valv_optional_type_check(int count, VALUE **vals, int idx,
     return VALV_OPT_BAD;
 }
 
-
 S_FUNC valv_opt
-valv_optional_ref_type_check(int count, VALUE **vals, int idx,
-    const char *UNUSED(name), short wanted)
+valv_optional_ref_type_check(int count, VALUE **vals, int idx, const char *UNUSED(name), short wanted)
 {
     if (idx > count) {
         return VALV_OPT_OOB;
@@ -470,10 +433,8 @@ valv_optional_ref_type_check(int count, VALUE **vals, int idx,
     return VALV_OPT_BAD;
 }
 
-
 S_FUNC bool
-valv_type_check(int UNUSED(count), VALUE **vals, int idx,
-    const char *UNUSED(name), short wanted)
+valv_type_check(int UNUSED(count), VALUE **vals, int idx, const char *UNUSED(name), short wanted)
 {
     bool ret;
 
@@ -482,23 +443,19 @@ valv_type_check(int UNUSED(count), VALUE **vals, int idx,
     return ret;
 }
 
-
 S_FUNC void
-valv_type_require(const char *custname, int count, VALUE **vals, int idx,
-    const char *name, short wanted)
+valv_type_require(const char *custname, int count, VALUE **vals, int idx, const char *name, short wanted)
 {
     if (!valv_type_check(count, vals, idx, name, wanted)) {
-        math_error("%s: argment %d (%s) must be of type %s (%s given)", custname,
-            idx + 1, name, type2str(wanted), type2str(vals[idx]->v_type));
+        math_error("%s: argment %d (%s) must be of type %s (%s given)", custname, idx + 1, name, type2str(wanted),
+                   type2str(vals[idx]->v_type));
     }
 
     return;
 }
 
-
 S_FUNC bool
-valv_ref_type_check(int UNUSED(count), VALUE **vals, int idx,
-    const char *UNUSED(name), short wanted)
+valv_ref_type_check(int UNUSED(count), VALUE **vals, int idx, const char *UNUSED(name), short wanted)
 {
     bool ret;
 
@@ -507,65 +464,55 @@ valv_ref_type_check(int UNUSED(count), VALUE **vals, int idx,
     return ret;
 }
 
-
 S_FUNC void
-valv_ref_type_require(const char *custname, int count, VALUE **vals, int idx,
-    const char *name, short wanted)
+valv_ref_type_require(const char *custname, int count, VALUE **vals, int idx, const char *name, short wanted)
 {
     if (!valv_type_check(count, vals, idx, name, V_VPTR)) {
-        math_error("%s: argment %d (%s) must be address (%s given) of type %s",
-            custname, idx + 1, name, type2str(vals[idx]->v_type),
-            type2str(wanted));
+        math_error("%s: argment %d (%s) must be address (%s given) of type %s", custname, idx + 1, name,
+                   type2str(vals[idx]->v_type), type2str(wanted));
     }
     if (!valv_ref_type_check(count, vals, idx, name, wanted)) {
-        math_error("%s: argment %d (%s) must be address of type %s (%s given)",
-            custname, idx + 1, name, type2str(wanted),
-            type2str(vals[idx]->v_addr->v_type));
+        math_error("%s: argment %d (%s) must be address of type %s (%s given)", custname, idx + 1, name, type2str(wanted),
+                   type2str(vals[idx]->v_addr->v_type));
     }
 
     return;
 }
 
-
 S_FUNC long
-valv_get_num_long(const char *custname, int count, VALUE **vals, int idx,
-    const char *name)
+valv_get_num_long(const char *custname, int count, VALUE **vals, int idx, const char *name)
 {
     valv_type_require(custname, count, vals, idx, name, V_NUM);
 
     return qtoi(vals[idx]->v_num);
 }
 
-
 S_FUNC VALUE *
-valv_optional_get_num(int count, VALUE **vals, int *idx, const char *name,
-    VALUE *dflt)
+valv_optional_get_num(int count, VALUE **vals, int *idx, const char *name, VALUE *dflt)
 {
     valv_opt chk;
     VALUE *num;
 
     chk = valv_optional_type_check(count, vals, *idx, name, V_NUM);
     switch (chk) {
-        case VALV_OPT_BAD:
-            return dflt;
-        case VALV_OPT_NULL:
-            *idx += 1;
-            /*FALLTHRU*/
-        case VALV_OPT_OOB:
-            return dflt;
-        case VALV_OPT_REF_NULL:
-        case VALV_OPT_GOOD:
-            ;
-            /*FALLTHRU*/
+    case VALV_OPT_BAD:
+        return dflt;
+    case VALV_OPT_NULL:
+        *idx += 1;
+        /*FALLTHRU*/
+    case VALV_OPT_OOB:
+        return dflt;
+    case VALV_OPT_REF_NULL:
+    case VALV_OPT_GOOD:;
+        /*FALLTHRU*/
     }
-    num  = vals[*idx];
-    *idx       += 1;
+    num = vals[*idx];
+    *idx += 1;
 
     return num;
 }
 
-
-#if 0 /* function defined but not used */
+#  if 0  /* function defined but not used */
 S_FUNC VALUE *
 valv_optional_ref_num(int count, VALUE **vals, int *idx, const char *name,
     VALUE *dflt)
@@ -596,20 +543,17 @@ valv_optional_ref_num(int count, VALUE **vals, int *idx, const char *name,
 
     return num;
 }
-#endif /* function defined but not used */
-
+#  endif /* function defined but not used */
 
 S_FUNC VALUE *
-valv_ref_num(const char *custname, int count, VALUE **vals, int idx,
-    const char *name)
+valv_ref_num(const char *custname, int count, VALUE **vals, int idx, const char *name)
 {
     valv_ref_type_require(custname, count, vals, idx, name, V_NUM);
 
     return vals[idx]->v_addr;
 }
 
-
-#if 0 /* function defined but not used */
+#  if 0  /* function defined but not used */
 S_FUNC VALUE *
 valv_get_num(const char *custname, int count, VALUE **vals, int idx,
     const char *name)
@@ -618,30 +562,25 @@ valv_get_num(const char *custname, int count, VALUE **vals, int idx,
 
     return vals[idx];
 }
-#endif /* function defined but not used */
-
+#  endif /* function defined but not used */
 
 S_FUNC char *
-valv_get_str(const char *custname, int count, VALUE **vals, int idx,
-    const char *name)
+valv_get_str(const char *custname, int count, VALUE **vals, int idx, const char *name)
 {
     valv_type_require(custname, count, vals, idx, name, V_STR);
 
     return vals[idx]->v_str->s_str;
 }
 
-
 S_FUNC VALUE *
-valv_get_strp(const char *custname, int count, VALUE **vals, int idx,
-    const char *name)
+valv_get_strp(const char *custname, int count, VALUE **vals, int idx, const char *name)
 {
     valv_type_require(custname, count, vals, idx, name, V_STR);
 
     return vals[idx];
 }
 
-
-#if 0 /* function defined but not used */
+#  if 0  /* function defined but not used */
 S_FUNC VALUE *
 valv_optional_ref_list(int count, VALUE **vals, int *idx, const char *name,
     VALUE *dflt)
@@ -669,58 +608,50 @@ valv_optional_ref_list(int count, VALUE **vals, int *idx, const char *name,
 
     return list;
 }
-#endif /* function defined but not used */
-
+#  endif /* function defined but not used */
 
 S_FUNC VALUE *
-valv_optional_get_list(int count, VALUE **vals, int *idx, const char *name,
-    VALUE *dflt)
+valv_optional_get_list(int count, VALUE **vals, int *idx, const char *name, VALUE *dflt)
 {
     valv_opt chk;
     VALUE *list;
 
     chk = valv_optional_type_check(count, vals, *idx, name, V_LIST);
     switch (chk) {
-        case VALV_OPT_BAD:
-            return dflt;
-        case VALV_OPT_NULL:
-            *idx += 1;
-            /*FALLTHRU*/
-        case VALV_OPT_OOB:
-            return dflt;
-        case VALV_OPT_REF_NULL:
-        case VALV_OPT_GOOD:
-            ;
-            /*FALLTHRU*/
+    case VALV_OPT_BAD:
+        return dflt;
+    case VALV_OPT_NULL:
+        *idx += 1;
+        /*FALLTHRU*/
+    case VALV_OPT_OOB:
+        return dflt;
+    case VALV_OPT_REF_NULL:
+    case VALV_OPT_GOOD:;
+        /*FALLTHRU*/
     }
-    list  = vals[*idx];
-    *idx        += 1;
+    list = vals[*idx];
+    *idx += 1;
 
     return list;
 }
 
-
 S_FUNC VALUE *
-valv_get_list(const char *custname, int count, VALUE **vals, int idx,
-    const char *name)
+valv_get_list(const char *custname, int count, VALUE **vals, int idx, const char *name)
 {
     valv_type_require(custname, count, vals, idx, name, V_LIST);
 
     return vals[idx];
 }
 
-
 S_FUNC VALUE *
-valv_ref_list(const char *custname, int count, VALUE **vals, int idx,
-    const char *name)
+valv_ref_list(const char *custname, int count, VALUE **vals, int idx, const char *name)
 {
     valv_ref_type_require(custname, count, vals, idx, name, V_LIST);
 
     return vals[idx]->v_addr;
 }
 
-
-#if 0 /* function defined but not used */
+#  if 0  /* function defined but not used */
 S_FUNC VALUE *
 valv_optional_get_assoc(int count, VALUE **vals, int *idx, const char *name,
     VALUE *dflt)
@@ -747,37 +678,33 @@ valv_optional_get_assoc(int count, VALUE **vals, int *idx, const char *name,
 
     return assoc;
 }
-#endif /* function defined but not used */
-
+#  endif /* function defined but not used */
 
 S_FUNC VALUE *
-valv_optional_ref_assoc(int count, VALUE **vals, int *idx, const char *name,
-    VALUE *dflt)
+valv_optional_ref_assoc(int count, VALUE **vals, int *idx, const char *name, VALUE *dflt)
 {
     valv_opt chk;
     VALUE *assoc;
 
     chk = valv_optional_ref_type_check(count, vals, *idx, name, V_ASSOC);
     switch (chk) {
-        case VALV_OPT_BAD:
-            return dflt;
-        case VALV_OPT_NULL:
-            *idx += 1;
-            /*FALLTHRU*/
-        case VALV_OPT_OOB:
-            return dflt;
-        case VALV_OPT_REF_NULL:
-        case VALV_OPT_GOOD:
-            ;
-            /*FALLTHRU*/
+    case VALV_OPT_BAD:
+        return dflt;
+    case VALV_OPT_NULL:
+        *idx += 1;
+        /*FALLTHRU*/
+    case VALV_OPT_OOB:
+        return dflt;
+    case VALV_OPT_REF_NULL:
+    case VALV_OPT_GOOD:;
+        /*FALLTHRU*/
     }
-    assoc  = vals[*idx]->v_addr;
-    *idx         += 1;
+    assoc = vals[*idx]->v_addr;
+    *idx += 1;
     return assoc;
 }
 
-
-#if 0 /* function defined but not used */
+#  if 0  /* function defined but not used */
 S_FUNC VALUE *
 valv_get_assoc(const char *custname, int count, VALUE **vals, int idx,
     const char *name)
@@ -785,18 +712,15 @@ valv_get_assoc(const char *custname, int count, VALUE **vals, int idx,
     valv_type_require(custname, count, vals, idx, name, V_ASSOC);
     return vals[idx];
 }
-#endif /* function defined but not used */
-
+#  endif /* function defined but not used */
 
 S_FUNC VALUE *
-valv_ref_assoc(const char *custname, int count, VALUE **vals, int idx,
-    const char *name)
+valv_ref_assoc(const char *custname, int count, VALUE **vals, int idx, const char *name)
 {
     valv_ref_type_require(custname, count, vals, idx, name, V_ASSOC);
 
     return vals[idx]->v_addr;
 }
-
 
 /*
  * u_pfe_execvp - execute a file, possibly looking in paths from environment or system
@@ -814,25 +738,24 @@ u_pfe_execvp(char *UNUSED(name), int count, VALUE **vals)
 {
     VALUE result;
     const char *custname = "execvp";
-    char  *path;
+    char *path;
     VALUE *args_list;
     char **args;
     LISTELEM *el;
     int s = 0;
 
-    path      = valv_get_str(custname, count, vals, 0, "file");
+    path = valv_get_str(custname, count, vals, 0, "file");
     args_list = valv_get_list(custname, count, vals, 1, "args");
 
     if (!(args = malloc(sizeof(char *) * (args_list->v_list->l_count + 1)))) {
-        math_error("%s: "__FILE__ ": %d: malloc: %s", custname, __LINE__,
-            strerror(errno));
+        math_error("%s: " __FILE__ ": %d: malloc: %s", custname, __LINE__, strerror(errno));
     }
 
     el = args_list->v_list->l_first;
     for (; el != NULL; el = el->e_next, s++) {
         if (el->e_value.v_type != V_STR) {
-            math_error("%s: argment 2 (args) element %d must be of type string (%s given)",
-                custname, s, type2str(el->e_value.v_type));
+            math_error("%s: argment 2 (args) element %d must be of type string (%s given)", custname, s,
+                       type2str(el->e_value.v_type));
         }
 
         args[s] = el->e_value.v_str->s_str;
@@ -840,19 +763,17 @@ u_pfe_execvp(char *UNUSED(name), int count, VALUE **vals)
     args[s] = NULL;
 
     if (execvp(path, args)) {
-        math_error("%s: "__FILE__ ": %d: %s", custname, __LINE__,
-            strerror(errno));
+        math_error("%s: " __FILE__ ": %d: %s", custname, __LINE__, strerror(errno));
     }
 
     free(args);
 
     result.v_subtype = 0;
-    result.v_type    = V_NUM;
+    result.v_type = V_NUM;
 
     result.v_num = itoq(errno);
     return result;
 }
-
 
 /*
  * u_pfe_dup - duplicate a file descriptor
@@ -874,18 +795,16 @@ u_pfe_dup(char *UNUSED(name), int count, VALUE **vals)
     fd = dup(valv_get_num_long(custname, count, vals, 0, "source"));
 
     if (fd < 0) {
-        math_error("%s: "__FILE__ ": %d: %s", custname, __LINE__,
-            strerror(errno));
+        math_error("%s: " __FILE__ ": %d: %s", custname, __LINE__, strerror(errno));
     }
 
     result.v_subtype = 0;
-    result.v_type    = V_NUM;
+    result.v_type = V_NUM;
 
     result.v_num = itoq(fd);
 
     return result;
 }
-
 
 /*
  * u_pfe_dup2 - duplicate a file descriptor
@@ -905,22 +824,19 @@ u_pfe_dup2(char *UNUSED(name), int count, VALUE **vals)
     const char *custname = "dup2";
     int fd;
 
-    fd = dup2(valv_get_num_long(custname, count, vals, 0, "source"),
-        valv_get_num_long(custname, count, vals, 1, "target"));
+    fd = dup2(valv_get_num_long(custname, count, vals, 0, "source"), valv_get_num_long(custname, count, vals, 1, "target"));
 
     if (fd < 0) {
-        math_error("%s: "__FILE__ ": %d: %s", custname, __LINE__,
-            strerror(errno));
+        math_error("%s: " __FILE__ ": %d: %s", custname, __LINE__, strerror(errno));
     }
 
     result.v_subtype = 0;
-    result.v_type    = V_NUM;
+    result.v_type = V_NUM;
 
     result.v_num = itoq(fd);
 
     return result;
 }
-
 
 /*
  * u_pfe_close - delete a file descriptor
@@ -942,18 +858,16 @@ u_pfe_close(char *UNUSED(name), int count, VALUE **vals)
     e = close(valv_get_num_long(custname, count, vals, 0, "fd"));
 
     if (e) {
-        math_error("%s: "__FILE__ ": %d: %s", custname, __LINE__,
-            strerror(errno));
+        math_error("%s: " __FILE__ ": %d: %s", custname, __LINE__, strerror(errno));
     }
 
     result.v_subtype = 0;
-    result.v_type    = V_NUM;
+    result.v_type = V_NUM;
 
     result.v_num = itoq(e);
 
     return result;
 }
-
 
 /*
  * u_pfe_write - write output
@@ -979,18 +893,16 @@ u_pfe_write(char *UNUSED(name), int count, VALUE **vals)
     written = write(valv_get_num_long(custname, count, vals, 0, "fd"), strp->v_str->s_str, strp->v_str->s_len);
 
     if (written < 0) {
-        math_error("%s: "__FILE__ ": %d: %s", custname, __LINE__,
-            strerror(errno));
+        math_error("%s: " __FILE__ ": %d: %s", custname, __LINE__, strerror(errno));
     }
 
     result.v_subtype = 0;
-    result.v_type    = V_NUM;
+    result.v_type = V_NUM;
 
     result.v_num = itoq(written);
 
     return result;
 }
-
 
 /*
  * u_pfe_read - write output
@@ -1017,16 +929,15 @@ u_pfe_read(char *UNUSED(name), int count, VALUE **vals)
     str = malloc((strl + 1) * sizeof(char));
 
     r = read(valv_get_num_long(custname, count, vals, 0, "fd"), str, strl);
-    str[r]    = '\0';
+    str[r] = '\0';
 
     if (r < 0) {
         free(str);
-        math_error("%s: "__FILE__ ": %d: %s", custname, __LINE__,
-            strerror(errno));
+        math_error("%s: " __FILE__ ": %d: %s", custname, __LINE__, strerror(errno));
     }
 
     result.v_subtype = 0;
-    result.v_type    = !r ? V_NULL : V_STR;
+    result.v_type = !r ? V_NULL : V_STR;
     if (r) {
         result.v_str = makestring(str);
     }
@@ -1035,8 +946,7 @@ u_pfe_read(char *UNUSED(name), int count, VALUE **vals)
 }
 
 S_FUNC VALUE *
-optional_valv_ref_list2fd_set(const char *custname, int count, VALUE **vals,
-    int *idx, const char *name, fd_set *fds, int *setsize)
+optional_valv_ref_list2fd_set(const char *custname, int count, VALUE **vals, int *idx, const char *name, fd_set *fds, int *setsize)
 {
     valv_opt chk;
     VALUE *list;
@@ -1046,27 +956,25 @@ optional_valv_ref_list2fd_set(const char *custname, int count, VALUE **vals,
 
     chk = valv_optional_ref_type_check(count, vals, *idx, name, V_LIST);
     switch (chk) {
-        case VALV_OPT_BAD:
-            return NULL;
-        case VALV_OPT_NULL:
-            *idx += 1;
-            /*FALLTHRU*/
-        case VALV_OPT_OOB:
-            return NULL;
-        case VALV_OPT_REF_NULL:
-            math_error("%s: argument %d (%s) address of type null is not allowed",
-                custname, *idx, name);
-        case VALV_OPT_GOOD:
-            ;
-            /*FALLTHRU*/
+    case VALV_OPT_BAD:
+        return NULL;
+    case VALV_OPT_NULL:
+        *idx += 1;
+        /*FALLTHRU*/
+    case VALV_OPT_OOB:
+        return NULL;
+    case VALV_OPT_REF_NULL:
+        math_error("%s: argument %d (%s) address of type null is not allowed", custname, *idx, name);
+    case VALV_OPT_GOOD:;
+        /*FALLTHRU*/
     }
-    list   = vals[*idx]->v_addr;
-    *idx   += 1;
-    el  = list->v_list->l_first;
+    list = vals[*idx]->v_addr;
+    *idx += 1;
+    el = list->v_list->l_first;
     for (; el != NULL; el = el->e_next, s++) {
         if (el->e_value.v_type != V_NUM) {
-            math_error("%s: argument %d (%s) element %d must be of type number (%s given)",
-                custname, *idx, name, s, type2str(el->e_value.v_type));
+            math_error("%s: argument %d (%s) element %d must be of type number (%s given)", custname, *idx, name, s,
+                       type2str(el->e_value.v_type));
         }
 
         i = qtoi(el->e_value.v_num);
@@ -1079,13 +987,12 @@ optional_valv_ref_list2fd_set(const char *custname, int count, VALUE **vals,
     return list;
 }
 
-
 S_FUNC VALUE *
 alloc_list(LIST *list)
 {
     VALUE *result;
 
-    result  = malloc(sizeof(VALUE));
+    result = malloc(sizeof(VALUE));
     result->v_type = V_LIST;
 
     result->v_list = list;
@@ -1093,13 +1000,12 @@ alloc_list(LIST *list)
     return result;
 }
 
-
 S_FUNC VALUE *
 alloc_assoc(ASSOC *assoc)
 {
     VALUE *result;
 
-    result  = malloc(sizeof(VALUE));
+    result = malloc(sizeof(VALUE));
     result->v_type = V_ASSOC;
 
     result->v_assoc = assoc;
@@ -1107,18 +1013,17 @@ alloc_assoc(ASSOC *assoc)
     return result;
 }
 
-
 S_FUNC VALUE *
 list_fd_get(LIST *in, fd_set *fds)
 {
-    VALUE    *out;
+    VALUE *out;
     LISTELEM *el;
-    int       s   = 0;
+    int s = 0;
     int i;
     VALUE o;
 
     out = alloc_list(listalloc());
-    el  = in->l_first;
+    el = in->l_first;
 
     for (; el != NULL; el = el->e_next, s++) {
         i = qtoi(el->e_value.v_num);
@@ -1131,13 +1036,12 @@ list_fd_get(LIST *in, fd_set *fds)
     return out;
 }
 
-
 S_FUNC VALUE *
 alloc_num(NUMBER *num)
 {
     VALUE *result;
 
-    result  = malloc(sizeof(VALUE));
+    result = malloc(sizeof(VALUE));
     result->v_type = V_NUM;
 
     result->v_num = num;
@@ -1145,20 +1049,18 @@ alloc_num(NUMBER *num)
     return result;
 }
 
-
 S_FUNC VALUE *
 alloc_str(STRING *str)
 {
     VALUE *result;
 
-    result  = malloc(sizeof(VALUE));
+    result = malloc(sizeof(VALUE));
     result->v_type = V_STR;
 
     result->v_str = str;
 
     return result;
 }
-
 
 /*
  * u_pfe_select - examine file descriptors
@@ -1182,7 +1084,7 @@ u_pfe_select(char *UNUSED(name), int count, VALUE **vals)
 {
     VALUE result;
     const char *custname = "select";
-    int         v        = 0;
+    int v = 0;
     VALUE *rdl;
     VALUE *wtl;
     fd_set rds;
@@ -1190,10 +1092,10 @@ u_pfe_select(char *UNUSED(name), int count, VALUE **vals)
     fd_set ers;
     VALUE *erl;
     VALUE *tv;
-    NUMBER         *tn;
-    struct timeval  t;
+    NUMBER *tn;
+    struct timeval t;
     struct timeval *tp;
-    int    ssz = 0;
+    int ssz = 0;
 
     FD_ZERO(&rds);
     rdl = optional_valv_ref_list2fd_set(custname, count, vals, &v, "reading", &rds, &ssz);
@@ -1216,9 +1118,9 @@ u_pfe_select(char *UNUSED(name), int count, VALUE **vals)
         if (zge31b(tn->num)) {
             math_error("sizeof(timeout) > 31 bytes");
         }
-        t.tv_sec  = ztoi(tn->num);
+        t.tv_sec = ztoi(tn->num);
         t.tv_usec = 0;
-        tp        = &t;
+        tp = &t;
     } else {
         NUMBER *q1, *q2;
         q1 = qscale(tn, 20); /* 2^20 = 1 Mi */
@@ -1229,17 +1131,16 @@ u_pfe_select(char *UNUSED(name), int count, VALUE **vals)
             math_error("sizeof(timeout as microseconds) > 31 bytes");
         }
         long usec = ztoi(q2->num);
-        t.tv_sec  = usec / 1000000;
+        t.tv_sec = usec / 1000000;
         t.tv_usec = usec - t.tv_sec * 1000000;
-        tp        = &t;
+        tp = &t;
         qfree(q2);
     }
 
     int r = select(ssz, &rds, &wts, &ers, tp);
 
     if (r < 0) {
-        math_error("%s: "__FILE__ ": %d: %s", custname, __LINE__,
-            strerror(errno));
+        math_error("%s: " __FILE__ ": %d: %s", custname, __LINE__, strerror(errno));
     }
 
     if (rdl) {
@@ -1253,13 +1154,12 @@ u_pfe_select(char *UNUSED(name), int count, VALUE **vals)
     }
 
     result.v_subtype = 0;
-    result.v_type    = V_NUM;
+    result.v_type = V_NUM;
 
     result.v_num = itoq(r);
 
     return result;
 }
-
 
 /*
  * u_pfe_poll - synchronous I/O multiplexing
@@ -1279,16 +1179,16 @@ VALUE
 u_pfe_poll(char *UNUSED(name), int count, VALUE **vals)
 {
     const char *custname = "poll";
-    const char *i_name   = "list of list(fd[, event1[, ...eventN]])";
+    const char *i_name = "list of list(fd[, event1[, ...eventN]])";
     VALUE result;
-    int v  = 2;
+    int v = 2;
     VALUE *tv;
     NUMBER *tn;
     int t;
-    LIST  *il;
+    LIST *il;
     struct pollfd *pollfds;
     LISTELEM *el;
-    int s  = 0;
+    int s = 0;
     LIST *el_list;
     LISTELEM *el_el;
     int el_el_s;
@@ -1312,15 +1212,15 @@ u_pfe_poll(char *UNUSED(name), int count, VALUE **vals)
     }
     t = qtoi(tn);
 
-    il      = iv->v_list;
+    il = iv->v_list;
     pollfds = malloc(il->l_count * sizeof(struct pollfd));
 
     el = il->l_first;
     for (; el != NULL; el = el->e_next, s++) {
         if (el->e_value.v_type != V_LIST) {
             free(pollfds);
-            math_error("%s: argument %d (%s) element %d must be of type list (%s given)",
-                custname, 1, i_name, s, type2str(el->e_value.v_type));
+            math_error("%s: argument %d (%s) element %d must be of type list (%s given)", custname, 1, i_name, s,
+                       type2str(el->e_value.v_type));
         }
 
         el_list = el->e_value.v_list;
@@ -1329,13 +1229,13 @@ u_pfe_poll(char *UNUSED(name), int count, VALUE **vals)
 
         if (el_el->e_value.v_type != V_NUM) {
             free(pollfds);
-            math_error("%s: argument %d (%s) element %d element %d must be of type number (%s given)",
-                custname, 1, i_name, s, 1, type2str(el_el->e_value.v_type));
+            math_error("%s: argument %d (%s) element %d element %d must be of type number (%s given)", custname, 1, i_name, s, 1,
+                       type2str(el_el->e_value.v_type));
         }
         if (!qisint(el_el->e_value.v_num)) {
             free(pollfds);
-            math_error("%s: argument %d (%s) element %d element %d must be integer (%s given)",
-                custname, 1, i_name, s, 1, type2str(el_el->e_value.v_type));
+            math_error("%s: argument %d (%s) element %d element %d must be integer (%s given)", custname, 1, i_name, s, 1,
+                       type2str(el_el->e_value.v_type));
         }
         pollfds[s].fd = qtoi(el_el->e_value.v_num);
 
@@ -1347,9 +1247,8 @@ u_pfe_poll(char *UNUSED(name), int count, VALUE **vals)
         for (; el_el != NULL; el_el = el_el->e_next, el_el_s++) {
             if (el_el->e_value.v_type != V_STR) {
                 free(pollfds);
-                math_error("%s: argument %d (%s) element %d element %d must be of type string (%s given)",
-                    custname, 1, i_name, s, el_el_s,
-                    type2str(el_el->e_value.v_type));
+                math_error("%s: argument %d (%s) element %d element %d must be of type string (%s given)", custname, 1, i_name, s,
+                           el_el_s, type2str(el_el->e_value.v_type));
             }
 
             el_el_str = el_el->e_value.v_str->s_str;
@@ -1378,8 +1277,8 @@ u_pfe_poll(char *UNUSED(name), int count, VALUE **vals)
             } else {
                 free(pollfds);
                 math_error("%s: argument %d (%s) element %d element %d must be a string containing one of the "
-                        "event names from POSIX poll.h or the manual for poll, lowercase without poll prefix (%s given)",
-                    custname, 1, i_name, s, el_el_s, el_el->e_value.v_str->s_str);
+                           "event names from POSIX poll.h or the manual for poll, lowercase without poll prefix (%s given)",
+                           custname, 1, i_name, s, el_el_s, el_el->e_value.v_str->s_str);
             }
         }
 
@@ -1390,8 +1289,7 @@ u_pfe_poll(char *UNUSED(name), int count, VALUE **vals)
 
     if (r < 0) {
         free(pollfds);
-        math_error("%s: "__FILE__ ": %d: %s", custname, __LINE__,
-            strerror(errno));
+        math_error("%s: " __FILE__ ": %d: %s", custname, __LINE__, strerror(errno));
     }
 
     ol = listalloc();
@@ -1436,13 +1334,12 @@ u_pfe_poll(char *UNUSED(name), int count, VALUE **vals)
     ov->v_list = ol;
 
     result.v_subtype = 0;
-    result.v_type    = V_NUM;
+    result.v_type = V_NUM;
 
     result.v_num = itoq(r);
 
     return result;
 }
-
 
 /*
  * u_pfe_wait4 - wait for process termination
@@ -1467,41 +1364,39 @@ VALUE
 u_pfe_wait4(char *UNUSED(name), int count, VALUE **vals)
 {
     VALUE result;
-    const char *custname  = "wait4";
+    const char *custname = "wait4";
     int v = 0;
     int stt = 0;
-    struct rusage  usg;
+    struct rusage usg;
     struct rusage *usg_p;
-    pid_t  r;
+    pid_t r;
     int opts = 0;
     VALUE *pid_num;
     VALUE *stt_assoc;
     VALUE *opt_list;
     VALUE *usg_assoc;
     LISTELEM *el;
-    int s  = 0;
+    int s = 0;
     char *opt_str;
 
-    pid_num   = valv_optional_get_num(count, vals, &v, "pid", NULL);
+    pid_num = valv_optional_get_num(count, vals, &v, "pid", NULL);
     stt_assoc = valv_ref_assoc(custname, count, vals, v++, "status"); /* stat in */
-    opt_list  = valv_optional_get_list(count, vals, &v, "options", NULL);
+    opt_list = valv_optional_get_list(count, vals, &v, "options", NULL);
     usg_assoc = valv_optional_ref_assoc(count, vals, &v, "usage", NULL);
 
     if (!pid_num && opt_list) {
-        math_error("%s: argument 1 (pid) being null doesn't support options list",
-            custname);
+        math_error("%s: argument 1 (pid) being null doesn't support options list", custname);
     }
     if (!pid_num && usg_assoc) {
-        math_error("%s: argument 1 (pid) being null doesn't support usage assoc",
-            custname);
+        math_error("%s: argument 1 (pid) being null doesn't support usage assoc", custname);
     }
 
     if (opt_list) {
         el = opt_list->v_list->l_first;
         for (; el != NULL; el = el->e_next, s++) {
             if (el->e_value.v_type != V_STR) {
-                math_error("%s: options list element %d must be of type string (%s given)",
-                    custname, s, type2str(el->e_value.v_type));
+                math_error("%s: options list element %d must be of type string (%s given)", custname, s,
+                           type2str(el->e_value.v_type));
             }
 
             opt_str = el->e_value.v_str->s_str;
@@ -1512,8 +1407,8 @@ u_pfe_wait4(char *UNUSED(name), int count, VALUE **vals)
             } else if (!strcmp(opt_str, "untraced")) {
                 opts |= WUNTRACED;
             } else {
-                math_error("%s: options list element %d must be one of \"nohang\" or \"untraced\" (%s given)",
-                    custname, s, opt_str);
+                math_error("%s: options list element %d must be one of \"nohang\" or \"untraced\" (%s given)", custname, s,
+                           opt_str);
             }
         }
     }
@@ -1522,36 +1417,30 @@ u_pfe_wait4(char *UNUSED(name), int count, VALUE **vals)
     r = pid_num ? wait4(qtoi(pid_num->v_num), &stt, opts, usg_p) : wait(&stt);
 
     if (0 > r) {
-        math_error("%s: "__FILE__ ": %d: %s", custname, __LINE__,
-            strerror(errno));
+        math_error("%s: " __FILE__ ": %d: %s", custname, __LINE__, strerror(errno));
     }
 
     if (WIFEXITED(stt)) {
         associndex_str_int(stt_assoc->v_assoc, makenewstring("exited"), TRUE);
-        associndex_str_int(stt_assoc->v_assoc, makenewstring("exitstatus"),
-            WEXITSTATUS(stt));
+        associndex_str_int(stt_assoc->v_assoc, makenewstring("exitstatus"), WEXITSTATUS(stt));
     }
     if (WIFSIGNALED(stt)) {
         associndex_str_int(stt_assoc->v_assoc, makenewstring("signaled"), TRUE);
-        associndex_str_int(stt_assoc->v_assoc, makenewstring("termsig"),
-            WTERMSIG(stt));
-        associndex_str_int(stt_assoc->v_assoc, makenewstring("coredump"),
-            WCOREDUMP(stt));
+        associndex_str_int(stt_assoc->v_assoc, makenewstring("termsig"), WTERMSIG(stt));
+        associndex_str_int(stt_assoc->v_assoc, makenewstring("coredump"), WCOREDUMP(stt));
     }
     if (WIFSTOPPED(stt)) {
         associndex_str_int(stt_assoc->v_assoc, makenewstring("stopped"), TRUE);
-        associndex_str_int(stt_assoc->v_assoc, makenewstring("stopsig"),
-            WSTOPSIG(stt));
+        associndex_str_int(stt_assoc->v_assoc, makenewstring("stopsig"), WSTOPSIG(stt));
     }
 
     result.v_subtype = 0;
-    result.v_type    = V_NUM;
+    result.v_type = V_NUM;
 
     result.v_num = itoq(r);
 
     return result;
 }
-
 
 /*
  * u_pfe_pfe - pipe/fork/exec
@@ -1590,16 +1479,13 @@ u_pfe_pfe(char *UNUSED(name), int count, VALUE **vals)
     pid_t child;
 
     if (pipe(ia)) {
-        math_error("%s: "__FILE__ ": %d: (in) pipe: %s", custname, __LINE__,
-            strerror(errno));
+        math_error("%s: " __FILE__ ": %d: (in) pipe: %s", custname, __LINE__, strerror(errno));
     }
     if (pipe(oa)) {
-        math_error("%s: "__FILE__ ": %d: (out) pipe: %s", custname, __LINE__,
-            strerror(errno));
+        math_error("%s: " __FILE__ ": %d: (out) pipe: %s", custname, __LINE__, strerror(errno));
     }
     if (pipe(ea)) {
-        math_error("%s: "__FILE__ ": %d: (err) pipe: %s", custname, __LINE__,
-            strerror(errno));
+        math_error("%s: " __FILE__ ": %d: (err) pipe: %s", custname, __LINE__, strerror(errno));
     }
     /* in, out, err values */
     iv = valv_ref_num(custname, count, vals, 0, "in");
@@ -1617,20 +1503,17 @@ u_pfe_pfe(char *UNUSED(name), int count, VALUE **vals)
         cce = !close(ea[1]) ? 0 : errno;
 
         if (cci) {
-            math_error("%s: "__FILE__ ": %d: child: (parent in) close: %s",
-                custname, __LINE__, strerror(cci));
+            math_error("%s: " __FILE__ ": %d: child: (parent in) close: %s", custname, __LINE__, strerror(cci));
         }
         if (cco) {
-            math_error("%s: "__FILE__ ": %d: child: (parent out) close: %s",
-                custname, __LINE__, strerror(cco));
+            math_error("%s: " __FILE__ ": %d: child: (parent out) close: %s", custname, __LINE__, strerror(cco));
         }
         if (cce) {
-            math_error("%s: "__FILE__ ": %d: child: (parent err) close: %s",
-                custname, __LINE__, strerror(cce));
+            math_error("%s: " __FILE__ ": %d: child: (parent err) close: %s", custname, __LINE__, strerror(cce));
         }
 
         result.v_subtype = 0;
-        result.v_type    = V_NUM;
+        result.v_type = V_NUM;
 
         result.v_num = itoq(child);
 
@@ -1643,44 +1526,37 @@ u_pfe_pfe(char *UNUSED(name), int count, VALUE **vals)
         pce = !close(ea[0]) ? 0 : errno;
 
         if (pci) {
-            math_error("%s: "__FILE__ ": %d: parent: (child in) close: %s",
-                custname, __LINE__, strerror(pci));
+            math_error("%s: " __FILE__ ": %d: parent: (child in) close: %s", custname, __LINE__, strerror(pci));
         }
         if (pco) {
-            math_error("%s: "__FILE__ ": %d: parent: (child out) close: %s",
-                custname, __LINE__, strerror(pco));
+            math_error("%s: " __FILE__ ": %d: parent: (child out) close: %s", custname, __LINE__, strerror(pco));
         }
         if (pce) {
-            math_error("%s: "__FILE__ ": %d: parent: (child err) close: %s",
-                custname, __LINE__, strerror(pce));
+            math_error("%s: " __FILE__ ": %d: parent: (child err) close: %s", custname, __LINE__, strerror(pce));
         }
 
         if (dup2(ia[0], 0) != 0) {
-            math_error("%s: "__FILE__ ": %d: mismatch: (in) dup2: %s", custname,
-                __LINE__, strerror(errno));
+            math_error("%s: " __FILE__ ": %d: mismatch: (in) dup2: %s", custname, __LINE__, strerror(errno));
         }
         if (dup2(oa[1], 1) != 1) {
-            math_error("%s: "__FILE__ ": %d: mismatch: (out) dup2: %s",
-                custname, __LINE__, strerror(errno));
+            math_error("%s: " __FILE__ ": %d: mismatch: (out) dup2: %s", custname, __LINE__, strerror(errno));
         }
         if (dup2(ea[1], 2) != 2) {
-            math_error("%s: "__FILE__ ": %d: mismatch: (err) dup2: %s",
-                custname, __LINE__, strerror(errno));
+            math_error("%s: " __FILE__ ": %d: mismatch: (err) dup2: %s", custname, __LINE__, strerror(errno));
         }
 
         args_list = valv_get_list(custname, count, vals, 3, "args");
 
         if (!(args = malloc(sizeof(char *) * (args_list->v_list->l_count + 1)))) {
-            math_error("%s: "__FILE__ ": %d: malloc: %s", custname, __LINE__,
-                strerror(errno));
+            math_error("%s: " __FILE__ ": %d: malloc: %s", custname, __LINE__, strerror(errno));
         }
 
         el = args_list->v_list->l_first;
-        s  = 0;
+        s = 0;
         for (; el != NULL; el = el->e_next, s++) {
             if (el->e_value.v_type != V_STR) {
-                math_error("%s: argment 2 (args) element %d must be of type string (%s given)",
-                    custname, s, type2str(el->e_value.v_type));
+                math_error("%s: argment 2 (args) element %d must be of type string (%s given)", custname, s,
+                           type2str(el->e_value.v_type));
             }
 
             args[s] = el->e_value.v_str->s_str;
@@ -1688,21 +1564,19 @@ u_pfe_pfe(char *UNUSED(name), int count, VALUE **vals)
         args[s] = NULL;
 
         if (execvp(args[0], args)) {
-            math_error("%s: "__FILE__ ": %d: execvp: %s", custname, __LINE__,
-                strerror(errno));
+            math_error("%s: " __FILE__ ": %d: execvp: %s", custname, __LINE__, strerror(errno));
         }
 
         free(args);
 
         result.v_subtype = 0;
-        result.v_type    = V_NUM;
+        result.v_type = V_NUM;
 
         result.v_num = itoq(errno);
 
         return result;
     }
 }
-
 
 /*
  * u_pfe_pwrite - write and close
@@ -1732,25 +1606,22 @@ u_pfe_pwrite(char *UNUSED(name), int count, VALUE **vals)
     w = write(fd, strp->v_str->s_str, strp->v_str->s_len);
 
     if (w < 0) {
-        math_error("%s: "__FILE__ ": %d: write: %s", custname, __LINE__,
-            strerror(errno));
+        math_error("%s: " __FILE__ ": %d: write: %s", custname, __LINE__, strerror(errno));
     }
 
     e = close(fd);
 
     if (e) {
-        math_error("%s: "__FILE__ ": %d: close: %s", custname, __LINE__,
-            strerror(errno));
+        math_error("%s: " __FILE__ ": %d: close: %s", custname, __LINE__, strerror(errno));
     }
 
     result.v_subtype = 0;
-    result.v_type    = V_NUM;
+    result.v_type = V_NUM;
 
     result.v_num = itoq(w);
 
     return result;
 }
-
 
 S_FUNC char *
 strext(char **subject, char *with)
@@ -1766,7 +1637,6 @@ strext(char **subject, char *with)
 
     return *subject;
 }
-
 
 /*
  * u_pfe_pread - read until eof, close and wait for exit status
@@ -1791,9 +1661,9 @@ u_pfe_pread(char *UNUSED(name), int count, VALUE **vals)
     int out;
     int err;
     int ssz = 0;
-    fd_set nvm; /* never mind */
+    fd_set nvm;  /* never mind */
     fd_set nvm2; /* never mind II */
-    fd_set rbs; /* read base set */
+    fd_set rbs;  /* read base set */
     /* Keep track of rbs */
     bool eoo = NULL;
     bool eoe = NULL;
@@ -1827,24 +1697,22 @@ u_pfe_pread(char *UNUSED(name), int count, VALUE **vals)
     }
 
     o = malloc(pfe_pfe_SIZE_INIT * sizeof(char));
-    o[0]    = '\0';
+    o[0] = '\0';
     e = malloc(pfe_pfe_SIZE_INIT * sizeof(char));
-    e[0]    = '\0';
+    e[0] = '\0';
 
     while (!eoo || !eoe) {
         memmove(&rcs, &rbs, sizeof(fd_set));
 
         int r = select(1 + ssz, &rcs, &nvm, &nvm2, NULL);
         if (r < 0) {
-            math_error("%s: "__FILE__ ": %d: select: %s", custname, __LINE__,
-                strerror(errno));
+            math_error("%s: " __FILE__ ": %d: select: %s", custname, __LINE__, strerror(errno));
         }
 
         if (FD_ISSET(out, &rcs)) {
             r = read(out, &ob, pfe_pfe_SIZE_BUFFER);
             if (r < 0) {
-                math_error("%s: "__FILE__ ": %d: (out, %lu) read: %s", custname,
-                    __LINE__, strlen(o), strerror(errno));
+                math_error("%s: " __FILE__ ": %d: (out, %lu) read: %s", custname, __LINE__, strlen(o), strerror(errno));
             }
             if (r) {
                 ob[r] = '\0';
@@ -1860,8 +1728,7 @@ u_pfe_pread(char *UNUSED(name), int count, VALUE **vals)
         if (FD_ISSET(err, &rcs)) {
             r = read(err, &eb, pfe_pfe_SIZE_BUFFER);
             if (r < 0) {
-                math_error("%s: "__FILE__ ": %d: (err, %lu) read: %s", custname,
-                    __LINE__, strlen(e), strerror(errno));
+                math_error("%s: " __FILE__ ": %d: (err, %lu) read: %s", custname, __LINE__, strlen(e), strerror(errno));
             }
             if (r) {
                 eb[r] = '\0';
@@ -1877,24 +1744,20 @@ u_pfe_pread(char *UNUSED(name), int count, VALUE **vals)
     }
 
     if (pco) {
-        math_error("%s: "__FILE__ ": %d: (out) close: %s", custname, __LINE__,
-            strerror(pco));
+        math_error("%s: " __FILE__ ": %d: (out) close: %s", custname, __LINE__, strerror(pco));
     }
     if (pce) {
-        math_error("%s: "__FILE__ ": %d: (err) close: %s", custname, __LINE__,
-            strerror(pce));
+        math_error("%s: " __FILE__ ": %d: (err) close: %s", custname, __LINE__, strerror(pce));
     }
 
-    w   = wait4(pid, &stt, 0, NULL);
+    w = wait4(pid, &stt, 0, NULL);
 
     if (0 > w) {
-        math_error("%s: "__FILE__ ": %d: wait4: %s", custname, __LINE__,
-            strerror(errno));
+        math_error("%s: " __FILE__ ": %d: wait4: %s", custname, __LINE__, strerror(errno));
     }
 
-    r = itoq((!WIFEXITED(stt) ? 0 : WEXITSTATUS(stt))
-             + (!WIFSTOPPED(stt) ? 0 : 128 + WSTOPSIG(stt))
-             + (!WIFSIGNALED(stt) ? 0 : 128 + WTERMSIG(stt)));
+    r = itoq((!WIFEXITED(stt) ? 0 : WEXITSTATUS(stt)) + (!WIFSTOPPED(stt) ? 0 : 128 + WSTOPSIG(stt)) +
+             (!WIFSIGNALED(stt) ? 0 : 128 + WTERMSIG(stt)));
 
     list = listalloc();
     insertlistlast(list, alloc_num(r));
@@ -1902,13 +1765,12 @@ u_pfe_pread(char *UNUSED(name), int count, VALUE **vals)
     insertlistlast(list, alloc_str(makestring(e)));
 
     result.v_subtype = 0;
-    result.v_type    = V_LIST;
+    result.v_type = V_LIST;
 
     result.v_list = list;
 
     return result;
 }
-
 
 /*
  * u_vadd_getpid - get calling process identification
@@ -1927,13 +1789,12 @@ u_vadd_getpid(char *UNUSED(name), int UNUSED(count), VALUE **UNUSED(vals))
     pid = getpid();
 
     result.v_subtype = 0;
-    result.v_type    = V_NUM;
+    result.v_type = V_NUM;
 
     result.v_num = itoq(pid);
 
     return result;
 }
-
 
 /*
  * u_vadd_getppid - get parent process identification
@@ -1952,13 +1813,12 @@ u_vadd_getppid(char *UNUSED(name), int UNUSED(count), VALUE **UNUSED(vals))
     pid = getppid();
 
     result.v_subtype = 0;
-    result.v_type    = V_NUM;
+    result.v_type = V_NUM;
 
     result.v_num = itoq(pid);
 
     return result;
 }
-
 
 /*
  * u_vadd_getcwd - get working directory pathname
@@ -1980,18 +1840,16 @@ u_vadd_getcwd(char *UNUSED(name), int UNUSED(count), VALUE **UNUSED(vals))
      */
     buf = getcwd(NULL, -1);
     if (!buf) {
-        math_error("%s: "__FILE__ ": %d: %s", custname, __LINE__,
-            strerror(errno));
+        math_error("%s: " __FILE__ ": %d: %s", custname, __LINE__, strerror(errno));
     }
 
     result.v_subtype = 0;
-    result.v_type    = V_STR;
+    result.v_type = V_STR;
 
     result.v_str = makestring(buf);
 
     return result;
 }
-
 
 /*
  * u_vadd_inputname - get working directory pathname
@@ -2001,8 +1859,7 @@ u_vadd_getcwd(char *UNUSED(name), int UNUSED(count), VALUE **UNUSED(vals))
  */
 /*ARGSUSED*/
 VALUE
-u_vadd_inputname(char *UNUSED(name), int UNUSED(count),
-    VALUE **UNUSED(vals))
+u_vadd_inputname(char *UNUSED(name), int UNUSED(count), VALUE **UNUSED(vals))
 {
     VALUE result;
     const char *UNUSED(custname) = "inputname";
@@ -2010,18 +1867,16 @@ u_vadd_inputname(char *UNUSED(name), int UNUSED(count),
 
     buf = inputname();
     if (!buf) {
-        buf = inputisterminal() ? "<terminal>"
-                                : "<anonymous>";
+        buf = inputisterminal() ? "<terminal>" : "<anonymous>";
     }
 
     result.v_subtype = 0;
-    result.v_type    = V_STR;
+    result.v_type = V_STR;
 
     result.v_str = makenewstring(buf);
 
     return result;
 }
-
 
 /*
  * u_vadd_basename - extract the base portion of a pathname
@@ -2045,18 +1900,16 @@ u_vadd_basename(char *UNUSED(name), int count, VALUE **vals)
 
     private_strlcpy(buf, basename(strp->v_str->s_str), sizeof(buf));
     if (!*buf) {
-        math_error("%s: "__FILE__ ": %d: %s", custname, __LINE__,
-            strerror(errno));
+        math_error("%s: " __FILE__ ": %d: %s", custname, __LINE__, strerror(errno));
     }
 
     result.v_subtype = 0;
-    result.v_type    = V_STR;
+    result.v_type = V_STR;
 
     result.v_str = makenewstring(buf);
 
     return result;
 }
-
 
 /*
  * u_vadd_dirname - extract the base portion of a pathname
@@ -2072,7 +1925,7 @@ VALUE
 u_vadd_dirname(char *UNUSED(name), int count, VALUE **vals)
 {
     VALUE result;
-    const char *custname =  "dirname";
+    const char *custname = "dirname";
     VALUE *strp;
     char buf[MAXPATHLEN];
 
@@ -2083,17 +1936,15 @@ u_vadd_dirname(char *UNUSED(name), int count, VALUE **vals)
 
     private_strlcpy(buf, dirname(strp->v_str->s_str), sizeof(buf));
     if (!*buf) {
-        math_error("%s: "__FILE__ ": %d: %s", custname, __LINE__,
-            strerror(errno));
+        math_error("%s: " __FILE__ ": %d: %s", custname, __LINE__, strerror(errno));
     }
 
     result.v_subtype = 0;
-    result.v_type    = V_STR;
+    result.v_type = V_STR;
 
     result.v_str = makenewstring(buf);
 
     return result;
 }
-
 
 #endif /* CUSTOM */

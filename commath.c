@@ -23,20 +23,16 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-
 #include "cmath.h"
 
-
 #include "errtbl.h"
-#include "banned.h"     /* include after system header <> includes */
+#include "banned.h" /* include after system header <> includes */
 
+COMPLEX _czero_ = {&_qzero_, &_qzero_, 1};
+COMPLEX _cone_ = {&_qone_, &_qzero_, 1};
+COMPLEX _conei_ = {&_qzero_, &_qone_, 1};
 
-COMPLEX _czero_ =               { &_qzero_, &_qzero_, 1 };
-COMPLEX _cone_ =                { &_qone_, &_qzero_, 1 };
-COMPLEX _conei_ =               { &_qzero_, &_qone_, 1 };
-
-STATIC COMPLEX _cnegone_ =      { &_qnegone_, &_qzero_, 1 };
-
+STATIC COMPLEX _cnegone_ = {&_qnegone_, &_qzero_, 1};
 
 /*
  * cmappr - complex multiple approximation
@@ -68,46 +64,45 @@ STATIC COMPLEX _cnegone_ =      { &_qnegone_, &_qzero_, 1 };
 COMPLEX *
 cmappr(COMPLEX *c, NUMBER *e, long rnd, bool cfree)
 {
-        COMPLEX *r;     /* COMPLEX multiple of e approximation of c */
+    COMPLEX *r; /* COMPLEX multiple of e approximation of c */
 
-        /*
-         * firewall
-         */
-        if (c == NULL) {
-                math_error("%s: c is NULL", __func__);
-                not_reached();
-        }
-        if (e == NULL) {
-                math_error("%s: e is NULL", __func__);
-                not_reached();
-        }
+    /*
+     * firewall
+     */
+    if (c == NULL) {
+        math_error("%s: c is NULL", __func__);
+        not_reached();
+    }
+    if (e == NULL) {
+        math_error("%s: e is NULL", __func__);
+        not_reached();
+    }
 
-        /*
-         * allocate return result
-         */
-        r = comalloc();
+    /*
+     * allocate return result
+     */
+    r = comalloc();
 
-        /*
-         * round c to multiple of e
-         */
-        qfree(r->real);
-        r->real = qmappr(c->real, e, rnd);
-        qfree(r->imag);
-        r->imag = qmappr(c->imag, e, rnd);
+    /*
+     * round c to multiple of e
+     */
+    qfree(r->real);
+    r->real = qmappr(c->real, e, rnd);
+    qfree(r->imag);
+    r->imag = qmappr(c->imag, e, rnd);
 
-        /*
-         * free c if requested
-         */
-        if (cfree == true) {
-                comfree(c);
-        }
+    /*
+     * free c if requested
+     */
+    if (cfree == true) {
+        comfree(c);
+    }
 
-        /*
-          * return the allocated multiple of e approximation of c
-         */
-        return r;
+    /*
+     * return the allocated multiple of e approximation of c
+     */
+    return r;
 }
-
 
 /*
  * Add two complex numbers.
@@ -115,24 +110,25 @@ cmappr(COMPLEX *c, NUMBER *e, long rnd, bool cfree)
 COMPLEX *
 c_add(COMPLEX *c1, COMPLEX *c2)
 {
-        COMPLEX *r;
+    COMPLEX *r;
 
-        if (ciszero(c1))
-                return clink(c2);
-        if (ciszero(c2))
-                return clink(c1);
-        r = comalloc();
-        if (!qiszero(c1->real) || !qiszero(c2->real)) {
-                qfree(r->real);
-                r->real = qqadd(c1->real, c2->real);
-        }
-        if (!qiszero(c1->imag) || !qiszero(c2->imag)) {
-                qfree(r->imag);
-                r->imag = qqadd(c1->imag, c2->imag);
-        }
-        return r;
+    if (ciszero(c1)) {
+        return clink(c2);
+    }
+    if (ciszero(c2)) {
+        return clink(c1);
+    }
+    r = comalloc();
+    if (!qiszero(c1->real) || !qiszero(c2->real)) {
+        qfree(r->real);
+        r->real = qqadd(c1->real, c2->real);
+    }
+    if (!qiszero(c1->imag) || !qiszero(c2->imag)) {
+        qfree(r->imag);
+        r->imag = qqadd(c1->imag, c2->imag);
+    }
+    return r;
 }
-
 
 /*
  * Subtract two complex numbers.
@@ -140,24 +136,25 @@ c_add(COMPLEX *c1, COMPLEX *c2)
 COMPLEX *
 c_sub(COMPLEX *c1, COMPLEX *c2)
 {
-        COMPLEX *r;
+    COMPLEX *r;
 
-        if ((c1->real == c2->real) && (c1->imag == c2->imag))
-                return clink(&_czero_);
-        if (ciszero(c2))
-                return clink(c1);
-        r = comalloc();
-        if (!qiszero(c1->real) || !qiszero(c2->real)) {
-                qfree(r->real);
-                r->real = qsub(c1->real, c2->real);
-        }
-        if (!qiszero(c1->imag) || !qiszero(c2->imag)) {
-                qfree(r->imag);
-                r->imag = qsub(c1->imag, c2->imag);
-        }
-        return r;
+    if ((c1->real == c2->real) && (c1->imag == c2->imag)) {
+        return clink(&_czero_);
+    }
+    if (ciszero(c2)) {
+        return clink(c1);
+    }
+    r = comalloc();
+    if (!qiszero(c1->real) || !qiszero(c2->real)) {
+        qfree(r->real);
+        r->real = qsub(c1->real, c2->real);
+    }
+    if (!qiszero(c1->imag) || !qiszero(c2->imag)) {
+        qfree(r->imag);
+        r->imag = qsub(c1->imag, c2->imag);
+    }
+    return r;
 }
-
 
 /*
  * Multiply two complex numbers.
@@ -171,42 +168,46 @@ c_sub(COMPLEX *c1, COMPLEX *c2)
 COMPLEX *
 c_mul(COMPLEX *c1, COMPLEX *c2)
 {
-        COMPLEX *r;
-        NUMBER *q1, *q2, *q3, *q4;
+    COMPLEX *r;
+    NUMBER *q1, *q2, *q3, *q4;
 
-        if (ciszero(c1) || ciszero(c2))
-                return clink(&_czero_);
-        if (cisone(c1))
-                return clink(c2);
-        if (cisone(c2))
-                return clink(c1);
-        if (cisreal(c2))
-                return c_mulq(c1, c2->real);
-        if (cisreal(c1))
-                return c_mulq(c2, c1->real);
-        /*
-         * Need to do the full calculation.
-         */
-        r = comalloc();
-        q2 = qqadd(c1->real, c1->imag);
-        q3 = qqadd(c2->real, c2->imag);
-        q1 = qmul(q2, q3);
-        qfree(q2);
-        qfree(q3);
-        q2 = qmul(c1->real, c2->real);
-        q3 = qmul(c1->imag, c2->imag);
-        q4 = qqadd(q2, q3);
-        qfree(r->real);
-        r->real = qsub(q2, q3);
-        qfree(r->imag);
-        r->imag = qsub(q1, q4);
-        qfree(q1);
-        qfree(q2);
-        qfree(q3);
-        qfree(q4);
-        return r;
+    if (ciszero(c1) || ciszero(c2)) {
+        return clink(&_czero_);
+    }
+    if (cisone(c1)) {
+        return clink(c2);
+    }
+    if (cisone(c2)) {
+        return clink(c1);
+    }
+    if (cisreal(c2)) {
+        return c_mulq(c1, c2->real);
+    }
+    if (cisreal(c1)) {
+        return c_mulq(c2, c1->real);
+    }
+    /*
+     * Need to do the full calculation.
+     */
+    r = comalloc();
+    q2 = qqadd(c1->real, c1->imag);
+    q3 = qqadd(c2->real, c2->imag);
+    q1 = qmul(q2, q3);
+    qfree(q2);
+    qfree(q3);
+    q2 = qmul(c1->real, c2->real);
+    q3 = qmul(c1->imag, c2->imag);
+    q4 = qqadd(q2, q3);
+    qfree(r->real);
+    r->real = qsub(q2, q3);
+    qfree(r->imag);
+    r->imag = qsub(q1, q4);
+    qfree(q1);
+    qfree(q2);
+    qfree(q3);
+    qfree(q4);
+    return r;
 }
-
 
 /*
  * Square a complex number.
@@ -214,41 +215,43 @@ c_mul(COMPLEX *c1, COMPLEX *c2)
 COMPLEX *
 c_square(COMPLEX *c)
 {
-        COMPLEX *r;
-        NUMBER *q1, *q2;
+    COMPLEX *r;
+    NUMBER *q1, *q2;
 
-        if (ciszero(c))
-                return clink(&_czero_);
-        if (cisrunit(c))
-                return clink(&_cone_);
-        if (cisiunit(c))
-                return clink(&_cnegone_);
-        r = comalloc();
-        if (cisreal(c)) {
-                qfree(r->real);
-                r->real = qsquare(c->real);
-                return r;
-        }
-        if (cisimag(c)) {
-                qfree(r->real);
-                q1 = qsquare(c->imag);
-                r->real = qneg(q1);
-                qfree(q1);
-                return r;
-        }
-        q1 = qsquare(c->real);
-        q2 = qsquare(c->imag);
+    if (ciszero(c)) {
+        return clink(&_czero_);
+    }
+    if (cisrunit(c)) {
+        return clink(&_cone_);
+    }
+    if (cisiunit(c)) {
+        return clink(&_cnegone_);
+    }
+    r = comalloc();
+    if (cisreal(c)) {
         qfree(r->real);
-        r->real = qsub(q1, q2);
-        qfree(q1);
-        qfree(q2);
-        qfree(r->imag);
-        q1 = qmul(c->real, c->imag);
-        r->imag = qscale(q1, 1L);
+        r->real = qsquare(c->real);
+        return r;
+    }
+    if (cisimag(c)) {
+        qfree(r->real);
+        q1 = qsquare(c->imag);
+        r->real = qneg(q1);
         qfree(q1);
         return r;
+    }
+    q1 = qsquare(c->real);
+    q2 = qsquare(c->imag);
+    qfree(r->real);
+    r->real = qsub(q1, q2);
+    qfree(q1);
+    qfree(q2);
+    qfree(r->imag);
+    q1 = qmul(c->real, c->imag);
+    r->imag = qscale(q1, 1L);
+    qfree(q1);
+    return r;
 }
-
 
 /*
  * Divide two complex numbers.
@@ -256,70 +259,70 @@ c_square(COMPLEX *c)
 COMPLEX *
 c_div(COMPLEX *c1, COMPLEX *c2)
 {
-        COMPLEX *r;
-        NUMBER *q1, *q2, *q3, *den;
+    COMPLEX *r;
+    NUMBER *q1, *q2, *q3, *den;
 
-        if (ciszero(c2)) {
-                math_error("Division by zero");
-                not_reached();
-        }
-        if ((c1->real == c2->real) && (c1->imag == c2->imag))
-                return clink(&_cone_);
-        r = comalloc();
-        if (cisreal(c1) && cisreal(c2)) {
-                qfree(r->real);
-                r->real = qqdiv(c1->real, c2->real);
-                return r;
-        }
-        if (cisimag(c1) && cisimag(c2)) {
-                qfree(r->real);
-                r->real = qqdiv(c1->imag, c2->imag);
-                return r;
-        }
-        if (cisimag(c1) && cisreal(c2)) {
-                qfree(r->imag);
-                r->imag = qqdiv(c1->imag, c2->real);
-                return r;
-        }
-        if (cisreal(c1) && cisimag(c2)) {
-                qfree(r->imag);
-                q1 = qqdiv(c1->real, c2->imag);
-                r->imag = qneg(q1);
-                qfree(q1);
-                return r;
-        }
-        if (cisreal(c2)) {
-                qfree(r->real);
-                qfree(r->imag);
-                r->real = qqdiv(c1->real, c2->real);
-                r->imag = qqdiv(c1->imag, c2->real);
-                return r;
-        }
-        q1 = qsquare(c2->real);
-        q2 = qsquare(c2->imag);
-        den = qqadd(q1, q2);
-        qfree(q1);
-        qfree(q2);
-        q1 = qmul(c1->real, c2->real);
-        q2 = qmul(c1->imag, c2->imag);
-        q3 = qqadd(q1, q2);
-        qfree(q1);
-        qfree(q2);
+    if (ciszero(c2)) {
+        math_error("Division by zero");
+        not_reached();
+    }
+    if ((c1->real == c2->real) && (c1->imag == c2->imag)) {
+        return clink(&_cone_);
+    }
+    r = comalloc();
+    if (cisreal(c1) && cisreal(c2)) {
         qfree(r->real);
-        r->real = qqdiv(q3, den);
-        qfree(q3);
-        q1 = qmul(c1->real, c2->imag);
-        q2 = qmul(c1->imag, c2->real);
-        q3 = qsub(q2, q1);
-        qfree(q1);
-        qfree(q2);
-        qfree(r->imag);
-        r->imag = qqdiv(q3, den);
-        qfree(q3);
-        qfree(den);
+        r->real = qqdiv(c1->real, c2->real);
         return r;
+    }
+    if (cisimag(c1) && cisimag(c2)) {
+        qfree(r->real);
+        r->real = qqdiv(c1->imag, c2->imag);
+        return r;
+    }
+    if (cisimag(c1) && cisreal(c2)) {
+        qfree(r->imag);
+        r->imag = qqdiv(c1->imag, c2->real);
+        return r;
+    }
+    if (cisreal(c1) && cisimag(c2)) {
+        qfree(r->imag);
+        q1 = qqdiv(c1->real, c2->imag);
+        r->imag = qneg(q1);
+        qfree(q1);
+        return r;
+    }
+    if (cisreal(c2)) {
+        qfree(r->real);
+        qfree(r->imag);
+        r->real = qqdiv(c1->real, c2->real);
+        r->imag = qqdiv(c1->imag, c2->real);
+        return r;
+    }
+    q1 = qsquare(c2->real);
+    q2 = qsquare(c2->imag);
+    den = qqadd(q1, q2);
+    qfree(q1);
+    qfree(q2);
+    q1 = qmul(c1->real, c2->real);
+    q2 = qmul(c1->imag, c2->imag);
+    q3 = qqadd(q1, q2);
+    qfree(q1);
+    qfree(q2);
+    qfree(r->real);
+    r->real = qqdiv(q3, den);
+    qfree(q3);
+    q1 = qmul(c1->real, c2->imag);
+    q2 = qmul(c1->imag, c2->real);
+    q3 = qsub(q2, q1);
+    qfree(q1);
+    qfree(q2);
+    qfree(r->imag);
+    r->imag = qqdiv(q3, den);
+    qfree(q3);
+    qfree(den);
+    return r;
 }
-
 
 /*
  * Invert a complex number.
@@ -327,41 +330,40 @@ c_div(COMPLEX *c1, COMPLEX *c2)
 COMPLEX *
 c_inv(COMPLEX *c)
 {
-        COMPLEX *r;
-        NUMBER *q1, *q2, *den;
+    COMPLEX *r;
+    NUMBER *q1, *q2, *den;
 
-        if (ciszero(c)) {
-                math_error("Inverting zero");
-                not_reached();
-        }
-        r = comalloc();
-        if (cisreal(c)) {
-                qfree(r->real);
-                r->real = qinv(c->real);
-                return r;
-        }
-        if (cisimag(c)) {
-                q1 = qinv(c->imag);
-                qfree(r->imag);
-                r->imag = qneg(q1);
-                qfree(q1);
-                return r;
-        }
-        q1 = qsquare(c->real);
-        q2 = qsquare(c->imag);
-        den = qqadd(q1, q2);
-        qfree(q1);
-        qfree(q2);
+    if (ciszero(c)) {
+        math_error("Inverting zero");
+        not_reached();
+    }
+    r = comalloc();
+    if (cisreal(c)) {
         qfree(r->real);
-        r->real = qqdiv(c->real, den);
-        q1 = qqdiv(c->imag, den);
+        r->real = qinv(c->real);
+        return r;
+    }
+    if (cisimag(c)) {
+        q1 = qinv(c->imag);
         qfree(r->imag);
         r->imag = qneg(q1);
         qfree(q1);
-        qfree(den);
         return r;
+    }
+    q1 = qsquare(c->real);
+    q2 = qsquare(c->imag);
+    den = qqadd(q1, q2);
+    qfree(q1);
+    qfree(q2);
+    qfree(r->real);
+    r->real = qqdiv(c->real, den);
+    q1 = qqdiv(c->imag, den);
+    qfree(r->imag);
+    r->imag = qneg(q1);
+    qfree(q1);
+    qfree(den);
+    return r;
 }
-
 
 /*
  * Negate a complex number.
@@ -369,22 +371,22 @@ c_inv(COMPLEX *c)
 COMPLEX *
 c_neg(COMPLEX *c)
 {
-        COMPLEX *r;
+    COMPLEX *r;
 
-        if (ciszero(c))
-                return clink(&_czero_);
-        r = comalloc();
-        if (!qiszero(c->real)) {
-                qfree(r->real);
-                r->real = qneg(c->real);
-        }
-        if (!qiszero(c->imag)) {
-                qfree(r->imag);
-                r->imag = qneg(c->imag);
-        }
-        return r;
+    if (ciszero(c)) {
+        return clink(&_czero_);
+    }
+    r = comalloc();
+    if (!qiszero(c->real)) {
+        qfree(r->real);
+        r->real = qneg(c->real);
+    }
+    if (!qiszero(c->imag)) {
+        qfree(r->imag);
+        r->imag = qneg(c->imag);
+    }
+    return r;
 }
-
 
 /*
  * Take the integer part of a complex number.
@@ -393,18 +395,18 @@ c_neg(COMPLEX *c)
 COMPLEX *
 c_int(COMPLEX *c)
 {
-        COMPLEX *r;
+    COMPLEX *r;
 
-        if (cisint(c))
-                return clink(c);
-        r = comalloc();
-        qfree(r->real);
-        r->real = qint(c->real);
-        qfree(r->imag);
-        r->imag = qint(c->imag);
-        return r;
+    if (cisint(c)) {
+        return clink(c);
+    }
+    r = comalloc();
+    qfree(r->real);
+    r->real = qint(c->real);
+    qfree(r->imag);
+    r->imag = qint(c->imag);
+    return r;
 }
-
 
 /*
  * Take the fractional part of a complex number.
@@ -413,18 +415,18 @@ c_int(COMPLEX *c)
 COMPLEX *
 c_frac(COMPLEX *c)
 {
-        COMPLEX *r;
+    COMPLEX *r;
 
-        if (cisint(c))
-                return clink(&_czero_);
-        r = comalloc();
-        qfree(r->real);
-        r->real = qfrac(c->real);
-        qfree(r->imag);
-        r->imag = qfrac(c->imag);
-        return r;
+    if (cisint(c)) {
+        return clink(&_czero_);
+    }
+    r = comalloc();
+    qfree(r->real);
+    r->real = qfrac(c->real);
+    qfree(r->imag);
+    r->imag = qfrac(c->imag);
+    return r;
 }
-
 
 /*
  * Take the conjugate of a complex number.
@@ -433,20 +435,20 @@ c_frac(COMPLEX *c)
 COMPLEX *
 c_conj(COMPLEX *c)
 {
-        COMPLEX *r;
+    COMPLEX *r;
 
-        if (cisreal(c))
-                return clink(c);
-        r = comalloc();
-        if (!qiszero(c->real)) {
-                qfree(r->real);
-                r->real = qlink(c->real);
-        }
-        qfree(r->imag);
-        r->imag = qneg(c->imag);
-        return r;
+    if (cisreal(c)) {
+        return clink(c);
+    }
+    r = comalloc();
+    if (!qiszero(c->real)) {
+        qfree(r->real);
+        r->real = qlink(c->real);
+    }
+    qfree(r->imag);
+    r->imag = qneg(c->imag);
+    return r;
 }
-
 
 /*
  * Return the real part of a complex number.
@@ -454,18 +456,18 @@ c_conj(COMPLEX *c)
 COMPLEX *
 c_real(COMPLEX *c)
 {
-        COMPLEX *r;
+    COMPLEX *r;
 
-        if (cisreal(c))
-                return clink(c);
-        r = comalloc();
-        if (!qiszero(c->real)) {
-                qfree(r->real);
-                r->real = qlink(c->real);
-        }
-        return r;
+    if (cisreal(c)) {
+        return clink(c);
+    }
+    r = comalloc();
+    if (!qiszero(c->real)) {
+        qfree(r->real);
+        r->real = qlink(c->real);
+    }
+    return r;
 }
-
 
 /*
  * c_to_q - convert a real part of a COMPLEX to a NUMBER
@@ -492,39 +494,38 @@ c_real(COMPLEX *c)
 NUMBER *
 c_to_q(COMPLEX *c, bool cfree)
 {
-        NUMBER *r;      /* allocated NUMBER equivalent to return */
+    NUMBER *r; /* allocated NUMBER equivalent to return */
 
-        /*
-         * firewall
-         */
-        if (c == NULL) {
-                math_error("%s: c is NULL", __func__);
-                not_reached();
-        }
+    /*
+     * firewall
+     */
+    if (c == NULL) {
+        math_error("%s: c is NULL", __func__);
+        not_reached();
+    }
 
-        /*
-         * allocate a new NUMBER
-         */
-        r = qalloc();
+    /*
+     * allocate a new NUMBER
+     */
+    r = qalloc();
 
-        /*
-         * link in the real part of the COMPLEX value
-         */
-        r = qlink(c->real);
+    /*
+     * link in the real part of the COMPLEX value
+     */
+    r = qlink(c->real);
 
-        /*
-         * free c if requested
-         */
-        if (cfree == true) {
-                comfree(c);
-        }
+    /*
+     * free c if requested
+     */
+    if (cfree == true) {
+        comfree(c);
+    }
 
-        /*
-         * return the allocated equivalent NUMBER
-         */
-        return r;
+    /*
+     * return the allocated equivalent NUMBER
+     */
+    return r;
 }
-
 
 /*
  * q_to_c - convert a NUMBER into an allocated COMPLEX
@@ -538,25 +539,24 @@ c_to_q(COMPLEX *c, bool cfree)
 COMPLEX *
 q_to_c(NUMBER *q)
 {
-        COMPLEX *res;   /* COMPLEX number to return */
+    COMPLEX *res; /* COMPLEX number to return */
 
-        /*
-         * allocate complex number
-         */
-        res = comalloc();
+    /*
+     * allocate complex number
+     */
+    res = comalloc();
 
-        /*
-         * assign NUMBER to real part
-         */
-        qfree(res->real);
-        res->real = qlink(q);
+    /*
+     * assign NUMBER to real part
+     */
+    qfree(res->real);
+    res->real = qlink(q);
 
-        /*
-         * return the allocated equivalent COMPLEX
-         */
-        return res;
+    /*
+     * return the allocated equivalent COMPLEX
+     */
+    return res;
 }
-
 
 /*
  * Return the imaginary part of a complex number as a real.
@@ -564,16 +564,16 @@ q_to_c(NUMBER *q)
 COMPLEX *
 c_imag(COMPLEX *c)
 {
-        COMPLEX *r;
+    COMPLEX *r;
 
-        if (cisreal(c))
-                return clink(&_czero_);
-        r = comalloc();
-        qfree(r->real);
-        r->real = qlink(c->imag);
-        return r;
+    if (cisreal(c)) {
+        return clink(&_czero_);
+    }
+    r = comalloc();
+    qfree(r->real);
+    r->real = qlink(c->imag);
+    return r;
 }
-
 
 /*
  * Add a real number to a complex number.
@@ -581,18 +581,18 @@ c_imag(COMPLEX *c)
 COMPLEX *
 c_addq(COMPLEX *c, NUMBER *q)
 {
-        COMPLEX *r;
+    COMPLEX *r;
 
-        if (qiszero(q))
-                return clink(c);
-        r = comalloc();
-        qfree(r->real);
-        qfree(r->imag);
-        r->real = qqadd(c->real, q);
-        r->imag = qlink(c->imag);
-        return r;
+    if (qiszero(q)) {
+        return clink(c);
+    }
+    r = comalloc();
+    qfree(r->real);
+    qfree(r->imag);
+    r->real = qqadd(c->real, q);
+    r->imag = qlink(c->imag);
+    return r;
 }
-
 
 /*
  * Subtract a real number from a complex number.
@@ -600,18 +600,18 @@ c_addq(COMPLEX *c, NUMBER *q)
 COMPLEX *
 c_subq(COMPLEX *c, NUMBER *q)
 {
-        COMPLEX *r;
+    COMPLEX *r;
 
-        if (qiszero(q))
-                return clink(c);
-        r = comalloc();
-        qfree(r->real);
-        qfree(r->imag);
-        r->real = qsub(c->real, q);
-        r->imag = qlink(c->imag);
-        return r;
+    if (qiszero(q)) {
+        return clink(c);
+    }
+    r = comalloc();
+    qfree(r->real);
+    qfree(r->imag);
+    r->real = qsub(c->real, q);
+    r->imag = qlink(c->imag);
+    return r;
 }
-
 
 /*
  * Shift the components of a complex number left by the specified
@@ -620,18 +620,18 @@ c_subq(COMPLEX *c, NUMBER *q)
 COMPLEX *
 c_shift(COMPLEX *c, long n)
 {
-        COMPLEX *r;
+    COMPLEX *r;
 
-        if (ciszero(c) || (n == 0))
-                return clink(c);
-        r = comalloc();
-        qfree(r->real);
-        qfree(r->imag);
-        r->real = qshift(c->real, n);
-        r->imag = qshift(c->imag, n);
-        return r;
+    if (ciszero(c) || (n == 0)) {
+        return clink(c);
+    }
+    r = comalloc();
+    qfree(r->real);
+    qfree(r->imag);
+    r->real = qshift(c->real, n);
+    r->imag = qshift(c->imag, n);
+    return r;
 }
-
 
 /*
  * Scale a complex number by a power of two.
@@ -639,18 +639,18 @@ c_shift(COMPLEX *c, long n)
 COMPLEX *
 c_scale(COMPLEX *c, long n)
 {
-        COMPLEX *r;
+    COMPLEX *r;
 
-        if (ciszero(c) || (n == 0))
-                return clink(c);
-        r = comalloc();
-        qfree(r->real);
-        qfree(r->imag);
-        r->real = qscale(c->real, n);
-        r->imag = qscale(c->imag, n);
-        return r;
+    if (ciszero(c) || (n == 0)) {
+        return clink(c);
+    }
+    r = comalloc();
+    qfree(r->real);
+    qfree(r->imag);
+    r->real = qscale(c->real, n);
+    r->imag = qscale(c->imag, n);
+    return r;
 }
-
 
 /*
  * Multiply a complex number by a real number.
@@ -658,22 +658,24 @@ c_scale(COMPLEX *c, long n)
 COMPLEX *
 c_mulq(COMPLEX *c, NUMBER *q)
 {
-        COMPLEX *r;
+    COMPLEX *r;
 
-        if (qiszero(q))
-                return clink(&_czero_);
-        if (qisone(q))
-                return clink(c);
-        if (qisnegone(q))
-                return c_neg(c);
-        r = comalloc();
-        qfree(r->real);
-        qfree(r->imag);
-        r->real = qmul(c->real, q);
-        r->imag = qmul(c->imag, q);
-        return r;
+    if (qiszero(q)) {
+        return clink(&_czero_);
+    }
+    if (qisone(q)) {
+        return clink(c);
+    }
+    if (qisnegone(q)) {
+        return c_neg(c);
+    }
+    r = comalloc();
+    qfree(r->real);
+    qfree(r->imag);
+    r->real = qmul(c->real, q);
+    r->imag = qmul(c->imag, q);
+    return r;
 }
-
 
 /*
  * Divide a complex number by a real number.
@@ -681,26 +683,25 @@ c_mulq(COMPLEX *c, NUMBER *q)
 COMPLEX *
 c_divq(COMPLEX *c, NUMBER *q)
 {
-        COMPLEX *r;
+    COMPLEX *r;
 
-        if (qiszero(q)) {
-                math_error("Division by zero");
-                not_reached();
-        }
-        if (qisone(q))
-                return clink(c);
-        if (qisnegone(q))
-                return c_neg(c);
-        r = comalloc();
-        qfree(r->real);
-        qfree(r->imag);
-        r->real = qqdiv(c->real, q);
-        r->imag = qqdiv(c->imag, q);
-        return r;
+    if (qiszero(q)) {
+        math_error("Division by zero");
+        not_reached();
+    }
+    if (qisone(q)) {
+        return clink(c);
+    }
+    if (qisnegone(q)) {
+        return c_neg(c);
+    }
+    r = comalloc();
+    qfree(r->real);
+    qfree(r->imag);
+    r->real = qqdiv(c->real, q);
+    r->imag = qqdiv(c->imag, q);
+    return r;
 }
-
-
-
 
 /*
  * Construct a complex number given the real and imaginary components.
@@ -708,18 +709,18 @@ c_divq(COMPLEX *c, NUMBER *q)
 COMPLEX *
 qqtoc(NUMBER *q1, NUMBER *q2)
 {
-        COMPLEX *r;
+    COMPLEX *r;
 
-        if (qiszero(q1) && qiszero(q2))
-                return clink(&_czero_);
-        r = comalloc();
-        qfree(r->real);
-        qfree(r->imag);
-        r->real = qlink(q1);
-        r->imag = qlink(q2);
-        return r;
+    if (qiszero(q1) && qiszero(q2)) {
+        return clink(&_czero_);
+    }
+    r = comalloc();
+    qfree(r->real);
+    qfree(r->imag);
+    r->real = qlink(q1);
+    r->imag = qlink(q2);
+    return r;
 }
-
 
 /*
  * Compare two complex numbers for equality, returning false if they are equal,
@@ -728,14 +729,14 @@ qqtoc(NUMBER *q1, NUMBER *q2)
 bool
 c_cmp(COMPLEX *c1, COMPLEX *c2)
 {
-        bool i;
+    bool i;
 
-        i = qcmp(c1->real, c2->real);
-        if (!i)
-                i = qcmp(c1->imag, c2->imag);
-        return i;
+    i = qcmp(c1->real, c2->real);
+    if (!i) {
+        i = qcmp(c1->imag, c2->imag);
+    }
+    return i;
 }
-
 
 /*
  * Compare two complex numbers and return a complex number with real and
@@ -745,17 +746,16 @@ c_cmp(COMPLEX *c1, COMPLEX *c2)
 COMPLEX *
 c_rel(COMPLEX *c1, COMPLEX *c2)
 {
-        COMPLEX *c;
+    COMPLEX *c;
 
-        c = comalloc();
-        qfree(c->real);
-        qfree(c->imag);
-        c->real = itoq((long) qrel(c1->real, c2->real));
-        c->imag = itoq((long) qrel(c1->imag, c2->imag));
+    c = comalloc();
+    qfree(c->real);
+    qfree(c->imag);
+    c->real = itoq((long)qrel(c1->real, c2->real));
+    c->imag = itoq((long)qrel(c1->imag, c2->imag));
 
-        return c;
+    return c;
 }
-
 
 /*
  * Allocate a new complex number.
@@ -763,19 +763,18 @@ c_rel(COMPLEX *c1, COMPLEX *c2)
 COMPLEX *
 comalloc(void)
 {
-        COMPLEX *r;
+    COMPLEX *r;
 
-        r = (COMPLEX *) malloc(sizeof(COMPLEX));
-        if (r == NULL) {
-                math_error("Cannot allocate complex number");
-                not_reached();
-        }
-        r->links = 1;
-        r->real = qlink(&_qzero_);
-        r->imag = qlink(&_qzero_);
-        return r;
+    r = (COMPLEX *)malloc(sizeof(COMPLEX));
+    if (r == NULL) {
+        math_error("Cannot allocate complex number");
+        not_reached();
+    }
+    r->links = 1;
+    r->real = qlink(&_qzero_);
+    r->imag = qlink(&_qzero_);
+    return r;
 }
-
 
 /*
  * Free a complex number.
@@ -783,9 +782,10 @@ comalloc(void)
 void
 comfree(COMPLEX *c)
 {
-        if (--(c->links) > 0)
-                return;
-        qfree(c->real);
-        qfree(c->imag);
-        free(c);
+    if (--(c->links) > 0) {
+        return;
+    }
+    qfree(c->real);
+    qfree(c->imag);
+    free(c);
 }

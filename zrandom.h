@@ -24,19 +24,16 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-
 #if !defined(INCLUDE_ZRANDOM_H)
-#define INCLUDE_ZRANDOM_H
+#  define INCLUDE_ZRANDOM_H
 
-
-#if defined(CALC_SRC)   /* if we are building from the calc source tree */
-# include "value.h"
-# include "have_const.h"
-#else
-# include <calc/value.h>
-# include <calc/have_const.h>
-#endif
-
+#  if defined(CALC_SRC) /* if we are building from the calc source tree */
+#    include "value.h"
+#    include "have_const.h"
+#  else
+#    include <calc/value.h>
+#    include <calc/have_const.h>
+#  endif
 
 /*
  * Blum generator state
@@ -51,29 +48,26 @@
  * that excessively large Blum modulus values waste CPU time.
  */
 struct random {
-        int seeded;     /* 1 => state has been seeded */
-        int bits;       /* number of unused bits in buffer */
-        int loglogn;    /* int(log2(log2(n))), bits produced per turn */
-        HALF buffer;    /* unused random bits from previous call */
-        HALF mask;      /* mask for the log2(log2(n)) lower bits of r */
-        ZVALUE n;       /* Blum modulus */
-        ZVALUE r;       /* Blum quadratic residue */
+    int seeded;  /* 1 => state has been seeded */
+    int bits;    /* number of unused bits in buffer */
+    int loglogn; /* int(log2(log2(n))), bits produced per turn */
+    HALF buffer; /* unused random bits from previous call */
+    HALF mask;   /* mask for the log2(log2(n)) lower bits of r */
+    ZVALUE n;    /* Blum modulus */
+    ZVALUE r;    /* Blum quadratic residue */
 };
-
 
 /*
  * Blum constants
  */
-#define BLUM_PREGEN 20  /* number of non-default predefined Blum generators */
-
+#  define BLUM_PREGEN 20 /* number of non-default predefined Blum generators */
 
 /*
  * Blum generator function declarations
  */
 E_FUNC RANDOM *zsrandom1(CONST ZVALUE seed, bool need_ret);
 E_FUNC RANDOM *zsrandom2(CONST ZVALUE seed, CONST ZVALUE newn);
-E_FUNC RANDOM *zsrandom4(CONST ZVALUE seed,
-                         CONST ZVALUE ip, CONST ZVALUE iq, long trials);
+E_FUNC RANDOM *zsrandom4(CONST ZVALUE seed, CONST ZVALUE ip, CONST ZVALUE iq, long trials);
 E_FUNC RANDOM *zsetrandom(CONST RANDOM *state);
 E_FUNC void zrandomskip(long count);
 E_FUNC void zrandom(long count, ZVALUE *res);
@@ -85,6 +79,5 @@ E_FUNC void randomfree(RANDOM *random);
 E_FUNC bool randomcmp(CONST RANDOM *s1, CONST RANDOM *s2);
 E_FUNC void randomprint(CONST RANDOM *state, int flags);
 E_FUNC void random_libcalc_cleanup(void);
-
 
 #endif /* !INCLUDE_ZRANDOM_H */

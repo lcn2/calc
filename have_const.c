@@ -43,29 +43,27 @@
 
 #include <stdio.h>
 
-
-#include "banned.h"     /* include after system header <> includes */
-
+#include "banned.h" /* include after system header <> includes */
 
 int
 main(void)
 {
 #if defined(HAVE_NO_CONST)
 
-        printf("#undef HAVE_CONST /* no */\n");
-        printf("#undef CONST\n");
-        printf("#define CONST /* no */\n");
+    printf("#undef HAVE_CONST /* no */\n");
+    printf("#undef CONST\n");
+    printf("#define CONST /* no */\n");
 
 #else /* HAVE_NO_CONST */
 
-        const char * const str = "const";
+    const char *const str = "const";
 
-        printf("#define HAVE_CONST /* yes */\n");
-        printf("#undef CONST\n");
-        printf("#define CONST %s /* yes */\n", str);
+    printf("#define HAVE_CONST /* yes */\n");
+    printf("#undef CONST\n");
+    printf("#define CONST %s /* yes */\n", str);
 
 #endif /* HAVE_NO_CONST */
 
-        /* exit(0); */
-        return 0;
+    /* exit(0); */
+    return 0;
 }

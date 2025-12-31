@@ -24,41 +24,36 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-
 /*
  * ISO C requires a translation unit to contain at least one declaration,
  * so we declare a global variable whose value is based on if CUSTOM is defined.
  */
 #if defined(CUSTOM)
-int c_register_allowed = 1;     /* CUSTOM defined */
-#else /* CUSTOM */
-int c_register_allowed = 0;     /* CUSTOM undefined */
-#endif /* CUSTOM */
-
+int c_register_allowed = 1; /* CUSTOM defined */
+#else                       /* CUSTOM */
+int c_register_allowed = 0; /* CUSTOM undefined */
+#endif                      /* CUSTOM */
 
 #if defined(CUSTOM)
 
-#include <stdio.h>
+#  include <stdio.h>
 
-#include "../have_const.h"
-#include "../value.h"
-#include "../custom.h"
+#  include "../have_const.h"
+#  include "../value.h"
+#  include "../custom.h"
 
-#include "../config.h"
-#include "../calc.h"
+#  include "../config.h"
+#  include "../calc.h"
 
-#include "../have_unused.h"
+#  include "../have_unused.h"
 
-
-#include "../errtbl.h"
-#include "../banned.h"  /* include after system header <> includes */
-
+#  include "../errtbl.h"
+#  include "../banned.h" /* include after system header <> includes */
 
 /*
  * registers
  */
-STATIC VALUE custom_reg[CUSTOM_REG_MAX+1];
-
+STATIC VALUE custom_reg[CUSTOM_REG_MAX + 1];
 
 /*
  * init_custreg - initialize custom registers
@@ -66,19 +61,18 @@ STATIC VALUE custom_reg[CUSTOM_REG_MAX+1];
 void
 init_custreg(void)
 {
-        int i;
+    int i;
 
-        /*
-         * set the registers to zero
-         */
-        for (i=0; i < CUSTOM_REG_MAX+1; ++i) {
-            custom_reg[i].v_type = V_NUM;
-            custom_reg[i].v_subtype = V_NOSUBTYPE;
-            custom_reg[i].v_num = itoq(0);
-        }
-        return;
+    /*
+     * set the registers to zero
+     */
+    for (i = 0; i < CUSTOM_REG_MAX + 1; ++i) {
+        custom_reg[i].v_type = V_NUM;
+        custom_reg[i].v_subtype = V_NOSUBTYPE;
+        custom_reg[i].v_num = itoq(0);
+    }
+    return;
 }
-
 
 /*
  * c_register - set or print a custom register value
@@ -93,49 +87,49 @@ init_custreg(void)
 VALUE
 c_register(char *UNUSED(name), int count, VALUE **vals)
 {
-        VALUE result;           /* what we will return */
-        long reg;               /* register number */
+    VALUE result; /* what we will return */
+    long reg;     /* register number */
 
-        /*
-         * arg check
-         */
-        result.v_type = V_NULL;
-        if (vals[0]->v_type != V_NUM) {
-                math_error("Non-numeric register number");
-                not_reached();
-        }
-        if (qisfrac(vals[0]->v_num)) {
-                math_error("Non-integer register number");
-                not_reached();
-        }
-        if (qisneg(vals[0]->v_num)) {
-                math_error("register number < 0");
-                not_reached();
-        }
-        if (! qistiny(vals[0]->v_num)) {
-                math_error("register is huge");
-                not_reached();
-        }
-        reg = qtoi(vals[0]->v_num);
-        if (reg > CUSTOM_REG_MAX) {
-                math_error("register is larger than CUSTOM_REG_MAX");
-                not_reached();
-        }
+    /*
+     * arg check
+     */
+    result.v_type = V_NULL;
+    if (vals[0]->v_type != V_NUM) {
+        math_error("Non-numeric register number");
+        not_reached();
+    }
+    if (qisfrac(vals[0]->v_num)) {
+        math_error("Non-integer register number");
+        not_reached();
+    }
+    if (qisneg(vals[0]->v_num)) {
+        math_error("register number < 0");
+        not_reached();
+    }
+    if (!qistiny(vals[0]->v_num)) {
+        math_error("register is huge");
+        not_reached();
+    }
+    reg = qtoi(vals[0]->v_num);
+    if (reg > CUSTOM_REG_MAX) {
+        math_error("register is larger than CUSTOM_REG_MAX");
+        not_reached();
+    }
 
-        /*
-         * print info on each arg
-         */
-        /* save previous value */
-        copyvalue(&custom_reg[reg], &result);
-        /* set the new value if a 2nd arg was given */
-        if (count == 2) {
-            copyvalue(vals[1], &custom_reg[reg]);
-        }
+    /*
+     * print info on each arg
+     */
+    /* save previous value */
+    copyvalue(&custom_reg[reg], &result);
+    /* set the new value if a 2nd arg was given */
+    if (count == 2) {
+        copyvalue(vals[1], &custom_reg[reg]);
+    }
 
-        /*
-         * return result
-         */
-        return result;
+    /*
+     * return result
+     */
+    return result;
 }
 
 #endif /* CUSTOM */

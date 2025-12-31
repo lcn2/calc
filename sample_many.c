@@ -32,7 +32,6 @@
  *      bits            number of bits to generate
  */
 
-
 #include <sys/types.h>
 #include <stdio.h>
 #include "calc.h"
@@ -40,135 +39,132 @@
 #include "have_const.h"
 #include "lib_util.h"
 
-
 #include "errtbl.h"
-#include "banned.h"     /* include after system header <> includes */
+#include "banned.h" /* include after system header <> includes */
 
+#define DEF_CNT 128 /* default number of bits to generate */
+#define RESEED 1000 /* number of random numbers to generate */
+#define MANY 100    /* number of random numbers to generate */
 
-#define DEF_CNT 128     /* default number of bits to generate */
-#define RESEED 1000     /* number of random numbers to generate */
-#define MANY 100        /* number of random numbers to generate */
-
-extern char *program;   /* our name */
-
+extern char *program; /* our name */
 
 int
 main(int argc, char **argv)
 {
-        RANDOM *prev_state;     /* previous random number state */
-        ZVALUE seed;            /* seed for Blum-Blum-Shub */
-        ZVALUE tmp;             /* temp value */
-        ZVALUE tmp2;            /* temp value */
-        ZVALUE random_val;      /* random number produced */
-        long cnt;               /* number of bits to generate */
-        char *hexstr;           /* random number as hex string */
-        int i;
-        int j;
+    RANDOM *prev_state; /* previous random number state */
+    ZVALUE seed;        /* seed for Blum-Blum-Shub */
+    ZVALUE tmp;         /* temp value */
+    ZVALUE tmp2;        /* temp value */
+    ZVALUE random_val;  /* random number produced */
+    long cnt;           /* number of bits to generate */
+    char *hexstr;       /* random number as hex string */
+    int i;
+    int j;
+
+    /*
+     * parse args
+     */
+    program = argv[0];
+    switch (argc) {
+    case 3:
+        seed = convstr2z(argv[2]);
+        cnt = strtol(argv[1], NULL, 0);
+        break;
+    case 2:
+        seed = _zero_; /* use the default seed */
+        cnt = strtol(argv[1], NULL, 0);
+        break;
+    case 1:
+        seed = _zero_; /* use the default seed */
+        cnt = DEF_CNT;
+        break;
+    default:
+        fprintf(stderr, "usage: %s [[bits] seed_string]\n", program);
+        exit(1);
+    }
+    if (cnt <= 0) {
+        fprintf(stderr, "%s: cnt:%d must be > 0\n", program, (int)cnt);
+        exit(2);
+    }
+
+    /*
+     * libcalc setup
+     */
+    libcalc_call_me_first();
+
+    /*
+     * reseed every so often
+     */
+    for (j = 0; j < RESEED; ++j) {
 
         /*
-         * parse args
+         * seed the generator
          */
-        program = argv[0];
-        switch (argc) {
-        case 3:
-                seed = convstr2z(argv[2]);
-                cnt = strtol(argv[1], NULL, 0);
-                break;
-        case 2:
-                seed = _zero_;  /* use the default seed */
-                cnt = strtol(argv[1], NULL, 0);
-                break;
-        case 1:
-                seed = _zero_;  /* use the default seed */
-                cnt = DEF_CNT;
-                break;
-        default:
-                fprintf(stderr, "usage: %s [[bits] seed_string]\n", program);
-                exit(1);
+        prev_state = zsrandom2(seed, _one_);
+        if (prev_state == NULL) {
+            math_error("previous random state is NULL");
+            not_reached();
         }
-        if (cnt <= 0) {
-                fprintf(stderr, "%s: cnt:%d must be > 0\n", program, (int)cnt);
-                exit(2);
-        }
+        randomfree(prev_state);
 
         /*
-         * libcalc setup
+         * generate random values forever
          */
-        libcalc_call_me_first();
+        for (i = 0; i < MANY; ++i) {
 
-        /*
-         * reseed every so often
-         */
-        for (j=0; j < RESEED; ++j) {
+            /*
+             * generate random bits
+             */
+            zrandom(cnt, &random_val);
 
-                /*
-                 * seed the generator
-                 */
-                prev_state = zsrandom2(seed, _one_);
-                if (prev_state == NULL) {
-                        math_error("previous random state is NULL");
-                        not_reached();
-                }
-                randomfree(prev_state);
+            /*
+             * convert into hex string
+             */
+            hexstr = convz2hex(random_val);
+            printf("%s\n", hexstr);
 
-                /*
-                 * generate random values forever
-                 */
-                for (i=0; i < MANY; ++i) {
-
-                        /*
-                         * generate random bits
-                         */
-                        zrandom(cnt, &random_val);
-
-                        /*
-                         * convert into hex string
-                         */
-                        hexstr = convz2hex(random_val);
-                        printf("%s\n", hexstr);
-
-                        /*
-                         * free
-                         */
-                        if (i < MANY-1) {
-                                zfree(random_val);
-                        }
-                        free(hexstr);
-                }
-
-                /*
-                 * increment the seed to better test different seeds
-                 *
-                 * NOTE: It is generally a bad idea to use the
-                 *       same random number generator to modify
-                 *       the seed.  We only do this below to
-                 *       try different seeds for debugging.
-                 *
-                 *       Don't do this in real life applications!
-                 *
-                 * We want to add at least 2^32 to the seed, so
-                 * we do the effect of:
-                 *
-                 *      seed += ((last_val<<32) + last_val);
-                 */
-                zshift(random_val, 32, &tmp);
-                zadd(tmp, random_val, &tmp2);
+            /*
+             * free
+             */
+            if (i < MANY - 1) {
                 zfree(random_val);
-                zfree(tmp);
-                zadd(seed, tmp2, &tmp);
-                zfree(tmp2);
-                zfree(seed);
-                seed = tmp;
+            }
+            free(hexstr);
         }
 
         /*
-         * libcalc shutdown
+         * increment the seed to better test different seeds
+         *
+         * NOTE: It is generally a bad idea to use the
+         *       same random number generator to modify
+         *       the seed.  We only do this below to
+         *       try different seeds for debugging.
+         *
+         *       Don't do this in real life applications!
+         *
+         * We want to add at least 2^32 to the seed, so
+         * we do the effect of:
+         *
+         *      seed += ((last_val<<32) + last_val);
          */
-        libcalc_call_me_last();
+        zshift(random_val, 32, &tmp);
+        zadd(tmp, random_val, &tmp2);
+        zfree(random_val);
+        zfree(tmp);
+        zadd(seed, tmp2, &tmp);
+        zfree(tmp2);
+        zfree(seed);
+        seed = tmp;
+    }
 
-        /*
-         * all done
-         */
-        /* exit(0); */
-        return 0;
+    /*
+     * libcalc shutdown
+     */
+    libcalc_call_me_last();
+
+    /*
+     * all done
+     */
+    /* exit(0); */
+    return 0;
 }

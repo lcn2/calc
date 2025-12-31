@@ -43,29 +43,27 @@
 
 #include <stdio.h>
 
-
-#include "banned.h"     /* include after system header <> includes */
-
+#include "banned.h" /* include after system header <> includes */
 
 int
 main(void)
 {
 #if defined(HAVE_NO_ENVIRON)
 
-        printf("#undef HAVE_ENVIRON /* no */\n");
+    printf("#undef HAVE_ENVIRON /* no */\n");
 
 #else /* HAVE_NO_ENVIRON */
 
-        extern char **environ;
+    extern char **environ;
 
-        if (environ == NULL) {
-                printf("#define HAVE_ENVIRON /* no */\n");
-        } else {
-                printf("#define HAVE_ENVIRON /* yes */\n");
-        }
+    if (environ == NULL) {
+        printf("#define HAVE_ENVIRON /* no */\n");
+    } else {
+        printf("#define HAVE_ENVIRON /* yes */\n");
+    }
 
 #endif /* HAVE_NO_ENVIRON */
 
-        /* exit(0); */
-        return 0;
+    /* exit(0); */
+    return 0;
 }

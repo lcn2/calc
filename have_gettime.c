@@ -42,32 +42,30 @@
 #include <stdio.h>
 #include <time.h>
 
-
-#include "banned.h"     /* include after system header <> includes */
-
+#include "banned.h" /* include after system header <> includes */
 
 int
 main(void)
 {
 #if defined(HAVE_NO_GETTIME) || defined(_WIN32) || defined(_WIN64)
 
-        printf("#undef HAVE_GETTIME /* no */\n");
+    printf("#undef HAVE_GETTIME /* no */\n");
 
 #else /* HAVE_NO_GETTIME */
 
-# if defined(CLOCK_REALTIME)
+#  if defined(CLOCK_REALTIME)
 
-        struct timespec realtime;       /* POSIX realtime clock */
-        (void) clock_gettime(CLOCK_REALTIME, &realtime);
-        printf("#define HAVE_GETTIME /* yes - CLOCK_REALTIME only */\n");
+    struct timespec realtime; /* POSIX realtime clock */
+    (void)clock_gettime(CLOCK_REALTIME, &realtime);
+    printf("#define HAVE_GETTIME /* yes - CLOCK_REALTIME only */\n");
 
-# else
+#  else
 
-        printf("#undef HAVE_GETTIME /* no - no CLOCK_REALTIME */\n");
+    printf("#undef HAVE_GETTIME /* no - no CLOCK_REALTIME */\n");
 
-# endif /* CLOCK_REALTIME */
+#  endif /* CLOCK_REALTIME */
 
 #endif /* HAVE_NO_GETTIME */
-        /* exit(0); */
-        return 0;
+    /* exit(0); */
+    return 0;
 }
