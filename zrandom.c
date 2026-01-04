@@ -2430,9 +2430,13 @@ zrandom(long cnt, ZVALUE *res)
         } else {
             /* copy buffer into upper and next element */
             t = blum.bits - (dest.bit + 1);
-            *dest.loc-- = (blum.buffer >> t);
+            *dest.loc-- |= (blum.buffer >> t);
             dest.bit = BASEB - t - 1;
-            *dest.loc = (HALF)(((unsigned long)(blum.buffer & lowhalf[t])) << (dest.bit + 1));
+            if (t == 0) {
+                *dest.loc = 0;
+            } else {
+                *dest.loc = (HALF)(((unsigned long)(blum.buffer & lowhalf[t])) << (dest.bit + 1));
+            }
         }
         dest.len -= blum.bits;
     }
@@ -2467,7 +2471,11 @@ zrandom(long cnt, ZVALUE *res)
             t = loglogn - (dest.bit + 1);
             *dest.loc-- |= (blum.buffer >> t);
             dest.bit = BASEB - t - 1;
-            *dest.loc = (HALF)(((unsigned long)(blum.buffer & lowhalf[t])) << (dest.bit + 1));
+            if (t == 0) {
+                *dest.loc = 0;
+            } else {
+                *dest.loc = (HALF)(((unsigned long)(blum.buffer & lowhalf[t])) << (dest.bit + 1));
+            }
         }
         dest.len -= loglogn;
     }

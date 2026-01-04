@@ -1,3 +1,35 @@
+The following are the changes from calc version 2.16.1.0 to date:
+
+    Fix compiler warning for `custom/u_pfe.c`.
+
+    Update the `ARCH_CFLAGS` make symbol comments in `Makefile.config`.
+
+    Add `ARCH_CFLAGS` to `COMMON_CFLAGS` in `Makefile.config`.
+
+    Add "RHEL (Linux) Address Sanitizer (ASAN) for i686" commented out
+    section to `Makefile.local`.
+
+    Improve comments in `Makefile.local` related to "Address Sanitizer (ASAN)".
+
+    Add `junk4200` to `.gitignore`.
+
+    Use `-${Q}` instead of `-@` while build hsrc files in `Makefile`.
+
+    Fix `pseudo_seed()` in `seed.c` to handle 32-bit architectures.
+
+    Fixed `reopenid()` in `file.c` to handle 32-bit architectures and
+    to avoid "glibc detected an invalid stdio handle" using `freopen(3)`.
+
+    Fixed bug in `c_power()` in `comfunc.c` that caused 32-bit
+    architectures to dump core.
+
+    Fixed bug in `zrandom()` in `zrandom.c` where results from a
+    Blum-Blum-Shub operation were incorrectly copied into a ZVALUE
+    for 32-bit architectures.
+
+    Fixed comment typo in `cal/regress.cal` before test 5305.
+
+
 The following are the changes from calc version 2.16.0.3 to 2.16.1.0:
 
     Added a new `.clang-format` file as the basis for using the

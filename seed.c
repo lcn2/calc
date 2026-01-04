@@ -696,7 +696,8 @@ pseudo_seed(void)
 
     /* classic 31-bit random seeded with time of day, count, prev hash */
     srandom((unsigned)(sdata.time) ^ (unsigned)call_count ^ past_hash);
-    for (j = 0; j < RANDOM_CNT; ++j) {
+    random_before[0] = random(); /* 31-bit value */
+    for (j = 1; j < RANDOM_CNT; ++j) {
         tmp = random(); /* 31-bit value */
         /* we 32-bit circular shift to spread 31-bit returns around */
         random_before[j] = (tmp << j) | (tmp >> (RANDOM_CNT - j));
@@ -711,7 +712,8 @@ pseudo_seed(void)
 #  endif /* HAVE_B64 */
 
     /* use 31-bit random some more with the new random state */
-    for (j = 0; j < RANDOM_CNT; ++j) {
+    random_after[0] = random(); /* 31-bit value */
+    for (j = 1; j < RANDOM_CNT; ++j) {
         tmp = random(); /* 31-bit value */
         /* we 32-bit circular shift to spread 31-bit returns around */
         random_after[j] = (tmp << j) | (tmp >> (RANDOM_CNT - j));

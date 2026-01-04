@@ -1712,7 +1712,8 @@ u_pfe_pread(char *UNUSED(name), int count, VALUE **vals)
         if (FD_ISSET(out, &rcs)) {
             r = read(out, &ob, pfe_pfe_SIZE_BUFFER);
             if (r < 0) {
-                math_error("%s: " __FILE__ ": %d: (out, %lu) read: %s", custname, __LINE__, strlen(o), strerror(errno));
+                math_error("%s: " __FILE__ ": %d: (out, %lu) read: %s",
+                           custname, __LINE__, (unsigned long)strlen(o), strerror(errno));
             }
             if (r) {
                 ob[r] = '\0';
@@ -1728,7 +1729,8 @@ u_pfe_pread(char *UNUSED(name), int count, VALUE **vals)
         if (FD_ISSET(err, &rcs)) {
             r = read(err, &eb, pfe_pfe_SIZE_BUFFER);
             if (r < 0) {
-                math_error("%s: " __FILE__ ": %d: (err, %lu) read: %s", custname, __LINE__, strlen(e), strerror(errno));
+                math_error("%s: " __FILE__ ": %d: (err, %lu) read: %s",
+                           custname, __LINE__,(unsigned long)strlen(e), strerror(errno));
             }
             if (r) {
                 eb[r] = '\0';

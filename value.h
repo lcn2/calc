@@ -186,7 +186,7 @@ struct value {
  * corresponding to 4 * sts.  MAXPROTECT is the sum of the simple
  * (power of two) protection status values.
  *
- * XXX - consider isseu #52 with respect to protect - XXX
+ * XXX - consider issue #52 with respect to protect - XXX
  */
 
 /*

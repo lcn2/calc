@@ -651,7 +651,7 @@ endif	# RPM_TOP
 	${Q} echo '' >> $@
 	${Q} echo '#endif /* !CALC_CONF_H */' >> $@
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -703,7 +703,7 @@ endian_calc.h: endian.c have_stdlib.h have_unistd.h \
 	${Q} echo '' >> $@
 	${Q} echo '#endif /* !ENDIAN_CALC_H */' >> $@
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -726,7 +726,7 @@ charbit.h: charbit.c have_limits.h \
 	${Q} echo '#define CALC_CHARBIT_H' >> $@
 	${Q} echo '' >> $@
 	${Q} echo '' >> $@
-	-@if [ -z ${CALC_CHARBIT} ]; then \
+	-${Q}if [ -z ${CALC_CHARBIT} ]; then \
 	    ${LCC} ${ICFLAGS} charbit.c -c ${S}; \
 	    ${LCC} ${ILDFLAGS} charbit.o -o charbit${EXT} ${S}; \
 	    ./charbit${EXT} >> $@ ${E}; \
@@ -739,7 +739,7 @@ charbit.h: charbit.c have_limits.h \
 	${Q} echo '#endif /* !CALC_CHARBIT_H */' >> $@
 	${H} echo '$@ formed'
 	${Q} ${RM} -f charbit.o charbit${EXT}
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -770,7 +770,7 @@ longbits.h: longbits.c charbit.h have_unistd.h have_stdlib.h \
 	${Q} echo '#endif /* !CALC_LONGBITS_H */' >> $@
 	${H} echo '$@ formed'
 	${Q} ${RM} -f longbits.o longbits${EXT}
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -836,7 +836,7 @@ have_times.h: ${MK_SET}
 	${Q} echo '' >> $@
 	${Q} echo '#endif /* !CALC_HAVE_TIMES_H */' >> $@
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -872,7 +872,7 @@ have_stdlib.h: ${MK_SET}
 	${Q} echo '' >> $@
 	${Q} echo '#endif /* !CALC_HAVE_STDLIB_H */' >> have_stdlib.h
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -908,7 +908,7 @@ have_unistd.h: ${MK_SET}
 	${Q} echo '' >> $@
 	${Q} echo '#endif /* !CALC_HAVE_UNISTD_H */' >> $@
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -944,7 +944,7 @@ have_limits.h: ${MK_SET}
 	${Q} echo '' >> $@
 	${Q} echo '#endif /* !CALC_HAVE_LIMITS_H */' >> $@
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -980,7 +980,7 @@ have_stdbool.h: ${MK_SET}
 	${Q} echo '' >> $@
 	${Q} echo '#endif /* !CALC_HAVE_STDBOOL_H */' >> $@
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -1016,7 +1016,7 @@ have_stdint.h: ${MK_SET}
 	${Q} echo '' >> $@
 	${Q} echo '#endif /* !CALC_HAVE_STDINT_H */' >> $@
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -1052,7 +1052,7 @@ have_inttypes.h: ${MK_SET}
 	${Q} echo '' >> $@
 	${Q} echo '#endif /* !CALC_HAVE_INTTYPES_H */' >> $@
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -1088,7 +1088,7 @@ have_string.h: ${MK_SET}
 	${Q} echo '' >> $@
 	${Q} echo '#endif /* !CALC_HAVE_STRING_H */' >> $@
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -1137,7 +1137,7 @@ terminal.h: ${MK_SET}
 	${Q} echo '' >> $@
 	${Q} echo '#endif /* !CALC_TERMINAL_H */' >> $@
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -1179,7 +1179,7 @@ have_fgetsetpos.h: have_fgetsetpos.c banned.h have_ban_pragma.h ${MK_SET}
 	${Q} echo '#endif /* !CALC_HAVE_FGETSETPOS_H */' >> $@
 	${Q} ${RM} -f have_fpos${EXT} have_fgetsetpos.o fpos_tmp
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -1223,7 +1223,7 @@ have_fpos_pos.h: have_fpos_pos.c have_fgetsetpos.h have_posscl.h have_string.h \
 	${Q} echo '#endif /* !CALC_HAVE_FPOS_POS_H */' >> $@
 	${Q} ${RM} -f have_fpos_pos${EXT} have_fpos_pos.o fpos_tmp
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -1270,7 +1270,7 @@ fposval.h: fposval.c have_fgetsetpos.h have_fpos_pos.h have_offscl.h have_posscl
 	${Q} echo '#endif /* !CALC_FPOSVAL_H */' >> $@
 	${Q} ${RM} -f fposval${EXT} fposval.o fposval_tmp
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -1312,7 +1312,7 @@ have_const.h: have_const.c banned.h have_ban_pragma.h ${MK_SET}
 	${Q} echo '#endif /* !CALC_HAVE_CONST_H */' >> $@
 	${Q} ${RM} -f have_const${EXT} have_const.o const_tmp
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -1353,7 +1353,7 @@ have_offscl.h: have_offscl.c have_unistd.h \
 	${Q} echo '#endif /* !CALC_HAVE_OFFSCL_H */' >> $@
 	${Q} ${RM} -f have_offscl${EXT} have_offscl.o offscl_tmp
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -1394,7 +1394,7 @@ have_posscl.h: have_posscl.c have_fgetsetpos.h have_unistd.h \
 	${Q} echo '#endif /* !CALC_HAVE_POSSCL_H */' >> $@
 	${Q} ${RM} -f have_posscl have_posscl.o posscl_tmp
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -1449,7 +1449,7 @@ align32.h: align32.c longbits.h have_unistd.h \
 	${Q} echo '' >> $@
 	${Q} echo '#endif /* !CALC_ALIGN32_H */' >> $@
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -1490,7 +1490,7 @@ have_uid_t.h: have_uid_t.c have_unistd.h \
 	${Q} echo '#endif /* !CALC_HAVE_UID_T_H */' >> $@
 	${Q} ${RM} -f have_uid_t${EXT} have_uid_t.o uid_tmp
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -1531,7 +1531,7 @@ have_environ.h: have_environ.c \
 	${Q} echo '#endif /* !CALC_HAVE_ENVIRON_H */' >> $@
 	${Q} ${RM} -f have_environ${EXT} have_environ.o environ_tmp
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -1573,7 +1573,7 @@ have_arc4random.h: have_arc4random.c have_stdlib.h \
 	${Q} echo '#endif /* !HAVE_ARC4RANDOM */' >> $@
 	${Q} ${RM} -f have_arc4random${EXT} have_arc4random.o arc4random_tmp
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -1613,7 +1613,7 @@ have_newstr.h: have_newstr.c banned.h have_ban_pragma.h have_string.h ${MK_SET}
 	${Q} echo '#endif /* !CALC_HAVE_NEWSTR_H */' >> $@
 	${Q} ${RM} -f have_newstr${EXT} have_newstr.o newstr_tmp
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -1652,7 +1652,7 @@ have_ustat.h: have_ustat.c banned.h have_ban_pragma.h ${MK_SET}
 	${Q} echo '#endif /* !CALC_HAVE_USTAT_H */' >> $@
 	${Q} ${RM} -f have_ustat${EXT} have_ustat.o ustat_tmp
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -1693,7 +1693,7 @@ have_statfs.h: have_statfs.c banned.h have_ban_pragma.h have_sys_vfs.h have_sys_
 	${Q} echo '#endif /* !CALC_HAVE_STATFS_H */' >> $@
 	${Q} ${RM} -f have_statfs${EXT} have_statfs.o statfs_tmp
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -1729,7 +1729,7 @@ have_sys_vfs.h: ${MK_SET}
 	${Q} echo '' >> $@
 	${Q} echo '#endif /* !CALC_HAVE_SYS_VFS_H */' >> $@
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -1765,7 +1765,7 @@ have_sys_param.h: ${MK_SET}
 	${Q} echo '' >> $@
 	${Q} echo '#endif /* !CALC_HAVE_SYS_PARAM_H */' >> $@
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -1801,7 +1801,7 @@ have_sys_mount.h: ${MK_SET}
 	${Q} echo '' >> $@
 	${Q} echo '#endif /* !CALC_HAVE_SYS_MOUNT_H */' >> $@
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -1842,7 +1842,7 @@ have_getsid.h: have_getsid.c have_unistd.h \
 	${Q} echo '#endif /* !CALC_HAVE_GETSID_H */' >> $@
 	${Q} ${RM} -f have_getsid${EXT} have_getsid.o getsid_tmp
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -1883,7 +1883,7 @@ have_getpgid.h: have_getpgid.c have_unistd.h \
 	${Q} echo '#endif /* !CALC_HAVE_GETPGID_H */' >> $@
 	${Q} ${RM} -f have_getpgid${EXT} have_getpgid.o getpgid_tmp
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -1924,7 +1924,7 @@ have_gettime.h: have_gettime.c banned.h have_ban_pragma.h \
 	${Q} echo '#endif /* !CALC_HAVE_GETTIME_H */' >> $@
 	${Q} ${RM} -f have_gettime${EXT} have_gettime.o gettime_tmp
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -1965,7 +1965,7 @@ have_getprid.h: have_getprid.c have_unistd.h \
 	${Q} echo '#endif /* !CALC_HAVE_GETPRID_H */' >> $@
 	${Q} ${RM} -f have_getprid${EXT} have_getprid.o getprid_tmp
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -2001,7 +2001,7 @@ have_urandom.h: ${MK_SET}
 	${Q} echo '' >> $@
 	${Q} echo '#endif /* !CALC_HAVE_URANDOM_H */' >> $@
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -2041,7 +2041,7 @@ have_rusage.h: have_rusage.c banned.h have_ban_pragma.h ${MK_SET}
 	${Q} echo '#endif /* !CALC_HAVE_RUSAGE_H */' >> $@
 	${Q} ${RM} -f have_rusage${EXT} have_rusage.o rusage_tmp
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -2081,7 +2081,7 @@ have_strdup.h: have_strdup.c banned.h have_ban_pragma.h have_string.h ${MK_SET}
 	${Q} echo '#endif /* !CALC_HAVE_STRDUP_H */' >> $@
 	${Q} ${RM} -f have_strdup${EXT} have_strdup.o strdup_tmp
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -2142,7 +2142,7 @@ args.h: have_stdvs.c have_varvs.c have_string.h have_unistd.h \
 	${Q} ${RM} -f have_stdvs.o have_varvs.o have_varvs${EXT} have_args.sh
 	${Q} ${RM} -f core
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -2157,7 +2157,7 @@ errsym.h: errcode${EXT}
 	${H} echo 'forming $@'
 	./errcode${EXT} -d > $@
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -2205,7 +2205,7 @@ have_unused.h: have_unused.c have_stdlib.h have_ban_pragma.h \
 	${Q} echo '#endif /* !CALC_HAVE_UNUSED_H */' >> $@
 	${Q} ${RM} -f have_unused${EXT} have_unused.o unused_tmp
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -2247,7 +2247,7 @@ have_ban_pragma.h: have_ban_pragma.c banned.h ${MK_SET}
 	${Q} echo '#endif /* !CALC_HAVE_BAN_PRAGMA_H */' >> $@
 	${Q} ${RM} -f have_ban_pragma${EXT} have_ban_pragma.o unused_tmp
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -2289,7 +2289,7 @@ have_strlcpy.h: have_strlcpy.c banned.h have_ban_pragma.h have_string.h \
 	${Q} echo '#endif /* !CALC_HAVE_STRLCPY_H */' >> $@
 	${Q} ${RM} -f have_strlcpy${EXT} have_strlcpy.o unused_tmp
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \
@@ -2331,7 +2331,7 @@ have_strlcat.h: have_strlcat.c banned.h have_ban_pragma.h have_string.h \
 	${Q} echo '#endif /* !CALC_HAVE_STRLCAT_H */' >> $@
 	${Q} ${RM} -f have_strlcat${EXT} have_strlcat.o unused_tmp
 	${H} echo '$@ formed'
-	-@if [ -z "${Q}" ]; then \
+	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    ${CAT} $@; \

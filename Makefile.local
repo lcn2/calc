@@ -77,12 +77,51 @@
 # See also: https://developer.apple.com/documentation/xcode/diagnosing-memory-thread-and-crash-issues-early
 # And also: https://github.com/google/sanitizers/wiki/AddressSanitizerFlags
 #
+# We recommend, for ease of debugging, building a static calc ("BLD_TYPE= calc-static-only").
+#
 # FSANITIZE+= -fsanitize=nullability-arg
 # FSANITIZE+= -fsanitize=nullability-assign
 # FSANITIZE+= -fsanitize=nullability-return
+# CFLAGS+= -Wextra -Werror
 # CFLAGS+= ${FSANITIZE} -fstack-protector-all
 # LDFLAGS+= ${FSANITIZE}
 # DEBUG:= -O0 -g3
+# BLD_TYPE= calc-static-only
+####
+
+####
+# RHEL (Linux) Address Sanitizer (ASAN) for i686
+#
+# This comment block was tested under:
+#
+#	RHEL9.7 with clang version 20.1.8 (Red Hat, Inc. 20.1.8-3.el9)
+#
+# with these RPMs installed:
+#
+# 	libasan-11.5.0-11.el9.x86_64
+# 	libubsan-11.5.0-11.el9.x86_64
+#
+# See the FSANITIZE comment block in Makefile.config for common FSANITIZE values and more info.
+#
+# To use the Address Sanitizer, uncomment this set set of lines and recompile (make clobber all):
+#
+# For more info see: https://github.com/google/sanitizers/wiki/AddressSanitizer
+# And also: https://github.com/google/sanitizers/wiki/AddressSanitizerFlags
+#
+# We recommend, for ease of debugging, building a static calc ("BLD_TYPE= calc-static-only").
+#
+# Be sure you have the following dnf packages installed:
+#
+#   dnf install readline-devel ncurses-libs ncurses-devel libasan libubsan
+#   dnf install readline-devel.i686 ncurses-libs.i686 ncurses-devel.i686 libubsan.i686
+#
+# ARCH_CFLAGS= -march=i686 -m32
+# CFLAGS+= -Wextra -Werror
+# LDFLAGS+= -L/usr/lib
+# CFLAGS+= ${FSANITIZE} -fstack-protector-all
+# LDFLAGS+= ${FSANITIZE}
+# DEBUG:= -O0 -g3
+# BLD_TYPE= calc-static-only
 ####
 
 ####
@@ -104,7 +143,15 @@
 # For more info see: https://github.com/google/sanitizers/wiki/AddressSanitizer
 # And also: https://github.com/google/sanitizers/wiki/AddressSanitizerFlags
 #
+# We recommend, for ease of debugging, building a static calc ("BLD_TYPE= calc-static-only").
+#
+# Be sure you have the following dnf packages installed:
+#
+#   dnf install readline-devel ncurses-libs ncurses-devel libasan libubsan
+#
+# CFLAGS+= -Wextra -Werror
 # CFLAGS+= ${FSANITIZE} -fstack-protector-all
 # LDFLAGS+= ${FSANITIZE}
 # DEBUG:= -O0 -g3
-###
+# BLD_TYPE= calc-static-only
+####

@@ -501,10 +501,11 @@ reopenid(FILEID id, char *mode, char *name)
         ioindex[idnum++] = i;
         fiop->id = id;
     } else {
+        (void) fclose(fiop->fp);
         if (name == NULL) {
-            fp = freopen(fiop->name, mode, fiop->fp);
+            fp = f_open(fiop->name, mode);
         } else {
-            fp = freopen(name, mode, fiop->fp);
+            fp = f_open(name, mode);
         }
         if (fp == NULL) {
             free(fiop->name);

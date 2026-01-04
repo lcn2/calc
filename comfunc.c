@@ -1649,11 +1649,10 @@ c_power(COMPLEX *c1, COMPLEX *c2, NUMBER *epsilon)
     qfree(tmp2);
     qfree(two_num);
     epsilon1 = qqbitvalue(*ep1_power_of_2);
+    qfree(ep1_power_of_2);
     if (epsilon1 == NULL) {
-        qfree(epsilon1);
         return NULL;
     }
-    qfree(ep1_power_of_2);
 
     /* ctmp1 = natural log of epsilon1 */
     ctmp1 = c_ln(c1, epsilon1);
