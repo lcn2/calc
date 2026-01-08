@@ -1,4 +1,4 @@
-The following are the changes from calc version 2.16.1.1 to date:
+The following are the changes from calc version 2.16.1.1 to 2.16.1.2:
 
     Fixed a bug where the calc command history was not being properly
     saved in the history file.  Thanks go to the GitHub user @Vekhir
