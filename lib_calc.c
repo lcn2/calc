@@ -1,7 +1,7 @@
 /*
  * lib_calc - calc link library initialization and shutdown routines
  *
- * Copyright (C) 1999-2007,2018,2021-2023  Landon Curt Noll
+ * Copyright (C) 1999-2007,2018,2021-2023,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -722,10 +722,17 @@ libcalc_call_me_last(void)
         free(shell);
         shell = NULL;
     }
-    if (calc_history != NULL) {
-        free(calc_history);
-        calc_history = NULL;
-    }
+    /*
+     * IMPORT NOTE: Do NOT free calc_history here !!!
+     *
+     * If you do, this will cause the history you have made to be lost!
+     *
+     * FYI In hist.c:
+     *
+     * The hist_finish() function, which is invoked due to a call to
+     * atexit(hist_finish) in hist_init() will take care of freeing
+     * the calc_history storage, if it was allocated in initenv().
+     */
     if (calc_helpdir != NULL) {
         free(calc_helpdir);
         calc_helpdir = NULL;

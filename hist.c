@@ -1,7 +1,7 @@
 /*
  * hist - interactive readline module
  *
- * Copyright (C) 1999-2007,2021-2023  David I. Bell
+ * Copyright (C) 1999-2007,2021-2023,2026  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -1485,7 +1485,7 @@ quit_calc(int UNUSED(ch))
 
 #if defined(USE_READLINE)
 
-#  define HISTORY_LEN (1024) /* number of entries to save */
+#  define HISTORY_LEN (4096) /* number of entries to save */
 
 #  include <readline/readline.h>
 #  include <readline/history.h>
@@ -1574,6 +1574,20 @@ my_stifle_history(void)
     }
 }
 
+/*
+ * close down and complete history and free the calc_history value allocated by initenv().
+ */
+S_FUNC void
+hist_finish(void)
+{
+    /* only save last number of entries */
+    my_stifle_history();
+    if (calc_history != NULL) {
+        free(calc_history);
+        calc_history = NULL;
+    }
+}
+
 int
 hist_init(char *UNUSED(filename))
 {
@@ -1605,7 +1619,8 @@ hist_init(char *UNUSED(filename))
     /* read previous history */
     read_history(calc_history);
 
-    atexit(my_stifle_history);
+    /* setup how history is closed down and synced when exiting */
+    atexit(hist_finish);
 
     return HIST_SUCCESS;
 }

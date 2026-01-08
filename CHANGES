@@ -1,3 +1,12 @@
+The following are the changes from calc version 2.16.1.1 to date:
+
+    Fixed a bug where the calc command history was not being properly
+    saved in the history file.  Thanks go to the GitHub user @Vekhir
+    for both reporting this problem and helping come up with a solution.
+
+    Per request, we expanded number of entries to save from 1024 to 4096.
+
+
 The following are the changes from calc version 2.16.1.0 to 2.16.1.1:
 
     Fix compiler warning for `custom/u_pfe.c`.
