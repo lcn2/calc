@@ -1,7 +1,7 @@
 /*
  * byteswap - byte swapping routines
  *
- * Copyright (C) 1999,2021-2023  Landon Curt Noll
+ * Copyright (C) 1999,2021-2023,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -24,11 +24,25 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-#include "cmath.h"
-#include "byteswap.h"
+/*
+ * important <system> header includes
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+#include <stdbool.h>
 
+/*
+ * calc local src includes
+ */
+#include "zmath.h"
+#include "qmath.h"
+#include "cmath.h"
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 /*
  * swap_b8_in_HALFs - swap 8 and if needed, 16 bits in an array of HALFs
@@ -96,7 +110,7 @@ swap_b8_in_ZVALUE(ZVALUE *dest, ZVALUE *src, bool all)
         /*
          * allocate the storage
          */
-        dest = malloc(sizeof(ZVALUE));
+        dest = calloc(1, sizeof(ZVALUE));
         if (dest == NULL) {
             math_error("swap_b8_in_ZVALUE: swap_b8_in_ZVALUE: "
                        "Not enough memory");
@@ -163,7 +177,7 @@ swap_b8_in_NUMBER(NUMBER *dest, NUMBER *src, bool all)
         /*
          * allocate the storage
          */
-        dest = malloc(sizeof(NUMBER));
+        dest = calloc(1, sizeof(NUMBER));
         if (dest == NULL) {
             math_error("swap_b8_in_NUMBER: Not enough memory");
             not_reached();
@@ -226,7 +240,7 @@ swap_b8_in_COMPLEX(COMPLEX *dest, COMPLEX *src, bool all)
         /*
          * allocate the storage
          */
-        dest = malloc(sizeof(COMPLEX));
+        dest = calloc(1, sizeof(COMPLEX));
         if (dest == NULL) {
             math_error("swap_b8_in_COMPLEX: Not enough memory");
             not_reached();
@@ -371,7 +385,7 @@ swap_b16_in_ZVALUE(ZVALUE *dest, ZVALUE *src, bool all)
         /*
          * allocate the storage
          */
-        dest = malloc(sizeof(ZVALUE));
+        dest = calloc(1, sizeof(ZVALUE));
         if (dest == NULL) {
             math_error("swap_b16_in_ZVALUE: Not enough memory");
             not_reached();
@@ -437,7 +451,7 @@ swap_b16_in_NUMBER(NUMBER *dest, NUMBER *src, bool all)
         /*
          * allocate the storage
          */
-        dest = malloc(sizeof(NUMBER));
+        dest = calloc(1, sizeof(NUMBER));
         if (dest == NULL) {
             math_error("swap_b16_in_NUMBER: Not enough memory");
             not_reached();
@@ -500,7 +514,7 @@ swap_b16_in_COMPLEX(COMPLEX *dest, COMPLEX *src, bool all)
         /*
          * allocate the storage
          */
-        dest = malloc(sizeof(COMPLEX));
+        dest = calloc(1, sizeof(COMPLEX));
         if (dest == NULL) {
             math_error("swap_b16_in_COMPLEX: Not enough memory");
             not_reached();
@@ -630,7 +644,7 @@ swap_HALF_in_NUMBER(NUMBER *dest, NUMBER *src, bool all)
         /*
          * allocate the storage
          */
-        dest = malloc(sizeof(NUMBER));
+        dest = calloc(1, sizeof(NUMBER));
         if (dest == NULL) {
             math_error("swap_HALF_in_NUMBER: Not enough memory");
             not_reached();
@@ -693,7 +707,7 @@ swap_HALF_in_COMPLEX(COMPLEX *dest, COMPLEX *src, bool all)
         /*
          * allocate the storage
          */
-        dest = malloc(sizeof(COMPLEX));
+        dest = calloc(1, sizeof(COMPLEX));
         if (dest == NULL) {
             math_error("swap_HALF_in_COMPLEX: Not enough memory");
             not_reached();

@@ -1,7 +1,7 @@
 /*
  * seed - produce pseudo-random seeds
  *
- * Copyright (C) 1999-2007,2021  Landon Curt Noll
+ * Copyright (C) 1999-2007,2021,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -33,23 +33,16 @@
  *              http://www.LavaRnd.org/
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 #include <errno.h>
-
-#include "have_stdlib.h"
-#if defined(HAVE_STDLIB_H)
-#  include <stdlib.h>
-#endif
-
-#include "have_unistd.h"
-#if defined(HAVE_UNISTD_H)
-#  include <unistd.h>
-#endif
-
-#if defined(_WIN32) || defined(_WIN64)
-#  include <process.h>
-#  define pid_t int
-#endif
+#include <stdint.h>
+#include <stdbool.h>
 
 /*
  * PORTING NOTE:
@@ -64,74 +57,72 @@
  */
 #include <sys/types.h>
 #include <sys/stat.h>
-#include "have_times.h"
+#include <time.h>
+#include <sys/time.h>
+#include <sys/times.h>
 
-#if defined(HAVE_TIME_H)
-#  include <time.h>
-#endif /* HAVE_TIME_H */
-
-#if defined(HAVE_SYS_TIME_H)
-#  include <sys/time.h>
-#endif /* HAVE_SYS_TIME_H */
-
-#if defined(HAVE_SYS_TIMES_H)
-#  include <sys/times.h>
-#endif /* HAVE_SYS_TIMES_H */
+/*
+ * conditional <system> head includes
+ */
+#if defined(_WIN32) || defined(_WIN64)
+#  include <process.h>
+#  define pid_t int
+#endif
 
 #if !defined(_WIN32) && !defined(_WIN64)
 #  include <sys/resource.h>
 #endif
 
-#if defined(HAVE_STDLIB_H)
-#  include <stdlib.h>
+#include <stdlib.h>
 /* NOTE: RANDOM_CNT should remain 32 to circular shift 31-bit returns */
-#  define RANDOM_CNT (32)      /* random() call repeat and circular shift */
-#  define INITSTATE_SIZE (256) /* initstate pool size */
-#endif                         /* HAVE_STDLIB_H */
+#define RANDOM_CNT (32)      /* random() call repeat and circular shift */
+#define INITSTATE_SIZE (256) /* initstate pool size */
 
 #include <setjmp.h>
-#include "alloc.h"
-#include "qmath.h"
-#include "longbits.h"
-#include "have_ustat.h"
-#include "have_getsid.h"
-#include "have_getpgid.h"
-#include "have_gettime.h"
-#include "have_getprid.h"
-#include "have_urandom.h"
-#include "have_rusage.h"
-#include "have_uid_t.h"
-#include "have_environ.h"
-#include "have_arc4random.h"
 
+#include "have_getsid.h"
 #if defined(HAVE_USTAT)
 #  include <ustat.h>
-#endif /* HAVE_USTAT */
+#endif
 
+#include "have_urandom.h"
 #if defined(HAVE_URANDOM)
 #  include <fcntl.h>
 #  define DEV_URANDOM "/dev/urandom"
 #  define DEV_URANDOM_POOL (16)
-#endif /* HAVE_URANDOM */
+#endif
 
 #include "have_sys_vfs.h"
 #if defined(HAVE_SYS_VFS_H)
 #  include <sys/vfs.h>
-#endif /* HAVE_SYS_VFS_H */
+#endif
 
 #include "have_sys_param.h"
 #if defined(HAVE_SYS_PARAM_H)
 #  include <sys/param.h>
-#endif /* HAVE_SYS_PARAM_H */
+#endif
 
 #include "have_sys_mount.h"
 #if defined(HAVE_SYS_MOUNT_H)
 #  include <sys/mount.h>
-#endif /* HAVE_SYS_MOUNT_H */
+#endif
 
+/*
+ * calc local src includes
+ */
+#include "zmath.h"
+#include "qmath.h"
+#include "longbits.h"
+#include "have_ustat.h"
+#include "have_getpgid.h"
+#include "have_gettime.h"
+#include "have_rusage.h"
+#include "have_environ.h"
+#include "have_arc4random.h"
 #include "have_statfs.h"
+#include "errtbl.h"
 
-#include "banned.h" /* include after system header <> includes */
+#include "banned.h" /* include after all other includes */
 
 /*
  * 64 bit hash value
@@ -149,12 +140,12 @@ static hash64 prev_hash64 = {0, 0}; /* previous pseudo_seed() return or 0 */
 
 #if defined(HAVE_ENVIRON)
 extern char **environ; /* user environment */
-#endif                 /* HAVE_ENVIRON */
+#endif
 
 #if defined(HAVE_ARC4RANDOM)
 #  define ARC4_BUFLEN (16)
 static char arc4_buf[ARC4_BUFLEN];
-#endif /* HAVE_ARC4RANDOM */
+#endif
 
 /*
  * call counter - number of times pseudo_seed() as been called
@@ -207,13 +198,16 @@ static FULL call_count = 0;
 /*
  * initial_private_hash64 - initial basis of Fowler/Noll/Vo-1 64 bit hash
  */
-S_FUNC hash64
+static hash64
 initial_private_hash64(void)
 {
     hash64 hval; /* current hash value */
 #if defined(HAVE_B64)
+
     hval = PRIVATE_64_BASIS;
-#else  /* HAVE_B64 */
+
+#else
+
     USB32 val[4]; /* hash value in base 2^16 */
 
     /* hash each octet of the buffer */
@@ -226,7 +220,8 @@ initial_private_hash64(void)
     /* hval.w32[1] = 0xffff&(val[3]<<16)+val[2]; */
     hval.w32[1] = (val[3] << 16) + val[2];
     hval.w32[0] = (val[1] << 16) + val[0];
-#endif /* HAVE_B64 */
+
+#endif
 
     /* return our initial hash value */
     return hval;
@@ -272,13 +267,13 @@ initial_private_hash64(void)
  * returns:
  *      64 bit hash as a static hash64 structure
  */
-S_FUNC hash64
+static hash64
 private_hash64_buf(hash64 hval, char *buf, unsigned len)
 {
 #if !defined(HAVE_B64)
     USB32 val[4];              /* hash value in base 2^16 */
     USB32 tmp[4];              /* tmp 64 bit value */
-#endif                         /* HAVE_B64 */
+#endif
     char *buf_end = buf + len; /* beyond end of hash area */
 
 #if defined(HAVE_B64)
@@ -293,7 +288,7 @@ private_hash64_buf(hash64 hval, char *buf, unsigned len)
         hval ^= (hash64)(*buf);
     }
 
-#else /* HAVE_B64 */
+#else
 
     /* load val array from hval argument */
     val[0] = hval.w32[0] & 0xffff;
@@ -340,7 +335,7 @@ private_hash64_buf(hash64 hval, char *buf, unsigned len)
     hval.w32[1] = (val[3] << 16) + val[2];
     hval.w32[0] = (val[1] << 16) + val[0];
 
-#endif /* HAVE_B64 */
+#endif
 
     /* return our hash value */
     return hval;
@@ -377,27 +372,20 @@ pseudo_seed(void)
         struct timespec realtime; /* POSIX realtime clock */
 #  endif
 #endif
-#if defined(HAVE_GETPRID)
-        prid_t getprid; /* project ID */
-#endif
 #if defined(HAVE_URANDOM)
         int urandom_fd;                      /* open descriptor for /dev/urandom */
         int urandom_ret;                     /* read() of /dev/random */
         char urandom_pool[DEV_URANDOM_POOL]; /* /dev/urandom data pool */
 #endif
-#if defined(HAVE_SYS_TIME_H)
         struct timeval tp; /* time of day */
-#endif
-        pid_t getpid; /* process ID */
+        pid_t getpid;      /* process ID */
 #if !defined(_WIN32) && !defined(_WIN64)
         pid_t getppid; /* parent process ID */
 #endif
-#if defined(HAVE_UID_T)
-        uid_t getuid;  /* real user ID */
-        uid_t geteuid; /* effective user ID */
-        gid_t getgid;  /* real group ID */
-        gid_t getegid; /* effective group ID */
-#endif
+        uid_t getuid;             /* real user ID */
+        uid_t geteuid;            /* effective user ID */
+        gid_t getgid;             /* real group ID */
+        gid_t getegid;            /* effective group ID */
         struct stat stat_dot;     /* stat of "." */
         struct stat stat_dotdot;  /* stat of ".." */
         struct stat stat_tmp;     /* stat of "/tmp" */
@@ -463,7 +451,6 @@ pseudo_seed(void)
         struct rusage rusage;       /* resource utilization */
         struct rusage rusage_child; /* resource utilization of children */
 #endif
-#if defined(HAVE_SYS_TIME_H)
         struct timeval tp2;             /* time of day again */
         struct tms times;               /* process times */
         struct timeval times_dot[2];    /* access & mod files of "." */
@@ -486,7 +473,6 @@ pseudo_seed(void)
         struct timeval times_system[2];
         /* access & mod files of "/var/log/messages" */
         struct timeval times_messages[2];
-#endif
         time_t time;             /* local time */
         size_t size;             /* size of this data structure */
         hash64 prev_hash64_copy; /* copy if the previous hash value */
@@ -494,13 +480,12 @@ pseudo_seed(void)
         jmp_buf env;             /* setjmp() context */
 #if defined(HAVE_ENVIRON)
         char **environ_copy; /* copy of extern char **environ */
-#endif                       /* HAVE_ENVIRON */
+#endif
         char *sdata_p;       /* address of this structure */
     } sdata;
 
     /**/
 
-#if defined(HAVE_STDLIB_H)
     unsigned long tmp;                  /* temp holder of 31-bit random() */
     unsigned past_hash;                 /* prev hash or xor-folded prev hash */
     long random_before[RANDOM_CNT];     /* random() pre initstate() */
@@ -509,7 +494,6 @@ pseudo_seed(void)
     long random_after[RANDOM_CNT];      /* random() post initstate() */
     char *setstate_ret;                 /* return from setstate() call */
     int j;
-#endif /* HAVE_STDLIB_H */
 #if defined(HAVE_ENVIRON)
     int i;
     size_t envlen; /* length of an environment variable */
@@ -533,13 +517,13 @@ pseudo_seed(void)
     memset(&sdata, 0, sizeof(sdata)); /* zeroize sdata */
 #if defined(HAVE_GETTIME)
 #  if defined(CLOCK_REALTIME)
+
     (void)clock_gettime(CLOCK_REALTIME, &sdata.realtime);
+
 #  endif
 #endif
-#if defined(HAVE_GETPRID)
-    sdata.getprid = getprid();
-#endif
 #if defined(HAVE_URANDOM)
+
     sdata.urandom_fd = open(DEV_URANDOM, O_NONBLOCK | O_RDONLY);
     if (sdata.urandom_fd >= 0) {
         sdata.urandom_ret = read(sdata.urandom_fd, &sdata.urandom_pool, DEV_URANDOM_POOL);
@@ -548,20 +532,17 @@ pseudo_seed(void)
         memset(&sdata.urandom_pool, EOF, DEV_URANDOM_POOL);
         sdata.urandom_ret = EOF;
     }
-#endif /* HAVE_URANDOM */
-#if defined(HAVE_SYS_TIME_H)
-    (void)gettimeofday(&sdata.tp, NULL);
+
 #endif
+    (void)gettimeofday(&sdata.tp, NULL);
     sdata.getpid = getpid();
 #if !defined(_WIN32) && !defined(_WIN64)
     sdata.getppid = getppid();
 #endif
-#if defined(HAVE_UID_T)
     sdata.getuid = getuid();
     sdata.geteuid = geteuid();
     sdata.getgid = getgid();
     sdata.getegid = getegid();
-#endif
     (void)stat(".", &sdata.stat_dot);
     (void)stat("..", &sdata.stat_dotdot);
     (void)stat("/tmp", &sdata.stat_tmp);
@@ -621,7 +602,6 @@ pseudo_seed(void)
     (void)getrusage(RUSAGE_SELF, &sdata.rusage);
     (void)getrusage(RUSAGE_CHILDREN, &sdata.rusage_child);
 #endif
-#if defined(HAVE_SYS_TIME_H)
     (void)gettimeofday(&sdata.tp2, NULL);
     (void)times(&sdata.times);
     (void)utimes(".", sdata.times_dot);
@@ -639,14 +619,13 @@ pseudo_seed(void)
     (void)utimes("/bin/ls", sdata.times_ls);
     (void)utimes("/var/log/system.log", sdata.times_system);
     (void)utimes("/var/log/messages", sdata.times_messages);
-#endif
     sdata.time = time(NULL);
     sdata.size = sizeof(sdata);
     sdata.prev_hash64_copy = prev_hash64; /* load previous hash */
     sdata.call_count_copy = ++call_count; /* update call count */
 #if defined(HAVE_ENVIRON)
     sdata.environ_copy = environ;
-#endif /* HAVE_ENVIRON */
+#endif
     sdata.sdata_p = (char *)&sdata;
 
     /*
@@ -655,6 +634,7 @@ pseudo_seed(void)
     hash_val = private_hash64_buf(hash_val, (char *)&sdata, sizeof(sdata));
 
 #if defined(HAVE_ENVIRON)
+
     /*
      * mix in each envinment variable
      */
@@ -668,9 +648,9 @@ pseudo_seed(void)
             hash_val = private_hash64_buf(hash_val, environ[i], envlen);
         }
     }
-#endif /* HAVE_ENVIRON */
 
-#if defined(HAVE_STDLIB_H)
+#endif
+
     /*
      * mix in data from 31-bit random() and friends
      *
@@ -688,11 +668,14 @@ pseudo_seed(void)
      */
 
     /* form the xor-fold of the previous hash */
-#  if defined(HAVE_B64)
+#if defined(HAVE_B64)
+
     past_hash = (unsigned)(((prev_hash64 >> 32) & 0xffffffff) ^ (prev_hash64 & 0xffffffff));
-#  else  /* HAVE_B64 */
+
+#else
     pash_hash = (unsigned)(prev_hash64.w32[0] ^ prev_hash64.w32[1]);
-#  endif /* HAVE_B64 */
+
+#endif
 
     /* classic 31-bit random seeded with time of day, count, prev hash */
     srandom((unsigned)(sdata.time) ^ (unsigned)call_count ^ past_hash);
@@ -704,12 +687,15 @@ pseudo_seed(void)
     }
 
     /* init with large random state with 32-bit xor fold FNV hash of sdata */
-#  if defined(HAVE_B64)
+#if defined(HAVE_B64)
+
     initstate_ret =
         initstate((unsigned)(((hash_val >> 32) & 0xffffffff) ^ (hash_val & 0xffffffff)), initstate_tbl, INITSTATE_SIZE);
-#  else  /* HAVE_B64 */
+
+#else
     initstate_ret = initstate((unsigned)(hash_val.w32[0] ^ hash_val.w32[1]), initstate_tbl, INITSTATE_SIZE);
-#  endif /* HAVE_B64 */
+
+#endif
 
     /* use 31-bit random some more with the new random state */
     random_after[0] = random(); /* 31-bit value */
@@ -730,15 +716,16 @@ pseudo_seed(void)
     hash_val = private_hash64_buf(hash_val, (char *)initstate_tbl, sizeof(initstate_tbl));
     hash_val = private_hash64_buf(hash_val, (char *)random_after, sizeof(random_after));
     hash_val = private_hash64_buf(hash_val, (char *)setstate_ret, sizeof(setstate_ret));
-#endif /* HAVE_STDLIB_H */
 
 #if defined(HAVE_ARC4RANDOM)
+
     /*
      * hash from a cryptographic pseudo-random number generator
      */
     arc4random_buf(arc4_buf, ARC4_BUFLEN);
     hash_val = private_hash64_buf(hash_val, (char *)arc4_buf, ARC4_BUFLEN);
-#endif /* HAVE_ARC4RANDOM */
+
+#endif
 
     /*
      * load the hash data into the ZVALUE

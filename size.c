@@ -1,7 +1,7 @@
 /*
  * size - size and sizeof functions are implemented here
  *
- * Copyright (C) 1999-2007,2021-2023  David I. Bell
+ * Copyright (C) 1999-2007,2021-2023,2026  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -23,22 +23,31 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-#include "value.h"
-#include "zrand.h"
-#include "zrandom.h"
-#include "block.h"
+/*
+ * important <system> header includes
+ */
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+#include <stdbool.h>
 
+/*
+ * calc local src includes
+ */
+#include "value.h"
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 /*
  * forward declarations
  */
-S_FUNC size_t zsize(ZVALUE);
-S_FUNC size_t qsize(NUMBER *);
-S_FUNC size_t csize(COMPLEX *);
-S_FUNC size_t memzsize(ZVALUE);
-S_FUNC size_t memqsize(NUMBER *);
+static size_t zsize(ZVALUE);
+static size_t qsize(NUMBER *);
+static size_t csize(COMPLEX *);
+static size_t memzsize(ZVALUE);
+static size_t memqsize(NUMBER *);
 
 /*
  * elm_count - return information about the number of elements
@@ -119,7 +128,7 @@ elm_count(VALUE *vp)
  * returns:
  *      value size
  */
-S_FUNC size_t
+static size_t
 zsize(ZVALUE z)
 {
     /* ignore the size of 0, 1 and -1 */
@@ -142,7 +151,7 @@ zsize(ZVALUE z)
  * returns:
  *      value size
  */
-S_FUNC size_t
+static size_t
 qsize(NUMBER *q)
 {
     /* ignore denominator parts of integers */
@@ -166,7 +175,7 @@ qsize(NUMBER *q)
  * returns:
  *      value size
  */
-S_FUNC size_t
+static size_t
 csize(COMPLEX *c)
 {
     /* ignore denominator parts of integers */
@@ -186,7 +195,7 @@ csize(COMPLEX *c)
  * returns:
  *      memory footprint
  */
-S_FUNC size_t
+static size_t
 memzsize(ZVALUE z)
 {
     return sizeof(ZVALUE) + (z.len * sizeof(HALF));
@@ -201,7 +210,7 @@ memzsize(ZVALUE z)
  * returns:
  *      memory footprint
  */
-S_FUNC size_t
+static size_t
 memqsize(NUMBER *q)
 {
     return sizeof(NUMBER) + memzsize(q->num) + memzsize(q->den);

@@ -1,7 +1,7 @@
 /*
  * have_ustat - Determine if we have ustat()
  *
- * Copyright (C) 1999,2021  Landon Curt Noll
+ * Copyright (C) 1999,2021,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -38,12 +38,19 @@
  *              undefined ==> do not call or cannot call ustat()
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
+#include <ustat.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <ustat.h>
 
-#include "banned.h" /* include after system header <> includes */
+/*
+ * calc local src includes
+ */
+
+#include "banned.h" /* include after all other includes */
 
 int
 main(void)
@@ -52,7 +59,7 @@ main(void)
 
     printf("#undef HAVE_USTAT /* no */\n");
 
-#else /* HAVE_NO_USTAT */
+#else
 
     struct stat stat_dot;   /* stat of "." */
     struct ustat ustat_dot; /* usage stat of "." */
@@ -62,7 +69,7 @@ main(void)
 
     printf("#define HAVE_USTAT /* yes */\n");
 
-#endif /* HAVE_NO_USTAT */
+#endif
 
     /* exit(0); */
     return 0;

@@ -1,7 +1,7 @@
 /*
  * have_statfs - Determine if we have statfs()
  *
- * Copyright (C) 2023  Landon Curt Noll
+ * Copyright (C) 2023,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -38,26 +38,36 @@
  *              undefined ==> do not call or cannot call statfs()
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 
+/*
+ * conditional <system> head includes
+ */
 #include "have_sys_vfs.h"
 #if defined(HAVE_SYS_VFS_H)
 #  include <sys/vfs.h>
-#endif /* HAVE_SYS_VFS_H */
+#endif
 
 #include "have_sys_param.h"
 #if defined(HAVE_SYS_PARAM_H)
 #  include <sys/param.h>
-#endif /* HAVE_SYS_PARAM_H */
+#endif
 
 #include "have_sys_mount.h"
 #if defined(HAVE_SYS_MOUNT_H)
 #  include <sys/mount.h>
-#endif /* HAVE_SYS_MOUNT_H */
+#endif
 
-#include "banned.h" /* include after system header <> includes */
+/*
+ * calc local src includes
+ */
+
+#include "banned.h" /* include after all other includes */
 
 int
 main(void)
@@ -66,7 +76,7 @@ main(void)
 
     printf("#undef HAVE_STATFS /* no */\n");
 
-#else /* HAVE_NO_STATFS */
+#else
 
     struct statfs statfs_dot; /* usage stat of "." */
 
@@ -74,7 +84,7 @@ main(void)
 
     printf("#define HAVE_STATFS /* yes */\n");
 
-#endif /* HAVE_NO_STATFS */
+#endif
 
     /* exit(0); */
     return 0;

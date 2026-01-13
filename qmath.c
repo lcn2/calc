@@ -1,7 +1,7 @@
 /*
  * qmath - extended precision rational arithmetic primitive routines
  *
- * Copyright (C) 1999-2007,2014,2021-2023  David I. Bell, Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007,2014,2021-2023,2026  David I. Bell, Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -25,12 +25,25 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+#include <stdbool.h>
+
+/*
+ * calc local src includes
+ */
+#include "zmath.h"
 #include "qmath.h"
 #include "config.h"
-
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 NUMBER _qzero_ = {{_zeroval_, 1, 0}, {_oneval_, 1, 0}, 1, NULL};
 NUMBER _qone_ = {{_oneval_, 1, 0}, {_oneval_, 1, 0}, 1, NULL};
@@ -1516,9 +1529,9 @@ qcmpi(NUMBER *q, long n)
 
 #define NNALLOC 1000
 
-STATIC NUMBER *freeNum = NULL;
-STATIC NUMBER **firstNums = NULL;
-STATIC long blockcount = 0;
+static NUMBER *freeNum = NULL;
+static NUMBER **firstNums = NULL;
+static long blockcount = 0;
 
 NUMBER *
 qalloc(void)
@@ -1527,7 +1540,7 @@ qalloc(void)
     NUMBER **newfn;
 
     if (freeNum == NULL) {
-        freeNum = (NUMBER *)malloc(sizeof(NUMBER) * NNALLOC);
+        freeNum = (NUMBER *)calloc(NNALLOC, sizeof(NUMBER));
         if (freeNum == NULL) {
             math_error("Not enough memory");
             not_reached();
@@ -1553,7 +1566,7 @@ qalloc(void)
 
         blockcount++;
         if (firstNums == NULL) {
-            newfn = (NUMBER **)malloc(blockcount * sizeof(NUMBER *));
+            newfn = (NUMBER **)calloc(blockcount, sizeof(NUMBER *));
         } else {
             newfn = (NUMBER **)realloc(firstNums, blockcount * sizeof(NUMBER *));
         }

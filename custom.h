@@ -1,7 +1,7 @@
 /*
  * custom - interface for custom software and hardware interfaces
  *
- * Copyright (C) 1999-2007,2021,2023  Landon Curt Noll
+ * Copyright (C) 1999-2007,2021,2023,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -30,7 +30,6 @@
  *
  * Don't include anything, let the including .c file bring in:
  *
- *      have_const.h
  *      value.h
  *
  * before they include this file.
@@ -68,11 +67,11 @@ struct custom {
  *
  * These are the required interfaces.  The dummy.c stubs these interfaces too.
  */
-E_FUNC bool custom_compiled(void);          /* return true if libcustcalc compiled CUSTOM defined, false otherwise */
-E_FUNC VALUE custom(char *, int, VALUE **); /* master custom interface */
-EXTERN bool allow_custom;                   /* true => custom builtins allowed */
-E_FUNC void showcustom(void);               /* print custom functions */
-E_FUNC void customhelp(char *);             /* direct custom help */
-E_FUNC void init_custreg(void);             /* initialize custom registers */
+extern bool custom_compiled(void);          /* return true if libcustcalc compiled CUSTOM defined, false otherwise */
+extern VALUE custom(char *, int, VALUE **); /* master custom interface */
+extern bool allow_custom;                   /* true => custom builtins allowed */
+extern void showcustom(void);               /* print custom functions */
+extern void customhelp(char *);             /* direct custom help */
+extern void init_custreg(void);             /* initialize custom registers */
 
-#endif /* !CUSTOM_H */
+#endif

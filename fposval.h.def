@@ -1,7 +1,7 @@
 /*
  * fposval.h.def - fposval.h default macros
  *
- * Copyright (C) 2021  Landon Curt Noll
+ * Copyright (C) 2021,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -29,11 +29,11 @@
  */
 
 /* what are our file position & size types? */
-#undef FILEPOS_BITS
-#define FILEPOS_BITS 64
-#undef FILEPOS_LEN
-#define FILEPOS_LEN 8
-#define SWAP_HALF_IN_FILEPOS(dest, src)         (*(dest) = *(src))
+#undef FPOS_T_BITS
+#define FPOS_T_BITS 64
+#undef FPOS_T_LEN
+#define FPOS_T_LEN 8
+#define SWAP_HALF_IN_FPOS_T(dest, src)         (*(dest) = *(src))
 
 #undef OFF_T_BITS
 #define OFF_T_BITS 64

@@ -1,8 +1,7 @@
-#!/usr/bin/env make
 #
 # calc - arbitrary precision calculator
 #
-# Copyright (C) 1999-2018,2021-2025  Landon Curt Noll
+# Copyright (C) 1999-2018,2021-2026  Landon Curt Noll
 #
 # Suggestion: Read the HOWTO.INSTALL file.
 #
@@ -162,22 +161,21 @@ CALCOBJS= calc.o
 
 # these .h files are needed to build the math link library
 #
-LIB_H_SRC= alloc.h attribute.h banned.h blkcpy.h block.h bool.h byteswap.h \
-	calc.h cmath.h config.h custom.h decl.h errtbl.h file.h func.h \
+LIB_H_SRC= attribute.h banned.h blkcpy.h block.h byteswap.h \
+	calc.h cmath.h config.h custom.h errtbl.h file.h func.h \
 	hash.h hist.h int.h jump.h label.h lib_calc.h lib_util.h nametype.h \
 	opcodes.h prime.h qmath.h sha1.h str.h strl.h symbol.h token.h \
 	value.h version.h zmath.h zrand.h zrandom.h
 
 # we build these .h files during the make
 #
-BUILD_H_SRC= align32.h args.h charbit.h conf.h endian_calc.h errsym.h fposval.h \
-	have_arc4random.h have_ban_pragma.h have_const.h have_environ.h \
-	have_fgetsetpos.h have_fpos_pos.h have_getpgid.h have_getprid.h \
-	have_getsid.h have_gettime.h have_inttypes.h have_limits.h \
-	have_newstr.h have_offscl.h have_posscl.h have_rusage.h have_statfs.h \
-	have_stdbool.h have_stdint.h have_stdlib.h have_strdup.h have_string.h \
+BUILD_H_SRC= charbit.h conf.h endian_calc.h errsym.h fposval.h \
+	have_arc4random.h have_ban_pragma.h have_environ.h \
+	have_fpos_pos.h have_getpgid.h \
+	have_getsid.h have_gettime.h \
+	have_offscl.h have_posscl.h have_rusage.h have_statfs.h \
 	have_strlcat.h have_strlcpy.h have_sys_mount.h have_sys_param.h \
-	have_sys_vfs.h have_times.h have_uid_t.h have_unistd.h have_unused.h \
+	have_sys_vfs.h have_unused.h \
 	have_urandom.h have_ustat.h longbits.h status.chk_c.h terminal.h
 
 # we build these .c files during the make
@@ -188,12 +186,12 @@ BUILD_C_SRC=
 #
 # There MUST be a .c for every .o in UTIL_OBJS.
 #
-UTIL_C_SRC= align32.c charbit.c chk_c.c endian.c fposval.c have_arc4random.c \
-	have_ban_pragma.c have_const.c have_environ.c have_fgetsetpos.c \
-	have_fpos_pos.c have_getpgid.c have_getprid.c have_getsid.c \
-	have_gettime.c have_newstr.c have_offscl.c have_posscl.c \
-	have_rusage.c have_statfs.c have_stdvs.c have_strdup.c have_strlcat.c \
-	have_strlcpy.c have_uid_t.c have_unused.c have_ustat.c have_varvs.c \
+UTIL_C_SRC= charbit.c chk_c.c endian.c fposval.c have_arc4random.c \
+	have_ban_pragma.c have_environ.c \
+	have_fpos_pos.c have_getpgid.c have_getsid.c \
+	have_gettime.c have_offscl.c have_posscl.c \
+	have_rusage.c have_statfs.c have_strlcat.c \
+	have_strlcpy.c have_unused.c have_ustat.c \
 	longbits.c
 
 # these awk and sed tools are used in the process of building BUILD_H_SRC
@@ -205,11 +203,11 @@ UTIL_MISC_SRC= fposval.h.def
 #
 # There MUST be a .o for every .c in UTIL_C_SRC.
 #
-UTIL_OBJS= endian.o longbits.o have_newstr.o have_uid_t.o \
-	have_const.o fposval.o have_fgetsetpos.o have_fpos_pos.o \
-	try_strarg.o have_stdvs.o have_varvs.o have_posscl.o \
+UTIL_OBJS= endian.o longbits.o \
+	fposval.o have_fpos_pos.o \
+	try_strarg.o have_posscl.o \
 	have_ustat.o have_getsid.o have_getpgid.o have_environ.o \
-	have_gettime.o have_getprid.o ver_calc.o have_rusage.o have_strdup.o \
+	have_gettime.o ver_calc.o have_rusage.o \
 	have_unused.o have_ban_pragma.o have_strlcpy.o have_strlcat.o \
 	have_arc4random.o charbit.o have_statfs.o chk_c.o
 
@@ -222,12 +220,12 @@ UTIL_TMP= ll_tmp fpos_tmp fposval_tmp const_tmp uid_tmp newstr_tmp vs_tmp \
 # these utility executables may be created in the process of
 # building the BUILD_H_SRC file set
 #
-UTIL_PROGS= align32${EXT} fposval${EXT} have_uid_t${EXT} have_const${EXT} \
-	endian${EXT} longbits${EXT} have_newstr${EXT} have_stdvs${EXT} \
-	have_varvs${EXT} have_ustat${EXT} have_getsid${EXT} \
-	have_getpgid${EXT} have_gettime${EXT} have_getprid${EXT} \
-	ver_calc${EXT} have_strdup${EXT} have_environ{EXT} \
-	have_unused${EXT} have_fpos${EXT} have_fpos_pos${EXT} \
+UTIL_PROGS= fposval${EXT} \
+	endian${EXT} longbits${EXT} \
+	have_ustat${EXT} have_getsid${EXT} \
+	have_getpgid${EXT} have_gettime${EXT} \
+	ver_calc${EXT} have_environ{EXT} \
+	have_unused${EXT} have_fpos_pos${EXT} \
 	have_offscl${EXT} have_rusage${EXT} have_ban_pragma${EXT} \
 	have_strlcpy${EXT} have_strlcat${EXT} have_arc4random${EXT} \
 	charbit${EXT} have_statfs${EXT} chk_c${EXT}
@@ -235,7 +233,7 @@ UTIL_PROGS= align32${EXT} fposval${EXT} have_uid_t${EXT} have_const${EXT} \
 # these utility files and scripts may be created in the process of building
 # the BUILD_H_SRC file set
 #
-UTIL_FILES= have_args.sh
+UTIL_FILES=
 
 # Any .h files that are needed to compile sample code.
 #
@@ -570,16 +568,18 @@ sample_many${EXT}: sample_many.o ${CALC_DYNAMIC_LIBS} ${MK_SET}
 #
 ###
 
-hist.o: hist.c ${MK_SET}
-	${CC} ${CFLAGS} -Wno-strict-prototypes ${TERMCONTROL} ${USE_READLINE} ${READLINE_INCLUDE} \
-	    -c hist.c
-
-seed.o: seed.c ${MK_SET}
-	${CC} ${CFLAGS} ${WNO_IMPLICT} ${WNO_ERROR_LONG_LONG} \
-	    ${WNO_LONG_LONG} -c seed.c
+# NOTE: In the case of multiple -O options, the last such option is the one that is effective.
+byteswap.o: byteswap.c ${MK_SET}
+	${CC} ${CFLAGS} -O1 -c byteswap.c
 
 file.o: file.c ${MK_SET}
 	${CC} ${CFLAGS} ${WNO_ERROR_LONG_LONG} ${WNO_LONG_LONG} -c file.c
+
+hist.o: hist.c ${MK_SET}
+	${CC} ${CFLAGS} -Wno-strict-prototypes ${TERMCONTROL} ${USE_READLINE} ${READLINE_INCLUDE} -c hist.c
+
+seed.o: seed.c ${MK_SET}
+	${CC} ${CFLAGS} ${WNO_IMPLICT} ${WNO_ERROR_LONG_LONG} ${WNO_LONG_LONG} -c seed.c
 
 ###
 #
@@ -597,7 +597,7 @@ file.o: file.c ${MK_SET}
 #
 ###
 
-hsrc: ${BUILD_H_SRC} ${BUILD_C_SRC} chk_c${EXT}
+hsrc: chk_c${EXT} ${BUILD_H_SRC} ${BUILD_C_SRC}
 
 .hsrc: ${BUILD_H_SRC} ${BUILD_C_SRC}
 	${Q} ${RM} -f .hsrc
@@ -661,7 +661,7 @@ endif	# RPM_TOP
 	    ${TRUE}; \
 	fi
 
-endian_calc.h: endian.c have_stdlib.h have_unistd.h \
+endian_calc.h: endian.c \
 	banned.h have_ban_pragma.h ${MK_SET}
 	${Q} ${RM} -f endian.o endian${EXT} $@
 	${H} echo 'forming $@'
@@ -713,7 +713,7 @@ endian_calc.h: endian.c have_stdlib.h have_unistd.h \
 	    ${TRUE}; \
 	fi
 
-charbit.h: charbit.c have_limits.h \
+charbit.h: charbit.c \
 	banned.h have_ban_pragma.h ${MK_SET}
 	${Q} ${RM} -f charbit.o charbit${EXT} $@
 	${H} echo 'forming $@'
@@ -749,7 +749,7 @@ charbit.h: charbit.c have_limits.h \
 	    ${TRUE}; \
 	fi
 
-longbits.h: longbits.c charbit.h have_unistd.h have_stdlib.h \
+longbits.h: longbits.c charbit.h \
 	banned.h have_ban_pragma.h ${MK_SET}
 	${Q} ${RM} -f longbits.o longbits${EXT} $@
 	${H} echo 'forming $@'
@@ -770,324 +770,6 @@ longbits.h: longbits.c charbit.h have_unistd.h have_stdlib.h \
 	${Q} echo '#endif /* !CALC_LONGBITS_H */' >> $@
 	${H} echo '$@ formed'
 	${Q} ${RM} -f longbits.o longbits${EXT}
-	-${Q}if [ -z "${Q}" ]; then \
-	    echo ''; \
-	    echo '=-=-= start of $@ =-=-='; \
-	    ${CAT} $@; \
-	    echo '=-=-= end of $@ =-=-='; \
-	    echo ''; \
-	else \
-	    ${TRUE}; \
-	fi
-
-have_times.h: ${MK_SET}
-	${Q} ${RM} -f $@
-	${H} echo 'forming $@'
-	${Q} echo '/*' > $@
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile rule $@' >> $@
-	${Q} echo ' */' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#if !defined(CALC_HAVE_TIMES_H)' >> $@
-	${Q} echo '#define CALC_HAVE_TIMES_H' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '/* do we have <times.h>? */' >> $@
-	-${Q} if [ X"${HAVE_TIMES_H}" = X"YES" ]; then \
-	    echo '#define HAVE_TIMES_H	/* yes */' >> $@; \
-	elif [ X"${HAVE_TIMES_H}" = X"NO" ]; then \
-	    echo '#undef HAVE_TIMES_H  /* no */' >> $@; \
-	elif echo '#include <times.h>' | ${CC} -E - ${S}; then \
-	    echo '#define HAVE_TIMES_H	/* yes */' >> $@; \
-	else \
-	    echo '#undef HAVE_TIMES_H  /* no */' >> $@; \
-	fi
-	${Q} echo '/* do we have <sys/times.h>? */' >> $@
-	-${Q} if [ X"${HAVE_SYS_TIMES_H}" = X"YES" ]; then \
-	    echo '#define HAVE_SYS_TIMES_H	/* yes */' >> $@; \
-	elif [ X"${HAVE_SYS_TIMES_H}" = X"NO" ]; then \
-	    echo '#undef HAVE_SYS_TIMES_H  /* no */' >> $@; \
-	elif echo '#include <sys/times.h>' | ${CC} -E - ${S}; then \
-	    echo '#define HAVE_SYS_TIMES_H  /* yes */' >> $@; \
-	else \
-	    echo '#undef HAVE_SYS_TIMES_H  /* no */' >> $@; \
-	fi
-	${Q} echo '/* do we have <time.h>? */' >> $@
-	-${Q} if [ X"${HAVE_TIME_H}" = X"YES" ]; then \
-	    echo '#define HAVE_TIME_H	/* yes */' >> $@; \
-	elif [ X"${HAVE_TIME_H}" = X"NO" ]; then \
-	    echo '#undef HAVE_TIME_H  /* no */' >> $@; \
-	elif echo '#include <time.h>' | ${CC} -E - ${S}; then \
-	    echo '#define HAVE_TIME_H  /* yes */' >> $@; \
-	else \
-	    echo '#undef HAVE_TIME_H  /* no */' >> $@; \
-	fi
-	${Q} echo '/* do we have <sys/time.h>? */' >> $@
-	-${Q} if [ X"${HAVE_SYS_TIME_H}" = X"YES" ]; then \
-	    echo '#define HAVE_SYS_TIME_H	/* yes */' >> $@; \
-	elif [ X"${HAVE_SYS_TIME_H}" = X"NO" ]; then \
-	    echo '#undef HAVE_SYS_TIME_H  /* no */' >> $@; \
-	elif echo '#include <sys/time.h>' | ${CC} -E - ${S}; then \
-	    echo '#define HAVE_SYS_TIME_H  /* yes */' >> $@; \
-	else \
-	    echo '#undef HAVE_SYS_TIME_H  /* no */' >> $@; \
-	fi
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#endif /* !CALC_HAVE_TIMES_H */' >> $@
-	${H} echo '$@ formed'
-	-${Q}if [ -z "${Q}" ]; then \
-	    echo ''; \
-	    echo '=-=-= start of $@ =-=-='; \
-	    ${CAT} $@; \
-	    echo '=-=-= end of $@ =-=-='; \
-	    echo ''; \
-	else \
-	    ${TRUE}; \
-	fi
-
-have_stdlib.h: ${MK_SET}
-	${Q} ${RM} -f $@
-	${H} echo 'forming $@'
-	${Q} echo '/*' > $@
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile rule $@' >> $@
-	${Q} echo ' */' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#if !defined(CALC_HAVE_STDLIB_H)' >> have_stdlib.h
-	${Q} echo '#define CALC_HAVE_STDLIB_H' >> have_stdlib.h
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '/* do we have <stdlib.h>? */' >> $@
-	-${Q} if [ X"${HAVE_STDLIB_H}" = X"YES" ]; then \
-	    echo '#define HAVE_STDLIB_H	/* yes */' >> have_stdlib.h; \
-	elif [ X"${HAVE_STDLIB_H}" = X"NO" ]; then \
-	    echo '#undef HAVE_STDLIB_H  /* no */' >> have_stdlib.h; \
-	elif echo '#include <stdlib.h>' | ${CC} -E - ${S}; then \
-	    echo '#define HAVE_STDLIB_H	 /* yes */' >> have_stdlib.h; \
-	else \
-	    echo '#undef HAVE_STDLIB_H	/* no */' >> have_stdlib.h; \
-	fi
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#endif /* !CALC_HAVE_STDLIB_H */' >> have_stdlib.h
-	${H} echo '$@ formed'
-	-${Q}if [ -z "${Q}" ]; then \
-	    echo ''; \
-	    echo '=-=-= start of $@ =-=-='; \
-	    ${CAT} $@; \
-	    echo '=-=-= end of $@ =-=-='; \
-	    echo ''; \
-	else \
-	    ${TRUE}; \
-	fi
-
-have_unistd.h: ${MK_SET}
-	${Q} ${RM} -f $@
-	${H} echo 'forming $@'
-	${Q} echo '/*' > $@
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile rule $@' >> $@
-	${Q} echo ' */' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#if !defined(CALC_HAVE_UNISTD_H)' >> $@
-	${Q} echo '#define CALC_HAVE_UNISTD_H' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '/* do we have <unistd.h>? */' >> $@
-	-${Q} if [ X"${HAVE_UNISTD_H}" = X"YES" ]; then \
-	    echo '#define HAVE_UNISTD_H	/* yes */' >> $@; \
-	elif [ X"${HAVE_UNISTD_H}" = X"NO" ]; then \
-	    echo '#undef HAVE_UNISTD_H  /* no */' >> $@; \
-	elif echo '#include <unistd.h>' | ${CC} -E - ${S}; then \
-	    echo '#define HAVE_UNISTD_H	 /* yes */' >> $@; \
-	else \
-	    echo '#undef HAVE_UNISTD_H	/* no */' >> $@; \
-	fi
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#endif /* !CALC_HAVE_UNISTD_H */' >> $@
-	${H} echo '$@ formed'
-	-${Q}if [ -z "${Q}" ]; then \
-	    echo ''; \
-	    echo '=-=-= start of $@ =-=-='; \
-	    ${CAT} $@; \
-	    echo '=-=-= end of $@ =-=-='; \
-	    echo ''; \
-	else \
-	    ${TRUE}; \
-	fi
-
-have_limits.h: ${MK_SET}
-	${Q} ${RM} -f $@
-	${H} echo 'forming $@'
-	${Q} echo '/*' > $@
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile rule $@' >> $@
-	${Q} echo ' */' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#if !defined(CALC_HAVE_LIMITS_H)' >> $@
-	${Q} echo '#define CALC_HAVE_LIMITS_H' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '/* do we have <limits.h>? */' >> $@
-	-${Q} if [ X"${HAVE_LIMITS_H}" = X"YES" ]; then \
-	    echo '#define HAVE_LIMITS_H	/* yes */' >> $@; \
-	elif [ X"${HAVE_LIMITS_H}" = X"NO" ]; then \
-	    echo '#undef HAVE_LIMITS_H  /* no */' >> $@; \
-	elif echo '#include <limits.h>' | ${CC} -E - ${S}; then \
-	    echo '#define HAVE_LIMITS_H	 /* yes */' >> $@; \
-	else \
-	    echo '#undef HAVE_LIMITS_H	/* no */' >> $@; \
-	fi
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#endif /* !CALC_HAVE_LIMITS_H */' >> $@
-	${H} echo '$@ formed'
-	-${Q}if [ -z "${Q}" ]; then \
-	    echo ''; \
-	    echo '=-=-= start of $@ =-=-='; \
-	    ${CAT} $@; \
-	    echo '=-=-= end of $@ =-=-='; \
-	    echo ''; \
-	else \
-	    ${TRUE}; \
-	fi
-
-have_stdbool.h: ${MK_SET}
-	${Q} ${RM} -f $@
-	${H} echo 'forming $@'
-	${Q} echo '/*' > $@
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile rule $@' >> $@
-	${Q} echo ' */' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#if !defined(CALC_HAVE_STDBOOL_H)' >> $@
-	${Q} echo '#define CALC_HAVE_STDBOOL_H' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '/* do we have <stdbool.h>? */' >> $@
-	-${Q} if [ X"${HAVE_STDBOOL_H}" = X"YES" ]; then \
-	    echo '#define HAVE_STDBOOL_H	/* yes */' >> $@; \
-	elif [ X"${HAVE_STDBOOL_H}" = X"NO" ]; then \
-	    echo '#undef HAVE_STDBOOL_H  /* no */' >> $@; \
-	elif echo '#include <stdbool.h>' | ${CC} -E - ${S}; then \
-	    echo '#define HAVE_STDBOOL_H	 /* yes */' >> $@; \
-	else \
-	    echo '#undef HAVE_STDBOOL_H	/* no */' >> $@; \
-	fi
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#endif /* !CALC_HAVE_STDBOOL_H */' >> $@
-	${H} echo '$@ formed'
-	-${Q}if [ -z "${Q}" ]; then \
-	    echo ''; \
-	    echo '=-=-= start of $@ =-=-='; \
-	    ${CAT} $@; \
-	    echo '=-=-= end of $@ =-=-='; \
-	    echo ''; \
-	else \
-	    ${TRUE}; \
-	fi
-
-have_stdint.h: ${MK_SET}
-	${Q} ${RM} -f $@
-	${H} echo 'forming $@'
-	${Q} echo '/*' > $@
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile rule $@' >> $@
-	${Q} echo ' */' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#if !defined(CALC_HAVE_STDINT_H)' >> $@
-	${Q} echo '#define CALC_HAVE_STDINT_H' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '/* do we have <stdint.h>? */' >> $@
-	-${Q} if [ X"${HAVE_STDINT_H}" = X"YES" ]; then \
-	    echo '#define HAVE_STDINT_H	/* yes */' >> $@; \
-	elif [ X"${HAVE_STDINT_H}" = X"NO" ]; then \
-	    echo '#undef HAVE_STDINT_H  /* no */' >> $@; \
-	elif echo '#include <stdint.h>' | ${CC} -E - ${S}; then \
-	    echo '#define HAVE_STDINT_H	 /* yes */' >> $@; \
-	else \
-	    echo '#undef HAVE_STDINT_H	/* no */' >> $@; \
-	fi
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#endif /* !CALC_HAVE_STDINT_H */' >> $@
-	${H} echo '$@ formed'
-	-${Q}if [ -z "${Q}" ]; then \
-	    echo ''; \
-	    echo '=-=-= start of $@ =-=-='; \
-	    ${CAT} $@; \
-	    echo '=-=-= end of $@ =-=-='; \
-	    echo ''; \
-	else \
-	    ${TRUE}; \
-	fi
-
-have_inttypes.h: ${MK_SET}
-	${Q} ${RM} -f $@
-	${H} echo 'forming $@'
-	${Q} echo '/*' > $@
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile rule $@' >> $@
-	${Q} echo ' */' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#if !defined(CALC_HAVE_INTTYPES_H)' >> $@
-	${Q} echo '#define CALC_HAVE_INTTYPES_H' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '/* do we have <inttypes.h>? */' >> $@
-	-${Q} if [ X"${HAVE_INTTYPES_H}" = X"YES" ]; then \
-	    echo '#define HAVE_INTTYPES_H	/* yes */' >> $@; \
-	elif [ X"${HAVE_INTTYPES_H}" = X"NO" ]; then \
-	    echo '#undef HAVE_INTTYPES_H  /* no */' >> $@; \
-	elif echo '#include <inttypes.h>' | ${CC} -E - ${S}; then \
-	    echo '#define HAVE_INTTYPES_H	 /* yes */' >> $@; \
-	else \
-	    echo '#undef HAVE_INTTYPES_H	/* no */' >> $@; \
-	fi
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#endif /* !CALC_HAVE_INTTYPES_H */' >> $@
-	${H} echo '$@ formed'
-	-${Q}if [ -z "${Q}" ]; then \
-	    echo ''; \
-	    echo '=-=-= start of $@ =-=-='; \
-	    ${CAT} $@; \
-	    echo '=-=-= end of $@ =-=-='; \
-	    echo ''; \
-	else \
-	    ${TRUE}; \
-	fi
-
-have_string.h: ${MK_SET}
-	${Q} ${RM} -f $@
-	${H} echo 'forming $@'
-	${Q} echo '/*' > $@
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile rule $@' >> $@
-	${Q} echo ' */' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#if !defined(CALC_HAVE_STRING_H)' >> $@
-	${Q} echo '#define CALC_HAVE_STRING_H' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '/* do we have <string.h>? */' >> $@
-	-${Q} if [ X"${HAVE_STRING_H}" = X"YES" ]; then \
-	    echo '#define HAVE_STRING_H	/* yes */' >> $@; \
-	elif [ X"${HAVE_STRING_H}" = X"NO" ]; then \
-	    echo '#undef HAVE_STRING_H  /* no */' >> $@; \
-	elif echo '#include <string.h>' | ${CC} -E - ${S}; then \
-	    echo '#define HAVE_STRING_H	 /* yes */' >> $@; \
-	else \
-	    echo '#undef HAVE_STRING_H	/* no */' >> $@; \
-	fi
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#endif /* !CALC_HAVE_STRING_H */' >> $@
-	${H} echo '$@ formed'
 	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -1147,49 +829,7 @@ terminal.h: ${MK_SET}
 	    ${TRUE}; \
 	fi
 
-have_fgetsetpos.h: have_fgetsetpos.c banned.h have_ban_pragma.h ${MK_SET}
-	${Q} ${RM} -f fpos_tmp $@
-	${H} echo 'forming $@'
-	${Q} echo '/*' > $@
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile rule $@' >> $@
-	${Q} echo ' */' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#if !defined(CALC_HAVE_FGETSETPOS_H)' >> $@
-	${Q} echo '#define CALC_HAVE_FGETSETPOS_H' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '/* do we have fgetpos & fsetpos functions? */' >> $@
-	${Q} ${RM} -f have_fgetsetpos.o have_fpos${EXT}
-	-${Q} ${LCC} ${HAVE_FGETSETPOS} ${ICFLAGS} have_fgetsetpos.c -c ${S} \
-		|| ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_fgetsetpos.o -o have_fpos${EXT} ${S} \
-		|| ${TRUE}
-	-${Q} ./have_fpos${EXT} > fpos_tmp ${E} \
-		|| ${TRUE}
-	-${Q} if [ -s fpos_tmp ]; then \
-	    ${CAT} fpos_tmp >> $@; \
-	else \
-	    echo '#undef HAVE_FGETSETPOS  /* no */' >> $@; \
-	    echo '' >> $@; \
-	    echo 'typedef long FILEPOS;' >> $@; \
-	fi
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#endif /* !CALC_HAVE_FGETSETPOS_H */' >> $@
-	${Q} ${RM} -f have_fpos${EXT} have_fgetsetpos.o fpos_tmp
-	${H} echo '$@ formed'
-	-${Q}if [ -z "${Q}" ]; then \
-	    echo ''; \
-	    echo '=-=-= start of $@ =-=-='; \
-	    ${CAT} $@; \
-	    echo '=-=-= end of $@ =-=-='; \
-	    echo ''; \
-	else \
-	    ${TRUE}; \
-	fi
-
-have_fpos_pos.h: have_fpos_pos.c have_fgetsetpos.h have_posscl.h have_string.h \
+have_fpos_pos.h: have_fpos_pos.c have_posscl.h \
 		 banned.h have_ban_pragma.h ${MK_SET}
 	${Q} ${RM} -f fpos_tmp $@
 	${H} echo 'forming $@'
@@ -1202,11 +842,10 @@ have_fpos_pos.h: have_fpos_pos.c have_fgetsetpos.h have_posscl.h have_string.h \
 	${Q} echo '#define CALC_HAVE_FPOS_POS_H' >> $@
 	${Q} echo '' >> $@
 	${Q} echo '' >> $@
-	${Q} echo '/* do we have an __pos element in FILEPOS? */' >> $@
+	${Q} echo '/* do we have an __pos element in fpos_t? */' >> $@
 	${Q} ${RM} -f have_fpos_pos.o have_fpos_pos${EXT}
-	-${Q} ${LCC} ${HAVE_FGETSETPOS} ${HAVE_FPOS_POS} ${ICFLAGS} \
-		have_fpos_pos.c -c ${S} \
-			|| ${TRUE}
+	-${Q} ${LCC} ${HAVE_FPOS_POS} ${ICFLAGS} have_fpos_pos.c -c ${S} \
+		|| ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_fpos_pos.o -o have_fpos_pos${EXT} ${S} \
 		|| ${TRUE}
 	-${Q} ./have_fpos_pos${EXT} > fpos_tmp ${E} \
@@ -1233,10 +872,9 @@ have_fpos_pos.h: have_fpos_pos.c have_fgetsetpos.h have_posscl.h have_string.h \
 	    ${TRUE}; \
 	fi
 
-fposval.h: fposval.c have_fgetsetpos.h have_fpos_pos.h have_offscl.h have_posscl.h \
-	   endian_calc.h banned.h have_ban_pragma.h fposval.h.def alloc.h \
-	   have_newstr.h have_string.h have_const.h have_string.h \
-	   have_unused.h have_stdbool.h ${MK_SET}
+fposval.h: fposval.c have_fpos_pos.h have_offscl.h have_posscl.h \
+	   endian_calc.h banned.h have_ban_pragma.h fposval.h.def \
+	   have_unused.h ${MK_SET}
 	${Q} ${RM} -f fposval_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -1280,49 +918,7 @@ fposval.h: fposval.c have_fgetsetpos.h have_fpos_pos.h have_offscl.h have_posscl
 	    ${TRUE}; \
 	fi
 
-have_const.h: have_const.c banned.h have_ban_pragma.h ${MK_SET}
-	${Q} ${RM} -f have_const const_tmp $@
-	${H} echo 'forming $@'
-	${Q} echo '/*' > $@
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile rule $@' >> $@
-	${Q} echo ' */' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#if !defined(CALC_HAVE_CONST_H)' >> $@
-	${Q} echo '#define CALC_HAVE_CONST_H' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '/* do we have or want const? */' >> $@
-	${Q} ${RM} -f have_const.o have_const${EXT}
-	-${Q} ${LCC} ${ICFLAGS} ${HAVE_CONST} have_const.c -c ${S} \
-		|| ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_const.o -o have_const${EXT} ${S} \
-		|| ${TRUE}
-	-${Q} ./have_const${EXT} > const_tmp ${E} \
-		|| ${TRUE}
-	-${Q} if [ -s const_tmp ]; then \
-	    ${CAT} const_tmp >> $@; \
-	else \
-	    echo '#undef HAVE_CONST /* no */' >> $@; \
-	    echo '#undef CONST' >> $@; \
-	    echo '#define CONST /* no */' >> $@; \
-	fi
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#endif /* !CALC_HAVE_CONST_H */' >> $@
-	${Q} ${RM} -f have_const${EXT} have_const.o const_tmp
-	${H} echo '$@ formed'
-	-${Q}if [ -z "${Q}" ]; then \
-	    echo ''; \
-	    echo '=-=-= start of $@ =-=-='; \
-	    ${CAT} $@; \
-	    echo '=-=-= end of $@ =-=-='; \
-	    echo ''; \
-	else \
-	    ${TRUE}; \
-	fi
-
-have_offscl.h: have_offscl.c have_unistd.h \
+have_offscl.h: have_offscl.c \
 	banned.h have_ban_pragma.h ${MK_SET}
 	${Q} ${RM} -f offscl_tmp $@
 	${H} echo 'forming $@'
@@ -1363,7 +959,7 @@ have_offscl.h: have_offscl.c have_unistd.h \
 	    ${TRUE}; \
 	fi
 
-have_posscl.h: have_posscl.c have_fgetsetpos.h have_unistd.h \
+have_posscl.h: have_posscl.c \
 	banned.h have_ban_pragma.h ${MK_SET}
 	${Q} ${RM} -f have_posscl have_posscl.o posscl_tmp $@
 	${H} echo 'forming $@'
@@ -1386,109 +982,13 @@ have_posscl.h: have_posscl.c have_fgetsetpos.h have_unistd.h \
 	-${Q} if [ -s posscl_tmp ]; then \
 	    ${CAT} posscl_tmp >> $@; \
 	else \
-	    echo '/* FILEPOS is not a simple value */' >> $@; \
-	    echo '#undef HAVE_FILEPOS_SCALAR' >> $@; \
+	    echo '/* fpos_t is not a simple value */' >> $@; \
+	    echo '#undef HAVE_FPOS_T_SCALAR' >> $@; \
 	fi
 	${Q} echo '' >> $@
 	${Q} echo '' >> $@
 	${Q} echo '#endif /* !CALC_HAVE_POSSCL_H */' >> $@
 	${Q} ${RM} -f have_posscl have_posscl.o posscl_tmp
-	${H} echo '$@ formed'
-	-${Q}if [ -z "${Q}" ]; then \
-	    echo ''; \
-	    echo '=-=-= start of $@ =-=-='; \
-	    ${CAT} $@; \
-	    echo '=-=-= end of $@ =-=-='; \
-	    echo ''; \
-	else \
-	    ${TRUE}; \
-	fi
-
-align32.h: align32.c longbits.h have_unistd.h \
-	banned.h have_ban_pragma.h have_unused.h ${MK_SET}
-	${Q} ${RM} -f align32 align32_tmp $@
-	${H} echo 'forming $@'
-	${Q} echo '/*' > $@
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile rule $@' >> $@
-	${Q} echo ' */' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#if !defined(CALC_ALIGN32_H)' >> $@
-	${Q} echo '#define CALC_ALIGN32_H' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '/* must we always align 32 bit accesses? */' >> $@
-	-${Q} if [ X"-DMUST_ALIGN32" = X${ALIGN32} ]; then \
-	    echo '/* forced to align 32 bit values */' >> $@; \
-	    echo '#define MUST_ALIGN32' >> $@; \
-	else \
-	    ${TRUE}; \
-	fi
-	-${Q} if [ X"-UMUST_ALIGN32" = X${ALIGN32} ]; then \
-	    echo '/* forced to not require 32 bit alignment */' >> $@; \
-	    echo '#undef MUST_ALIGN32' >> $@; \
-	else \
-	    ${TRUE}; \
-	fi
-	-${Q} if [ X = X${ALIGN32} ]; then \
-	    ${RM} -f align32.o align32${EXT}; \
-	    ${LCC} ${ICFLAGS} ${ALIGN32} align32.c -c ${S}; \
-	    ${LCC} ${ILDFLAGS} align32.o -o align32${EXT} ${S}; \
-	    ./align32${EXT} >align32_tmp ${E}; \
-	    if [ -s align32_tmp ]; then \
-		${CAT} align32_tmp >> $@; \
-	    else \
-		echo '/* guess we must align 32 bit values */' >> $@; \
-		echo '#define MUST_ALIGN32' >> $@; \
-	    fi; \
-	    ${RM} -f align32${EXT} align32.o align32_tmp core; \
-	else \
-	    ${TRUE}; \
-	fi
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#endif /* !CALC_ALIGN32_H */' >> $@
-	${H} echo '$@ formed'
-	-${Q}if [ -z "${Q}" ]; then \
-	    echo ''; \
-	    echo '=-=-= start of $@ =-=-='; \
-	    ${CAT} $@; \
-	    echo '=-=-= end of $@ =-=-='; \
-	    echo ''; \
-	else \
-	    ${TRUE}; \
-	fi
-
-have_uid_t.h: have_uid_t.c have_unistd.h \
-	banned.h have_ban_pragma.h ${MK_SET}
-	${Q} ${RM} -f have_uid_t uid_tmp $@
-	${H} echo 'forming $@'
-	${Q} echo '/*' > $@
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile rule $@' >> $@
-	${Q} echo ' */' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#if !defined(CALC_HAVE_UID_T_H)' >> $@
-	${Q} echo '#define CALC_HAVE_UID_T_H' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '/* do we have or want uid_t? */' >> $@
-	${Q} ${RM} -f have_uid_t.o have_uid_t${EXT}
-	-${Q} ${LCC} ${ICFLAGS} ${HAVE_UID_T} have_uid_t.c -c ${S} \
-		|| ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_uid_t.o -o have_uid_t${EXT} ${S} \
-		|| ${TRUE}
-	-${Q} ./have_uid_t${EXT} > uid_tmp ${E} \
-		|| ${TRUE}
-	-${Q} if [ -s uid_tmp ]; then \
-	    ${CAT} uid_tmp >> $@; \
-	else \
-	    echo '#undef HAVE_UID_T /* no */' >> $@; \
-	fi
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#endif /* !CALC_HAVE_UID_T_H */' >> $@
-	${Q} ${RM} -f have_uid_t${EXT} have_uid_t.o uid_tmp
 	${H} echo '$@ formed'
 	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -1541,7 +1041,7 @@ have_environ.h: have_environ.c \
 	    ${TRUE}; \
 	fi
 
-have_arc4random.h: have_arc4random.c have_stdlib.h \
+have_arc4random.h: have_arc4random.c \
 	banned.h have_ban_pragma.h ${MK_SET}
 	${Q} ${RM} -f have_arc4random arc4random_tmp $@
 	${H} echo 'forming $@'
@@ -1572,46 +1072,6 @@ have_arc4random.h: have_arc4random.c have_stdlib.h \
 	${Q} echo '' >> $@
 	${Q} echo '#endif /* !HAVE_ARC4RANDOM */' >> $@
 	${Q} ${RM} -f have_arc4random${EXT} have_arc4random.o arc4random_tmp
-	${H} echo '$@ formed'
-	-${Q}if [ -z "${Q}" ]; then \
-	    echo ''; \
-	    echo '=-=-= start of $@ =-=-='; \
-	    ${CAT} $@; \
-	    echo '=-=-= end of $@ =-=-='; \
-	    echo ''; \
-	else \
-	    ${TRUE}; \
-	fi
-
-have_newstr.h: have_newstr.c banned.h have_ban_pragma.h have_string.h ${MK_SET}
-	${Q} ${RM} -f newstr_tmp $@
-	${H} echo 'forming $@'
-	${Q} echo '/*' > $@
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile rule $@' >> $@
-	${Q} echo ' */' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#if !defined(CALC_HAVE_NEWSTR_H)' >> $@
-	${Q} echo '#define CALC_HAVE_NEWSTR_H' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '/* do we have/want memcpy(), memset() & strchr()? */' >> $@
-	${Q} ${RM} -f have_newstr.o have_newstr${EXT}
-	-${Q} ${LCC} ${ICFLAGS} ${HAVE_NEWSTR} have_newstr.c -c ${S} \
-		|| ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_newstr.o -o have_newstr${EXT} ${S} \
-		|| ${TRUE}
-	-${Q} ./have_newstr${EXT} > newstr_tmp ${E} \
-		|| ${TRUE}
-	-${Q} if [ -s newstr_tmp ]; then \
-	    ${CAT} newstr_tmp >> $@; \
-	else \
-	    echo '#undef HAVE_NEWSTR /* no */' >> $@; \
-	fi
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#endif /* !CALC_HAVE_NEWSTR_H */' >> $@
-	${Q} ${RM} -f have_newstr${EXT} have_newstr.o newstr_tmp
 	${H} echo '$@ formed'
 	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -1811,7 +1271,7 @@ have_sys_mount.h: ${MK_SET}
 	    ${TRUE}; \
 	fi
 
-have_getsid.h: have_getsid.c have_unistd.h \
+have_getsid.h: have_getsid.c \
 	banned.h have_ban_pragma.h ${MK_SET}
 	${Q} ${RM} -f getsid_tmp $@
 	${H} echo 'forming $@'
@@ -1852,7 +1312,7 @@ have_getsid.h: have_getsid.c have_unistd.h \
 	    ${TRUE}; \
 	fi
 
-have_getpgid.h: have_getpgid.c have_unistd.h \
+have_getpgid.h: have_getpgid.c \
 	banned.h have_ban_pragma.h ${MK_SET}
 	${Q} ${RM} -f getpgid_tmp $@
 	${H} echo 'forming $@'
@@ -1923,47 +1383,6 @@ have_gettime.h: have_gettime.c banned.h have_ban_pragma.h \
 	${Q} echo '' >> $@
 	${Q} echo '#endif /* !CALC_HAVE_GETTIME_H */' >> $@
 	${Q} ${RM} -f have_gettime${EXT} have_gettime.o gettime_tmp
-	${H} echo '$@ formed'
-	-${Q}if [ -z "${Q}" ]; then \
-	    echo ''; \
-	    echo '=-=-= start of $@ =-=-='; \
-	    ${CAT} $@; \
-	    echo '=-=-= end of $@ =-=-='; \
-	    echo ''; \
-	else \
-	    ${TRUE}; \
-	fi
-
-have_getprid.h: have_getprid.c have_unistd.h \
-	banned.h have_ban_pragma.h ${MK_SET}
-	${Q} ${RM} -f getprid_tmp $@
-	${H} echo 'forming $@'
-	${Q} echo '/*' > $@
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile rule $@' >> $@
-	${Q} echo ' */' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#if !defined(CALC_HAVE_GETPRID_H)' >> $@
-	${Q} echo '#define CALC_HAVE_GETPRID_H' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '/* do we have or want getprid()? */' >> $@
-	${Q} ${RM} -f have_getprid.o have_getprid${EXT}
-	-${Q} ${LCC} ${ICFLAGS} ${HAVE_GETPRID} have_getprid.c -c ${S} \
-		|| ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_getprid.o -o have_getprid${EXT} ${S} \
-		|| ${TRUE}
-	-${Q} ./have_getprid${EXT} > getprid_tmp ${E} \
-		|| ${TRUE}
-	-${Q} if [ -s getprid_tmp ]; then \
-	    ${CAT} getprid_tmp >> $@; \
-	else \
-	    echo '#undef HAVE_GETPRID /* no */' >> $@; \
-	fi
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#endif /* !CALC_HAVE_GETPRID_H */' >> $@
-	${Q} ${RM} -f have_getprid${EXT} have_getprid.o getprid_tmp
 	${H} echo '$@ formed'
 	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -2051,108 +1470,7 @@ have_rusage.h: have_rusage.c banned.h have_ban_pragma.h ${MK_SET}
 	    ${TRUE}; \
 	fi
 
-have_strdup.h: have_strdup.c banned.h have_ban_pragma.h have_string.h ${MK_SET}
-	${Q} ${RM} -f strdup_tmp $@
-	${H} echo 'forming $@'
-	${Q} echo '/*' > $@
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile rule $@' >> $@
-	${Q} echo ' */' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#if !defined(CALC_HAVE_STRDUP_H)' >> $@
-	${Q} echo '#define CALC_HAVE_STRDUP_H' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '/* do we have or want getstrdup()? */' >> $@
-	${Q} ${RM} -f have_strdup.o have_strdup${EXT}
-	-${Q} ${LCC} ${ICFLAGS} ${HAVE_STRDUP} have_strdup.c -c ${S} \
-		|| ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_strdup.o -o have_strdup${EXT} ${S} \
-		|| ${TRUE}
-	-${Q} ./have_strdup${EXT} > strdup_tmp ${E} \
-		|| ${TRUE}
-	-${Q} if [ -s strdup_tmp ]; then \
-	    ${CAT} strdup_tmp >> $@; \
-	else \
-	    echo '#undef HAVE_STRDUP /* no */' >> $@; \
-	fi
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#endif /* !CALC_HAVE_STRDUP_H */' >> $@
-	${Q} ${RM} -f have_strdup${EXT} have_strdup.o strdup_tmp
-	${H} echo '$@ formed'
-	-${Q}if [ -z "${Q}" ]; then \
-	    echo ''; \
-	    echo '=-=-= start of $@ =-=-='; \
-	    ${CAT} $@; \
-	    echo '=-=-= end of $@ =-=-='; \
-	    echo ''; \
-	else \
-	    ${TRUE}; \
-	fi
-
-args.h: have_stdvs.c have_varvs.c have_string.h have_unistd.h \
-	have_stdlib.h banned.h have_ban_pragma.h
-	${Q} ${RM} -f $@
-	${H} echo 'forming $@'
-	${Q} echo '/*' > $@
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile rule $@' >> $@
-	${Q} echo ' */' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#if !defined(CALC_ARGS_H)' >> $@
-	${Q} echo '#define CALC_ARGS_H' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} ${RM} -f have_stdvs.o have_stdvs${EXT}
-	-${Q} ${LCC} ${ICFLAGS} ${HAVE_VSNPRINTF} have_stdvs.c -c ${S} \
-		|| ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_stdvs.o -o have_stdvs${EXT} ${S} \
-		|| ${TRUE}
-	-${Q} if ./have_stdvs${EXT} >>$@ ${E}; then \
-	    ${TOUCH} have_args.sh; \
-	else \
-	    ${TRUE}; \
-	fi
-	-${Q} if [ ! -f have_args.sh ] && [ X"${HAVE_VSNPRINTF}" = X ]; then \
-	    ${RM} -f have_stdvs.o have_stdvs${EXT} have_varvs.o; \
-	    ${RM} -f have_varvs${EXT}; \
-	    ${LCC} ${ICFLAGS} ${HAVE_VSNPRINTF} have_varvs.c -c ${S}; \
-	    ${LCC} ${ILDFLAGS} have_varvs.o -o have_varvs${EXT} ${E}; \
-	    if ./have_varvs${EXT} >>$@ 2>/dev/null; then \
-		${TOUCH} have_args.sh; \
-	    else \
-		${TRUE}; \
-	    fi; \
-	else \
-	    ${TRUE}; \
-	fi
-	-${Q} if [ -f have_args.sh ]; then \
-	    echo 'exit 0' > have_args.sh; \
-	else \
-	    echo 'exit 1' > have_args.sh; \
-	    echo "Unable to determine what type of variable args and"; \
-	    echo "what type of vsnprintf() should be used.  Set or change"; \
-	    echo "the Makefile variable HAVE_VSNPRINTF."; \
-	fi
-	${Q} sh ./have_args.sh
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#endif /* !CALC_ARGS_H */' >> $@
-	${Q} ${RM} -f have_stdvs.o have_varvs.o have_varvs${EXT} have_args.sh
-	${Q} ${RM} -f core
-	${H} echo '$@ formed'
-	-${Q}if [ -z "${Q}" ]; then \
-	    echo ''; \
-	    echo '=-=-= start of $@ =-=-='; \
-	    ${CAT} $@; \
-	    echo '=-=-= end of $@ =-=-='; \
-	    echo ''; \
-	else \
-	    ${TRUE}; \
-	fi
-
-errsym.h: errcode${EXT}
+errsym.h: status.chk_c.h errcode${EXT}
 	${Q} ${RM} -f $@
 	${H} echo 'forming $@'
 	./errcode${EXT} -d > $@
@@ -2167,12 +1485,12 @@ errsym.h: errcode${EXT}
 	    ${TRUE}; \
 	fi
 
-errcode${EXT}: errtbl.c attribute.h bool.h errtbl.h have_const.h have_stdbool.h have_newstr.h \
+errcode${EXT}: status.chk_c.h errtbl.c attribute.h errtbl.h \
 	       endian_calc.h longbits.h ${MK_SET}
 	${RM} -f $@
 	${LCC} ${ICFLAGS} ${ILDFLAGS} -DERRCODE_SRC errtbl.c -o $@
 
-have_unused.h: have_unused.c have_stdlib.h have_ban_pragma.h \
+have_unused.h: have_unused.c have_ban_pragma.h \
 	       ${MK_SET}
 	${Q} ${RM} -f unused_tmp $@
 	${H} echo 'forming $@'
@@ -2257,7 +1575,7 @@ have_ban_pragma.h: have_ban_pragma.c banned.h ${MK_SET}
 	    ${TRUE}; \
 	fi
 
-have_strlcpy.h: have_strlcpy.c banned.h have_ban_pragma.h have_string.h \
+have_strlcpy.h: have_strlcpy.c banned.h have_ban_pragma.h \
 		${MK_SET}
 	${Q} ${RM} -f unused_tmp $@
 	${H} echo 'forming $@'
@@ -2299,7 +1617,7 @@ have_strlcpy.h: have_strlcpy.c banned.h have_ban_pragma.h have_string.h \
 	    ${TRUE}; \
 	fi
 
-have_strlcat.h: have_strlcat.c banned.h have_ban_pragma.h have_string.h \
+have_strlcat.h: have_strlcat.c banned.h have_ban_pragma.h \
 		${MK_SET}
 	${Q} ${RM} -f unused_tmp $@
 	${H} echo 'forming $@'
@@ -2341,7 +1659,7 @@ have_strlcat.h: have_strlcat.c banned.h have_ban_pragma.h have_string.h \
 	    ${TRUE}; \
 	fi
 
-chk_c${EXT}: chk_c.c have_stdint.h have_inttypes.h have_stdlib.h bool.h have_ban_pragma.h banned.h have_stdbool.h
+chk_c${EXT}: have_ban_pragma.h chk_c.c
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	${Q} ${RM} -f chk_c.o $@ status.chk_c.h
 	${H} echo 'forming status.chk_c.h'
@@ -2610,9 +1928,7 @@ calc_version: ver_calc${EXT}
 version:
 	@echo ${VERSION}
 
-ver_calc${EXT}: version.c strl.c have_string.h have_const.h have_newstr.h \
-	have_strlcpy.h have_strlcat.h endian_calc.h longbits.h \
-	have_unused.h charbit.h have_stdbool.h
+ver_calc${EXT}: version.c strl.c have_strlcpy.h have_strlcat.h endian_calc.h longbits.h have_unused.h charbit.h
 	${RM} -f $@
 	${LCC} ${ICFLAGS} -DCALC_VER ${ILDFLAGS} version.c strl.c -o $@
 
@@ -2803,7 +2119,6 @@ calcinfo:
 
 env:
 	@echo '=-=-=-=-= dumping major make variables =-=-=-=-='
-	@echo 'ALIGN32=${ALIGN32}'; echo ''
 	@echo 'ALLOW_CUSTOM=${ALLOW_CUSTOM}'; echo ''
 	@echo 'AR=${AR}'; echo ''
 	@echo 'ARCH_CFLAGS=${ARCH_CFLAGS}'; echo ''
@@ -2873,42 +2188,24 @@ env:
 	@echo 'GREP=${GREP}'; echo ''
 	@echo 'GZIP=${GZIP}'; echo ''
 	@echo 'HAVE_ARC4RANDOM=${HAVE_ARC4RANDOM}'; echo ''
-	@echo 'HAVE_CONST=${HAVE_CONST}'; echo ''
 	@echo 'HAVE_ENVIRON=${HAVE_ENVIRON}'; echo ''
-	@echo 'HAVE_FGETSETPOS=${HAVE_FGETSETPOS}'; echo ''
 	@echo 'HAVE_FPOS_POS=${HAVE_FPOS_POS}'; echo ''
 	@echo 'HAVE_GETPGID=${HAVE_GETPGID}'; echo ''
-	@echo 'HAVE_GETPRID=${HAVE_GETPRID}'; echo ''
 	@echo 'HAVE_GETRUSAGE=${HAVE_GETRUSAGE}'; echo ''
 	@echo 'HAVE_GETSID=${HAVE_GETSID}'; echo ''
 	@echo 'HAVE_GETTIME=${HAVE_GETTIME}'; echo ''
-	@echo 'HAVE_INTTYPES_H=${HAVE_INTTYPES_H}'; echo ''
-	@echo 'HAVE_LIMITS_H=${HAVE_LIMITS_H}'; echo ''
-	@echo 'HAVE_NEWSTR=${HAVE_NEWSTR}'; echo ''
 	@echo 'HAVE_OFFSCL=${HAVE_OFFSCL}'; echo ''
 	@echo 'HAVE_POSSCL=${HAVE_POSSCL}'; echo ''
 	@echo 'HAVE_PRAGMA_GCC_POSION=${HAVE_PRAGMA_GCC_POSION}'; echo ''
 	@echo 'HAVE_STATFS=${HAVE_STATFS}'; echo ''
-	@echo 'HAVE_STDBOOL_H=${HAVE_STDBOOL_H}'; echo ''
-	@echo 'HAVE_STDINT_H=${HAVE_STDINT_H}'; echo ''
-	@echo 'HAVE_STDLIB_H=${HAVE_STDLIB_H}'; echo ''
-	@echo 'HAVE_STRDUP=${HAVE_STRDUP}'; echo ''
-	@echo 'HAVE_STRING_H=${HAVE_STRING_H}'; echo ''
 	@echo 'HAVE_STRLCAT=${HAVE_STRLCAT}'; echo ''
 	@echo 'HAVE_STRLCPY=${HAVE_STRLCPY}'; echo ''
 	@echo 'HAVE_SYS_MOUNT_H=${HAVE_SYS_MOUNT_H}'; echo ''
 	@echo 'HAVE_SYS_PARAM_H=${HAVE_SYS_PARAM_H}'; echo ''
-	@echo 'HAVE_SYS_TIME_H=${HAVE_SYS_TIME_H}'; echo ''
-	@echo 'HAVE_SYS_TIMES_H=${HAVE_SYS_TIMES_H}'; echo ''
 	@echo 'HAVE_SYS_VFS_H=${HAVE_SYS_VFS_H}'; echo ''
-	@echo 'HAVE_TIME_H=${HAVE_TIME_H}'; echo ''
-	@echo 'HAVE_TIMES_H=${HAVE_TIMES_H}'; echo ''
-	@echo 'HAVE_UID_T=${HAVE_UID_T}'; echo ''
-	@echo 'HAVE_UNISTD_H=${HAVE_UNISTD_H}'; echo ''
 	@echo 'HAVE_UNUSED=${HAVE_UNUSED}'; echo ''
 	@echo 'HAVE_URANDOM_H=${HAVE_URANDOM_H}'; echo ''
 	@echo 'HAVE_USTAT=${HAVE_USTAT}'; echo ''
-	@echo 'HAVE_VSNPRINTF=${HAVE_VSNPRINTF}'; echo ''
 	@echo 'HELPDIR=${HELPDIR}'; echo ''
 	@echo 'H=${H}'; echo ''
 	@echo 'HOSTNAME=${HOSTNAME}'; echo ''
@@ -3347,6 +2644,7 @@ olduninstall:
 	${RM} -f ${CALC_INCDIR}/calcerr.c
 	${RM} -f ${CALC_INCDIR}/have_fgetsetpos.h
 	${RM} -f ${CALC_INCDIR}/calcerr.h
+	${RM} -f ${CALC_INCDIR}/alloc.h
 	${RM} -f -v Makefile.simple Makefile.simple.bak
 	${RM} -f -v custom/Makefile.simple custom/Makefile.simple.bak
 
@@ -3382,6 +2680,20 @@ clean:
 	${RM} -f have_vs.c std_arg.h try_stdarg.c fnvhash.c
 	${RM} -f have_malloc.h math_error.h string.h string.c
 	${RM} -f calcerr.c calcerr.h calcerr.o
+	${RM} -f align32.h args.h have_fgetsetpos.h have_getprid.h have_args.sh alloc.h
+	${RM} -f have_inttypes.h have_limits.h have_newstr.h have_stdbool.h
+	${RM} -f have_stdint.h have_stdlib.h have_strdup.h have_string.h have_times.h
+	${RM} -f have_uid_t.h have_unistd.h have_const.h bool.h decl.h have_fpos.h
+	${RM} -f have_const.c have_const.o have_const${EXT}
+	${RM} -f have_fgetsetpos.c have_fgetsetpos.o have_fgetsetpos${EXT}
+	${RM} -f have_getprid.c have_getprid.o have_getprid${EXT}
+	${RM} -f have_newstr.c have_newstr.o have_newstr${EXT}
+	${RM} -f have_stdvs.c have_stdvs.o have_stdvs${EXT}
+	${RM} -f have_strdup.c have_strdup.o have_strdup${EXT}
+	${RM} -f have_uid_t.c have_uid_t.o have_uid_t${EXT}
+	${RM} -f have_varvs.c have_varvs.o have_varvs${EXT}
+	${RM} -f align32.c align32.o align32${EXT}
+	${RM} -f have_fpos.c have_fpos.o have_fpos${EXT}
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 clobber: clean
@@ -3439,7 +2751,7 @@ clobber: clean
 	    ${RM} -rf .DS_Store; \
 	fi
 	${RM} -f func.show func.sort
-	${RM} -f outfile have_fpos.h
+	${RM} -f outfile
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 # install everything
@@ -3764,9 +3076,6 @@ install: ${LIB_H_SRC} ${BUILD_H_SRC} calc.1 all custom/Makefile
 	fi
 	${V} # NOTE: misc install cleanup
 	${Q} ${RM} -f tmp
-	${V} # NOTE: have_fgetsetpos.h has been renamed to have_fgetsetpos.h so we
-	${V} #       remove the old have_fgetsetpos.h include file.
-	${Q} ${RM} -f ${CALC_INCDIR}/have_fgetsetpos.h
 	${V} # NOTE: remove the calcerr.c that was installed by mistake
 	${V} #	     under ${INC_DIR} in calc v2.12.9.1
 	${Q} ${RM} -f ${T}${CALC_INCDIR}/calcerr.c
@@ -4030,171 +3339,133 @@ clang-format: ${C_SRC} ${H_SRC}
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 
 addop.o: addop.c
-addop.o: alloc.h
 addop.o: attribute.h
 addop.o: banned.h
 addop.o: block.h
-addop.o: bool.h
 addop.o: byteswap.h
 addop.o: calc.h
 addop.o: charbit.h
 addop.o: cmath.h
 addop.o: config.h
-addop.o: decl.h
 addop.o: endian_calc.h
 addop.o: errsym.h
 addop.o: errtbl.h
 addop.o: func.h
 addop.o: hash.h
 addop.o: have_ban_pragma.h
-addop.o: have_const.h
-addop.o: have_limits.h
-addop.o: have_newstr.h
-addop.o: have_stdbool.h
-addop.o: have_stdlib.h
-addop.o: have_string.h
+addop.o: int.h
 addop.o: label.h
 addop.o: longbits.h
 addop.o: nametype.h
 addop.o: opcodes.h
 addop.o: qmath.h
 addop.o: sha1.h
+addop.o: status.chk_c.h
 addop.o: str.h
 addop.o: symbol.h
 addop.o: token.h
 addop.o: value.h
 addop.o: version.h
 addop.o: zmath.h
-align32.o: align32.c
-align32.o: banned.h
-align32.o: have_ban_pragma.h
-align32.o: have_stdlib.h
-align32.o: have_unistd.h
-align32.o: have_unused.h
-align32.o: longbits.h
-assocfunc.o: alloc.h
+addop.o: zrand.h
+addop.o: zrandom.h
 assocfunc.o: assocfunc.c
 assocfunc.o: attribute.h
 assocfunc.o: banned.h
 assocfunc.o: block.h
-assocfunc.o: bool.h
 assocfunc.o: byteswap.h
 assocfunc.o: charbit.h
 assocfunc.o: cmath.h
 assocfunc.o: config.h
-assocfunc.o: decl.h
 assocfunc.o: endian_calc.h
 assocfunc.o: errsym.h
 assocfunc.o: errtbl.h
 assocfunc.o: hash.h
 assocfunc.o: have_ban_pragma.h
-assocfunc.o: have_const.h
-assocfunc.o: have_limits.h
-assocfunc.o: have_newstr.h
-assocfunc.o: have_stdbool.h
-assocfunc.o: have_stdlib.h
-assocfunc.o: have_string.h
+assocfunc.o: int.h
 assocfunc.o: longbits.h
 assocfunc.o: nametype.h
 assocfunc.o: qmath.h
 assocfunc.o: sha1.h
+assocfunc.o: status.chk_c.h
 assocfunc.o: str.h
 assocfunc.o: value.h
 assocfunc.o: version.h
 assocfunc.o: zmath.h
-blkcpy.o: alloc.h
+assocfunc.o: zrand.h
+assocfunc.o: zrandom.h
 blkcpy.o: attribute.h
 blkcpy.o: banned.h
 blkcpy.o: blkcpy.c
 blkcpy.o: blkcpy.h
 blkcpy.o: block.h
-blkcpy.o: bool.h
 blkcpy.o: byteswap.h
 blkcpy.o: calc.h
 blkcpy.o: charbit.h
 blkcpy.o: cmath.h
 blkcpy.o: config.h
-blkcpy.o: decl.h
 blkcpy.o: endian_calc.h
 blkcpy.o: errsym.h
 blkcpy.o: errtbl.h
 blkcpy.o: file.h
 blkcpy.o: hash.h
 blkcpy.o: have_ban_pragma.h
-blkcpy.o: have_const.h
-blkcpy.o: have_fgetsetpos.h
-blkcpy.o: have_limits.h
-blkcpy.o: have_newstr.h
-blkcpy.o: have_stdbool.h
-blkcpy.o: have_stdlib.h
-blkcpy.o: have_string.h
+blkcpy.o: int.h
 blkcpy.o: longbits.h
 blkcpy.o: nametype.h
 blkcpy.o: qmath.h
 blkcpy.o: sha1.h
+blkcpy.o: status.chk_c.h
 blkcpy.o: str.h
 blkcpy.o: value.h
 blkcpy.o: version.h
 blkcpy.o: zmath.h
-block.o: alloc.h
+blkcpy.o: zrand.h
+blkcpy.o: zrandom.h
 block.o: attribute.h
 block.o: banned.h
 block.o: block.c
 block.o: block.h
-block.o: bool.h
 block.o: byteswap.h
 block.o: charbit.h
 block.o: cmath.h
 block.o: config.h
-block.o: decl.h
 block.o: endian_calc.h
 block.o: errsym.h
 block.o: errtbl.h
 block.o: hash.h
 block.o: have_ban_pragma.h
-block.o: have_const.h
-block.o: have_limits.h
-block.o: have_newstr.h
-block.o: have_stdbool.h
-block.o: have_stdlib.h
-block.o: have_string.h
+block.o: int.h
 block.o: longbits.h
 block.o: nametype.h
 block.o: qmath.h
 block.o: sha1.h
+block.o: status.chk_c.h
 block.o: str.h
 block.o: value.h
 block.o: version.h
 block.o: zmath.h
-byteswap.o: alloc.h
+block.o: zrand.h
+block.o: zrandom.h
 byteswap.o: attribute.h
 byteswap.o: banned.h
-byteswap.o: bool.h
 byteswap.o: byteswap.c
 byteswap.o: byteswap.h
 byteswap.o: charbit.h
 byteswap.o: cmath.h
-byteswap.o: decl.h
 byteswap.o: endian_calc.h
 byteswap.o: errsym.h
 byteswap.o: errtbl.h
 byteswap.o: have_ban_pragma.h
-byteswap.o: have_const.h
-byteswap.o: have_limits.h
-byteswap.o: have_newstr.h
-byteswap.o: have_stdbool.h
-byteswap.o: have_stdlib.h
-byteswap.o: have_string.h
+byteswap.o: int.h
 byteswap.o: longbits.h
 byteswap.o: qmath.h
+byteswap.o: status.chk_c.h
 byteswap.o: version.h
 byteswap.o: zmath.h
-calc.o: alloc.h
-calc.o: args.h
 calc.o: attribute.h
 calc.o: banned.h
 calc.o: block.h
-calc.o: bool.h
 calc.o: byteswap.h
 calc.o: calc.c
 calc.o: calc.h
@@ -4203,26 +3474,17 @@ calc.o: cmath.h
 calc.o: conf.h
 calc.o: config.h
 calc.o: custom.h
-calc.o: decl.h
 calc.o: endian_calc.h
 calc.o: errsym.h
 calc.o: errtbl.h
 calc.o: func.h
 calc.o: hash.h
 calc.o: have_ban_pragma.h
-calc.o: have_const.h
-calc.o: have_limits.h
-calc.o: have_newstr.h
-calc.o: have_stdbool.h
-calc.o: have_stdlib.h
-calc.o: have_strdup.h
-calc.o: have_string.h
 calc.o: have_strlcat.h
 calc.o: have_strlcpy.h
-calc.o: have_uid_t.h
-calc.o: have_unistd.h
 calc.o: have_unused.h
 calc.o: hist.h
+calc.o: int.h
 calc.o: label.h
 calc.o: lib_calc.h
 calc.o: longbits.h
@@ -4230,6 +3492,7 @@ calc.o: nametype.h
 calc.o: opcodes.h
 calc.o: qmath.h
 calc.o: sha1.h
+calc.o: status.chk_c.h
 calc.o: str.h
 calc.o: strl.h
 calc.o: symbol.h
@@ -4237,23 +3500,17 @@ calc.o: token.h
 calc.o: value.h
 calc.o: version.h
 calc.o: zmath.h
+calc.o: zrand.h
+calc.o: zrandom.h
 charbit.o: banned.h
 charbit.o: charbit.c
 charbit.o: have_ban_pragma.h
-charbit.o: have_limits.h
 chk_c.o: banned.h
-chk_c.o: bool.h
 chk_c.o: chk_c.c
 chk_c.o: have_ban_pragma.h
-chk_c.o: have_inttypes.h
-chk_c.o: have_stdbool.h
-chk_c.o: have_stdint.h
-chk_c.o: have_stdlib.h
-codegen.o: alloc.h
 codegen.o: attribute.h
 codegen.o: banned.h
 codegen.o: block.h
-codegen.o: bool.h
 codegen.o: byteswap.h
 codegen.o: calc.h
 codegen.o: charbit.h
@@ -4261,22 +3518,15 @@ codegen.o: cmath.h
 codegen.o: codegen.c
 codegen.o: conf.h
 codegen.o: config.h
-codegen.o: decl.h
 codegen.o: endian_calc.h
 codegen.o: errsym.h
 codegen.o: errtbl.h
 codegen.o: func.h
 codegen.o: hash.h
 codegen.o: have_ban_pragma.h
-codegen.o: have_const.h
-codegen.o: have_limits.h
-codegen.o: have_newstr.h
-codegen.o: have_stdbool.h
-codegen.o: have_stdlib.h
-codegen.o: have_string.h
 codegen.o: have_strlcat.h
 codegen.o: have_strlcpy.h
-codegen.o: have_unistd.h
+codegen.o: int.h
 codegen.o: label.h
 codegen.o: lib_calc.h
 codegen.o: longbits.h
@@ -4284,6 +3534,7 @@ codegen.o: nametype.h
 codegen.o: opcodes.h
 codegen.o: qmath.h
 codegen.o: sha1.h
+codegen.o: status.chk_c.h
 codegen.o: str.h
 codegen.o: strl.h
 codegen.o: symbol.h
@@ -4291,59 +3542,44 @@ codegen.o: token.h
 codegen.o: value.h
 codegen.o: version.h
 codegen.o: zmath.h
-comfunc.o: alloc.h
+codegen.o: zrand.h
+codegen.o: zrandom.h
 comfunc.o: attribute.h
 comfunc.o: banned.h
-comfunc.o: bool.h
 comfunc.o: byteswap.h
 comfunc.o: charbit.h
 comfunc.o: cmath.h
 comfunc.o: comfunc.c
 comfunc.o: config.h
-comfunc.o: decl.h
 comfunc.o: endian_calc.h
 comfunc.o: errsym.h
 comfunc.o: errtbl.h
 comfunc.o: have_ban_pragma.h
-comfunc.o: have_const.h
-comfunc.o: have_limits.h
-comfunc.o: have_newstr.h
-comfunc.o: have_stdbool.h
-comfunc.o: have_stdlib.h
-comfunc.o: have_string.h
+comfunc.o: int.h
 comfunc.o: longbits.h
-comfunc.o: nametype.h
 comfunc.o: qmath.h
+comfunc.o: status.chk_c.h
 comfunc.o: version.h
 comfunc.o: zmath.h
-commath.o: alloc.h
 commath.o: attribute.h
 commath.o: banned.h
-commath.o: bool.h
 commath.o: byteswap.h
 commath.o: charbit.h
 commath.o: cmath.h
 commath.o: commath.c
-commath.o: decl.h
 commath.o: endian_calc.h
 commath.o: errsym.h
 commath.o: errtbl.h
 commath.o: have_ban_pragma.h
-commath.o: have_const.h
-commath.o: have_limits.h
-commath.o: have_newstr.h
-commath.o: have_stdbool.h
-commath.o: have_stdlib.h
-commath.o: have_string.h
+commath.o: int.h
 commath.o: longbits.h
 commath.o: qmath.h
+commath.o: status.chk_c.h
 commath.o: version.h
 commath.o: zmath.h
-config.o: alloc.h
 config.o: attribute.h
 config.o: banned.h
 config.o: block.h
-config.o: bool.h
 config.o: byteswap.h
 config.o: calc.h
 config.o: charbit.h
@@ -4351,26 +3587,19 @@ config.o: cmath.h
 config.o: config.c
 config.o: config.h
 config.o: custom.h
-config.o: decl.h
 config.o: endian_calc.h
 config.o: errsym.h
 config.o: errtbl.h
 config.o: hash.h
 config.o: have_ban_pragma.h
-config.o: have_const.h
-config.o: have_limits.h
-config.o: have_newstr.h
-config.o: have_stdbool.h
-config.o: have_stdlib.h
-config.o: have_strdup.h
-config.o: have_string.h
 config.o: have_strlcat.h
 config.o: have_strlcpy.h
-config.o: have_times.h
+config.o: int.h
 config.o: longbits.h
 config.o: nametype.h
 config.o: qmath.h
 config.o: sha1.h
+config.o: status.chk_c.h
 config.o: str.h
 config.o: strl.h
 config.o: token.h
@@ -4378,42 +3607,36 @@ config.o: value.h
 config.o: version.h
 config.o: zmath.h
 config.o: zrand.h
-const.o: alloc.h
+config.o: zrandom.h
 const.o: attribute.h
 const.o: banned.h
 const.o: block.h
-const.o: bool.h
 const.o: byteswap.h
 const.o: calc.h
 const.o: charbit.h
 const.o: cmath.h
 const.o: config.h
 const.o: const.c
-const.o: decl.h
 const.o: endian_calc.h
 const.o: errsym.h
 const.o: errtbl.h
 const.o: hash.h
 const.o: have_ban_pragma.h
-const.o: have_const.h
-const.o: have_limits.h
-const.o: have_newstr.h
-const.o: have_stdbool.h
-const.o: have_stdlib.h
-const.o: have_string.h
+const.o: int.h
 const.o: longbits.h
 const.o: nametype.h
 const.o: qmath.h
 const.o: sha1.h
+const.o: status.chk_c.h
 const.o: str.h
 const.o: value.h
 const.o: version.h
 const.o: zmath.h
-custom.o: alloc.h
+const.o: zrand.h
+const.o: zrandom.h
 custom.o: attribute.h
 custom.o: banned.h
 custom.o: block.h
-custom.o: bool.h
 custom.o: byteswap.h
 custom.o: calc.h
 custom.o: charbit.h
@@ -4421,73 +3644,61 @@ custom.o: cmath.h
 custom.o: config.h
 custom.o: custom.c
 custom.o: custom.h
-custom.o: decl.h
 custom.o: endian_calc.h
 custom.o: errsym.h
 custom.o: errtbl.h
 custom.o: hash.h
 custom.o: have_ban_pragma.h
-custom.o: have_const.h
-custom.o: have_limits.h
-custom.o: have_newstr.h
-custom.o: have_stdbool.h
-custom.o: have_stdlib.h
-custom.o: have_string.h
+custom.o: int.h
 custom.o: longbits.h
 custom.o: nametype.h
 custom.o: qmath.h
 custom.o: sha1.h
+custom.o: status.chk_c.h
 custom.o: str.h
 custom.o: value.h
 custom.o: version.h
 custom.o: zmath.h
+custom.o: zrand.h
+custom.o: zrandom.h
 endian.o: banned.h
 endian.o: endian.c
 endian.o: have_ban_pragma.h
-endian.o: have_stdlib.h
-endian.o: have_unistd.h
-errtbl.o: alloc.h
 errtbl.o: attribute.h
+errtbl.o: banned.h
 errtbl.o: block.h
-errtbl.o: bool.h
 errtbl.o: byteswap.h
-errtbl.o: calc.h
 errtbl.o: charbit.h
 errtbl.o: cmath.h
 errtbl.o: config.h
-errtbl.o: decl.h
 errtbl.o: endian_calc.h
 errtbl.o: errsym.h
 errtbl.o: errtbl.c
 errtbl.o: errtbl.h
 errtbl.o: func.h
 errtbl.o: hash.h
-errtbl.o: have_const.h
-errtbl.o: have_limits.h
-errtbl.o: have_newstr.h
-errtbl.o: have_stdbool.h
-errtbl.o: have_stdlib.h
-errtbl.o: have_string.h
+errtbl.o: have_ban_pragma.h
+errtbl.o: int.h
 errtbl.o: label.h
 errtbl.o: longbits.h
 errtbl.o: nametype.h
 errtbl.o: qmath.h
 errtbl.o: sha1.h
+errtbl.o: status.chk_c.h
 errtbl.o: str.h
 errtbl.o: value.h
 errtbl.o: version.h
 errtbl.o: zmath.h
-file.o: alloc.h
+errtbl.o: zrand.h
+errtbl.o: zrandom.h
 file.o: attribute.h
 file.o: banned.h
 file.o: block.h
-file.o: bool.h
 file.o: byteswap.h
 file.o: calc.h
 file.o: charbit.h
 file.o: cmath.h
 file.o: config.h
-file.o: decl.h
 file.o: endian_calc.h
 file.o: errsym.h
 file.o: errtbl.h
@@ -4496,61 +3707,40 @@ file.o: file.h
 file.o: fposval.h
 file.o: hash.h
 file.o: have_ban_pragma.h
-file.o: have_const.h
-file.o: have_fgetsetpos.h
 file.o: have_fpos_pos.h
-file.o: have_limits.h
-file.o: have_newstr.h
-file.o: have_stdbool.h
-file.o: have_stdlib.h
-file.o: have_string.h
 file.o: have_strlcat.h
 file.o: have_strlcpy.h
-file.o: have_unistd.h
+file.o: int.h
 file.o: longbits.h
 file.o: nametype.h
 file.o: qmath.h
 file.o: sha1.h
+file.o: status.chk_c.h
 file.o: str.h
 file.o: strl.h
 file.o: value.h
 file.o: version.h
 file.o: zmath.h
-fposval.o: alloc.h
+file.o: zrand.h
+file.o: zrandom.h
 fposval.o: banned.h
-fposval.o: bool.h
-fposval.o: byteswap.h
-fposval.o: charbit.h
-fposval.o: decl.h
 fposval.o: endian_calc.h
 fposval.o: fposval.c
 fposval.o: have_ban_pragma.h
-fposval.o: have_const.h
-fposval.o: have_fgetsetpos.h
 fposval.o: have_fpos_pos.h
-fposval.o: have_limits.h
-fposval.o: have_newstr.h
 fposval.o: have_offscl.h
 fposval.o: have_posscl.h
-fposval.o: have_stdbool.h
-fposval.o: have_stdlib.h
-fposval.o: have_string.h
 fposval.o: have_unused.h
-fposval.o: longbits.h
-fposval.o: version.h
-fposval.o: zmath.h
-func.o: alloc.h
 func.o: attribute.h
 func.o: banned.h
+func.o: blkcpy.h
 func.o: block.h
-func.o: bool.h
 func.o: byteswap.h
 func.o: calc.h
 func.o: charbit.h
 func.o: cmath.h
 func.o: config.h
 func.o: custom.h
-func.o: decl.h
 func.o: endian_calc.h
 func.o: errsym.h
 func.o: errtbl.h
@@ -4559,20 +3749,11 @@ func.o: func.c
 func.o: func.h
 func.o: hash.h
 func.o: have_ban_pragma.h
-func.o: have_const.h
-func.o: have_fgetsetpos.h
-func.o: have_limits.h
-func.o: have_newstr.h
 func.o: have_rusage.h
-func.o: have_stdbool.h
-func.o: have_stdlib.h
-func.o: have_strdup.h
-func.o: have_string.h
 func.o: have_strlcat.h
 func.o: have_strlcpy.h
-func.o: have_times.h
-func.o: have_unistd.h
 func.o: have_unused.h
+func.o: int.h
 func.o: label.h
 func.o: longbits.h
 func.o: nametype.h
@@ -4580,6 +3761,7 @@ func.o: opcodes.h
 func.o: prime.h
 func.o: qmath.h
 func.o: sha1.h
+func.o: status.chk_c.h
 func.o: str.h
 func.o: strl.h
 func.o: symbol.h
@@ -4589,33 +3771,26 @@ func.o: version.h
 func.o: zmath.h
 func.o: zrand.h
 func.o: zrandom.h
-hash.o: alloc.h
 hash.o: attribute.h
 hash.o: banned.h
 hash.o: block.h
-hash.o: bool.h
 hash.o: byteswap.h
 hash.o: calc.h
 hash.o: charbit.h
 hash.o: cmath.h
 hash.o: config.h
-hash.o: decl.h
 hash.o: endian_calc.h
 hash.o: errsym.h
 hash.o: errtbl.h
 hash.o: hash.c
 hash.o: hash.h
 hash.o: have_ban_pragma.h
-hash.o: have_const.h
-hash.o: have_limits.h
-hash.o: have_newstr.h
-hash.o: have_stdbool.h
-hash.o: have_stdlib.h
-hash.o: have_string.h
+hash.o: int.h
 hash.o: longbits.h
 hash.o: nametype.h
 hash.o: qmath.h
 hash.o: sha1.h
+hash.o: status.chk_c.h
 hash.o: str.h
 hash.o: value.h
 hash.o: version.h
@@ -4625,53 +3800,31 @@ hash.o: zrandom.h
 have_arc4random.o: banned.h
 have_arc4random.o: have_arc4random.c
 have_arc4random.o: have_ban_pragma.h
-have_arc4random.o: have_stdlib.h
 have_ban_pragma.o: banned.h
 have_ban_pragma.o: have_ban_pragma.c
 have_ban_pragma.o: have_ban_pragma.h
-have_const.o: banned.h
-have_const.o: have_ban_pragma.h
-have_const.o: have_const.c
 have_environ.o: banned.h
 have_environ.o: have_ban_pragma.h
 have_environ.o: have_environ.c
-have_fgetsetpos.o: banned.h
-have_fgetsetpos.o: have_ban_pragma.h
-have_fgetsetpos.o: have_fgetsetpos.c
 have_fpos_pos.o: banned.h
 have_fpos_pos.o: have_ban_pragma.h
-have_fpos_pos.o: have_fgetsetpos.h
 have_fpos_pos.o: have_fpos_pos.c
 have_fpos_pos.o: have_posscl.h
-have_fpos_pos.o: have_string.h
 have_getpgid.o: banned.h
 have_getpgid.o: have_ban_pragma.h
 have_getpgid.o: have_getpgid.c
-have_getpgid.o: have_unistd.h
-have_getprid.o: banned.h
-have_getprid.o: have_ban_pragma.h
-have_getprid.o: have_getprid.c
-have_getprid.o: have_unistd.h
 have_getsid.o: banned.h
 have_getsid.o: have_ban_pragma.h
 have_getsid.o: have_getsid.c
-have_getsid.o: have_unistd.h
 have_gettime.o: banned.h
 have_gettime.o: have_ban_pragma.h
 have_gettime.o: have_gettime.c
-have_newstr.o: banned.h
-have_newstr.o: have_ban_pragma.h
-have_newstr.o: have_newstr.c
-have_newstr.o: have_string.h
 have_offscl.o: banned.h
 have_offscl.o: have_ban_pragma.h
 have_offscl.o: have_offscl.c
-have_offscl.o: have_unistd.h
 have_posscl.o: banned.h
 have_posscl.o: have_ban_pragma.h
-have_posscl.o: have_fgetsetpos.h
 have_posscl.o: have_posscl.c
-have_posscl.o: have_unistd.h
 have_rusage.o: banned.h
 have_rusage.o: have_ban_pragma.h
 have_rusage.o: have_rusage.c
@@ -4681,178 +3834,122 @@ have_statfs.o: have_statfs.c
 have_statfs.o: have_sys_mount.h
 have_statfs.o: have_sys_param.h
 have_statfs.o: have_sys_vfs.h
-have_stdvs.o: banned.h
-have_stdvs.o: have_ban_pragma.h
-have_stdvs.o: have_stdlib.h
-have_stdvs.o: have_stdvs.c
-have_stdvs.o: have_string.h
-have_stdvs.o: have_unistd.h
-have_strdup.o: banned.h
-have_strdup.o: have_ban_pragma.h
-have_strdup.o: have_strdup.c
-have_strdup.o: have_string.h
 have_strlcat.o: banned.h
 have_strlcat.o: have_ban_pragma.h
-have_strlcat.o: have_string.h
 have_strlcat.o: have_strlcat.c
 have_strlcpy.o: banned.h
 have_strlcpy.o: have_ban_pragma.h
-have_strlcpy.o: have_string.h
 have_strlcpy.o: have_strlcpy.c
-have_uid_t.o: banned.h
-have_uid_t.o: have_ban_pragma.h
-have_uid_t.o: have_uid_t.c
-have_uid_t.o: have_unistd.h
 have_unused.o: banned.h
 have_unused.o: have_ban_pragma.h
 have_unused.o: have_unused.c
 have_ustat.o: banned.h
 have_ustat.o: have_ban_pragma.h
 have_ustat.o: have_ustat.c
-have_varvs.o: banned.h
-have_varvs.o: have_ban_pragma.h
-have_varvs.o: have_string.h
-have_varvs.o: have_unistd.h
-have_varvs.o: have_varvs.c
-help.o: alloc.h
-help.o: attribute.h
 help.o: banned.h
 help.o: block.h
-help.o: bool.h
 help.o: byteswap.h
 help.o: calc.h
 help.o: charbit.h
 help.o: cmath.h
 help.o: conf.h
 help.o: config.h
-help.o: decl.h
 help.o: endian_calc.h
-help.o: errsym.h
-help.o: errtbl.h
 help.o: hash.h
 help.o: have_ban_pragma.h
-help.o: have_const.h
-help.o: have_limits.h
-help.o: have_newstr.h
-help.o: have_stdbool.h
-help.o: have_stdlib.h
-help.o: have_string.h
-help.o: have_unistd.h
 help.o: help.c
+help.o: int.h
 help.o: lib_calc.h
 help.o: longbits.h
 help.o: nametype.h
 help.o: qmath.h
 help.o: sha1.h
+help.o: status.chk_c.h
 help.o: str.h
 help.o: value.h
 help.o: version.h
 help.o: zmath.h
-hist.o: alloc.h
+help.o: zrand.h
+help.o: zrandom.h
 hist.o: attribute.h
 hist.o: banned.h
 hist.o: block.h
-hist.o: bool.h
 hist.o: byteswap.h
 hist.o: calc.h
 hist.o: charbit.h
 hist.o: cmath.h
 hist.o: config.h
-hist.o: decl.h
 hist.o: endian_calc.h
 hist.o: errsym.h
 hist.o: errtbl.h
 hist.o: hash.h
 hist.o: have_ban_pragma.h
-hist.o: have_const.h
-hist.o: have_limits.h
-hist.o: have_newstr.h
-hist.o: have_stdbool.h
-hist.o: have_stdlib.h
-hist.o: have_strdup.h
-hist.o: have_string.h
 hist.o: have_strlcat.h
 hist.o: have_strlcpy.h
-hist.o: have_unistd.h
 hist.o: have_unused.h
 hist.o: hist.c
 hist.o: hist.h
+hist.o: int.h
 hist.o: lib_calc.h
 hist.o: longbits.h
 hist.o: nametype.h
 hist.o: qmath.h
 hist.o: sha1.h
+hist.o: status.chk_c.h
 hist.o: str.h
 hist.o: strl.h
 hist.o: value.h
 hist.o: version.h
 hist.o: zmath.h
-input.o: alloc.h
+hist.o: zrand.h
+hist.o: zrandom.h
 input.o: attribute.h
 input.o: banned.h
 input.o: block.h
-input.o: bool.h
 input.o: byteswap.h
 input.o: calc.h
 input.o: charbit.h
 input.o: cmath.h
 input.o: conf.h
 input.o: config.h
-input.o: decl.h
 input.o: endian_calc.h
 input.o: errsym.h
 input.o: errtbl.h
 input.o: hash.h
 input.o: have_ban_pragma.h
-input.o: have_const.h
-input.o: have_limits.h
-input.o: have_newstr.h
-input.o: have_stdbool.h
-input.o: have_stdlib.h
-input.o: have_string.h
 input.o: have_strlcat.h
 input.o: have_strlcpy.h
-input.o: have_unistd.h
 input.o: hist.h
 input.o: input.c
+input.o: int.h
 input.o: longbits.h
 input.o: nametype.h
 input.o: qmath.h
 input.o: sha1.h
+input.o: status.chk_c.h
 input.o: str.h
 input.o: strl.h
 input.o: value.h
 input.o: version.h
 input.o: zmath.h
+input.o: zrand.h
+input.o: zrandom.h
 jump.o: banned.h
-jump.o: decl.h
 jump.o: have_ban_pragma.h
-jump.o: have_const.h
 jump.o: jump.c
 jump.o: jump.h
-label.o: alloc.h
-label.o: attribute.h
 label.o: banned.h
 label.o: block.h
-label.o: bool.h
 label.o: byteswap.h
 label.o: calc.h
 label.o: charbit.h
 label.o: cmath.h
 label.o: config.h
-label.o: decl.h
 label.o: endian_calc.h
-label.o: errsym.h
-label.o: errtbl.h
 label.o: func.h
 label.o: hash.h
 label.o: have_ban_pragma.h
-label.o: have_const.h
-label.o: have_limits.h
-label.o: have_newstr.h
-label.o: have_stdbool.h
-label.o: have_stdlib.h
-label.o: have_string.h
+label.o: int.h
 label.o: label.c
 label.o: label.h
 label.o: longbits.h
@@ -4860,16 +3957,17 @@ label.o: nametype.h
 label.o: opcodes.h
 label.o: qmath.h
 label.o: sha1.h
+label.o: status.chk_c.h
 label.o: str.h
 label.o: token.h
 label.o: value.h
 label.o: version.h
 label.o: zmath.h
-lib_calc.o: alloc.h
+label.o: zrand.h
+label.o: zrandom.h
 lib_calc.o: attribute.h
 lib_calc.o: banned.h
 lib_calc.o: block.h
-lib_calc.o: bool.h
 lib_calc.o: byteswap.h
 lib_calc.o: calc.h
 lib_calc.o: charbit.h
@@ -4877,23 +3975,15 @@ lib_calc.o: cmath.h
 lib_calc.o: conf.h
 lib_calc.o: config.h
 lib_calc.o: custom.h
-lib_calc.o: decl.h
 lib_calc.o: endian_calc.h
 lib_calc.o: errsym.h
 lib_calc.o: errtbl.h
 lib_calc.o: func.h
 lib_calc.o: hash.h
 lib_calc.o: have_ban_pragma.h
-lib_calc.o: have_const.h
-lib_calc.o: have_limits.h
-lib_calc.o: have_newstr.h
-lib_calc.o: have_stdbool.h
-lib_calc.o: have_stdlib.h
-lib_calc.o: have_strdup.h
-lib_calc.o: have_string.h
 lib_calc.o: have_strlcat.h
 lib_calc.o: have_strlcpy.h
-lib_calc.o: have_unistd.h
+lib_calc.o: int.h
 lib_calc.o: label.h
 lib_calc.o: lib_calc.c
 lib_calc.o: lib_calc.h
@@ -4901,6 +3991,7 @@ lib_calc.o: longbits.h
 lib_calc.o: nametype.h
 lib_calc.o: qmath.h
 lib_calc.o: sha1.h
+lib_calc.o: status.chk_c.h
 lib_calc.o: str.h
 lib_calc.o: strl.h
 lib_calc.o: symbol.h
@@ -4909,157 +4000,119 @@ lib_calc.o: token.h
 lib_calc.o: value.h
 lib_calc.o: version.h
 lib_calc.o: zmath.h
+lib_calc.o: zrand.h
 lib_calc.o: zrandom.h
-lib_util.o: alloc.h
 lib_util.o: attribute.h
 lib_util.o: banned.h
-lib_util.o: bool.h
 lib_util.o: byteswap.h
 lib_util.o: charbit.h
-lib_util.o: decl.h
 lib_util.o: endian_calc.h
 lib_util.o: errsym.h
 lib_util.o: errtbl.h
 lib_util.o: have_ban_pragma.h
-lib_util.o: have_const.h
-lib_util.o: have_limits.h
-lib_util.o: have_newstr.h
-lib_util.o: have_stdbool.h
-lib_util.o: have_stdlib.h
-lib_util.o: have_string.h
+lib_util.o: int.h
 lib_util.o: lib_util.c
 lib_util.o: lib_util.h
 lib_util.o: longbits.h
+lib_util.o: status.chk_c.h
 lib_util.o: version.h
 lib_util.o: zmath.h
-listfunc.o: alloc.h
 listfunc.o: attribute.h
 listfunc.o: banned.h
 listfunc.o: block.h
-listfunc.o: bool.h
 listfunc.o: byteswap.h
 listfunc.o: charbit.h
 listfunc.o: cmath.h
 listfunc.o: config.h
-listfunc.o: decl.h
 listfunc.o: endian_calc.h
 listfunc.o: errsym.h
 listfunc.o: errtbl.h
 listfunc.o: hash.h
 listfunc.o: have_ban_pragma.h
-listfunc.o: have_const.h
-listfunc.o: have_limits.h
-listfunc.o: have_newstr.h
-listfunc.o: have_stdbool.h
-listfunc.o: have_stdlib.h
-listfunc.o: have_string.h
+listfunc.o: int.h
 listfunc.o: listfunc.c
 listfunc.o: longbits.h
 listfunc.o: nametype.h
 listfunc.o: qmath.h
 listfunc.o: sha1.h
+listfunc.o: status.chk_c.h
 listfunc.o: str.h
 listfunc.o: value.h
 listfunc.o: version.h
 listfunc.o: zmath.h
 listfunc.o: zrand.h
+listfunc.o: zrandom.h
 longbits.o: banned.h
 longbits.o: charbit.h
 longbits.o: have_ban_pragma.h
-longbits.o: have_limits.h
-longbits.o: have_stdlib.h
-longbits.o: have_unistd.h
 longbits.o: longbits.c
-matfunc.o: alloc.h
 matfunc.o: attribute.h
 matfunc.o: banned.h
 matfunc.o: block.h
-matfunc.o: bool.h
 matfunc.o: byteswap.h
 matfunc.o: charbit.h
 matfunc.o: cmath.h
 matfunc.o: config.h
-matfunc.o: decl.h
 matfunc.o: endian_calc.h
 matfunc.o: errsym.h
 matfunc.o: errtbl.h
 matfunc.o: hash.h
 matfunc.o: have_ban_pragma.h
-matfunc.o: have_const.h
-matfunc.o: have_limits.h
-matfunc.o: have_newstr.h
-matfunc.o: have_stdbool.h
-matfunc.o: have_stdlib.h
-matfunc.o: have_string.h
 matfunc.o: have_unused.h
+matfunc.o: int.h
 matfunc.o: longbits.h
 matfunc.o: matfunc.c
 matfunc.o: nametype.h
 matfunc.o: qmath.h
 matfunc.o: sha1.h
+matfunc.o: status.chk_c.h
 matfunc.o: str.h
 matfunc.o: value.h
 matfunc.o: version.h
 matfunc.o: zmath.h
 matfunc.o: zrand.h
-math_error.o: alloc.h
-math_error.o: args.h
-math_error.o: attribute.h
+matfunc.o: zrandom.h
 math_error.o: banned.h
 math_error.o: block.h
-math_error.o: bool.h
 math_error.o: byteswap.h
 math_error.o: calc.h
 math_error.o: charbit.h
 math_error.o: cmath.h
 math_error.o: config.h
-math_error.o: decl.h
 math_error.o: endian_calc.h
-math_error.o: errsym.h
-math_error.o: errtbl.h
 math_error.o: hash.h
 math_error.o: have_ban_pragma.h
-math_error.o: have_const.h
-math_error.o: have_limits.h
-math_error.o: have_newstr.h
-math_error.o: have_stdbool.h
-math_error.o: have_stdlib.h
-math_error.o: have_string.h
+math_error.o: int.h
 math_error.o: lib_calc.h
 math_error.o: longbits.h
 math_error.o: math_error.c
 math_error.o: nametype.h
 math_error.o: qmath.h
 math_error.o: sha1.h
+math_error.o: status.chk_c.h
 math_error.o: str.h
 math_error.o: value.h
 math_error.o: version.h
 math_error.o: zmath.h
-obj.o: alloc.h
+math_error.o: zrand.h
+math_error.o: zrandom.h
 obj.o: attribute.h
 obj.o: banned.h
 obj.o: block.h
-obj.o: bool.h
 obj.o: byteswap.h
 obj.o: calc.h
 obj.o: charbit.h
 obj.o: cmath.h
 obj.o: config.h
-obj.o: decl.h
 obj.o: endian_calc.h
 obj.o: errsym.h
 obj.o: errtbl.h
 obj.o: func.h
 obj.o: hash.h
 obj.o: have_ban_pragma.h
-obj.o: have_const.h
-obj.o: have_limits.h
-obj.o: have_newstr.h
-obj.o: have_stdbool.h
-obj.o: have_stdlib.h
-obj.o: have_string.h
 obj.o: have_strlcat.h
 obj.o: have_strlcpy.h
+obj.o: int.h
 obj.o: label.h
 obj.o: longbits.h
 obj.o: nametype.h
@@ -5067,40 +4120,36 @@ obj.o: obj.c
 obj.o: opcodes.h
 obj.o: qmath.h
 obj.o: sha1.h
+obj.o: status.chk_c.h
 obj.o: str.h
 obj.o: strl.h
 obj.o: symbol.h
 obj.o: value.h
 obj.o: version.h
 obj.o: zmath.h
-opcodes.o: alloc.h
+obj.o: zrand.h
+obj.o: zrandom.h
 opcodes.o: attribute.h
 opcodes.o: banned.h
 opcodes.o: block.h
-opcodes.o: bool.h
 opcodes.o: byteswap.h
 opcodes.o: calc.h
 opcodes.o: charbit.h
 opcodes.o: cmath.h
 opcodes.o: config.h
 opcodes.o: custom.h
-opcodes.o: decl.h
 opcodes.o: endian_calc.h
 opcodes.o: errsym.h
 opcodes.o: errtbl.h
 opcodes.o: file.h
+opcodes.o: fposval.h
 opcodes.o: func.h
 opcodes.o: hash.h
 opcodes.o: have_ban_pragma.h
-opcodes.o: have_const.h
-opcodes.o: have_fgetsetpos.h
-opcodes.o: have_limits.h
-opcodes.o: have_newstr.h
-opcodes.o: have_stdbool.h
-opcodes.o: have_stdlib.h
-opcodes.o: have_string.h
+opcodes.o: have_fpos_pos.h
 opcodes.o: have_unused.h
 opcodes.o: hist.h
+opcodes.o: int.h
 opcodes.o: label.h
 opcodes.o: lib_calc.h
 opcodes.o: longbits.h
@@ -5109,6 +4158,7 @@ opcodes.o: opcodes.c
 opcodes.o: opcodes.h
 opcodes.o: qmath.h
 opcodes.o: sha1.h
+opcodes.o: status.chk_c.h
 opcodes.o: str.h
 opcodes.o: symbol.h
 opcodes.o: value.h
@@ -5116,470 +4166,349 @@ opcodes.o: version.h
 opcodes.o: zmath.h
 opcodes.o: zrand.h
 opcodes.o: zrandom.h
-pix.o: alloc.h
 pix.o: banned.h
-pix.o: bool.h
 pix.o: byteswap.h
 pix.o: charbit.h
-pix.o: decl.h
 pix.o: endian_calc.h
 pix.o: have_ban_pragma.h
-pix.o: have_const.h
-pix.o: have_limits.h
-pix.o: have_newstr.h
-pix.o: have_stdbool.h
-pix.o: have_stdlib.h
-pix.o: have_string.h
+pix.o: int.h
 pix.o: longbits.h
 pix.o: pix.c
 pix.o: prime.h
 pix.o: qmath.h
+pix.o: status.chk_c.h
 pix.o: version.h
 pix.o: zmath.h
-poly.o: alloc.h
-poly.o: attribute.h
 poly.o: banned.h
 poly.o: block.h
-poly.o: bool.h
 poly.o: byteswap.h
 poly.o: charbit.h
 poly.o: cmath.h
 poly.o: config.h
-poly.o: decl.h
 poly.o: endian_calc.h
-poly.o: errsym.h
-poly.o: errtbl.h
 poly.o: hash.h
 poly.o: have_ban_pragma.h
-poly.o: have_const.h
-poly.o: have_limits.h
-poly.o: have_newstr.h
-poly.o: have_stdbool.h
-poly.o: have_stdlib.h
-poly.o: have_string.h
+poly.o: int.h
 poly.o: longbits.h
 poly.o: nametype.h
 poly.o: poly.c
 poly.o: qmath.h
 poly.o: sha1.h
+poly.o: status.chk_c.h
 poly.o: str.h
 poly.o: value.h
 poly.o: version.h
 poly.o: zmath.h
-prime.o: alloc.h
+poly.o: zrand.h
+poly.o: zrandom.h
 prime.o: banned.h
-prime.o: bool.h
 prime.o: byteswap.h
 prime.o: charbit.h
-prime.o: decl.h
 prime.o: endian_calc.h
 prime.o: have_ban_pragma.h
-prime.o: have_const.h
-prime.o: have_limits.h
-prime.o: have_newstr.h
-prime.o: have_stdbool.h
-prime.o: have_stdlib.h
-prime.o: have_string.h
+prime.o: int.h
 prime.o: jump.h
 prime.o: longbits.h
 prime.o: prime.c
 prime.o: prime.h
 prime.o: qmath.h
+prime.o: status.chk_c.h
 prime.o: version.h
 prime.o: zmath.h
-qfunc.o: alloc.h
 qfunc.o: attribute.h
 qfunc.o: banned.h
-qfunc.o: bool.h
 qfunc.o: byteswap.h
 qfunc.o: charbit.h
 qfunc.o: config.h
-qfunc.o: decl.h
 qfunc.o: endian_calc.h
 qfunc.o: errsym.h
 qfunc.o: errtbl.h
 qfunc.o: have_ban_pragma.h
-qfunc.o: have_const.h
-qfunc.o: have_limits.h
-qfunc.o: have_newstr.h
-qfunc.o: have_stdbool.h
-qfunc.o: have_stdlib.h
-qfunc.o: have_string.h
+qfunc.o: int.h
 qfunc.o: longbits.h
-qfunc.o: nametype.h
 qfunc.o: prime.h
 qfunc.o: qfunc.c
 qfunc.o: qmath.h
+qfunc.o: status.chk_c.h
 qfunc.o: version.h
 qfunc.o: zmath.h
-qio.o: alloc.h
-qio.o: args.h
 qio.o: attribute.h
 qio.o: banned.h
-qio.o: bool.h
 qio.o: byteswap.h
 qio.o: charbit.h
 qio.o: config.h
-qio.o: decl.h
 qio.o: endian_calc.h
 qio.o: errsym.h
 qio.o: errtbl.h
 qio.o: have_ban_pragma.h
-qio.o: have_const.h
-qio.o: have_limits.h
-qio.o: have_newstr.h
-qio.o: have_stdbool.h
-qio.o: have_stdlib.h
-qio.o: have_string.h
 qio.o: have_unused.h
+qio.o: int.h
 qio.o: longbits.h
-qio.o: nametype.h
 qio.o: qio.c
 qio.o: qmath.h
+qio.o: status.chk_c.h
 qio.o: version.h
 qio.o: zmath.h
-qmath.o: alloc.h
 qmath.o: attribute.h
 qmath.o: banned.h
-qmath.o: bool.h
 qmath.o: byteswap.h
 qmath.o: charbit.h
 qmath.o: config.h
-qmath.o: decl.h
 qmath.o: endian_calc.h
 qmath.o: errsym.h
 qmath.o: errtbl.h
 qmath.o: have_ban_pragma.h
-qmath.o: have_const.h
-qmath.o: have_limits.h
-qmath.o: have_newstr.h
-qmath.o: have_stdbool.h
-qmath.o: have_stdlib.h
-qmath.o: have_string.h
+qmath.o: int.h
 qmath.o: longbits.h
-qmath.o: nametype.h
 qmath.o: qmath.c
 qmath.o: qmath.h
+qmath.o: status.chk_c.h
 qmath.o: version.h
 qmath.o: zmath.h
-qmod.o: alloc.h
 qmod.o: attribute.h
 qmod.o: banned.h
-qmod.o: bool.h
 qmod.o: byteswap.h
 qmod.o: charbit.h
 qmod.o: config.h
-qmod.o: decl.h
 qmod.o: endian_calc.h
 qmod.o: errsym.h
 qmod.o: errtbl.h
 qmod.o: have_ban_pragma.h
-qmod.o: have_const.h
-qmod.o: have_limits.h
-qmod.o: have_newstr.h
-qmod.o: have_stdbool.h
-qmod.o: have_stdlib.h
-qmod.o: have_string.h
+qmod.o: int.h
 qmod.o: longbits.h
-qmod.o: nametype.h
 qmod.o: qmath.h
 qmod.o: qmod.c
+qmod.o: status.chk_c.h
 qmod.o: version.h
 qmod.o: zmath.h
-qtrans.o: alloc.h
 qtrans.o: attribute.h
 qtrans.o: banned.h
-qtrans.o: bool.h
 qtrans.o: byteswap.h
 qtrans.o: charbit.h
 qtrans.o: config.h
-qtrans.o: decl.h
 qtrans.o: endian_calc.h
 qtrans.o: errsym.h
 qtrans.o: errtbl.h
 qtrans.o: have_ban_pragma.h
-qtrans.o: have_const.h
-qtrans.o: have_limits.h
-qtrans.o: have_newstr.h
-qtrans.o: have_stdbool.h
-qtrans.o: have_stdlib.h
-qtrans.o: have_string.h
+qtrans.o: int.h
 qtrans.o: longbits.h
-qtrans.o: nametype.h
 qtrans.o: qmath.h
 qtrans.o: qtrans.c
+qtrans.o: status.chk_c.h
 qtrans.o: version.h
 qtrans.o: zmath.h
-quickhash.o: alloc.h
 quickhash.o: attribute.h
 quickhash.o: banned.h
 quickhash.o: block.h
-quickhash.o: bool.h
 quickhash.o: byteswap.h
 quickhash.o: charbit.h
 quickhash.o: cmath.h
 quickhash.o: config.h
-quickhash.o: decl.h
 quickhash.o: endian_calc.h
 quickhash.o: errsym.h
 quickhash.o: errtbl.h
 quickhash.o: hash.h
 quickhash.o: have_ban_pragma.h
-quickhash.o: have_const.h
-quickhash.o: have_limits.h
-quickhash.o: have_newstr.h
-quickhash.o: have_stdbool.h
-quickhash.o: have_stdlib.h
-quickhash.o: have_string.h
+quickhash.o: int.h
 quickhash.o: longbits.h
 quickhash.o: nametype.h
 quickhash.o: qmath.h
 quickhash.o: quickhash.c
 quickhash.o: sha1.h
+quickhash.o: status.chk_c.h
 quickhash.o: str.h
 quickhash.o: value.h
 quickhash.o: version.h
 quickhash.o: zmath.h
 quickhash.o: zrand.h
 quickhash.o: zrandom.h
-sample_many.o: alloc.h
 sample_many.o: attribute.h
 sample_many.o: banned.h
 sample_many.o: block.h
-sample_many.o: bool.h
 sample_many.o: byteswap.h
 sample_many.o: calc.h
 sample_many.o: charbit.h
 sample_many.o: cmath.h
 sample_many.o: config.h
-sample_many.o: decl.h
 sample_many.o: endian_calc.h
 sample_many.o: errsym.h
 sample_many.o: errtbl.h
 sample_many.o: hash.h
 sample_many.o: have_ban_pragma.h
-sample_many.o: have_const.h
-sample_many.o: have_limits.h
-sample_many.o: have_newstr.h
-sample_many.o: have_stdbool.h
-sample_many.o: have_stdlib.h
-sample_many.o: have_string.h
+sample_many.o: int.h
 sample_many.o: lib_util.h
 sample_many.o: longbits.h
 sample_many.o: nametype.h
 sample_many.o: qmath.h
 sample_many.o: sample_many.c
 sample_many.o: sha1.h
+sample_many.o: status.chk_c.h
 sample_many.o: str.h
 sample_many.o: value.h
 sample_many.o: version.h
 sample_many.o: zmath.h
+sample_many.o: zrand.h
 sample_many.o: zrandom.h
-sample_rand.o: alloc.h
 sample_rand.o: attribute.h
 sample_rand.o: banned.h
 sample_rand.o: block.h
-sample_rand.o: bool.h
 sample_rand.o: byteswap.h
 sample_rand.o: calc.h
 sample_rand.o: charbit.h
 sample_rand.o: cmath.h
 sample_rand.o: config.h
-sample_rand.o: decl.h
 sample_rand.o: endian_calc.h
 sample_rand.o: errsym.h
 sample_rand.o: errtbl.h
 sample_rand.o: hash.h
 sample_rand.o: have_ban_pragma.h
-sample_rand.o: have_const.h
-sample_rand.o: have_limits.h
-sample_rand.o: have_newstr.h
-sample_rand.o: have_stdbool.h
-sample_rand.o: have_stdlib.h
-sample_rand.o: have_string.h
+sample_rand.o: int.h
 sample_rand.o: lib_util.h
 sample_rand.o: longbits.h
 sample_rand.o: nametype.h
 sample_rand.o: qmath.h
 sample_rand.o: sample_rand.c
 sample_rand.o: sha1.h
+sample_rand.o: status.chk_c.h
 sample_rand.o: str.h
 sample_rand.o: value.h
 sample_rand.o: version.h
 sample_rand.o: zmath.h
+sample_rand.o: zrand.h
 sample_rand.o: zrandom.h
-seed.o: alloc.h
 seed.o: banned.h
-seed.o: bool.h
 seed.o: byteswap.h
 seed.o: charbit.h
-seed.o: decl.h
 seed.o: endian_calc.h
+seed.o: errsym.h
+seed.o: errtbl.h
 seed.o: have_arc4random.h
 seed.o: have_ban_pragma.h
-seed.o: have_const.h
 seed.o: have_environ.h
 seed.o: have_getpgid.h
-seed.o: have_getprid.h
 seed.o: have_getsid.h
 seed.o: have_gettime.h
-seed.o: have_limits.h
-seed.o: have_newstr.h
 seed.o: have_rusage.h
 seed.o: have_statfs.h
-seed.o: have_stdbool.h
-seed.o: have_stdlib.h
-seed.o: have_string.h
 seed.o: have_sys_mount.h
 seed.o: have_sys_param.h
 seed.o: have_sys_vfs.h
-seed.o: have_times.h
-seed.o: have_uid_t.h
-seed.o: have_unistd.h
 seed.o: have_urandom.h
 seed.o: have_ustat.h
+seed.o: int.h
 seed.o: longbits.h
 seed.o: qmath.h
 seed.o: seed.c
+seed.o: status.chk_c.h
 seed.o: version.h
 seed.o: zmath.h
-sha1.o: align32.h
-sha1.o: alloc.h
 sha1.o: attribute.h
 sha1.o: banned.h
 sha1.o: block.h
-sha1.o: bool.h
 sha1.o: byteswap.h
 sha1.o: charbit.h
 sha1.o: cmath.h
 sha1.o: config.h
-sha1.o: decl.h
 sha1.o: endian_calc.h
 sha1.o: errsym.h
 sha1.o: errtbl.h
 sha1.o: hash.h
 sha1.o: have_ban_pragma.h
-sha1.o: have_const.h
-sha1.o: have_limits.h
-sha1.o: have_newstr.h
-sha1.o: have_stdbool.h
-sha1.o: have_stdlib.h
-sha1.o: have_string.h
+sha1.o: int.h
 sha1.o: longbits.h
 sha1.o: nametype.h
 sha1.o: qmath.h
 sha1.o: sha1.c
 sha1.o: sha1.h
+sha1.o: status.chk_c.h
 sha1.o: str.h
 sha1.o: value.h
 sha1.o: version.h
 sha1.o: zmath.h
-size.o: alloc.h
+sha1.o: zrand.h
+sha1.o: zrandom.h
 size.o: attribute.h
 size.o: banned.h
 size.o: block.h
-size.o: bool.h
 size.o: byteswap.h
 size.o: charbit.h
 size.o: cmath.h
 size.o: config.h
-size.o: decl.h
 size.o: endian_calc.h
 size.o: errsym.h
 size.o: errtbl.h
 size.o: hash.h
 size.o: have_ban_pragma.h
-size.o: have_const.h
-size.o: have_limits.h
-size.o: have_newstr.h
-size.o: have_stdbool.h
-size.o: have_stdlib.h
-size.o: have_string.h
+size.o: int.h
 size.o: longbits.h
 size.o: nametype.h
 size.o: qmath.h
 size.o: sha1.h
 size.o: size.c
+size.o: status.chk_c.h
 size.o: str.h
 size.o: value.h
 size.o: version.h
 size.o: zmath.h
 size.o: zrand.h
 size.o: zrandom.h
-str.o: alloc.h
 str.o: attribute.h
 str.o: banned.h
 str.o: block.h
-str.o: bool.h
 str.o: byteswap.h
 str.o: calc.h
 str.o: charbit.h
 str.o: cmath.h
 str.o: config.h
-str.o: decl.h
 str.o: endian_calc.h
 str.o: errsym.h
 str.o: errtbl.h
 str.o: hash.h
 str.o: have_ban_pragma.h
-str.o: have_const.h
-str.o: have_limits.h
-str.o: have_newstr.h
-str.o: have_stdbool.h
-str.o: have_stdlib.h
-str.o: have_string.h
 str.o: have_strlcat.h
 str.o: have_strlcpy.h
+str.o: int.h
 str.o: longbits.h
 str.o: nametype.h
 str.o: qmath.h
 str.o: sha1.h
+str.o: status.chk_c.h
 str.o: str.c
 str.o: str.h
 str.o: strl.h
 str.o: value.h
 str.o: version.h
 str.o: zmath.h
-strl.o: alloc.h
+str.o: zrand.h
+str.o: zrandom.h
 strl.o: banned.h
-strl.o: decl.h
 strl.o: have_ban_pragma.h
-strl.o: have_const.h
-strl.o: have_newstr.h
-strl.o: have_string.h
 strl.o: have_strlcat.h
 strl.o: have_strlcpy.h
 strl.o: strl.c
 strl.o: strl.h
-symbol.o: alloc.h
 symbol.o: attribute.h
 symbol.o: banned.h
 symbol.o: block.h
-symbol.o: bool.h
 symbol.o: byteswap.h
 symbol.o: calc.h
 symbol.o: charbit.h
 symbol.o: cmath.h
 symbol.o: config.h
-symbol.o: decl.h
 symbol.o: endian_calc.h
 symbol.o: errsym.h
 symbol.o: errtbl.h
 symbol.o: func.h
 symbol.o: hash.h
 symbol.o: have_ban_pragma.h
-symbol.o: have_const.h
-symbol.o: have_limits.h
-symbol.o: have_newstr.h
-symbol.o: have_stdbool.h
-symbol.o: have_stdlib.h
-symbol.o: have_string.h
+symbol.o: int.h
 symbol.o: label.h
 symbol.o: longbits.h
 symbol.o: nametype.h
 symbol.o: opcodes.h
 symbol.o: qmath.h
 symbol.o: sha1.h
+symbol.o: status.chk_c.h
 symbol.o: str.h
 symbol.o: symbol.c
 symbol.o: symbol.h
@@ -5587,51 +4516,44 @@ symbol.o: token.h
 symbol.o: value.h
 symbol.o: version.h
 symbol.o: zmath.h
-token.o: alloc.h
-token.o: args.h
+symbol.o: zrand.h
+symbol.o: zrandom.h
 token.o: attribute.h
 token.o: banned.h
 token.o: block.h
-token.o: bool.h
 token.o: byteswap.h
 token.o: calc.h
 token.o: charbit.h
 token.o: cmath.h
 token.o: config.h
-token.o: decl.h
 token.o: endian_calc.h
 token.o: errsym.h
 token.o: errtbl.h
 token.o: hash.h
 token.o: have_ban_pragma.h
-token.o: have_const.h
-token.o: have_limits.h
-token.o: have_newstr.h
-token.o: have_stdbool.h
-token.o: have_stdlib.h
-token.o: have_string.h
+token.o: int.h
 token.o: lib_calc.h
 token.o: longbits.h
 token.o: nametype.h
 token.o: qmath.h
 token.o: sha1.h
+token.o: status.chk_c.h
 token.o: str.h
 token.o: token.c
 token.o: token.h
 token.o: value.h
 token.o: version.h
 token.o: zmath.h
-value.o: alloc.h
+token.o: zrand.h
+token.o: zrandom.h
 value.o: attribute.h
 value.o: banned.h
 value.o: block.h
-value.o: bool.h
 value.o: byteswap.h
 value.o: calc.h
 value.o: charbit.h
 value.o: cmath.h
 value.o: config.h
-value.o: decl.h
 value.o: endian_calc.h
 value.o: errsym.h
 value.o: errtbl.h
@@ -5639,19 +4561,14 @@ value.o: file.h
 value.o: func.h
 value.o: hash.h
 value.o: have_ban_pragma.h
-value.o: have_const.h
-value.o: have_fgetsetpos.h
-value.o: have_limits.h
-value.o: have_newstr.h
-value.o: have_stdbool.h
-value.o: have_stdlib.h
-value.o: have_string.h
+value.o: int.h
 value.o: label.h
 value.o: longbits.h
 value.o: nametype.h
 value.o: opcodes.h
 value.o: qmath.h
 value.o: sha1.h
+value.o: status.chk_c.h
 value.o: str.h
 value.o: symbol.h
 value.o: value.c
@@ -5660,254 +4577,184 @@ value.o: version.h
 value.o: zmath.h
 value.o: zrand.h
 value.o: zrandom.h
-version.o: alloc.h
-version.o: attribute.h
 version.o: banned.h
 version.o: block.h
-version.o: bool.h
 version.o: byteswap.h
 version.o: calc.h
 version.o: charbit.h
 version.o: cmath.h
 version.o: config.h
-version.o: decl.h
 version.o: endian_calc.h
-version.o: errsym.h
-version.o: errtbl.h
 version.o: hash.h
 version.o: have_ban_pragma.h
-version.o: have_const.h
-version.o: have_limits.h
-version.o: have_newstr.h
-version.o: have_stdbool.h
-version.o: have_stdlib.h
-version.o: have_string.h
 version.o: have_strlcat.h
 version.o: have_strlcpy.h
-version.o: have_unused.h
+version.o: int.h
 version.o: longbits.h
 version.o: nametype.h
 version.o: qmath.h
 version.o: sha1.h
+version.o: status.chk_c.h
 version.o: str.h
 version.o: strl.h
 version.o: value.h
 version.o: version.c
 version.o: version.h
 version.o: zmath.h
-zfunc.o: alloc.h
+version.o: zrand.h
+version.o: zrandom.h
 zfunc.o: attribute.h
 zfunc.o: banned.h
-zfunc.o: bool.h
 zfunc.o: byteswap.h
 zfunc.o: charbit.h
-zfunc.o: decl.h
 zfunc.o: endian_calc.h
 zfunc.o: errsym.h
 zfunc.o: errtbl.h
 zfunc.o: have_ban_pragma.h
-zfunc.o: have_const.h
-zfunc.o: have_limits.h
-zfunc.o: have_newstr.h
-zfunc.o: have_stdbool.h
-zfunc.o: have_stdlib.h
-zfunc.o: have_string.h
+zfunc.o: int.h
 zfunc.o: longbits.h
+zfunc.o: status.chk_c.h
 zfunc.o: version.h
 zfunc.o: zfunc.c
 zfunc.o: zmath.h
-zio.o: alloc.h
-zio.o: args.h
 zio.o: attribute.h
 zio.o: banned.h
-zio.o: bool.h
 zio.o: byteswap.h
 zio.o: charbit.h
 zio.o: config.h
-zio.o: decl.h
 zio.o: endian_calc.h
 zio.o: errsym.h
 zio.o: errtbl.h
 zio.o: have_ban_pragma.h
-zio.o: have_const.h
-zio.o: have_limits.h
-zio.o: have_newstr.h
-zio.o: have_stdbool.h
-zio.o: have_stdlib.h
-zio.o: have_string.h
+zio.o: int.h
 zio.o: longbits.h
-zio.o: nametype.h
 zio.o: qmath.h
+zio.o: status.chk_c.h
 zio.o: version.h
 zio.o: zio.c
 zio.o: zmath.h
-zmath.o: alloc.h
 zmath.o: attribute.h
 zmath.o: banned.h
-zmath.o: bool.h
 zmath.o: byteswap.h
 zmath.o: charbit.h
-zmath.o: decl.h
 zmath.o: endian_calc.h
 zmath.o: errsym.h
 zmath.o: errtbl.h
 zmath.o: have_ban_pragma.h
-zmath.o: have_const.h
-zmath.o: have_inttypes.h
-zmath.o: have_limits.h
-zmath.o: have_newstr.h
-zmath.o: have_stdbool.h
-zmath.o: have_stdint.h
-zmath.o: have_stdlib.h
-zmath.o: have_string.h
 zmath.o: int.h
 zmath.o: longbits.h
 zmath.o: status.chk_c.h
 zmath.o: version.h
 zmath.o: zmath.c
 zmath.o: zmath.h
-zmod.o: alloc.h
 zmod.o: attribute.h
 zmod.o: banned.h
-zmod.o: bool.h
 zmod.o: byteswap.h
 zmod.o: charbit.h
 zmod.o: config.h
-zmod.o: decl.h
 zmod.o: endian_calc.h
 zmod.o: errsym.h
 zmod.o: errtbl.h
 zmod.o: have_ban_pragma.h
-zmod.o: have_const.h
-zmod.o: have_limits.h
-zmod.o: have_newstr.h
-zmod.o: have_stdbool.h
-zmod.o: have_stdlib.h
-zmod.o: have_string.h
+zmod.o: int.h
 zmod.o: longbits.h
-zmod.o: nametype.h
 zmod.o: qmath.h
+zmod.o: status.chk_c.h
 zmod.o: version.h
 zmod.o: zmath.h
 zmod.o: zmod.c
-zmul.o: alloc.h
 zmul.o: attribute.h
 zmul.o: banned.h
-zmul.o: bool.h
 zmul.o: byteswap.h
 zmul.o: charbit.h
 zmul.o: config.h
-zmul.o: decl.h
 zmul.o: endian_calc.h
 zmul.o: errsym.h
 zmul.o: errtbl.h
 zmul.o: have_ban_pragma.h
-zmul.o: have_const.h
-zmul.o: have_limits.h
-zmul.o: have_newstr.h
-zmul.o: have_stdbool.h
-zmul.o: have_stdlib.h
-zmul.o: have_string.h
+zmul.o: int.h
 zmul.o: longbits.h
-zmul.o: nametype.h
 zmul.o: qmath.h
+zmul.o: status.chk_c.h
 zmul.o: version.h
 zmul.o: zmath.h
 zmul.o: zmul.c
-zprime.o: alloc.h
 zprime.o: attribute.h
 zprime.o: banned.h
 zprime.o: block.h
-zprime.o: bool.h
 zprime.o: byteswap.h
 zprime.o: charbit.h
 zprime.o: cmath.h
 zprime.o: config.h
-zprime.o: decl.h
 zprime.o: endian_calc.h
 zprime.o: errsym.h
 zprime.o: errtbl.h
 zprime.o: hash.h
 zprime.o: have_ban_pragma.h
-zprime.o: have_const.h
-zprime.o: have_limits.h
-zprime.o: have_newstr.h
-zprime.o: have_stdbool.h
-zprime.o: have_stdlib.h
-zprime.o: have_string.h
+zprime.o: int.h
 zprime.o: jump.h
 zprime.o: longbits.h
 zprime.o: nametype.h
 zprime.o: prime.h
 zprime.o: qmath.h
 zprime.o: sha1.h
+zprime.o: status.chk_c.h
 zprime.o: str.h
 zprime.o: value.h
 zprime.o: version.h
 zprime.o: zmath.h
 zprime.o: zprime.c
 zprime.o: zrand.h
-zrand.o: alloc.h
+zprime.o: zrandom.h
 zrand.o: attribute.h
 zrand.o: banned.h
 zrand.o: block.h
-zrand.o: bool.h
 zrand.o: byteswap.h
 zrand.o: charbit.h
 zrand.o: cmath.h
 zrand.o: config.h
-zrand.o: decl.h
 zrand.o: endian_calc.h
 zrand.o: errsym.h
 zrand.o: errtbl.h
 zrand.o: hash.h
 zrand.o: have_ban_pragma.h
-zrand.o: have_const.h
-zrand.o: have_limits.h
-zrand.o: have_newstr.h
-zrand.o: have_stdbool.h
-zrand.o: have_stdlib.h
-zrand.o: have_string.h
 zrand.o: have_unused.h
+zrand.o: int.h
 zrand.o: longbits.h
 zrand.o: nametype.h
 zrand.o: qmath.h
 zrand.o: sha1.h
+zrand.o: status.chk_c.h
 zrand.o: str.h
 zrand.o: value.h
 zrand.o: version.h
 zrand.o: zmath.h
 zrand.o: zrand.c
 zrand.o: zrand.h
-zrandom.o: alloc.h
+zrand.o: zrandom.h
 zrandom.o: attribute.h
 zrandom.o: banned.h
 zrandom.o: block.h
-zrandom.o: bool.h
 zrandom.o: byteswap.h
 zrandom.o: charbit.h
 zrandom.o: cmath.h
 zrandom.o: config.h
-zrandom.o: decl.h
 zrandom.o: endian_calc.h
 zrandom.o: errsym.h
 zrandom.o: errtbl.h
 zrandom.o: hash.h
 zrandom.o: have_ban_pragma.h
-zrandom.o: have_const.h
-zrandom.o: have_limits.h
-zrandom.o: have_newstr.h
-zrandom.o: have_stdbool.h
-zrandom.o: have_stdlib.h
-zrandom.o: have_string.h
 zrandom.o: have_unused.h
+zrandom.o: int.h
 zrandom.o: longbits.h
 zrandom.o: nametype.h
 zrandom.o: qmath.h
 zrandom.o: sha1.h
+zrandom.o: status.chk_c.h
 zrandom.o: str.h
 zrandom.o: value.h
 zrandom.o: version.h
 zrandom.o: zmath.h
+zrandom.o: zrand.h
 zrandom.o: zrandom.c
 zrandom.o: zrandom.h

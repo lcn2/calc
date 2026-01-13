@@ -2,7 +2,7 @@
 #
 # Makefile.local - modify, replace or append calc Makefile variables
 #
-# Copyright (C) 2023  Landon Curt Noll
+# Copyright (C) 2023,2026  Landon Curt Noll
 #
 # Suggestion: Read the HOWTO.INSTALL file.
 #
@@ -82,10 +82,10 @@
 # FSANITIZE+= -fsanitize=nullability-arg
 # FSANITIZE+= -fsanitize=nullability-assign
 # FSANITIZE+= -fsanitize=nullability-return
-# CFLAGS+= -Wextra -Werror
+# CCWARN+= -Werror
 # CFLAGS+= ${FSANITIZE} -fstack-protector-all
 # LDFLAGS+= ${FSANITIZE}
-# DEBUG:= -O0 -g3
+# DEBUG:= -O0 -ggdb3
 # BLD_TYPE= calc-static-only
 ####
 
@@ -116,11 +116,11 @@
 #   dnf install readline-devel.i686 ncurses-libs.i686 ncurses-devel.i686 libubsan.i686
 #
 # ARCH_CFLAGS= -march=i686 -m32
-# CFLAGS+= -Wextra -Werror
+# CCWARN+= -Werror
 # LDFLAGS+= -L/usr/lib
 # CFLAGS+= ${FSANITIZE} -fstack-protector-all
 # LDFLAGS+= ${FSANITIZE}
-# DEBUG:= -O0 -g3
+# DEBUG:= -O0 -ggdb3
 # BLD_TYPE= calc-static-only
 ####
 
@@ -149,9 +149,9 @@
 #
 #   dnf install readline-devel ncurses-libs ncurses-devel libasan libubsan
 #
-# CFLAGS+= -Wextra -Werror
+# CCWARN+= -Werror
 # CFLAGS+= ${FSANITIZE} -fstack-protector-all
 # LDFLAGS+= ${FSANITIZE}
-# DEBUG:= -O0 -g3
+# DEBUG:= -O0 -ggdb3
 # BLD_TYPE= calc-static-only
 ####

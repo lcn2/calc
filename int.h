@@ -6,7 +6,7 @@
  *      https://en.cppreference.com/w/c/language/arithmetic_types
  *      https://en.cppreference.com/w/c/types/integer
  *
- * Copyright (C) 2023  Landon Curt Noll
+ * Copyright (C) 2023,2026  Landon Curt Noll
  *
  * Primary author:  Landon Curt Noll
  *
@@ -36,23 +36,14 @@
 /*
  * important include files that have an impact in integer types used in calc
  */
-#  include "have_stdint.h"
-#  if defined(HAVE_STDINT_H)
-#    include <stdint.h>
-#  endif /* HAVE_STDINT_H */
 
-#  include "have_inttypes.h"
-#  if defined(HAVE_INTTYPES_H)
-#    include <inttypes.h>
-#  endif /* HAVE_INTTYPES_H */
-
-#  include "status.chk_c.h"
-
-#  include "bool.h"
-
-#  include "charbit.h"
-
-#  include "version.h"
+#  if defined(CALC_SRC) /* if we are building from the calc source tree */
+#    include "status.chk_c.h"
+#    include "charbit.h"
+#  else
+#    include <calc/status.chk_c.h>
+#    include <calc/charbit.h>
+#  endif
 
 /*
  * case: C compiler and select include files appear to meet calc requirements
@@ -67,27 +58,27 @@
  */
 #    if !defined(INT8_WIDTH)
 #      define INT8_WIDTH (sizeof(int8_t) * CALC_CHARBIT)
-#    endif /* INT8_WIDTH */
+#    endif
 
 #    if !defined(INT16_WIDTH)
 #      define INT16_WIDTH (sizeof(int16_t) * CALC_CHARBIT)
-#    endif /* INT16_WIDTH */
+#    endif
 
 #    if !defined(INT32_WIDTH)
 #      define INT32_WIDTH (sizeof(int32_t) * CALC_CHARBIT)
-#    endif /* INT32_WIDTH */
+#    endif
 
 #    if !defined(INT64_WIDTH)
 #      define INT64_WIDTH (sizeof(int64_t) * CALC_CHARBIT)
-#    endif /* INT64_WIDTH */
+#    endif
 
 #    if !defined(INTPTR_WIDTH)
 #      define INTPTR_WIDTH (sizeof(intptr_t) * CALC_CHARBIT)
-#    endif /* INTPTR_WIDTH */
+#    endif
 
 #    if !defined(INTMAX_WIDTH)
 #      define INTMAX_WIDTH (sizeof(intmax_t) * CALC_CHARBIT)
-#    endif /* INTMAX_WIDTH */
+#    endif
 
 /*
  * bit width of various unsigned integers
@@ -97,32 +88,32 @@
  */
 #    if !defined(UINT8_WIDTH)
 #      define UINT8_WIDTH (sizeof(uint8_t) * CALC_CHARBIT)
-#    endif /* UINT8_WIDTH */
+#    endif
 
 #    if !defined(UINT16_WIDTH)
 #      define UINT16_WIDTH (sizeof(uint16_t) * CALC_CHARBIT)
-#    endif /* UINT16_WIDTH */
+#    endif
 
 #    if !defined(UINT32_WIDTH)
 #      define UINT32_WIDTH (sizeof(uint32_t) * CALC_CHARBIT)
-#    endif /* UINT32_WIDTH */
+#    endif
 
 #    if !defined(UINT64_WIDTH)
 #      define UINT64_WIDTH (sizeof(uint64_t) * CALC_CHARBIT)
-#    endif /* UINT64_WIDTH */
+#    endif
 
 #    if !defined(UINTPTR_WIDTH)
 #      define UINTPTR_WIDTH (sizeof(uintptr_t) * CALC_CHARBIT)
-#    endif /* UINTPTR_WIDTH */
+#    endif
 
 #    if !defined(UINTMAX_WIDTH)
 #      define UINTMAX_WIDTH (sizeof(uintmax_t) * CALC_CHARBIT)
-#    endif /* UINTMAX_WIDTH */
+#    endif
 
 /*
  * case: C compiler and/or select include files do not meet calc requirements
  */
-#  else /* CHK_C */
+#  else
 
 /*
  * calc v2 is the last version where one might be able to use an old C compiler
@@ -138,27 +129,27 @@
  */
 #      if !defined(INT8_WIDTH)
 #        define INT8_WIDTH (8)
-#      endif /* INT8_WIDTH */
+#      endif
 
 #      if !defined(INT16_WIDTH)
 #        define INT16_WIDTH (16)
-#      endif /* INT16_WIDTH */
+#      endif
 
 #      if !defined(INT32_WIDTH)
 #        define INT32_WIDTH (32)
-#      endif /* INT32_WIDTH */
+#      endif
 
 #      if !defined(INT64_WIDTH)
 #        define INT64_WIDTH (64)
-#      endif /* INT64_WIDTH */
+#      endif
 
 #      if !defined(INTPTR_WIDTH)
 #        define INTPTR_WIDTH (64)
-#      endif /* INTPTR_WIDTH */
+#      endif
 
 #      if !defined(INTMAX_WIDTH)
 #        define INTMAX_WIDTH (64)
-#      endif /* INTMAX_WIDTH */
+#      endif
 
 /*
  * bit width of various unsigned integers
@@ -168,36 +159,36 @@
  */
 #      if !defined(UINT8_WIDTH)
 #        define UINT8_WIDTH (8)
-#      endif /* UINT8_WIDTH */
+#      endif
 
 #      if !defined(UINT16_WIDTH)
 #        define UINT16_WIDTH (16)
-#      endif /* UINT16_WIDTH */
+#      endif
 
 #      if !defined(UINT32_WIDTH)
 #        define UINT32_WIDTH (32)
-#      endif /* UINT32_WIDTH */
+#      endif
 
 #      if !defined(UINT64_WIDTH)
 #        define UINT64_WIDTH (64)
-#      endif /* UINT64_WIDTH */
+#      endif
 
 #      if !defined(UINTPTR_WIDTH)
 #        define UINTPTR_WIDTH (64)
-#      endif /* UINTPTR_WIDTH */
+#      endif
 
 #      if !defined(UINTMAX_WIDTH)
 #        define UINTMAX_WIDTH (64)
-#      endif /* UINTMAX_WIDTH */
+#      endif
 
-#    else /* MAJOR_VER < 3 */
+#    else
 
 /*
  * calc v3 or later and CHK_C is undefined
  */
 #      pragma GCC error "calc v3 and later require C compiler and include files that support CHK_C"
 
-#    endif /* MAJOR_VER < 3 */
-#  endif   /* CHK_C */
+#    endif
+#  endif
 
-#endif /* !INCLUDE_INT_H */
+#endif

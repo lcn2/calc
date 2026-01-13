@@ -1,7 +1,7 @@
 /*
  * sample_rand - test the libcalc random number generator
  *
- * Copyright (C) 1999-2007,2021-2023  Landon Curt Noll
+ * Copyright (C) 1999-2007,2021-2023,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -32,15 +32,25 @@
  *      bits            number of bits to generate
  */
 
-#include <sys/types.h>
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
-#include "calc.h"
-#include "zrandom.h"
-#include "have_const.h"
-#include "lib_util.h"
+#include <stdlib.h>
+#include <sys/types.h>
+#include <stdint.h>
+#include <stdbool.h>
 
+/*
+ * calc local src includes
+ */
+#include "value.h"
+#include "calc.h"
+#include "lib_util.h"
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 #define DEF_CNT 128 /* default number of bits to generate */
 

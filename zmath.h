@@ -1,7 +1,7 @@
 /*
  * zmath - declarations for extended precision integer arithmetic
  *
- * Copyright (C) 1999-2007,2014,2021,2023  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2007,2014,2021,2023,2026  David I. Bell and Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -34,27 +34,18 @@
 
 #  if defined(CALC_SRC) /* if we are building from the calc source tree */
 #    include "version.h"
-#    include "bool.h"
-#    include "decl.h"
-#    include "alloc.h"
+#    include "int.h"
 #    include "endian_calc.h"
 #    include "longbits.h"
 #    include "byteswap.h"
-#    include "have_stdlib.h"
 #    include "charbit.h"
 #  else
 #    include <calc/version.h>
-#    include <calc/bool.h>
-#    include <calc/decl.h>
-#    include <calc/alloc.h>
+#    include <calc/int.h>
 #    include <calc/endian_calc.h>
 #    include <calc/longbits.h>
 #    include <calc/byteswap.h>
-#    include <calc/have_stdlib.h>
 #    include <calc/charbit.h>
-#  endif
-#  ifdef HAVE_STDLIB_H
-#    include <stdlib.h>
 #  endif
 
 #  ifndef ALLOCTEST
@@ -75,7 +66,8 @@
 
 /* BTW: BASEB is effectively HALF_BITS */
 
-#    define BASEB 32 /* use base 2^32 */
+#    define BASEB_LOG2 (5)          /* use base 2^32 */
+#    define BASEB (1 << BASEB_LOG2) /* use base 2^32 */
 typedef USB32 HALF;  /* unit of number storage */
 typedef SB32 SHALF;  /* signed HALF */
 typedef USB64 FULL;  /* double unit of number storage */
@@ -96,7 +88,8 @@ typedef SB64 SFULL;  /* signed FULL */
 
 #  else
 
-#    define BASEB 16 /* use base 2^16 */
+#    define BASEB_LOG2 (4)          /* use base 2^16 */
+#    define BASEB (1 << BASEB_LOG2) /* use base 2^16 */
 typedef USB16 HALF; /* unit of number storage */
 typedef SB16 SHALF; /* signed HALF */
 typedef USB32 FULL; /* double unit of number storage */
@@ -120,6 +113,7 @@ typedef SB32 SFULL; /* signed FULL */
 #  define BASE ((FULL)1 << BASEB)    /* base for calculations */
 #  define BASE1 (BASE - (FULL)1)     /* one less than base */
 #  define BASEDIG ((BASEB / 16) * 5) /* number of digits in base */
+#  define HALF_BITS (BASEB)          /* alias for BASEB - bits in a HALF */
 #  define FULL_BITS (2 * BASEB)      /* bits in a FULL */
 #  define HALF_LEN (sizeof(HALF))    /* length of HALF in bytes */
 #  define FULL_LEN (sizeof(FULL))    /* length of FULL in bytes */
@@ -166,11 +160,11 @@ typedef SB32 FLAG; /* small value (e.g. comparison) */
 /*
  * length of internal integer values in units of HALF
  */
-#  if MAJOR_VER < 3
+#  if MAJOR_VER >= 3
+typedef intptr_t LEN; /* unit of length storage */
+#  else
 typedef SB32 LEN; /* calc v2 compatible unit of length storage */
-#  else           /* MAJOR_VER < 3 */
-typedef uintptr_t LEN; /* unit of length storage */
-#  endif          /* MAJOR_VER < 3 */
+#  endif
 
 #  define SWAP_B32_IN_bool(dest, src) (*((bool *)(dest)) = *((bool *)(src)))
 #  define SWAP_B16_IN_bool(dest, src) SWAP_B16_IN_B32(dest, src)
@@ -181,10 +175,14 @@ typedef uintptr_t LEN; /* unit of length storage */
 #  define SWAP_B8_IN_LEN(dest, src) SWAP_B8_IN_B32(dest, src)
 
 #  if LONG_BITS == 64
+
 #    define SWAP_HALF_IN_LONG(dest, src) SWAP_HALF_IN_B64(dest, src)
-#  else /* LONG_BITS == 64 */
+
+#  else
+
 #    define SWAP_HALF_IN_LONG(dest, src) SWAP_HALF_IN_B32(dest, src)
-#  endif /* LONG_BITS == 64 */
+
+#  endif
 
 /*
  * Quickhash basis
@@ -223,28 +221,26 @@ typedef uintptr_t LEN; /* unit of length storage */
 #  define QUICKHASH_BASIS ((QCKHASH)(0x811c9dc5))
 
 /*
- * The largest power of 10 we will compute for our decimal conversion
- * internal constants is: 10^(2^TEN_MAX).
- */
-#  define TEN_MAX 31 /* 10^2^31 requires about 1.66 * 2^29 bytes */
-
-/*
  * MAXDATA - largest data object in bytes we will use
  *
- * We start with MAXDATA as 1 less than 1/8 of the maximum address space.
- * We limit to 1/8 because for a maximum complex value we
+ * We start with MAXDATA as 1 less than 1/16 of the maximum address space.
+ * We limit to 1/16 because for a maximum complex value we
  * will need 4 huge integers, plus other data, code and stack space.
+ * We often perform an operation such as 'a = b + c', so need 3 such
+ * complex values.  So '3*4/16 == 3/4' of the address space, with spare
+ * space for code, op stack and other data.
  *
  * NOTE: MAXDATA must be 1 less than a power of 2.
  * NOTE: MAXDATA_LOG2 is the log base 2 of MAXDATA+1.
  */
-#  if MAJOR_VER < 3
-#    define MAXDATA_LOG2 (28)                 /* as defined by calc v2 */
-#    define MAXDATA ((1 << MAXDATA_LOG2) - 1) /* calc v2 compatible supported address space */
-#  else                                       /* MAJOR_VER < 3 */
-#    define MAXDATA_LOG2 (UINTPTR_WIDTH - 3)  /* 1/8 of address space */
+#  define ADDR_REDUCT 4                                      /* power of 2 address space reduction 1/(2^4) == 1/16 */
+#  if MAJOR_VER >= 3
+#    define MAXDATA_LOG2 ((int)(INTPTR_WIDTH - ADDR_REDUCT)) /* 1/16 of address space */
 #    define MAXDATA (((LEN)1 << MAXDATA_LOG2) - 1)
-#  endif /* MAJOR_VER < 3 */
+#  else
+#    define MAXDATA_LOG2 (32 - ADDR_REDUCT)     /* 1/16 of 32-bit address space as defined by calc v2 */
+#    define MAXDATA ((1 << MAXDATA_LOG2) - 1)   /* calc v2 compatible supported address space */
+#  endif
 
 /*
  * MAXLEN - maximum length of internal integer values in units of HALF
@@ -255,8 +251,56 @@ typedef uintptr_t LEN; /* unit of length storage */
  * NOTE: MAXLEN must be 1 less than a power of 2.
  * NOTE: MAXLEN_LOG2 is the log base 2 of MAXLEN+1.
  */
-#  define MAXLEN ((LEN)((MAXDATA / HALF_LEN) - 1)) /* longest value allowed */
-#  define MAXLEN_LOG2 (MAXDATA_LOG2 - BASEB)
+#  define MAXLEN_LOG2 (MAXDATA_LOG2 - BASEB_LOG2)
+#  define MAXLEN (((LEN)1 << MAXLEN_LOG2) - 1)
+
+/*
+ * The number of decimal digits in 10^power_of_10, where power_of_10 is an integer >= 0:
+ *
+ *      power_of_10 + 1
+ *
+ * The number of bytes needed to hold 10^power_of_10:
+ *
+ *      ceil( (power_of_10 + 1) / log(256) )
+ *
+ *      NOTE: log() is a log base 10
+ *
+ * Let us convert that using log base 2 because that will be easier to work with later on.
+ * The number of bytes needed to hold 10^power_of_10:
+ *
+ *      ceil( log2(10) * (power_of_10 + 1) / log2(256) )
+ *
+ *      NOTE: log2() is a log base 2
+ *
+ * NOTE: log2(256) == 8, so the number of bytes needed to hold 10^power_of_10:
+ *
+ *      ceil( log2(10) * (power_of_10 + 1) / 8 )
+ *
+ * The ztenpow() function (in zfunc.c) computes powers of 10^(2^x), where x is in an integer >= 0.
+ * So the number of bytes required to hold 10^(2^x), where x is in an integer >= 0:
+ *
+ *      ceil( log2(10) * (2^x + 1) / 8 )
+ *
+ * TEN_MAX, is the limit of those powers of 10^(2^x) computed by the ztenpow(), so 0 <= x <= TEN_MAX.
+ * So what is a reasonable value of TEN_MAX?  Read on.  :-)
+ *
+ * The bits are required to hold the length in bytes of 10^(2^x) is
+ * the log base 2 of the number of bytes required to hold 10^(2^x).  So:
+ *
+ *      ceil( log2( ceil( log2(10) * (2^x + 1) / 8 ) ) )
+ *
+ * For x == 31, and thus for calculating up to 10^(2^31), we need about 850.5 MBytes.
+ * For x == 49, and thus for calculating up to 10^(2^49), we need about 212.6 TBytes.
+ */
+
+/*
+ * The largest power of 10 we will compute for our decimal conversion internal constants is: 10^(2^TEN_MAX)
+ */
+#  if MAJOR_VER >= 3
+#    define TEN_MAX 49  /* calc v3+: 10^2^49 requires about 1.66 * 2^47 bytes */
+#  else
+#    define TEN_MAX 31  /* calc v2: 10^2^31 requires about 1.66 * 2^29 bytes */
+#  endif
 
 #  define MAXREDC 256 /* number of entries in REDC cache */
 #  define SQ_ALG2 28  /* size for alternative squaring */
@@ -293,14 +337,15 @@ typedef union {
 #    endif
 #  endif
 
+#  if MAJOR_VER >= 3
+typedef bool SIGN; /* sign of a multi-precision integer */
+#  else
+typedef SB32 SIGN; /* sign of a multi-precision integer */
+#  endif
+
 /*
- * ZVALUE - multi-prevision integer
+ * ZVALUE - multi-precision integer
  */
-#  if MAJOR_VER < 3
-typedef SB32 SIGN; /* calc v2 compatible sign type */
-#  else            /* MAJOR_VER < 3 */
-typedef bool SIGN; /* sign as a C boolean */
-#  endif           /* MAJOR_VER < 3 */
 typedef struct {
     HALF *v;   /* pointer to array of values */
     LEN len;   /* number of values in array */
@@ -310,125 +355,125 @@ typedef struct {
 /*
  * Function prototypes for integer math routines.
  */
-E_FUNC HALF *alloc(LEN len);
-E_FUNC int is_const(HALF *h);
+extern HALF *alloc(LEN len);
+extern int is_const(HALF *h);
 #  ifdef ALLOCTEST
-E_FUNC void freeh(HALF *);
+extern void freeh(HALF *);
 #  endif
 
 /*
  * Input, output, and conversion routines.
  */
-E_FUNC void zcopy(ZVALUE z, ZVALUE *res);
-E_FUNC void itoz(long i, ZVALUE *res);
-E_FUNC void utoz(FULL i, ZVALUE *res);
-E_FUNC void stoz(SFULL i, ZVALUE *res);
-E_FUNC void str2z(char *s, ZVALUE *res);
-E_FUNC long ztoi(ZVALUE z);
-E_FUNC FULL ztou(ZVALUE z);
-E_FUNC SFULL ztos(ZVALUE z);
-E_FUNC void zprintval(ZVALUE z, long decimals, long width);
-E_FUNC void zprintx(ZVALUE z, long width);
-E_FUNC void zprintb(ZVALUE z, long width);
-E_FUNC void zprinto(ZVALUE z, long width);
-E_FUNC void fitzprint(ZVALUE, long, long);
+extern void zcopy(ZVALUE z, ZVALUE *res);
+extern void itoz(long i, ZVALUE *res);
+extern void utoz(FULL i, ZVALUE *res);
+extern void stoz(SFULL i, ZVALUE *res);
+extern void str2z(char *s, ZVALUE *res);
+extern long ztoi(ZVALUE z);
+extern FULL ztou(ZVALUE z);
+extern SFULL ztos(ZVALUE z);
+extern void zprintval(ZVALUE z, long decimals, long width);
+extern void zprintx(ZVALUE z, long width);
+extern void zprintb(ZVALUE z, long width);
+extern void zprinto(ZVALUE z, long width);
+extern void fitzprint(ZVALUE, long, long);
 
 /*
  * Basic numeric routines.
  */
-E_FUNC void zmuli(ZVALUE z, long n, ZVALUE *res);
-E_FUNC long zdivi(ZVALUE z, long n, ZVALUE *res);
-E_FUNC long zmodi(ZVALUE z, long n);
-E_FUNC void zadd(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-E_FUNC void zsub(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-E_FUNC void zmul(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-E_FUNC long zdiv(ZVALUE z1, ZVALUE z2, ZVALUE *res, ZVALUE *rem, long R);
-E_FUNC long zquo(ZVALUE z1, ZVALUE z2, ZVALUE *res, long R);
-E_FUNC long zmod(ZVALUE z1, ZVALUE z2, ZVALUE *rem, long R);
-E_FUNC void zequo(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-E_FUNC bool zdivides(ZVALUE z1, ZVALUE z2);
-E_FUNC void zor(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-E_FUNC void zand(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-E_FUNC void zxor(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-E_FUNC void zandnot(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-E_FUNC long zpopcnt(ZVALUE z, int bitval);
-E_FUNC void zshift(ZVALUE z, long n, ZVALUE *res);
-E_FUNC void zsquare(ZVALUE z, ZVALUE *res);
-E_FUNC long zlowbit(ZVALUE z);
-E_FUNC LEN zhighbit(ZVALUE z);
-E_FUNC void zbitvalue(long n, ZVALUE *res);
-E_FUNC bool zzbitvalue(ZVALUE pos, ZVALUE *res);
-E_FUNC bool zisset(ZVALUE z, long n);
-E_FUNC bool zisonebit(ZVALUE z);
-E_FUNC bool zisallbits(ZVALUE z);
-E_FUNC FLAG ztest(ZVALUE z);
-E_FUNC FLAG zrel(ZVALUE z1, ZVALUE z2);
-E_FUNC FLAG zabsrel(ZVALUE z1, ZVALUE z2);
-E_FUNC bool zcmp(ZVALUE z1, ZVALUE z2);
+extern void zmuli(ZVALUE z, long n, ZVALUE *res);
+extern long zdivi(ZVALUE z, long n, ZVALUE *res);
+extern long zmodi(ZVALUE z, long n);
+extern void zadd(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+extern void zsub(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+extern void zmul(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+extern long zdiv(ZVALUE z1, ZVALUE z2, ZVALUE *res, ZVALUE *rem, long R);
+extern long zquo(ZVALUE z1, ZVALUE z2, ZVALUE *res, long R);
+extern long zmod(ZVALUE z1, ZVALUE z2, ZVALUE *rem, long R);
+extern void zequo(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+extern bool zdivides(ZVALUE z1, ZVALUE z2);
+extern void zor(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+extern void zand(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+extern void zxor(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+extern void zandnot(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+extern long zpopcnt(ZVALUE z, int bitval);
+extern void zshift(ZVALUE z, long n, ZVALUE *res);
+extern void zsquare(ZVALUE z, ZVALUE *res);
+extern long zlowbit(ZVALUE z);
+extern LEN zhighbit(ZVALUE z);
+extern void zbitvalue(long n, ZVALUE *res);
+extern bool zzbitvalue(ZVALUE pos, ZVALUE *res);
+extern bool zisset(ZVALUE z, long n);
+extern bool zisonebit(ZVALUE z);
+extern bool zisallbits(ZVALUE z);
+extern FLAG ztest(ZVALUE z);
+extern FLAG zrel(ZVALUE z1, ZVALUE z2);
+extern FLAG zabsrel(ZVALUE z1, ZVALUE z2);
+extern bool zcmp(ZVALUE z1, ZVALUE z2);
 
 /*
  * More complicated numeric functions.
  */
-E_FUNC FULL uugcd(FULL i1, FULL i2);
-E_FUNC long iigcd(long i1, long i2);
-E_FUNC void zgcd(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-E_FUNC void zlcm(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-E_FUNC void zreduce(ZVALUE z1, ZVALUE z2, ZVALUE *z1res, ZVALUE *z2res);
-E_FUNC void zfact(ZVALUE z, ZVALUE *dest);
-E_FUNC void zperm(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-E_FUNC int zcomb(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-E_FUNC FLAG zjacobi(ZVALUE z1, ZVALUE z2);
-E_FUNC void zfib(ZVALUE z, ZVALUE *res);
-E_FUNC void zpowi(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-E_FUNC void ztenpow(long power, ZVALUE *res);
-E_FUNC void zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res);
-E_FUNC bool zmodinv(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-E_FUNC bool zrelprime(ZVALUE z1, ZVALUE z2);
-E_FUNC long zlog(ZVALUE z1, ZVALUE z2);
-E_FUNC long zlog10(ZVALUE z, bool *was_10_power);
-E_FUNC long zdivcount(ZVALUE z1, ZVALUE z2);
-E_FUNC long zfacrem(ZVALUE z1, ZVALUE z2, ZVALUE *rem);
-E_FUNC long zgcdrem(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-E_FUNC long zdigits(ZVALUE z1);
-E_FUNC long zdigit(ZVALUE z1, long n);
-E_FUNC FLAG zsqrt(ZVALUE z1, ZVALUE *dest, long R);
-E_FUNC void zroot(ZVALUE z1, ZVALUE z2, ZVALUE *dest);
-E_FUNC bool zissquare(ZVALUE z);
-E_FUNC void zhnrmod(ZVALUE v, ZVALUE h, ZVALUE zn, ZVALUE zr, ZVALUE *res);
-E_FUNC bool zispowerof2(ZVALUE z, FULL *log2);
+extern FULL uugcd(FULL i1, FULL i2);
+extern long iigcd(long i1, long i2);
+extern void zgcd(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+extern void zlcm(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+extern void zreduce(ZVALUE z1, ZVALUE z2, ZVALUE *z1res, ZVALUE *z2res);
+extern void zfact(ZVALUE z, ZVALUE *dest);
+extern void zperm(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+extern int zcomb(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+extern FLAG zjacobi(ZVALUE z1, ZVALUE z2);
+extern void zfib(ZVALUE z, ZVALUE *res);
+extern void zpowi(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+extern void ztenpow(long power, ZVALUE *res);
+extern void zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res);
+extern bool zmodinv(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+extern bool zrelprime(ZVALUE z1, ZVALUE z2);
+extern long zlog(ZVALUE z1, ZVALUE z2);
+extern long zlog10(ZVALUE z, bool *was_10_power);
+extern long zdivcount(ZVALUE z1, ZVALUE z2);
+extern long zfacrem(ZVALUE z1, ZVALUE z2, ZVALUE *rem);
+extern long zgcdrem(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+extern long zdigits(ZVALUE z1);
+extern long zdigit(ZVALUE z1, long n);
+extern FLAG zsqrt(ZVALUE z1, ZVALUE *dest, long R);
+extern void zroot(ZVALUE z1, ZVALUE z2, ZVALUE *dest);
+extern bool zissquare(ZVALUE z);
+extern void zhnrmod(ZVALUE v, ZVALUE h, ZVALUE zn, ZVALUE zr, ZVALUE *res);
+extern bool zispowerof2(ZVALUE z, FULL *log2);
 
 /*
  * Prime related functions.
  */
-E_FUNC FLAG zisprime(ZVALUE z);
-E_FUNC FULL znprime(ZVALUE z);
-E_FUNC FULL next_prime(FULL v);
-E_FUNC FULL zpprime(ZVALUE z);
-E_FUNC void zpfact(ZVALUE z, ZVALUE *dest);
-E_FUNC bool zprimetest(ZVALUE z, long count, ZVALUE skip);
-E_FUNC bool zredcprimetest(ZVALUE z, long count, ZVALUE skip);
-E_FUNC bool znextcand(ZVALUE z1, long count, ZVALUE skip, ZVALUE res, ZVALUE mod, ZVALUE *cand);
-E_FUNC bool zprevcand(ZVALUE z1, long count, ZVALUE skip, ZVALUE res, ZVALUE mod, ZVALUE *cand);
-E_FUNC FULL zlowfactor(ZVALUE z, long count);
-E_FUNC FLAG zfactor(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-E_FUNC long zpix(ZVALUE z1);
-E_FUNC void zlcmfact(ZVALUE z, ZVALUE *dest);
+extern FLAG zisprime(ZVALUE z);
+extern FULL znprime(ZVALUE z);
+extern FULL next_prime(FULL v);
+extern FULL zpprime(ZVALUE z);
+extern void zpfact(ZVALUE z, ZVALUE *dest);
+extern bool zprimetest(ZVALUE z, long count, ZVALUE skip);
+extern bool zredcprimetest(ZVALUE z, long count, ZVALUE skip);
+extern bool znextcand(ZVALUE z1, long count, ZVALUE skip, ZVALUE res, ZVALUE mod, ZVALUE *cand);
+extern bool zprevcand(ZVALUE z1, long count, ZVALUE skip, ZVALUE res, ZVALUE mod, ZVALUE *cand);
+extern FULL zlowfactor(ZVALUE z, long count);
+extern FLAG zfactor(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+extern long zpix(ZVALUE z1);
+extern void zlcmfact(ZVALUE z, ZVALUE *dest);
 
 /*
  * miscellaneous functions. :-)
  */
-E_FUNC void zsquaremod(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-E_FUNC void zminmod(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-E_FUNC bool zcmpmod(ZVALUE z1, ZVALUE z2, ZVALUE z3);
-E_FUNC void zio_init(void);
+extern void zsquaremod(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+extern void zminmod(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+extern bool zcmpmod(ZVALUE z1, ZVALUE z2, ZVALUE z3);
+extern void zio_init(void);
 
 /*
  * These functions are for internal use only.
  */
-E_FUNC void ztrim(ZVALUE *z);
-E_FUNC void zshiftr(ZVALUE z, long n);
-E_FUNC void zshiftl(ZVALUE z, long n);
-E_FUNC HALF *zalloctemp(LEN len);
+extern void ztrim(ZVALUE *z);
+extern void zshiftr(ZVALUE z, long n);
+extern void zshiftl(ZVALUE z, long n);
+extern HALF *zalloctemp(LEN len);
 
 /*
  * Modulo arithmetic definitions.
@@ -444,13 +489,13 @@ typedef struct {
     ZVALUE one; /* REDC format for the number 1 */
 } REDC;
 
-E_FUNC REDC *zredcalloc(ZVALUE z1);
-E_FUNC void zredcfree(REDC *rp);
-E_FUNC void zredcencode(REDC *rp, ZVALUE z1, ZVALUE *res);
-E_FUNC void zredcdecode(REDC *rp, ZVALUE z1, ZVALUE *res);
-E_FUNC void zredcmul(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
-E_FUNC void zredcsquare(REDC *rp, ZVALUE z1, ZVALUE *res);
-E_FUNC void zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
+extern REDC *zredcalloc(ZVALUE z1);
+extern void zredcfree(REDC *rp);
+extern void zredcencode(REDC *rp, ZVALUE z1, ZVALUE *res);
+extern void zredcdecode(REDC *rp, ZVALUE z1, ZVALUE *res);
+extern void zredcmul(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
+extern void zredcsquare(REDC *rp, ZVALUE z1, ZVALUE *res);
+extern void zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
 
 /*
  * macro expansions to speed this thing up
@@ -621,75 +666,75 @@ E_FUNC void zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
 /*
  * Output routines for either FILE handles or strings.
  */
-E_FUNC void math_chr(int ch);
-E_FUNC void math_str(char *str);
-E_FUNC void math_fill(char *str, long width);
-E_FUNC void math_flush(void);
-E_FUNC void math_divertio(void);
-E_FUNC void math_cleardiversions(void);
-E_FUNC char *math_getdivertedio(void);
-E_FUNC int math_setmode(int mode);
-E_FUNC int math_setmode2(int mode);
-E_FUNC LEN math_setdigits(LEN digits);
-E_FUNC void math_fmt(char *, ...) __attribute__((format(printf, 1, 2)));
+extern void math_chr(int ch);
+extern void math_str(char *str);
+extern void math_fill(char *str, long width);
+extern void math_flush(void);
+extern void math_divertio(void);
+extern void math_cleardiversions(void);
+extern char *math_getdivertedio(void);
+extern int math_setmode(int mode);
+extern int math_setmode2(int mode);
+extern LEN math_setdigits(LEN digits);
+extern void math_fmt(char *, ...) __attribute__((format(printf, 1, 2)));
 
 /*
  * external swap functions
  */
-E_FUNC HALF *swap_b8_in_HALFs(HALF *dest, HALF *src, LEN len);
-E_FUNC ZVALUE *swap_b8_in_ZVALUE(ZVALUE *dest, ZVALUE *src, bool all);
-E_FUNC HALF *swap_b16_in_HALFs(HALF *dest, HALF *src, LEN len);
-E_FUNC HALF *swap_HALFs(HALF *dest, HALF *src, LEN len);
-E_FUNC ZVALUE *swap_b16_in_ZVALUE(ZVALUE *dest, ZVALUE *src, bool all);
-E_FUNC ZVALUE *swap_HALF_in_ZVALUE(ZVALUE *dest, ZVALUE *src, bool all);
+extern HALF *swap_b8_in_HALFs(HALF *dest, HALF *src, LEN len);
+extern ZVALUE *swap_b8_in_ZVALUE(ZVALUE *dest, ZVALUE *src, bool all);
+extern HALF *swap_b16_in_HALFs(HALF *dest, HALF *src, LEN len);
+extern HALF *swap_HALFs(HALF *dest, HALF *src, LEN len);
+extern ZVALUE *swap_b16_in_ZVALUE(ZVALUE *dest, ZVALUE *src, bool all);
+extern ZVALUE *swap_HALF_in_ZVALUE(ZVALUE *dest, ZVALUE *src, bool all);
 
 /*
  * constants used often by the arithmetic routines
  */
-EXTERN HALF _zeroval_[];
-EXTERN ZVALUE _zero_;
+extern HALF _zeroval_[];
+extern ZVALUE _zero_;
 
-EXTERN HALF _oneval_[];
-EXTERN ZVALUE _one_;
-EXTERN ZVALUE _neg_one_;
+extern HALF _oneval_[];
+extern ZVALUE _one_;
+extern ZVALUE _neg_one_;
 
-EXTERN HALF _twoval_[];
-EXTERN ZVALUE _two_;
+extern HALF _twoval_[];
+extern ZVALUE _two_;
 
-EXTERN HALF _tenval_[];
-EXTERN ZVALUE _ten_;
+extern HALF _tenval_[];
+extern ZVALUE _ten_;
 
-EXTERN HALF _sqbaseval_[];
-EXTERN ZVALUE _sqbase_;
+extern HALF _sqbaseval_[];
+extern ZVALUE _sqbase_;
 
-EXTERN HALF _pow4baseval_[];
-EXTERN ZVALUE _pow4base_;
+extern HALF _pow4baseval_[];
+extern ZVALUE _pow4base_;
 
-EXTERN HALF _pow8baseval_[];
-EXTERN ZVALUE _pow8base_;
+extern HALF _pow8baseval_[];
+extern ZVALUE _pow8base_;
 
-EXTERN HALF _basebval_[];
-EXTERN ZVALUE _baseb_;
+extern HALF _basebval_[];
+extern ZVALUE _baseb_;
 
 /* _b32_ is _sqbaseval_ or _pow4baseval_ depending on BASEB */
-EXTERN ZVALUE _b32_;
+extern ZVALUE _b32_;
 
 /* _b64_ is _pow4baseval_ or _pow8baseval_ depending on BASEB */
-EXTERN ZVALUE _b64_;
+extern ZVALUE _b64_;
 
-EXTERN HALF *half_tbl[]; /* preset HALF constants, NULL terminated list */
+extern HALF *half_tbl[]; /* preset HALF constants, NULL terminated list */
 
-EXTERN bool _math_abort_;    /* nonzero to abort calculations */
-EXTERN ZVALUE _tenpowers_[]; /* table of 10^2^n */
+extern bool _math_abort_;    /* nonzero to abort calculations */
+extern ZVALUE _tenpowers_[]; /* table of 10^2^n */
 
 /*
  * Bit fiddling functions and types
  */
-EXTERN HALF bitmask[];        /* bit rotation, norm 0 */
-EXTERN HALF lowhalf[];        /* bit masks from low end of HALF */
-EXTERN HALF rlowhalf[];       /* reversed bit masks from low end of HALF */
-EXTERN HALF highhalf[];       /* bit masks from high end of HALF */
-EXTERN HALF rhighhalf[];      /* reversed bit masks from high end of HALF */
+extern HALF bitmask[];        /* bit rotation, norm 0 */
+extern HALF lowhalf[];        /* bit masks from low end of HALF */
+extern HALF rlowhalf[];       /* reversed bit masks from low end of HALF */
+extern HALF highhalf[];       /* bit masks from high end of HALF */
+extern HALF rhighhalf[];      /* reversed bit masks from high end of HALF */
 #  define HAVE_REVERSED_MASKS /* allows old code to know libcalc.a has them */
 
 /*
@@ -707,4 +752,4 @@ typedef struct {
     int len;   /* length of string in bits */
 } BITSTR;
 
-#endif /* !INCLUDE_ZMATH_H*/
+#endif

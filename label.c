@@ -1,7 +1,7 @@
 /*
  * label - label handling routines
  *
- * Copyright (C) 1999-2007,2021  David I. Bell
+ * Copyright (C) 1999-2007,2021,2026  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -23,18 +23,29 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
+#include <stdio.h>
+#include <string.h>
+#include <stdint.h>
+#include <stdbool.h>
+
+/*
+ * calc local src includes
+ */
+#include "value.h"
 #include "calc.h"
 #include "token.h"
-#include "label.h"
-#include "str.h"
 #include "opcodes.h"
+#include "label.h"
 #include "func.h"
 
-#include "banned.h" /* include after system header <> includes */
+#include "banned.h" /* include after all other includes */
 
-STATIC long labelcount;         /* number of user labels defined */
-STATIC STRINGHEAD labelnames;   /* list of user label names */
-STATIC LABEL labels[MAXLABELS]; /* list of user labels */
+static long labelcount;         /* number of user labels defined */
+static STRINGHEAD labelnames;   /* list of user label names */
+static LABEL labels[MAXLABELS]; /* list of user labels */
 
 /*
  * Initialize the table of labels for a function.

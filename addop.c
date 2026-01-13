@@ -1,7 +1,7 @@
 /*
  * addop - add opcodes to a function being compiled
  *
- * Copyright (C) 1999-2007,2021-2023  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023,2026  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -25,33 +25,44 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+#include <stdbool.h>
+
+/*
+ * calc local src includes
+ */
+#include "value.h"
 #include "calc.h"
-#include "alloc.h"
 #include "opcodes.h"
-#include "str.h"
+#include "label.h"
 #include "func.h"
 #include "token.h"
-#include "label.h"
 #include "symbol.h"
-
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 #define FUNCALLOCSIZE 20    /* reallocate size for functions */
 #define OPCODEALLOCSIZE 100 /* reallocate size for opcodes in functions */
 
-STATIC unsigned long maxopcodes; /* number of opcodes available */
-STATIC long newindex;            /* index of new function */
-STATIC char *newname;            /* name of new function */
-STATIC long oldop;               /* previous opcode */
-STATIC long oldoldop;            /* opcode before previous opcode */
-STATIC long debugline;           /* line number of latest debug opcode */
-STATIC long funccount;           /* number of functions */
-STATIC long funcavail;           /* available number of functions */
-STATIC FUNC *functemplate;       /* function definition template */
-STATIC FUNC **functions;         /* table of functions */
-STATIC STRINGHEAD funcnames;     /* function names */
+static unsigned long maxopcodes; /* number of opcodes available */
+static long newindex;            /* index of new function */
+static char *newname;            /* name of new function */
+static long oldop;               /* previous opcode */
+static long oldoldop;            /* opcode before previous opcode */
+static long debugline;           /* line number of latest debug opcode */
+static long funccount;           /* number of functions */
+static long funcavail;           /* available number of functions */
+static FUNC *functemplate;       /* function definition template */
+static FUNC **functions;         /* table of functions */
+static STRINGHEAD funcnames;     /* function names */
 
 /*
  * Initialize the table of user defined functions.
@@ -61,12 +72,12 @@ initfunctions(void)
 {
     initstr(&funcnames);
     maxopcodes = OPCODEALLOCSIZE;
-    functemplate = (FUNC *)malloc(funcsize(maxopcodes));
+    functemplate = (FUNC *)calloc(1, funcsize(maxopcodes));
     if (functemplate == NULL) {
         math_error("Cannot allocate function template");
         not_reached();
     }
-    functions = (FUNC **)malloc(sizeof(FUNC *) * FUNCALLOCSIZE);
+    functions = (FUNC **)calloc(FUNCALLOCSIZE, sizeof(FUNC *));
     if (functions == NULL) {
         math_error("Cannot allocate function table");
         not_reached();
@@ -192,7 +203,7 @@ endfunc(void)
         return;
     }
     size = funcsize(curfunc->f_opcodecount);
-    fp = (FUNC *)malloc(size);
+    fp = (FUNC *)calloc(size, 1);
     if (fp == NULL) {
         math_error("Cannot commit function");
         not_reached();
@@ -427,7 +438,7 @@ addop(long op)
     q = NULL;
     if ((count + 5) >= maxopcodes) {
         maxopcodes += OPCODEALLOCSIZE;
-        fp = (FUNC *)malloc(funcsize(maxopcodes));
+        fp = (FUNC *)calloc(1, funcsize(maxopcodes));
         if (fp == NULL) {
             math_error("cannot malloc function");
             not_reached();

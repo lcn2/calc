@@ -1,7 +1,7 @@
 /*
  * u_pfe - pipe/fork/exec
  *
- * Copyright (c) 2024 Viktor Bergquist
+ * Copyright (c) 2024,2026  Viktor Bergquist and Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -45,35 +45,42 @@
 
 #if defined(CUSTOM)
 int u_pfe_allowed = 1; /* CUSTOM defined */
-#else                  /* CUSTOM */
+#else
 int u_pfe_allowed = 0; /* CUSTOM undefined */
-#endif                 /* CUSTOM */
+#endif
 
 #if defined(CUSTOM)
 
+/*
+ * important <system> header includes
+ */
+#  include <stdio.h>
+#  include <stdlib.h>
+#  include <string.h>
+#  include <unistd.h>
+#  include <libgen.h>
+#  include <poll.h>
 #  include <sys/wait.h>
 #  include <sys/time.h>
 #  include <sys/errno.h>
 #  include <sys/param.h> /* MAXPATHLEN attow */
 #  include <sys/types.h>
-#  include <sys/wait.h>
-#  include <libgen.h>
-#  include <poll.h>
-#  include <stdio.h>
-#  include <string.h>
-#  include <unistd.h>
 #  include <sys/resource.h>
+#  include <sys/wait.h>
+#  include <stdint.h>
+#  include <stdbool.h>
 
-#  include "../have_const.h"
+/*
+ * calc local src includes
+ */
 #  include "../value.h"
 #  include "../custom.h"
-
-#  include "../config.h"
 #  include "../calc.h"
-
 #  include "../have_unused.h"
+#  include "../attribute.h"
+#  include "../errtbl.h"
 
-#  include "../banned.h" /* include after system header <> includes */
+#  include "../banned.h" /* include after all other includes */
 
 #  define u_pfe_read_STRL_DFLT 1024
 #  define pfe_pfe_SIZE_BUFFER 4096
@@ -88,71 +95,66 @@ typedef enum {
 } valv_opt;
 
 /*
- * S_FUNC declations
+ * static declations
  */
-S_FUNC VALUE *pfe_select_TIMEOUT_DFLT = NULL;
-S_FUNC VALUE *u_pfe_poll_TIMEOUT_DFLT = NULL;
+static VALUE *pfe_select_TIMEOUT_DFLT = NULL;
+static VALUE *u_pfe_poll_TIMEOUT_DFLT = NULL;
 
 /*
  * forward declarations
  */
-S_FUNC size_t private_strlcat(char *dst, const char *src, size_t dsize);
-S_FUNC size_t private_strlcpy(char *dst, const char *src, size_t dsize);
-S_FUNC const char *type2str(short type);
-S_FUNC VALUE *associndex_int(ASSOC *assoc, long index);
-S_FUNC VALUE *associndex_str(ASSOC *assoc, STRING *index);
-S_FUNC void associndex_int_int(ASSOC *assoc, long index, long value);
-S_FUNC void associndex_str_int(ASSOC *assoc, STRING *index, long value);
-S_FUNC valv_opt valv_optional_type_check(int count, VALUE **vals, int idx, const char *UNUSED(name), short wanted);
-S_FUNC valv_opt valv_optional_ref_type_check(int count, VALUE **vals, int idx, const char *UNUSED(name), short wanted);
-S_FUNC bool valv_type_check(int UNUSED(count), VALUE **vals, int idx, const char *UNUSED(name), short wanted);
-S_FUNC void valv_type_require(const char *custname, int count, VALUE **vals, int idx, const char *name, short wanted);
-S_FUNC bool valv_ref_type_check(int UNUSED(count), VALUE **vals, int idx, const char *UNUSED(name), short wanted);
-S_FUNC void valv_ref_type_require(const char *custname, int count, VALUE **vals, int idx, const char *name, short wanted);
-S_FUNC long valv_get_num_long(const char *custname, int count, VALUE **vals, int idx, const char *name);
-S_FUNC VALUE *valv_optional_get_num(int count, VALUE **vals, int *idx, const char *name, VALUE *dflt);
+static size_t private_strlcat(char *dst, const char *src, size_t dsize);
+static size_t private_strlcpy(char *dst, const char *src, size_t dsize);
+static const char *type2str(short type);
+static VALUE *associndex_int(ASSOC *assoc, long index);
+static VALUE *associndex_str(ASSOC *assoc, STRING *index);
+static void associndex_int_int(ASSOC *assoc, long index, long value);
+static void associndex_str_int(ASSOC *assoc, STRING *index, long value);
+static valv_opt valv_optional_type_check(int count, VALUE **vals, int idx, const char *UNUSED(name), short wanted);
+static valv_opt valv_optional_ref_type_check(int count, VALUE **vals, int idx, const char *UNUSED(name), short wanted);
+static bool valv_type_check(int UNUSED(count), VALUE **vals, int idx, const char *UNUSED(name), short wanted);
+static void valv_type_require(const char *custname, int count, VALUE **vals, int idx, const char *name, short wanted);
+static bool valv_ref_type_check(int UNUSED(count), VALUE **vals, int idx, const char *UNUSED(name), short wanted);
+static void valv_ref_type_require(const char *custname, int count, VALUE **vals, int idx, const char *name, short wanted);
+static long valv_get_num_long(const char *custname, int count, VALUE **vals, int idx, const char *name);
+static VALUE *valv_optional_get_num(int count, VALUE **vals, int *idx, const char *name, VALUE *dflt);
 #  if 0  /* function defined but not used */
-S_FUNC VALUE * valv_optional_ref_num(int count, VALUE **vals, int *idx, const char *name,
-    VALUE *dflt);
-#  endif /* function defined but not used */
-S_FUNC VALUE *valv_ref_num(const char *custname, int count, VALUE **vals, int idx, const char *name);
+static VALUE * valv_optional_ref_num(int count, VALUE **vals, int *idx, const char *name, VALUE *dflt);
+#  endif
+static VALUE *valv_ref_num(const char *custname, int count, VALUE **vals, int idx, const char *name);
 #  if 0  /* function defined but not used */
-S_FUNC VALUE * valv_get_num(const char *custname, int count, VALUE **vals, int idx,
-    const char *name);
-#  endif /* function defined but not used */
-S_FUNC char *valv_get_str(const char *custname, int count, VALUE **vals, int idx, const char *name);
-S_FUNC VALUE *valv_get_strp(const char *custname, int count, VALUE **vals, int idx, const char *name);
+static VALUE * valv_get_num(const char *custname, int count, VALUE **vals, int idx, const char *name);
+#  endif
+static char *valv_get_str(const char *custname, int count, VALUE **vals, int idx, const char *name);
+static VALUE *valv_get_strp(const char *custname, int count, VALUE **vals, int idx, const char *name);
 #  if 0  /* function defined but not used */
-S_FUNC VALUE * valv_optional_ref_list(int count, VALUE **vals, int *idx, const char *name,
-    VALUE *dflt);
-#  endif /* function defined but not used */
-S_FUNC VALUE *valv_optional_get_list(int count, VALUE **vals, int *idx, const char *name, VALUE *dflt);
-S_FUNC VALUE *valv_get_list(const char *custname, int count, VALUE **vals, int idx, const char *name);
-S_FUNC VALUE *valv_ref_list(const char *custname, int count, VALUE **vals, int idx, const char *name);
+static VALUE * valv_optional_ref_list(int count, VALUE **vals, int *idx, const char *name, VALUE *dflt);
+#  endif
+static VALUE *valv_optional_get_list(int count, VALUE **vals, int *idx, const char *name, VALUE *dflt);
+static VALUE *valv_get_list(const char *custname, int count, VALUE **vals, int idx, const char *name);
+static VALUE *valv_ref_list(const char *custname, int count, VALUE **vals, int idx, const char *name);
 #  if 0  /* function defined but not used */
-S_FUNC VALUE * valv_optional_get_assoc(int count, VALUE **vals, int *idx, const char *name,
-    VALUE *dflt);
-#  endif /* function defined but not used */
-S_FUNC VALUE *valv_optional_ref_assoc(int count, VALUE **vals, int *idx, const char *name, VALUE *dflt);
+static VALUE * valv_optional_get_assoc(int count, VALUE **vals, int *idx, const char *name, VALUE *dflt);
+#  endif
+static VALUE *valv_optional_ref_assoc(int count, VALUE **vals, int *idx, const char *name, VALUE *dflt);
 #  if 0  /* function defined but not used */
-S_FUNC VALUE * valv_get_assoc(const char *custname, int count, VALUE **vals, int idx,
-    const char *name);
-#  endif /* function defined but not used */
-S_FUNC VALUE *valv_ref_assoc(const char *custname, int count, VALUE **vals, int idx, const char *name);
-S_FUNC VALUE *optional_valv_ref_list2fd_set(const char *custname, int count, VALUE **vals, int *idx, const char *name, fd_set *fds,
+static VALUE * valv_get_assoc(const char *custname, int count, VALUE **vals, int idx, const char *name);
+#  endif
+static VALUE *valv_ref_assoc(const char *custname, int count, VALUE **vals, int idx, const char *name);
+static VALUE *optional_valv_ref_list2fd_set(const char *custname, int count, VALUE **vals, int *idx, const char *name, fd_set *fds,
                                             int *setsize);
-S_FUNC VALUE *alloc_list(LIST *list);
-S_FUNC VALUE *alloc_assoc(ASSOC *assoc);
-S_FUNC VALUE *list_fd_get(LIST *in, fd_set *fds);
-S_FUNC VALUE *alloc_num(NUMBER *num);
-S_FUNC VALUE *alloc_str(STRING *str);
-S_FUNC char *strext(char **subject, char *with);
+static VALUE *alloc_list(LIST *list);
+static VALUE *alloc_assoc(ASSOC *assoc);
+static VALUE *list_fd_get(LIST *in, fd_set *fds);
+static VALUE *alloc_num(NUMBER *num);
+static VALUE *alloc_str(STRING *str);
+static char *strext(char **subject, char *with);
 
 /*
  * private_strlcat - size-bounded string concatenation
  *
  * Sadly, strlcat(3) is not portable enough for a number of supported calc v2 enviroments.
- * So we will include as a S_FUNC function below, strlcat.c from:
+ * So we will include as a static function below, strlcat.c from:
  *
  *      https://github.com/libressl/openbsd/blob/master/src/lib/libc/string/strlcat.c
  *
@@ -162,7 +164,7 @@ S_FUNC char *strext(char **subject, char *with);
  * Returns strlen(src) + MIN(dsize, strlen(initial dst)).
  * If retval >= dsize, truncation occurred.
  */
-S_FUNC size_t
+static size_t
 private_strlcat(char *dst, const char *src, size_t dsize)
 {
     const char *odst = dst;
@@ -204,11 +206,11 @@ private_strlcat(char *dst, const char *src, size_t dsize)
  * Returns strlen(src); if retval >= dsize, truncation occurred.
  *
  * Sadly, strlcpy(3) is not portable enough for a number of supported calc v2 enviroments.
- * So we will include as a S_FUNC function below, strlcpy.c from:
+ * So we will include as a static function below, strlcpy.c from:
  *
  *      https://github.com/libressl/openbsd/blob/master/src/lib/libc/string/strlcpy.c
  */
-S_FUNC size_t
+static size_t
 private_strlcpy(char *dst, const char *src, size_t dsize)
 {
     const char *osrc = src;
@@ -240,7 +242,7 @@ private_strlcpy(char *dst, const char *src, size_t dsize)
     return ret;
 }
 
-S_FUNC const char *
+static const char *
 type2str(short type)
 {
     /* originally from c_argv.c */
@@ -306,7 +308,7 @@ u_pfe_fork(char *UNUSED(name), int UNUSED(count), VALUE **UNUSED(vals))
     return result;
 }
 
-S_FUNC VALUE *
+static VALUE *
 associndex_int(ASSOC *assoc, long index)
 {
     VALUE i;
@@ -318,12 +320,12 @@ associndex_int(ASSOC *assoc, long index)
 
     indices[0] = i;
 
-    ret = associndex(assoc, TRUE, 1, indices);
+    ret = associndex(assoc, true, 1, indices);
 
     return ret;
 }
 
-S_FUNC VALUE *
+static VALUE *
 associndex_str(ASSOC *assoc, STRING *index)
 {
     VALUE i;
@@ -335,12 +337,12 @@ associndex_str(ASSOC *assoc, STRING *index)
 
     indices[0] = i;
 
-    ret = associndex(assoc, TRUE, 1, indices);
+    ret = associndex(assoc, true, 1, indices);
 
     return ret;
 }
 
-S_FUNC void
+static void
 associndex_int_int(ASSOC *assoc, long index, long value)
 {
     VALUE *i;
@@ -352,7 +354,7 @@ associndex_int_int(ASSOC *assoc, long index, long value)
     return;
 }
 
-S_FUNC void
+static void
 associndex_str_int(ASSOC *assoc, STRING *index, long value)
 {
     VALUE *i;
@@ -395,7 +397,7 @@ u_pfe_pipe(char *UNUSED(name), int UNUSED(count), VALUE **UNUSED(vals))
     return result;
 }
 
-S_FUNC valv_opt
+static valv_opt
 valv_optional_type_check(int count, VALUE **vals, int idx, const char *UNUSED(name), short wanted)
 {
     if (idx > count) {
@@ -411,7 +413,7 @@ valv_optional_type_check(int count, VALUE **vals, int idx, const char *UNUSED(na
     return VALV_OPT_BAD;
 }
 
-S_FUNC valv_opt
+static valv_opt
 valv_optional_ref_type_check(int count, VALUE **vals, int idx, const char *UNUSED(name), short wanted)
 {
     if (idx > count) {
@@ -433,7 +435,7 @@ valv_optional_ref_type_check(int count, VALUE **vals, int idx, const char *UNUSE
     return VALV_OPT_BAD;
 }
 
-S_FUNC bool
+static bool
 valv_type_check(int UNUSED(count), VALUE **vals, int idx, const char *UNUSED(name), short wanted)
 {
     bool ret;
@@ -443,7 +445,7 @@ valv_type_check(int UNUSED(count), VALUE **vals, int idx, const char *UNUSED(nam
     return ret;
 }
 
-S_FUNC void
+static void
 valv_type_require(const char *custname, int count, VALUE **vals, int idx, const char *name, short wanted)
 {
     if (!valv_type_check(count, vals, idx, name, wanted)) {
@@ -454,7 +456,7 @@ valv_type_require(const char *custname, int count, VALUE **vals, int idx, const 
     return;
 }
 
-S_FUNC bool
+static bool
 valv_ref_type_check(int UNUSED(count), VALUE **vals, int idx, const char *UNUSED(name), short wanted)
 {
     bool ret;
@@ -464,7 +466,7 @@ valv_ref_type_check(int UNUSED(count), VALUE **vals, int idx, const char *UNUSED
     return ret;
 }
 
-S_FUNC void
+static void
 valv_ref_type_require(const char *custname, int count, VALUE **vals, int idx, const char *name, short wanted)
 {
     if (!valv_type_check(count, vals, idx, name, V_VPTR)) {
@@ -479,7 +481,7 @@ valv_ref_type_require(const char *custname, int count, VALUE **vals, int idx, co
     return;
 }
 
-S_FUNC long
+static long
 valv_get_num_long(const char *custname, int count, VALUE **vals, int idx, const char *name)
 {
     valv_type_require(custname, count, vals, idx, name, V_NUM);
@@ -487,7 +489,7 @@ valv_get_num_long(const char *custname, int count, VALUE **vals, int idx, const 
     return qtoi(vals[idx]->v_num);
 }
 
-S_FUNC VALUE *
+static VALUE *
 valv_optional_get_num(int count, VALUE **vals, int *idx, const char *name, VALUE *dflt)
 {
     valv_opt chk;
@@ -513,7 +515,8 @@ valv_optional_get_num(int count, VALUE **vals, int *idx, const char *name, VALUE
 }
 
 #  if 0  /* function defined but not used */
-S_FUNC VALUE *
+
+static VALUE *
 valv_optional_ref_num(int count, VALUE **vals, int *idx, const char *name,
     VALUE *dflt)
 {
@@ -543,9 +546,10 @@ valv_optional_ref_num(int count, VALUE **vals, int *idx, const char *name,
 
     return num;
 }
-#  endif /* function defined but not used */
 
-S_FUNC VALUE *
+#  endif
+
+static VALUE *
 valv_ref_num(const char *custname, int count, VALUE **vals, int idx, const char *name)
 {
     valv_ref_type_require(custname, count, vals, idx, name, V_NUM);
@@ -554,7 +558,8 @@ valv_ref_num(const char *custname, int count, VALUE **vals, int idx, const char 
 }
 
 #  if 0  /* function defined but not used */
-S_FUNC VALUE *
+
+static VALUE *
 valv_get_num(const char *custname, int count, VALUE **vals, int idx,
     const char *name)
 {
@@ -562,9 +567,10 @@ valv_get_num(const char *custname, int count, VALUE **vals, int idx,
 
     return vals[idx];
 }
-#  endif /* function defined but not used */
 
-S_FUNC char *
+#  endif
+
+static char *
 valv_get_str(const char *custname, int count, VALUE **vals, int idx, const char *name)
 {
     valv_type_require(custname, count, vals, idx, name, V_STR);
@@ -572,7 +578,7 @@ valv_get_str(const char *custname, int count, VALUE **vals, int idx, const char 
     return vals[idx]->v_str->s_str;
 }
 
-S_FUNC VALUE *
+static VALUE *
 valv_get_strp(const char *custname, int count, VALUE **vals, int idx, const char *name)
 {
     valv_type_require(custname, count, vals, idx, name, V_STR);
@@ -581,7 +587,8 @@ valv_get_strp(const char *custname, int count, VALUE **vals, int idx, const char
 }
 
 #  if 0  /* function defined but not used */
-S_FUNC VALUE *
+
+static VALUE *
 valv_optional_ref_list(int count, VALUE **vals, int *idx, const char *name,
     VALUE *dflt)
 {
@@ -608,9 +615,10 @@ valv_optional_ref_list(int count, VALUE **vals, int *idx, const char *name,
 
     return list;
 }
-#  endif /* function defined but not used */
 
-S_FUNC VALUE *
+#  endif
+
+static VALUE *
 valv_optional_get_list(int count, VALUE **vals, int *idx, const char *name, VALUE *dflt)
 {
     valv_opt chk;
@@ -635,7 +643,7 @@ valv_optional_get_list(int count, VALUE **vals, int *idx, const char *name, VALU
     return list;
 }
 
-S_FUNC VALUE *
+static VALUE *
 valv_get_list(const char *custname, int count, VALUE **vals, int idx, const char *name)
 {
     valv_type_require(custname, count, vals, idx, name, V_LIST);
@@ -643,7 +651,7 @@ valv_get_list(const char *custname, int count, VALUE **vals, int idx, const char
     return vals[idx];
 }
 
-S_FUNC VALUE *
+static VALUE *
 valv_ref_list(const char *custname, int count, VALUE **vals, int idx, const char *name)
 {
     valv_ref_type_require(custname, count, vals, idx, name, V_LIST);
@@ -652,7 +660,8 @@ valv_ref_list(const char *custname, int count, VALUE **vals, int idx, const char
 }
 
 #  if 0  /* function defined but not used */
-S_FUNC VALUE *
+
+static VALUE *
 valv_optional_get_assoc(int count, VALUE **vals, int *idx, const char *name,
     VALUE *dflt)
 {
@@ -678,9 +687,10 @@ valv_optional_get_assoc(int count, VALUE **vals, int *idx, const char *name,
 
     return assoc;
 }
-#  endif /* function defined but not used */
 
-S_FUNC VALUE *
+#  endif
+
+static VALUE *
 valv_optional_ref_assoc(int count, VALUE **vals, int *idx, const char *name, VALUE *dflt)
 {
     valv_opt chk;
@@ -705,16 +715,18 @@ valv_optional_ref_assoc(int count, VALUE **vals, int *idx, const char *name, VAL
 }
 
 #  if 0  /* function defined but not used */
-S_FUNC VALUE *
+
+static VALUE *
 valv_get_assoc(const char *custname, int count, VALUE **vals, int idx,
     const char *name)
 {
     valv_type_require(custname, count, vals, idx, name, V_ASSOC);
     return vals[idx];
 }
-#  endif /* function defined but not used */
 
-S_FUNC VALUE *
+#  endif
+
+static VALUE *
 valv_ref_assoc(const char *custname, int count, VALUE **vals, int idx, const char *name)
 {
     valv_ref_type_require(custname, count, vals, idx, name, V_ASSOC);
@@ -747,7 +759,7 @@ u_pfe_execvp(char *UNUSED(name), int count, VALUE **vals)
     path = valv_get_str(custname, count, vals, 0, "file");
     args_list = valv_get_list(custname, count, vals, 1, "args");
 
-    if (!(args = malloc(sizeof(char *) * (args_list->v_list->l_count + 1)))) {
+    if (!(args = calloc(args_list->v_list->l_count + 1, sizeof(char *)))) {
         math_error("%s: " __FILE__ ": %d: malloc: %s", custname, __LINE__, strerror(errno));
     }
 
@@ -926,7 +938,7 @@ u_pfe_read(char *UNUSED(name), int count, VALUE **vals)
 
     strl = count < 2 ? u_pfe_read_STRL_DFLT : valv_get_num_long(custname, count, vals, 1, "count");
 
-    str = malloc((strl + 1) * sizeof(char));
+    str = calloc(strl + 1, sizeof(char));
 
     r = read(valv_get_num_long(custname, count, vals, 0, "fd"), str, strl);
     str[r] = '\0';
@@ -945,7 +957,7 @@ u_pfe_read(char *UNUSED(name), int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE *
+static VALUE *
 optional_valv_ref_list2fd_set(const char *custname, int count, VALUE **vals, int *idx, const char *name, fd_set *fds, int *setsize)
 {
     valv_opt chk;
@@ -987,12 +999,12 @@ optional_valv_ref_list2fd_set(const char *custname, int count, VALUE **vals, int
     return list;
 }
 
-S_FUNC VALUE *
+static VALUE *
 alloc_list(LIST *list)
 {
     VALUE *result;
 
-    result = malloc(sizeof(VALUE));
+    result = calloc(1, sizeof(VALUE));
     result->v_type = V_LIST;
 
     result->v_list = list;
@@ -1000,12 +1012,12 @@ alloc_list(LIST *list)
     return result;
 }
 
-S_FUNC VALUE *
+static VALUE *
 alloc_assoc(ASSOC *assoc)
 {
     VALUE *result;
 
-    result = malloc(sizeof(VALUE));
+    result = calloc(1, sizeof(VALUE));
     result->v_type = V_ASSOC;
 
     result->v_assoc = assoc;
@@ -1013,7 +1025,7 @@ alloc_assoc(ASSOC *assoc)
     return result;
 }
 
-S_FUNC VALUE *
+static VALUE *
 list_fd_get(LIST *in, fd_set *fds)
 {
     VALUE *out;
@@ -1036,12 +1048,12 @@ list_fd_get(LIST *in, fd_set *fds)
     return out;
 }
 
-S_FUNC VALUE *
+static VALUE *
 alloc_num(NUMBER *num)
 {
     VALUE *result;
 
-    result = malloc(sizeof(VALUE));
+    result = calloc(1, sizeof(VALUE));
     result->v_type = V_NUM;
 
     result->v_num = num;
@@ -1049,12 +1061,12 @@ alloc_num(NUMBER *num)
     return result;
 }
 
-S_FUNC VALUE *
+static VALUE *
 alloc_str(STRING *str)
 {
     VALUE *result;
 
-    result = malloc(sizeof(VALUE));
+    result = calloc(1, sizeof(VALUE));
     result->v_type = V_STR;
 
     result->v_str = str;
@@ -1213,7 +1225,7 @@ u_pfe_poll(char *UNUSED(name), int count, VALUE **vals)
     t = qtoi(tn);
 
     il = iv->v_list;
-    pollfds = malloc(il->l_count * sizeof(struct pollfd));
+    pollfds = calloc(il->l_count, sizeof(struct pollfd));
 
     el = il->l_first;
     for (; el != NULL; el = el->e_next, s++) {
@@ -1252,7 +1264,7 @@ u_pfe_poll(char *UNUSED(name), int count, VALUE **vals)
             }
 
             el_el_str = el_el->e_value.v_str->s_str;
-            if (FALSE) {
+            if (false) {
                 ; /* man poll|gawk 'match($0,"^\\s*POLL([A-Z]+)",m){print(tolower(m[1]))}' */
             } else if (!strcmp(el_el_str, "err")) {
                 pollfds[s].events |= POLLERR;
@@ -1400,7 +1412,7 @@ u_pfe_wait4(char *UNUSED(name), int count, VALUE **vals)
             }
 
             opt_str = el->e_value.v_str->s_str;
-            if (FALSE) {
+            if (false) {
                 ;
             } else if (!strcmp(opt_str, "nohang")) {
                 opts |= WNOHANG;
@@ -1421,16 +1433,16 @@ u_pfe_wait4(char *UNUSED(name), int count, VALUE **vals)
     }
 
     if (WIFEXITED(stt)) {
-        associndex_str_int(stt_assoc->v_assoc, makenewstring("exited"), TRUE);
+        associndex_str_int(stt_assoc->v_assoc, makenewstring("exited"), true);
         associndex_str_int(stt_assoc->v_assoc, makenewstring("exitstatus"), WEXITSTATUS(stt));
     }
     if (WIFSIGNALED(stt)) {
-        associndex_str_int(stt_assoc->v_assoc, makenewstring("signaled"), TRUE);
+        associndex_str_int(stt_assoc->v_assoc, makenewstring("signaled"), true);
         associndex_str_int(stt_assoc->v_assoc, makenewstring("termsig"), WTERMSIG(stt));
         associndex_str_int(stt_assoc->v_assoc, makenewstring("coredump"), WCOREDUMP(stt));
     }
     if (WIFSTOPPED(stt)) {
-        associndex_str_int(stt_assoc->v_assoc, makenewstring("stopped"), TRUE);
+        associndex_str_int(stt_assoc->v_assoc, makenewstring("stopped"), true);
         associndex_str_int(stt_assoc->v_assoc, makenewstring("stopsig"), WSTOPSIG(stt));
     }
 
@@ -1547,7 +1559,7 @@ u_pfe_pfe(char *UNUSED(name), int count, VALUE **vals)
 
         args_list = valv_get_list(custname, count, vals, 3, "args");
 
-        if (!(args = malloc(sizeof(char *) * (args_list->v_list->l_count + 1)))) {
+        if (!(args = calloc(args_list->v_list->l_count + 1, sizeof(char *)))) {
             math_error("%s: " __FILE__ ": %d: malloc: %s", custname, __LINE__, strerror(errno));
         }
 
@@ -1623,7 +1635,7 @@ u_pfe_pwrite(char *UNUSED(name), int count, VALUE **vals)
     return result;
 }
 
-S_FUNC char *
+static char *
 strext(char **subject, char *with)
 {
     size_t n;
@@ -1696,9 +1708,9 @@ u_pfe_pread(char *UNUSED(name), int count, VALUE **vals)
         ssz = err;
     }
 
-    o = malloc(pfe_pfe_SIZE_INIT * sizeof(char));
+    o = calloc(pfe_pfe_SIZE_INIT, sizeof(char));
     o[0] = '\0';
-    e = malloc(pfe_pfe_SIZE_INIT * sizeof(char));
+    e = calloc(pfe_pfe_SIZE_INIT, sizeof(char));
     e[0] = '\0';
 
     while (!eoo || !eoe) {
@@ -1712,8 +1724,8 @@ u_pfe_pread(char *UNUSED(name), int count, VALUE **vals)
         if (FD_ISSET(out, &rcs)) {
             r = read(out, &ob, pfe_pfe_SIZE_BUFFER);
             if (r < 0) {
-                math_error("%s: " __FILE__ ": %d: (out, %lu) read: %s",
-                           custname, __LINE__, (unsigned long)strlen(o), strerror(errno));
+                math_error("%s: " __FILE__ ": %d: (out, %lu) read: %s", custname, __LINE__, (unsigned long)strlen(o),
+                           strerror(errno));
             }
             if (r) {
                 ob[r] = '\0';
@@ -1723,14 +1735,14 @@ u_pfe_pread(char *UNUSED(name), int count, VALUE **vals)
                     pco = errno;
                 }
                 FD_CLR(out, &rbs);
-                eoo = TRUE;
+                eoo = true;
             }
         }
         if (FD_ISSET(err, &rcs)) {
             r = read(err, &eb, pfe_pfe_SIZE_BUFFER);
             if (r < 0) {
-                math_error("%s: " __FILE__ ": %d: (err, %lu) read: %s",
-                           custname, __LINE__,(unsigned long)strlen(e), strerror(errno));
+                math_error("%s: " __FILE__ ": %d: (err, %lu) read: %s", custname, __LINE__, (unsigned long)strlen(e),
+                           strerror(errno));
             }
             if (r) {
                 eb[r] = '\0';
@@ -1740,7 +1752,7 @@ u_pfe_pread(char *UNUSED(name), int count, VALUE **vals)
                     pce = errno;
                 }
                 FD_CLR(err, &rbs);
-                eoe = TRUE;
+                eoe = true;
             }
         }
     }
@@ -1949,4 +1961,4 @@ u_vadd_dirname(char *UNUSED(name), int count, VALUE **vals)
     return result;
 }
 
-#endif /* CUSTOM */
+#endif

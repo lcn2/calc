@@ -104,20 +104,20 @@ LIMITS
 LINK LIBRARY
     int calc_errno;                             /* global calc_errno value */
 
-    CONST struct errtbl error_table[ECOUNT+2];  /* calc error codes, error symbols and error messages */
+    const struct errtbl error_table[ECOUNT+2];  /* calc error codes, error symbols and error messages */
 
-    bool is_e_digits(CONST char *errsym);
+    bool is_e_digits(const char *errsym);
     bool is_valid_errnum(int errnum);
     bool is_errnum_in_error_table(int errnum);
-    bool is_e_1string(CONST char *errsym);
-    bool is_e_2string(CONST char *errsym);
-    struct errtbl *find_errsym_in_errtbl(CONST char *errsym, CONST struct errtbl *tbl);
-    struct errtbl *find_errnum_in_errtbl(int errnum, CONST struct errtbl *tbl);
-    CONST struct errtbl *lookup_errnum_in_error_table(int errnum);
-    int errsym_2_errnum(CONST char *errsym);
+    bool is_e_1string(const char *errsym);
+    bool is_e_2string(const char *errsym);
+    struct errtbl *find_errsym_in_errtbl(const char *errsym, const struct errtbl *tbl);
+    struct errtbl *find_errnum_in_errtbl(int errnum, const struct errtbl *tbl);
+    const struct errtbl *lookup_errnum_in_error_table(int errnum);
+    int errsym_2_errnum(const char *errsym);
     char *errnum_2_errsym(int errnum, bool *palloced);
     char *errnum_2_errmsg(int errnum, bool *palloced);
-    char *errsym_2_errmsg(CONST char *errsym, bool *palloced);
+    char *errsym_2_errmsg(const char *errsym, bool *palloced);
 
 SEE ALSO
     errcount, errmax, errno, errorcodes, errsym, iserror, newerror, stoponerror
@@ -125,7 +125,7 @@ SEE ALSO
     strcat, strcpy, strlen, strncmp, strncpy, strpos,
     strprintf, strscan, strscanf, substr,
 
-## Copyright (C) 1999-2006,2023  Landon Curt Noll
+## Copyright (C) 1999-2006,2023,2026  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

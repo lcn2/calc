@@ -1,7 +1,7 @@
 /*
  * assocfunc - association table routines
  *
- * Copyright (C) 1999-2007,2021-2023  David I. Bell
+ * Copyright (C) 1999-2007,2021-2023,2026  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -32,20 +32,32 @@
  * quick access.
  */
 
-#include "value.h"
+/*
+ * important <system> header includes
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdbool.h>
 
+/*
+ * calc local src includes
+ */
+#include "value.h"
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 #define MINHASHSIZE 31  /* minimum size of hash tables */
 #define GROWHASHSIZE 50 /* approximate growth for hash tables */
 #define CHAINLENGTH 10  /* desired number of elements on a hash chain */
 #define ELEMSIZE(n) (sizeof(ASSOCELEM) + (sizeof(VALUE) * ((n) - 1)))
 
-S_FUNC ASSOCELEM *elemindex(ASSOC *ap, long index);
-S_FUNC bool compareindices(VALUE *v1, VALUE *v2, long dim);
-S_FUNC void resize(ASSOC *ap, long newsize);
-S_FUNC void assoc_elemfree(ASSOCELEM *ep);
+static ASSOCELEM *elemindex(ASSOC *ap, long index);
+static bool compareindices(VALUE *v1, VALUE *v2, long dim);
+static void resize(ASSOC *ap, long newsize);
+static void assoc_elemfree(ASSOCELEM *ep);
 
 /*
  * Return the address of the value specified by normal indexing of
@@ -64,7 +76,7 @@ associndex(ASSOC *ap, bool create, long dim, VALUE *indices)
 {
     ASSOCELEM **listhead;
     ASSOCELEM *ep;
-    STATIC VALUE val;
+    static VALUE val;
     QCKHASH hash;
     int i;
 
@@ -108,7 +120,7 @@ associndex(ASSOC *ap, bool create, long dim, VALUE *indices)
         return &val;
     }
 
-    ep = (ASSOCELEM *)malloc(ELEMSIZE(dim));
+    ep = (ASSOCELEM *)calloc(1, ELEMSIZE(dim));
     if (ep == NULL) {
         math_error("Cannot allocate association element");
         not_reached();
@@ -196,7 +208,7 @@ assocrsearch(ASSOC *ap, VALUE *vp, long i, long j, ZVALUE *index)
  *      ap              association to index into
  *      index           index of desired element
  */
-S_FUNC ASSOCELEM *
+static ASSOCELEM *
 elemindex(ASSOC *ap, long index)
 {
     ASSOCELEM *ep;
@@ -331,7 +343,7 @@ assoccopy(ASSOC *oldap)
 
     for (oldhi = 0; oldhi < oldap->a_size; oldhi++) {
         for (oldep = oldap->a_table[oldhi]; oldep; oldep = oldep->e_next) {
-            ep = (ASSOCELEM *)malloc(ELEMSIZE(oldep->e_dim));
+            ep = (ASSOCELEM *)calloc(1, ELEMSIZE(oldep->e_dim));
             if (ep == NULL) {
                 math_error("Cannot allocate "
                            "association element");
@@ -358,7 +370,7 @@ assoccopy(ASSOC *oldap)
  * This is only actually done if the growth from the previous size is
  * enough to make this worthwhile.
  */
-S_FUNC void
+static void
 resize(ASSOC *ap, long newsize)
 {
     ASSOCELEM **oldtable;
@@ -373,7 +385,7 @@ resize(ASSOC *ap, long newsize)
     }
 
     newsize = (long)next_prime((FULL)newsize);
-    newtable = (ASSOCELEM **)malloc(sizeof(ASSOCELEM *) * newsize);
+    newtable = (ASSOCELEM **)calloc(newsize, sizeof(ASSOCELEM *));
     if (newtable == NULL) {
         math_error("No memory to grow association");
         not_reached();
@@ -403,7 +415,7 @@ resize(ASSOC *ap, long newsize)
 /*
  * Free an association element, along with any contained values.
  */
-S_FUNC void
+static void
 assoc_elemfree(ASSOCELEM *ep)
 {
     int i;
@@ -430,14 +442,14 @@ assocalloc(long initsize)
     if (initsize < MINHASHSIZE) {
         initsize = MINHASHSIZE;
     }
-    ap = (ASSOC *)malloc(sizeof(ASSOC));
+    ap = (ASSOC *)calloc(1, sizeof(ASSOC));
     if (ap == NULL) {
         math_error("No memory for association");
         not_reached();
     }
     ap->a_count = 0;
     ap->a_size = initsize;
-    ap->a_table = (ASSOCELEM **)malloc(sizeof(ASSOCELEM *) * initsize);
+    ap->a_table = (ASSOCELEM **)calloc(initsize, sizeof(ASSOCELEM *));
     if (ap->a_table == NULL) {
         free((char *)ap);
         math_error("No memory for association");
@@ -521,7 +533,7 @@ assocprint(ASSOC *ap, long max_print)
  * Compare two lists of index values to see if they are identical.
  * Returns true if they are the same.
  */
-S_FUNC bool
+static bool
 compareindices(VALUE *v1, VALUE *v2, long dim)
 {
     int i;

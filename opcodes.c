@@ -1,7 +1,7 @@
 /*
  * opcodes - opcode execution module
  *
- * Copyright (C) 1999-2007,2021-2023  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023,2026  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -25,37 +25,46 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
-#include <sys/types.h>
+#include <stdlib.h>
+#include <string.h>
 #include <setjmp.h>
+#include <sys/types.h>
+#include <stdint.h>
+#include <stdbool.h>
 
+/*
+ * calc local src includes
+ */
+#include "value.h"
 #include "calc.h"
 #include "opcodes.h"
+#include "label.h"
 #include "func.h"
 #include "symbol.h"
 #include "hist.h"
 #include "file.h"
-#include "zrand.h"
-#include "zrandom.h"
-#include "have_fgetsetpos.h"
 #include "custom.h"
 #include "lib_calc.h"
-#include "block.h"
-#include "str.h"
-
+#include "have_fpos_pos.h"
+#include "fposval.h"
 #include "have_unused.h"
-
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 #define QUICKLOCALS 20 /* local vars to handle quickly */
 
-STATIC VALUE stackarray[MAXSTACK]; /* storage for stack */
-STATIC VALUE oldvalue;             /* previous calculation value */
-STATIC bool saveval = true;        /* to enable or disable saving */
-STATIC int errcount;               /* counts calls to error_value */
-STATIC bool go;
-STATIC long calc_depth;
+static VALUE stackarray[MAXSTACK]; /* storage for stack */
+static VALUE oldvalue;             /* previous calculation value */
+static bool saveval = true;        /* to enable or disable saving */
+static int errcount;               /* counts calls to error_value */
+static bool go;
+static long calc_depth;
 
 /*
  * global symbols
@@ -69,9 +78,9 @@ int calc_errno = 0;    /* global calc_errno value */
 /*
  * forward declarations
  */
-S_FUNC void showsizes(void);
-S_FUNC void o_paramaddr(FUNC *fp, int argcnt, VALUE *args, long index);
-S_FUNC void o_getvalue(FUNC *fp);
+static void showsizes(void);
+static void o_paramaddr(FUNC *fp, int argcnt, VALUE *args, long index);
+static void o_getvalue(FUNC *fp);
 
 /*
  * Types of opcodes (depends on arguments saved after the opcode).
@@ -114,8 +123,8 @@ struct opcode {
 /*
  * external configuration functions
  */
-E_FUNC void config_value(CONFIG *cfg, int type, VALUE *ret);
-E_FUNC void setconfig(int type, VALUE *vp);
+extern void config_value(CONFIG *cfg, int type, VALUE *ret);
+extern void setconfig(int type, VALUE *vp);
 
 /*
  * Initialize the stack.
@@ -147,12 +156,12 @@ initstack(void)
 /*
  * The various opcodes
  */
-S_FUNC void
+static void
 o_nop(FUNC *UNUSED(fp))
 {
 }
 
-S_FUNC void
+static void
 o_localaddr(FUNC *fp, VALUE *locals, long index)
 {
     if ((unsigned long)index >= fp->f_localcount) {
@@ -166,7 +175,7 @@ o_localaddr(FUNC *fp, VALUE *locals, long index)
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_globaladdr(FUNC *UNUSED(fp), GLOBAL *sp)
 {
     if (sp == NULL) {
@@ -179,7 +188,7 @@ o_globaladdr(FUNC *UNUSED(fp), GLOBAL *sp)
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_paramaddr(FUNC *UNUSED(fp), int argcount, VALUE *args, long index)
 {
     if ((long)index >= argcount) {
@@ -197,7 +206,7 @@ o_paramaddr(FUNC *UNUSED(fp), int argcount, VALUE *args, long index)
     /*      stack->v_subtype = V_NOSUBTYPE; */ /* XXX ??? */
 }
 
-S_FUNC void
+static void
 o_localvalue(FUNC *fp, VALUE *locals, long index)
 {
     if ((unsigned long)index >= fp->f_localcount) {
@@ -208,7 +217,7 @@ o_localvalue(FUNC *fp, VALUE *locals, long index)
     copyvalue(locals, ++stack);
 }
 
-S_FUNC void
+static void
 o_globalvalue(FUNC *UNUSED(fp), GLOBAL *sp)
 {
     if (sp == NULL) {
@@ -218,7 +227,7 @@ o_globalvalue(FUNC *UNUSED(fp), GLOBAL *sp)
     copyvalue(&sp->g_value, ++stack);
 }
 
-S_FUNC void
+static void
 o_paramvalue(FUNC *UNUSED(fp), int argcount, VALUE *args, long index)
 {
     if ((long)index >= argcount) {
@@ -232,7 +241,7 @@ o_paramvalue(FUNC *UNUSED(fp), int argcount, VALUE *args, long index)
     copyvalue(args, ++stack);
 }
 
-S_FUNC void
+static void
 o_argvalue(FUNC *fp, int argcount, VALUE *args)
 {
     VALUE *vp;
@@ -263,7 +272,7 @@ o_argvalue(FUNC *fp, int argcount, VALUE *args)
     (void)o_paramaddr(fp, argcount, args, index);
 }
 
-S_FUNC void
+static void
 o_number(FUNC *UNUSED(fp), long arg)
 {
     NUMBER *q;
@@ -279,7 +288,7 @@ o_number(FUNC *UNUSED(fp), long arg)
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_imaginary(FUNC *UNUSED(fp), long arg)
 {
     NUMBER *q;
@@ -304,7 +313,7 @@ o_imaginary(FUNC *UNUSED(fp), long arg)
     stack->v_type = V_COM;
 }
 
-S_FUNC void
+static void
 o_string(FUNC *UNUSED(fp), long arg)
 {
     stack++;
@@ -313,7 +322,7 @@ o_string(FUNC *UNUSED(fp), long arg)
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_undef(FUNC *UNUSED(fp))
 {
     stack++;
@@ -321,7 +330,7 @@ o_undef(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_matcreate(FUNC *UNUSED(fp), long dim)
 {
     register MATRIX *mp; /* matrix being defined */
@@ -389,11 +398,11 @@ o_matcreate(FUNC *UNUSED(fp), long dim)
     stack->v_mat = mp;
 }
 
-S_FUNC void
+static void
 o_eleminit(FUNC *UNUSED(fp), long index)
 {
     VALUE *vp;
-    STATIC VALUE *oldvp;
+    static VALUE *oldvp;
     VALUE tmp;
     OCTET *ptr;
     BLOCK *blk;
@@ -533,7 +542,7 @@ o_eleminit(FUNC *UNUSED(fp), long index)
  *      dim             dimension of matrix
  *      writeflag       nonzero if element will be written
  */
-S_FUNC void
+static void
 o_indexaddr(FUNC *UNUSED(fp), long dim, long writeflag)
 {
     int i;
@@ -685,7 +694,7 @@ o_indexaddr(FUNC *UNUSED(fp), long dim, long writeflag)
     stack->v_addr = vp;
 }
 
-S_FUNC void
+static void
 o_elemaddr(FUNC *UNUSED(fp), long index)
 {
     VALUE *vp;
@@ -730,14 +739,14 @@ o_elemaddr(FUNC *UNUSED(fp), long index)
     stack->v_addr = vp;
 }
 
-S_FUNC void
+static void
 o_elemvalue(FUNC *fp, long index)
 {
     o_elemaddr(fp, index);
     copyvalue(stack->v_addr, stack);
 }
 
-S_FUNC void
+static void
 o_objcreate(FUNC *UNUSED(fp), long arg)
 {
     stack++;
@@ -746,7 +755,7 @@ o_objcreate(FUNC *UNUSED(fp), long arg)
     stack->v_obj = objalloc(arg);
 }
 
-S_FUNC void
+static void
 o_assign(FUNC *UNUSED(fp))
 {
     VALUE *var; /* variable value */
@@ -864,7 +873,7 @@ o_assign(FUNC *UNUSED(fp))
     var->v_subtype |= subtype;
 }
 
-S_FUNC void
+static void
 o_assignback(FUNC *fp)
 {
     VALUE tmp;
@@ -875,14 +884,14 @@ o_assignback(FUNC *fp)
     o_assign(fp);
 }
 
-S_FUNC void
+static void
 o_assignpop(FUNC *fp)
 {
     o_assign(fp);
     stack--;
 }
 
-S_FUNC void
+static void
 o_ptr(FUNC *UNUSED(fp))
 {
     switch (stack->v_type) {
@@ -906,7 +915,7 @@ o_ptr(FUNC *UNUSED(fp))
     }
 }
 
-S_FUNC void
+static void
 o_deref(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -975,7 +984,7 @@ o_deref(FUNC *UNUSED(fp))
     }
 }
 
-S_FUNC void
+static void
 o_swap(FUNC *UNUSED(fp))
 {
     VALUE *v1, *v2; /* variables to be swapped */
@@ -1011,7 +1020,7 @@ o_swap(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_add(FUNC *UNUSED(fp))
 {
     VALUE *v1, *v2;
@@ -1051,7 +1060,7 @@ o_add(FUNC *UNUSED(fp))
     *stack = tmp;
 }
 
-S_FUNC void
+static void
 o_sub(FUNC *UNUSED(fp))
 {
     VALUE *v1, *v2;
@@ -1091,7 +1100,7 @@ o_sub(FUNC *UNUSED(fp))
     *stack = tmp;
 }
 
-S_FUNC void
+static void
 o_mul(FUNC *UNUSED(fp))
 {
     VALUE *v1, *v2;
@@ -1130,7 +1139,7 @@ o_mul(FUNC *UNUSED(fp))
     *stack = tmp;
 }
 
-S_FUNC void
+static void
 o_power(FUNC *UNUSED(fp))
 {
     VALUE *v1, *v2;
@@ -1150,7 +1159,7 @@ o_power(FUNC *UNUSED(fp))
     *stack = tmp;
 }
 
-S_FUNC void
+static void
 o_div(FUNC *UNUSED(fp))
 {
     VALUE *v1, *v2;
@@ -1189,7 +1198,7 @@ o_div(FUNC *UNUSED(fp))
     *stack = tmp;
 }
 
-S_FUNC void
+static void
 o_quo(FUNC *UNUSED(fp))
 {
     VALUE *v1, *v2;
@@ -1211,7 +1220,7 @@ o_quo(FUNC *UNUSED(fp))
     *stack = tmp;
 }
 
-S_FUNC void
+static void
 o_mod(FUNC *UNUSED(fp))
 {
     VALUE *v1, *v2;
@@ -1233,7 +1242,7 @@ o_mod(FUNC *UNUSED(fp))
     *stack = tmp;
 }
 
-S_FUNC void
+static void
 o_and(FUNC *UNUSED(fp))
 {
     VALUE *v1, *v2;
@@ -1254,7 +1263,7 @@ o_and(FUNC *UNUSED(fp))
     *stack = tmp;
 }
 
-S_FUNC void
+static void
 o_or(FUNC *UNUSED(fp))
 {
     VALUE *v1, *v2;
@@ -1275,7 +1284,7 @@ o_or(FUNC *UNUSED(fp))
     *stack = tmp;
 }
 
-S_FUNC void
+static void
 o_xor(FUNC *UNUSED(fp))
 {
     VALUE *v1, *v2;
@@ -1297,7 +1306,7 @@ o_xor(FUNC *UNUSED(fp))
     *stack = tmp;
 }
 
-S_FUNC void
+static void
 o_comp(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -1312,7 +1321,7 @@ o_comp(FUNC *UNUSED(fp))
     *stack = tmp;
 }
 
-S_FUNC void
+static void
 o_not(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -1336,7 +1345,7 @@ o_not(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_plus(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -1363,7 +1372,7 @@ o_plus(FUNC *UNUSED(fp))
     *stack = tmp;
 }
 
-S_FUNC void
+static void
 o_negate(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -1389,7 +1398,7 @@ o_negate(FUNC *UNUSED(fp))
     *stack = tmp;
 }
 
-S_FUNC void
+static void
 o_invert(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -1405,7 +1414,7 @@ o_invert(FUNC *UNUSED(fp))
     *stack = tmp;
 }
 
-S_FUNC void
+static void
 o_scale(FUNC *UNUSED(fp))
 {
     VALUE *v1, *v2;
@@ -1425,7 +1434,7 @@ o_scale(FUNC *UNUSED(fp))
     *stack = tmp;
 }
 
-S_FUNC void
+static void
 o_int(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -1440,7 +1449,7 @@ o_int(FUNC *UNUSED(fp))
     *stack = tmp;
 }
 
-S_FUNC void
+static void
 o_frac(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -1455,7 +1464,7 @@ o_frac(FUNC *UNUSED(fp))
     *stack = tmp;
 }
 
-S_FUNC void
+static void
 o_abs(FUNC *UNUSED(fp))
 {
     VALUE *v1, *v2;
@@ -1493,7 +1502,7 @@ o_abs(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_norm(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -1519,7 +1528,7 @@ o_norm(FUNC *UNUSED(fp))
     *stack = tmp;
 }
 
-S_FUNC void
+static void
 o_square(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -1545,7 +1554,7 @@ o_square(FUNC *UNUSED(fp))
     *stack = tmp;
 }
 
-S_FUNC void
+static void
 o_test(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -1562,7 +1571,7 @@ o_test(FUNC *UNUSED(fp))
     stack->v_num = i ? qlink(&_qone_) : qlink(&_qzero_);
 }
 
-S_FUNC void
+static void
 o_links(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -1601,7 +1610,7 @@ o_links(FUNC *UNUSED(fp))
     stack->v_num = itoq(links);
 }
 
-S_FUNC void
+static void
 o_bit(FUNC *UNUSED(fp))
 {
     VALUE *v1, *v2;
@@ -1652,7 +1661,7 @@ o_bit(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_highbit(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -1701,7 +1710,7 @@ o_highbit(FUNC *UNUSED(fp))
     }
 }
 
-S_FUNC void
+static void
 o_lowbit(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -1755,7 +1764,7 @@ o_lowbit(FUNC *UNUSED(fp))
     }
 }
 
-S_FUNC void
+static void
 o_content(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -1770,7 +1779,7 @@ o_content(FUNC *UNUSED(fp))
     *stack = tmp;
 }
 
-S_FUNC void
+static void
 o_hashop(FUNC *UNUSED(fp))
 {
     VALUE *v1, *v2;
@@ -1790,7 +1799,7 @@ o_hashop(FUNC *UNUSED(fp))
     *stack = tmp;
 }
 
-S_FUNC void
+static void
 o_backslash(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -1805,7 +1814,7 @@ o_backslash(FUNC *UNUSED(fp))
     *stack = tmp;
 }
 
-S_FUNC void
+static void
 o_setminus(FUNC *UNUSED(fp))
 {
     VALUE *v1, *v2;
@@ -1825,7 +1834,7 @@ o_setminus(FUNC *UNUSED(fp))
     *stack = tmp;
 }
 
-S_FUNC void
+static void
 o_istype(FUNC *UNUSED(fp))
 {
     VALUE *v1, *v2;
@@ -1851,7 +1860,7 @@ o_istype(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_isint(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -1881,7 +1890,7 @@ o_isint(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_isnum(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -1913,7 +1922,7 @@ o_isnum(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_ismat(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -1935,7 +1944,7 @@ o_ismat(FUNC *UNUSED(fp))
     stack->v_num = qlink(&_qone_);
 }
 
-S_FUNC void
+static void
 o_islist(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -1952,7 +1961,7 @@ o_islist(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_isobj(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -1969,7 +1978,7 @@ o_isobj(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_isstr(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -1986,7 +1995,7 @@ o_isstr(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_isfile(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -2003,7 +2012,7 @@ o_isfile(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_isrand(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -2020,7 +2029,7 @@ o_isrand(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_israndom(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -2037,7 +2046,7 @@ o_israndom(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_isconfig(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -2054,7 +2063,7 @@ o_isconfig(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_ishash(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -2074,7 +2083,7 @@ o_ishash(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_isassoc(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -2091,7 +2100,7 @@ o_isassoc(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_isblock(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -2113,7 +2122,7 @@ o_isblock(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_isoctet(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -2130,7 +2139,7 @@ o_isoctet(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_isptr(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -2161,7 +2170,7 @@ o_isptr(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_isdefined(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -2192,7 +2201,7 @@ o_isdefined(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_isobjtype(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -2213,7 +2222,7 @@ o_isobjtype(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_issimple(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -2237,7 +2246,7 @@ o_issimple(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_isodd(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -2261,7 +2270,7 @@ o_isodd(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_iseven(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -2285,7 +2294,7 @@ o_iseven(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_isreal(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -2309,7 +2318,7 @@ o_isreal(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_isnull(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -2331,7 +2340,7 @@ o_isnull(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_re(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -2362,7 +2371,7 @@ o_re(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_im(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -2394,7 +2403,7 @@ o_im(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_conjugate(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -2417,7 +2426,7 @@ o_conjugate(FUNC *UNUSED(fp))
     *stack = tmp;
 }
 
-S_FUNC void
+static void
 o_fiaddr(FUNC *UNUSED(fp))
 {
     register MATRIX *m; /* current matrix element */
@@ -2490,14 +2499,14 @@ o_fiaddr(FUNC *UNUSED(fp))
     stack->v_addr = res;
 }
 
-S_FUNC void
+static void
 o_fivalue(FUNC *fp)
 {
     (void)o_fiaddr(fp);
     (void)o_getvalue(fp);
 }
 
-S_FUNC void
+static void
 o_sgn(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -2523,7 +2532,7 @@ o_sgn(FUNC *UNUSED(fp))
     *stack = tmp;
 }
 
-S_FUNC void
+static void
 o_numerator(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -2549,7 +2558,7 @@ o_numerator(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_denominator(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -2572,7 +2581,7 @@ o_denominator(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_duplicate(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -2581,7 +2590,7 @@ o_duplicate(FUNC *UNUSED(fp))
     *stack = *vp;
 }
 
-S_FUNC void
+static void
 o_dupvalue(FUNC *UNUSED(fp))
 {
     if (stack->v_type == V_ADDR) {
@@ -2592,18 +2601,18 @@ o_dupvalue(FUNC *UNUSED(fp))
     stack++;
 }
 
-S_FUNC void
+static void
 o_pop(FUNC *UNUSED(fp))
 {
     freevalue(stack--);
 }
 
-S_FUNC void
+static void
 o_return(FUNC *UNUSED(fp))
 {
 }
 
-S_FUNC void
+static void
 o_jumpz(FUNC *UNUSED(fp), bool *dojump)
 {
     VALUE *vp;
@@ -2628,7 +2637,7 @@ o_jumpz(FUNC *UNUSED(fp), bool *dojump)
     }
 }
 
-S_FUNC void
+static void
 o_jumpnz(FUNC *UNUSED(fp), bool *dojump)
 {
     VALUE *vp;
@@ -2656,7 +2665,7 @@ o_jumpnz(FUNC *UNUSED(fp), bool *dojump)
 /*
  * jumpnn invokes a jump if top value points to a null value
  */
-S_FUNC void
+static void
 o_jumpnn(FUNC *UNUSED(fp), bool *dojump)
 {
     if (stack->v_addr->v_type) {
@@ -2665,7 +2674,7 @@ o_jumpnn(FUNC *UNUSED(fp), bool *dojump)
     }
 }
 
-S_FUNC void
+static void
 o_condorjump(FUNC *UNUSED(fp), bool *dojump)
 {
     VALUE *vp;
@@ -2692,7 +2701,7 @@ o_condorjump(FUNC *UNUSED(fp), bool *dojump)
     }
 }
 
-S_FUNC void
+static void
 o_condandjump(FUNC *UNUSED(fp), bool *dojump)
 {
     VALUE *vp;
@@ -2724,7 +2733,7 @@ o_condandjump(FUNC *UNUSED(fp), bool *dojump)
  * different, popping off the top element, leaving the first one on the stack.
  * If they are equal, pop both values and do not jump.
  */
-S_FUNC void
+static void
 o_casejump(FUNC *UNUSED(fp), bool *dojump)
 {
     VALUE *v1, *v2;
@@ -2747,13 +2756,13 @@ o_casejump(FUNC *UNUSED(fp), bool *dojump)
     }
 }
 
-S_FUNC void
+static void
 o_jump(FUNC *UNUSED(fp), bool *dojump)
 {
     *dojump = true;
 }
 
-S_FUNC void
+static void
 o_usercall(FUNC *fp, long index, long argcount)
 {
     fp = findfunc(index);
@@ -2764,7 +2773,7 @@ o_usercall(FUNC *fp, long index, long argcount)
     calculate(fp, (int)argcount);
 }
 
-S_FUNC void
+static void
 o_call(FUNC *UNUSED(fp), long index, long argcount)
 {
     VALUE result;
@@ -2777,7 +2786,7 @@ o_call(FUNC *UNUSED(fp), long index, long argcount)
     *stack = result;
 }
 
-S_FUNC void
+static void
 o_getvalue(FUNC *UNUSED(fp))
 {
     if (stack->v_type == V_ADDR) {
@@ -2785,7 +2794,7 @@ o_getvalue(FUNC *UNUSED(fp))
     }
 }
 
-S_FUNC void
+static void
 o_cmp(FUNC *UNUSED(fp))
 {
     VALUE *v1, *v2;
@@ -2805,7 +2814,7 @@ o_cmp(FUNC *UNUSED(fp))
     *stack = tmp;
 }
 
-S_FUNC void
+static void
 o_eq(FUNC *UNUSED(fp))
 {
     VALUE *v1, *v2;
@@ -2827,7 +2836,7 @@ o_eq(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_ne(FUNC *UNUSED(fp))
 {
     VALUE *v1, *v2;
@@ -2849,7 +2858,7 @@ o_ne(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_le(FUNC *UNUSED(fp))
 {
     VALUE *v1, *v2;
@@ -2879,7 +2888,7 @@ o_le(FUNC *UNUSED(fp))
     freevalue(&tmp);
 }
 
-S_FUNC void
+static void
 o_ge(FUNC *UNUSED(fp))
 {
     VALUE *v1, *v2;
@@ -2908,7 +2917,7 @@ o_ge(FUNC *UNUSED(fp))
     freevalue(&tmp);
 }
 
-S_FUNC void
+static void
 o_lt(FUNC *UNUSED(fp))
 {
     VALUE *v1, *v2;
@@ -2937,7 +2946,7 @@ o_lt(FUNC *UNUSED(fp))
     freevalue(&tmp);
 }
 
-S_FUNC void
+static void
 o_gt(FUNC *UNUSED(fp))
 {
     VALUE *v1, *v2;
@@ -2966,7 +2975,7 @@ o_gt(FUNC *UNUSED(fp))
     freevalue(&tmp);
 }
 
-S_FUNC void
+static void
 o_preinc(FUNC *UNUSED(fp))
 {
     VALUE *vp, tmp;
@@ -2995,7 +3004,7 @@ o_preinc(FUNC *UNUSED(fp))
     *vp = tmp;
 }
 
-S_FUNC void
+static void
 o_predec(FUNC *UNUSED(fp))
 {
     VALUE *vp, tmp;
@@ -3023,7 +3032,7 @@ o_predec(FUNC *UNUSED(fp))
     *vp = tmp;
 }
 
-S_FUNC void
+static void
 o_postinc(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -3065,7 +3074,7 @@ o_postinc(FUNC *UNUSED(fp))
     stack->v_addr = vp;
 }
 
-S_FUNC void
+static void
 o_postdec(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -3106,7 +3115,7 @@ o_postdec(FUNC *UNUSED(fp))
     stack->v_addr = vp;
 }
 
-S_FUNC void
+static void
 o_leftshift(FUNC *UNUSED(fp))
 {
     VALUE *v1, *v2;
@@ -3126,7 +3135,7 @@ o_leftshift(FUNC *UNUSED(fp))
     *stack = tmp;
 }
 
-S_FUNC void
+static void
 o_rightshift(FUNC *UNUSED(fp))
 {
     VALUE *v1, *v2;
@@ -3146,7 +3155,7 @@ o_rightshift(FUNC *UNUSED(fp))
     *stack = tmp;
 }
 
-S_FUNC void
+static void
 o_debug(FUNC *UNUSED(fp), long line)
 {
     funcline = line;
@@ -3156,7 +3165,7 @@ o_debug(FUNC *UNUSED(fp), long line)
     }
 }
 
-S_FUNC void
+static void
 o_printresult(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -3188,7 +3197,7 @@ o_printresult(FUNC *UNUSED(fp))
     freevalue(stack--);
 }
 
-S_FUNC void
+static void
 o_print(FUNC *UNUSED(fp), long flags)
 {
     VALUE *vp;
@@ -3205,14 +3214,14 @@ o_print(FUNC *UNUSED(fp), long flags)
     math_flush();
 }
 
-S_FUNC void
+static void
 o_printeol(FUNC *UNUSED(fp))
 {
     math_chr('\n');
     math_flush();
 }
 
-S_FUNC void
+static void
 o_printspace(FUNC *UNUSED(fp))
 {
     math_chr(' ');
@@ -3221,7 +3230,7 @@ o_printspace(FUNC *UNUSED(fp))
     }
 }
 
-S_FUNC void
+static void
 o_printstring(FUNC *UNUSED(fp), long index)
 {
     STRING *s;
@@ -3236,7 +3245,7 @@ o_printstring(FUNC *UNUSED(fp), long index)
     math_flush();
 }
 
-S_FUNC void
+static void
 o_zero(FUNC *UNUSED(fp))
 {
     stack++;
@@ -3245,7 +3254,7 @@ o_zero(FUNC *UNUSED(fp))
     stack->v_num = qlink(&_qzero_);
 }
 
-S_FUNC void
+static void
 o_one(FUNC *UNUSED(fp))
 {
     stack++;
@@ -3254,7 +3263,7 @@ o_one(FUNC *UNUSED(fp))
     stack->v_num = qlink(&_qone_);
 }
 
-S_FUNC void
+static void
 o_save(FUNC *fp)
 {
     VALUE *vp;
@@ -3269,7 +3278,7 @@ o_save(FUNC *fp)
     }
 }
 
-S_FUNC void
+static void
 o_oldvalue(FUNC *UNUSED(fp))
 {
     ++stack;
@@ -3290,7 +3299,7 @@ o_setsaveval(FUNC *UNUSED(fp))
     freevalue(stack);
 }
 
-S_FUNC void
+static void
 o_quit(FUNC *fp, long index)
 {
     STRING *s;
@@ -3330,14 +3339,14 @@ o_quit(FUNC *fp, long index)
     go = false;
 }
 
-S_FUNC void
+static void
 o_abort(FUNC *fp, long index)
 {
     abort_now = true;
     o_quit(fp, index);
 }
 
-S_FUNC void
+static void
 o_getepsilon(FUNC *UNUSED(fp))
 {
     stack++;
@@ -3346,7 +3355,7 @@ o_getepsilon(FUNC *UNUSED(fp))
     stack->v_num = qlink(conf->epsilon);
 }
 
-S_FUNC void
+static void
 o_setepsilon(FUNC *UNUSED(fp))
 {
     VALUE *vp;
@@ -3370,7 +3379,7 @@ o_setepsilon(FUNC *UNUSED(fp))
     stack->v_subtype = V_NOSUBTYPE;
 }
 
-S_FUNC void
+static void
 o_setconfig(FUNC *UNUSED(fp))
 {
     int type;
@@ -3401,7 +3410,7 @@ o_setconfig(FUNC *UNUSED(fp))
     *stack = tmp;
 }
 
-S_FUNC void
+static void
 o_getconfig(FUNC *UNUSED(fp))
 {
     int type;
@@ -3443,7 +3452,7 @@ updateoldvalue(FUNC *fp)
  * error_value - return error as a value and store type in calc_errno
  */
 VALUE
-error_value(int e)
+error_value(int16_t e)
 {
     VALUE res;
 
@@ -3462,7 +3471,7 @@ error_value(int e)
         math_error("Error %d caused errcount to exceed errmax", e);
         not_reached();
     }
-    res.v_type = (short)-e;
+    res.v_type = -e;
     res.v_subtype = V_NOSUBTYPE;
     return res;
 }
@@ -3500,7 +3509,7 @@ set_errcount(int e)
 /*
  * Fill a newly created matrix at v1 with copies of value at v2.
  */
-S_FUNC void
+static void
 o_initfill(FUNC *UNUSED(fp))
 {
     VALUE *v1, *v2;
@@ -3528,7 +3537,7 @@ o_initfill(FUNC *UNUSED(fp))
     freevalue(stack--);
 }
 
-S_FUNC void
+static void
 o_show(FUNC *fp, long arg)
 {
     unsigned int size;
@@ -3602,42 +3611,123 @@ o_show(FUNC *fp, long arg)
     }
 }
 
-S_FUNC void
+static void
 showsizes(void)
 {
-    printf("\tchar\t\t%4ld\n", (long)sizeof(char));
-    printf("\tshort\t\t%4ld\n", (long)sizeof(short));
-    printf("\tint\t\t%4ld\n", (long)sizeof(int));
-    printf("\tlong\t\t%4ld\n", (long)sizeof(long));
-    printf("\tpointer\t\t%4ld\n", (long)sizeof(void *));
-    printf("\tFILEPOS\t\t%4ld\n", (long)sizeof(FILEPOS));
-    printf("\toff_t\t\t%4ld\n", (long)sizeof(off_t));
-    printf("\tHALF\t\t%4ld\n", (long)sizeof(HALF));
-    printf("\tFULL\t\t%4ld\n", (long)sizeof(FULL));
-    printf("\tVALUE\t\t%4ld\n", (long)sizeof(VALUE));
-    printf("\tNUMBER\t\t%4ld\n", (long)sizeof(NUMBER));
-    printf("\tZVALUE\t\t%4ld\n", (long)sizeof(ZVALUE));
-    printf("\tCOMPLEX\t\t%4ld\n", (long)sizeof(COMPLEX));
-    printf("\tSTRING\t\t%4ld\n", (long)sizeof(STRING));
-    printf("\tMATRIX\t\t%4ld\n", (long)sizeof(MATRIX));
-    printf("\tLIST\t\t%4ld\n", (long)sizeof(LIST));
-    printf("\tLISTELEM\t%4ld\n", (long)sizeof(LISTELEM));
-    printf("\tOBJECT\t\t%4ld\n", (long)sizeof(OBJECT));
-    printf("\tOBJECTACTIONS\t%4ld\n", (long)sizeof(OBJECTACTIONS));
-    printf("\tASSOC\t\t%4ld\n", (long)sizeof(ASSOC));
-    printf("\tASSOCELEM\t%4ld\n", (long)sizeof(ASSOCELEM));
-    printf("\tBLOCK\t\t%4ld\n", (long)sizeof(BLOCK));
-    printf("\tNBLOCK\t\t%4ld\n", (long)sizeof(NBLOCK));
-    printf("\tCONFIG\t\t%4ld\n", (long)sizeof(CONFIG));
-    printf("\tFILEIO\t\t%4ld\n", (long)sizeof(FILEIO));
-    printf("\tRAND\t\t%4ld\n", (long)sizeof(RAND));
-    printf("\tRANDOM\t\t%4ld\n", (long)sizeof(RANDOM));
+    printf("\tchar\t\t%4zu\n", sizeof(char));
+    printf("\tshort\t\t%4zu\n", sizeof(short));
+    printf("\tint\t\t%4zu\n", sizeof(int));
+    printf("\tlong\t\t%4zu\n", sizeof(long));
+    printf("\tpointer\t\t%4zu\n", sizeof(void *));
+    printf("\tfpos_t\t\t%4zu\n", sizeof(fpos_t));
+    printf("\toff_t\t\t%4zu\n", sizeof(off_t));
+    printf("\tHALF\t\t%4zu\n", sizeof(HALF));
+    printf("\tFULL\t\t%4zu\n", sizeof(FULL));
+    printf("\tVALUE\t\t%4zu\n", sizeof(VALUE));
+    printf("\tNUMBER\t\t%4zu\n", sizeof(NUMBER));
+    printf("\tZVALUE\t\t%4zu\n", sizeof(ZVALUE));
+    printf("\tCOMPLEX\t\t%4zu\n", sizeof(COMPLEX));
+    printf("\tSTRING\t\t%4zu\n", sizeof(STRING));
+    printf("\tMATRIX\t\t%4zu\n", sizeof(MATRIX));
+    printf("\tLIST\t\t%4zu\n", sizeof(LIST));
+    printf("\tLISTELEM\t%4zu\n", sizeof(LISTELEM));
+    printf("\tOBJECT\t\t%4zu\n", sizeof(OBJECT));
+    printf("\tOBJECTACTIONS\t%4zu\n", sizeof(OBJECTACTIONS));
+    printf("\tASSOC\t\t%4zu\n", sizeof(ASSOC));
+    printf("\tASSOCELEM\t%4zu\n", sizeof(ASSOCELEM));
+    printf("\tBLOCK\t\t%4zu\n", sizeof(BLOCK));
+    printf("\tNBLOCK\t\t%4zu\n", sizeof(NBLOCK));
+    printf("\tCONFIG\t\t%4zu\n", sizeof(CONFIG));
+    printf("\tFILEIO\t\t%4zu\n", sizeof(FILEIO));
+    printf("\tRAND\t\t%4zu\n", sizeof(RAND));
+    printf("\tRANDOM\t\t%4zu\n", sizeof(RANDOM));
+#if defined(MODE_LEN)
+    printf("\tMODE_LEN\t%4zu\n", MODE_LEN);
+#endif
+#if defined(CALC_CHARBIT)
+    printf("\tCALC_CHARBIT\t%4d\n", CALC_CHARBIT);
+#endif
+#if defined(FPOS_POS_BITS)
+    printf("\tFPOS_POS_BITS\t%4d\n", FPOS_POS_BITS);
+#endif
+#if defined(FPOS_POS_LEN)
+    printf("\tFPOS_POS_LEN\t%4d\n", FPOS_POS_LEN);
+#endif
+#if defined(FPOS_T_BITS)
+    printf("\tFPOS_T_BITS\t%4d\n", FPOS_T_BITS);
+#endif
+#if defined(FPOS_T_LEN)
+    printf("\tFPOS_T_LEN\t%4d\n", FPOS_T_LEN);
+#endif
+#if defined(OFF_T_BITS)
+    printf("\tOFF_T_BITS\t%4d\n", OFF_T_BITS);
+#endif
+#if defined(OFF_T_LEN)
+    printf("\tOFF_T_LEN\t%4d\n", OFF_T_LEN);
+#endif
+#if defined(DEV_BITS)
+    printf("\tDEV_BITS\t%4d\n", DEV_BITS);
+#endif
+#if defined(DEV_LEN)
+    printf("\tDEV_LEN\t\t%4d\n", DEV_LEN);
+#endif
+#if defined(INODE_BITS)
+    printf("\tINODE_BITS\t%4d\n", INODE_BITS);
+#endif
+#if defined(INODE_LEN)
+    printf("\tINODE_LEN\t%4d\n", INODE_LEN);
+#endif
+#if defined(BASEB_LOG2)
+    printf("\tBASEB_LOG2\t%4d\n", BASEB_LOG2);
+#endif
+#if defined(BASEB)
+    printf("\tBASEB\t\t%4d\n", BASEB);
+#endif
+#if defined(HALF_BITS)
+    printf("\tHALF_BITS\t%4d\n", HALF_BITS);
+#endif
+#if defined(HALF_LEN)
+    printf("\tHALF_LEN\t%4zu\n", HALF_LEN);
+#endif
+#if defined(FULL_BITS)
+    printf("\tFULL_BITS\t%4d\n", FULL_BITS);
+#endif
+#if defined(FULL_LEN)
+    printf("\tFULL_LEN\t%4zu\n", FULL_LEN);
+#endif
+#if defined(PTR_BITS)
+    printf("\tPTR_BITS\t%4d\n", PTR_BITS);
+#endif
+#if defined(PTR_LEN)
+    printf("\tPTR_LEN\t\t%4d\n", PTR_LEN);
+#endif
+#if defined(INTPTR_WIDTH)
+    printf("\tINTPTR_WIDTH\t%4zu\n", INTPTR_WIDTH);
+#endif
+#if defined(ADDR_REDUCT)
+    printf("\tADDR_REDUCT\t%4d\n", ADDR_REDUCT);
+#endif
+#if defined(MAXDATA_LOG2)
+    printf("\tMAXDATA_LOG2\t%4d\n", MAXDATA_LOG2);
+#endif
+#if defined(MAXDATA)
+    printf("\tMAXDATA\t\t%4zu\n", MAXDATA);
+#endif
+#if defined(MAXLEN_LOG2)
+    printf("\tMAXLEN_LOG2\t%4d\n", MAXLEN_LOG2);
+#endif
+#if defined(MAXLEN)
+    printf("\tMAXLEN\t\t%4zu\n", MAXLEN);
+#endif
+#if defined(TEN_MAX)
+    printf("\tTEN_MAX\t\t%4d\n", TEN_MAX);
+#endif
 }
 
 /*
  * Information about each opcode.
  */
-STATIC struct opcode opcodes[MAX_OPCODE + 1] = {
+static struct opcode opcodes[MAX_OPCODE + 1] = {
     {{.func_nul = o_nop}, OPNUL, "NOP"}, /* no operation */
 
     {{.func_loc = o_localaddr}, OPLOC, "LOCALADDR"}, /* address of local variable */
@@ -3943,7 +4033,7 @@ calculate(FUNC *fp, int argcount)
     }
     locals = localtable;
     if (fp->f_localcount > QUICKLOCALS) {
-        locals = (VALUE *)malloc(sizeof(VALUE) * fp->f_localcount);
+        locals = (VALUE *)calloc(sizeof(VALUE), fp->f_localcount);
         if (locals == NULL) {
             math_error("No memory for local variables");
             not_reached();

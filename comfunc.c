@@ -1,7 +1,7 @@
 /*
  * comfunc - extended precision complex arithmetic non-primitive routines
  *
- * Copyright (C) 1999-2007,2021-2023,2025  David I. Bell, Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023,2025-2026  David I. Bell, Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -25,22 +25,36 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-#include "config.h"
-#include "cmath.h"
+/*
+ * important <system> header includes
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdbool.h>
 
+/*
+ * calc local src includes
+ */
+#include "zmath.h"
+#include "qmath.h"
+#include "cmath.h"
+#include "config.h"
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 /*
  * cache the natural logarithm of 10
  */
-STATIC COMPLEX *cln_10 = NULL;
-STATIC NUMBER *cln_10_epsilon = NULL;
-STATIC COMPLEX *cln_2 = NULL;
-STATIC NUMBER *cln_2_epsilon = NULL;
-STATIC NUMBER _q10_ = {{_tenval_, 1, 0}, {_oneval_, 1, 0}, 1, NULL};
-STATIC NUMBER _q2_ = {{_twoval_, 1, 0}, {_oneval_, 1, 0}, 1, NULL};
-STATIC NUMBER _q0_ = {{_zeroval_, 1, 0}, {_oneval_, 1, 0}, 1, NULL};
+static COMPLEX *cln_10 = NULL;
+static NUMBER *cln_10_epsilon = NULL;
+static COMPLEX *cln_2 = NULL;
+static NUMBER *cln_2_epsilon = NULL;
+static NUMBER _q10_ = {{_tenval_, 1, 0}, {_oneval_, 1, 0}, 1, NULL};
+static NUMBER _q2_ = {{_twoval_, 1, 0}, {_oneval_, 1, 0}, 1, NULL};
+static NUMBER _q0_ = {{_zeroval_, 1, 0}, {_oneval_, 1, 0}, 1, NULL};
 COMPLEX _cten_ = {&_q10_, &_q0_, 1};
 COMPLEX _ctwo_ = {&_q2_, &_q0_, 1};
 

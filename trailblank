@@ -7,7 +7,7 @@
 # If all is well, this tool prints nothing and does an exit 0.
 # If a problem is found, this tool prints messages and does a non-0 exit.
 #
-# Copyright (C) 2017,2018,2021-2023  Landon Curt Noll
+# Copyright (C) 2017,2018,2021-2023,2026  Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of version 2.1 of the GNU Lesser General Public License
@@ -56,7 +56,7 @@ LEADING_SPACES_BEFORE_TAB=$(
               -name '*.ptch' -o -name 'core.*' -o \
               -name '*.so*' -o -name 'calc-static' -o -name 'libcalc.*' -o \
               -name 'sample_many' -o -name 'sample_rand' -o -name 'errcode' -o \
-              -path './help/funclist' -o -path './have_stdvs' -o \
+              -path './help/funclist' -o \
               -path './endian' -o -path './no_implicit' -o -name 'chk_c' -o \
               -path './longbits' -o -name '.*.swp' -o -name 'conf.h' -o \
               -name '.git' -o -path './custom/libcustcalc*' -o -path './libcustcalc*' -o \
@@ -97,7 +97,7 @@ TRAILING_WHITESPACE=$(
               -name '*.ptch' -o -name 'core.*' -o \
               -name '*.so*' -o -name 'calc-static' -o -name 'libcalc.*' -o \
               -name 'sample_many' -o -name 'sample_rand' -o -name 'errcode' -o \
-              -path './help/funclist' -o -path './have_stdvs' -o \
+              -path './help/funclist' -o \
               -path './endian' -o -path './no_implicit' -o -name 'chk_c' -o \
               -path './longbits' -o -name '.*.swp' -o -name 'conf.h' -o \
               -name '.git' -o -path './custom/libcustcalc*' -o -path './libcustcalc*' -o \
@@ -176,7 +176,7 @@ PICKY_PHASE_1=$(
               -name '*.ptch' -o -name 'core.*' -o \
               -name '*.so*' -o -name 'calc-static' -o -name 'libcalc.*' -o \
               -name 'sample_many' -o -name 'sample_rand' -o -name 'errcode' -o \
-              -path './help/funclist' -o -path './have_stdvs' -o \
+              -path './help/funclist' -o \
               -path './endian' -o -path './no_implicit' -o -name 'chk_c' -o \
               -path './longbits' -o -name '.*.swp' -o -name 'conf.h' -o \
               -name '.git' -o -path './custom/libcustcalc*' -o -path './libcustcalc*' -o \
@@ -228,7 +228,7 @@ TABS_FOUND=$(
               -name '*.ptch' -o -name 'core.*' -o \
               -name '*.so*' -o -name 'calc-static' -o -name 'libcalc.*' -o \
               -name 'sample_many' -o -name 'sample_rand' -o -name 'errcode' -o \
-              -path './help/funclist' -o -path './have_stdvs' -o \
+              -path './help/funclist' -o \
               -path './endian' -o -path './no_implicit' -o -name 'chk_c' -o \
               -path './longbits' -o -name '.*.swp' -o -name 'conf.h' -o \
               -name '.git' -o -path './custom/libcustcalc*' -o -path './libcustcalc*' -o \

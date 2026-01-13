@@ -1,7 +1,7 @@
 /*
  * matfunc - extended precision rational arithmetic matrix functions
  *
- * Copyright (C) 1999-2007,2021-2023  David I. Bell
+ * Copyright (C) 1999-2007,2021-2023,2026  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -28,21 +28,31 @@
  * Matrices can contain arbitrary types of elements.
  */
 
-#include "alloc.h"
+/*
+ * important <system> header includes
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+#include <stdbool.h>
+
+/*
+ * calc local src includes
+ */
 #include "value.h"
-#include "zrand.h"
-
 #include "have_unused.h"
-
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
 
-E_FUNC long irand(long s);
+#include "banned.h" /* include after all other includes */
 
-S_FUNC void matswaprow(MATRIX *m, long r1, long r2);
-S_FUNC void matsubrow(MATRIX *m, long oprow, long baserow, VALUE *mulval);
-S_FUNC void matmulrow(MATRIX *m, long row, VALUE *mulval);
-S_FUNC MATRIX *matident(MATRIX *m);
+extern long irand(long s);
+
+static void matswaprow(MATRIX *m, long r1, long r2);
+static void matsubrow(MATRIX *m, long oprow, long baserow, VALUE *mulval);
+static void matmulrow(MATRIX *m, long row, VALUE *mulval);
+static MATRIX *matident(MATRIX *m);
 
 /*
  * Add two compatible matrices.
@@ -1040,7 +1050,7 @@ matfill(MATRIX *m, VALUE *v1, VALUE *v2)
 /*
  * Set a copy of a square matrix to the identity matrix.
  */
-S_FUNC MATRIX *
+static MATRIX *
 matident(MATRIX *m)
 {
     register VALUE *val; /* current value */
@@ -1321,7 +1331,7 @@ matdet(MATRIX *m)
  * Local utility routine to swap two rows of a square matrix.
  * No checks are made to verify the legality of the arguments.
  */
-S_FUNC void
+static void
 matswaprow(MATRIX *m, long r1, long r2)
 {
     register VALUE *v1, *v2;
@@ -1348,7 +1358,7 @@ matswaprow(MATRIX *m, long r1, long r2)
  * The row to be changed is oprow, the row to be subtracted is baserow.
  * No checks are made to verify the legality of the arguments.
  */
-S_FUNC void
+static void
 matsubrow(MATRIX *m, long oprow, long baserow, VALUE *mulval)
 {
     register VALUE *vop, *vbase;
@@ -1373,7 +1383,7 @@ matsubrow(MATRIX *m, long oprow, long baserow, VALUE *mulval)
  * Local utility routine to multiply a row by a specified number.
  * No checks are made to verify the legality of the arguments.
  */
-S_FUNC void
+static void
 matmulrow(MATRIX *m, long row, VALUE *mulval)
 {
     register VALUE *val;
@@ -1478,7 +1488,7 @@ matalloc(long size)
     long i;
     VALUE *vp;
 
-    m = (MATRIX *)malloc(matsize(size));
+    m = (MATRIX *)calloc(1, matsize(size));
     if (m == NULL) {
         math_error("Cannot get memory to allocate matrix of size %ld", size);
         not_reached();
@@ -1607,7 +1617,7 @@ matsort(MATRIX *m)
     long len[LONG_BITS];
     long i, j, k;
 
-    buf = (VALUE *)malloc(m->m_size * sizeof(VALUE));
+    buf = (VALUE *)calloc(m->m_size, sizeof(VALUE));
     if (buf == NULL) {
         math_error("Not enough memory for matsort");
         not_reached();

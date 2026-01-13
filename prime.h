@@ -1,7 +1,7 @@
 /*
  * prime - quickly determine if a small number is prime
  *
- * Copyright (C) 1999-2007,2014,2021  Landon Curt Noll
+ * Copyright (C) 1999-2007,2014,2021,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -26,14 +26,6 @@
 
 #if !defined(INCLUDE_PRIME_H)
 #  define INCLUDE_PRIME_H
-
-#  if defined(CALC_SRC) /* if we are building from the calc source tree */
-#    include "qmath.h"
-#    include "have_const.h"
-#  else
-#    include <calc/math.h>
-#    include <calc/have_const.h>
-#  endif
 
 #  define MAX_MAP_PRIME ((FULL)65521)     /* (2^16-15) largest prime in prmap */
 #  define MAX_MAP_VAL ((FULL)65535)       /* (2^16-1)  largest bit in pr_map */
@@ -75,12 +67,12 @@
 /*
  * Prime related external arrays.
  */
-EXTERN CONST unsigned short prime[];
-EXTERN CONST unsigned char pr_map[];
-EXTERN CONST unsigned short pi10b[];
-EXTERN CONST unsigned short pi18b[];
-EXTERN NUMBER _nxtprime_;        /* 2^32+15 - smallest prime > 2^32 */
-EXTERN CONST ZVALUE _nxt_prime_; /* 2^32+15 - smallest prime > 2^32 */
-EXTERN CONST ZVALUE _jmpmod2_;   /* JMPMOD*2 as a ZVALUE */
+extern const unsigned short prime[];
+extern const unsigned char pr_map[];
+extern const unsigned short pi10b[];
+extern const unsigned short pi18b[];
+extern NUMBER _nxtprime_;        /* 2^32+15 - smallest prime > 2^32 */
+extern const ZVALUE _nxt_prime_; /* 2^32+15 - smallest prime > 2^32 */
+extern const ZVALUE _jmpmod2_;   /* JMPMOD*2 as a ZVALUE */
 
-#endif /* !INCLUDE_PRIME_H */
+#endif

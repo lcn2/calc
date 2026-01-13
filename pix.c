@@ -1,7 +1,7 @@
 /*
  * pix - number of primes less than a small value
  *
- * Copyright (C) 1999,2021  Landon Curt Noll
+ * Copyright (C) 1999,2021,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -24,18 +24,27 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-#include "zmath.h"
-#include "prime.h"
-#include "have_const.h"
+/*
+ * important <system> header includes
+ */
+#include <stdint.h>
+#include <stdbool.h>
 
-#include "banned.h" /* include after system header <> includes */
+/*
+ * calc local src includes
+ */
+#include "zmath.h"
+#include "qmath.h"
+#include "prime.h"
+
+#include "banned.h" /* include after all other includes */
 
 /*
  * pi10b - number of primes <= 2^18 in multiples of 2^10
  *
  * pi10b[x]  ==  pi(x*1024)             for 0 <= x <= 256
  */
-CONST unsigned short pi10b[(MAX_PI10B / 1024) + 1 + 1] = {
+const unsigned short pi10b[(MAX_PI10B / 1024) + 1 + 1] = {
     0,     172,   309,   439,   564,   685,   801,   916,   1028,  1142,  1254,  1362,  1469,  1580,  1681,  1794,  1900,  2002,
     2110,  2205,  2312,  2413,  2517,  2618,  2725,  2818,  2918,  3016,  3124,  3221,  3314,  3414,  3512,  3619,  3716,  3808,
     3908,  4006,  4098,  4197,  4288,  4391,  4495,  4583,  4678,  4767,  4858,  4956,  5051,  5152,  5239,  5339,  5432,  5520,
@@ -59,7 +68,7 @@ CONST unsigned short pi10b[(MAX_PI10B / 1024) + 1 + 1] = {
  * sum pi18b[i]  ==  pi(x*262144)       for 0 <= x <= 16384
  * i=0
  */
-CONST unsigned short pi18b[(MAX_PI18B / 262144) + 1] = {
+const unsigned short pi18b[(MAX_PI18B / 262144) + 1] = {
     23000, 20390, 19556, 19079, 18761, 18482, 18256, 18087, 17903, 17794, 17706, 17535, 17520, 17309, 17359, 17210, 17138, 17092,
     17082, 16936, 16918, 16793, 16865, 16731, 16680, 16699, 16734, 16562, 16528, 16547, 16460, 16451, 16456, 16397, 16318, 16352,
     16319, 16221, 16200, 16290, 16260, 16152, 16159, 16114, 16148, 16103, 16086, 16011, 16096, 15887, 16003, 15907, 16006, 15904,

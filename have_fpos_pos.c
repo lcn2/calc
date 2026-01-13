@@ -1,7 +1,7 @@
 /*
- * have_fpos_pos - Determine if a __pos element in FILEPOS
+ * have_fpos_pos - Determine if a __pos element in fpos_t
  *
- * Copyright (C) 2000,2021  Landon Curt Noll
+ * Copyright (C) 2000,2021,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -24,38 +24,41 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
-#include "have_fgetsetpos.h"
-#include "have_posscl.h"
-#include "have_string.h"
-#ifdef HAVE_STRING_H
-#  include <string.h>
-#endif
+#include <string.h>
 
-#include "banned.h" /* include after system header <> includes */
+/*
+ * calc local src includes
+ */
+#include "have_posscl.h"
+
+#include "banned.h" /* include after all other includes */
 
 int
 main(void)
 {
-#if defined(HAVE_FILEPOS_SCALAR)
+#if defined(HAVE_FPOS_T_SCALAR)
 
-    printf("/* HAVE_FILEPOS_SCALAR is defined, we assume FILEPOS is scalar */\n");
-    printf("/* we assume we have no __pos in FILEPOS */\n");
+    printf("/* HAVE_FPOS_T_SCALAR is defined, we assume fpos_t is scalar */\n");
+    printf("/* we assume we have no __pos in fpos_t */\n");
     printf("#undef HAVE_FPOS_POS\t/* no */\n");
     printf("#undef FPOS_POS_BITS\n");
     printf("#undef FPOS_POS_LEN\n");
 
 #else
 
-    printf("/* HAVE_FILEPOS_SCALAR is undefined, we assume FILEPOS is not scalar */\n");
+    printf("/* HAVE_FPOS_T_SCALAR is undefined, we assume fpos_t is not scalar */\n");
 #  if defined(HAVE_NO_FPOS_POS)
-    printf("/* HAVE_NO_FPOS_POS defiled, we assume we have no __pos in FILEPOS */\n");
+    printf("/* HAVE_NO_FPOS_POS defiled, we assume we have no __pos in fpos_t */\n");
     printf("#undef HAVE_FPOS_POS\t/* no */\n");
     printf("#undef FPOS_POS_BITS\n");
     printf("#undef FPOS_POS_LEN\n");
 
 #  elif defined(FPOS_POS_BITS)
-    printf("/* FPOS_POS_BITS defiled, assume we have __pos in FILEPOS */\n");
+    printf("/* FPOS_POS_BITS defiled, assume we have __pos in fpos_t */\n");
     printf("#undef HAVE_FPOS_POS\n");
     printf("#define HAVE_FPOS_POS 1  /* yes */\n");
     printf("#undef FPOS_POS_BITS\n");
@@ -70,9 +73,9 @@ main(void)
     printf("#undef HAVE_FPOS_POS\n");
     printf("#define HAVE_FPOS_POS 1  /* yes */\n");
     printf("#undef FPOS_POS_BITS\n");
-    printf("#define FPOS_POS_BITS %lu\n", sizeof(pos.__pos) * 8);
+    printf("#define FPOS_POS_BITS %zu\n", sizeof(pos.__pos) * 8);
     printf("#undef FPOS_POS_LEN\n");
-    printf("#define FPOS_POS_LEN %lu\n", sizeof(pos.__pos));
+    printf("#define FPOS_POS_LEN %zu\n", sizeof(pos.__pos));
 #  endif
 #endif
     /* exit(0); */

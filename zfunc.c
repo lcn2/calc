@@ -1,7 +1,7 @@
 /*
  * zfunc - extended precision integral arithmetic non-primitive routines
  *
- * Copyright (C) 1999-2007,2021-2023  David I. Bell, Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023,2026  David I. Bell, Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -25,16 +25,28 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-#include "zmath.h"
-#include "alloc.h"
+/*
+ * important <system> header includes
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+#include <stdbool.h>
 
+/*
+ * important <system> header includes
+ */
+#include "zmath.h"
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 ZVALUE _tenpowers_[TEN_MAX + 1]; /* table of 10^2^n */
 
-STATIC long *power10 = NULL;
-STATIC int max_power10_exp = 0;
+static long *power10 = NULL;
+static int max_power10_exp = 0;
 
 /*
  * given:
@@ -47,7 +59,7 @@ STATIC int max_power10_exp = 0;
  * If issq_mod4k[x & 0xfff] == 0, then x cannot be a perfect square
  * else x might be a perfect square.
  */
-STATIC USB8 issq_mod4k[1 << 12] = {
+static USB8 issq_mod4k[1 << 12] = {
     1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1,
     0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,
     0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
@@ -255,7 +267,7 @@ zperm(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 /*
  * docomb evaluates binomial coefficient when z1 >= 0, z2 >= 0
  */
-S_FUNC int
+static int
 docomb(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 {
     ZVALUE ans;

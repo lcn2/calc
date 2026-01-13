@@ -1,7 +1,7 @@
 /*
  * zio - scanf and printf routines for arbitrary precision integers
  *
- * Copyright (C) 1999-2007,2021-2023  David I. Bell
+ * Copyright (C) 1999-2007,2021-2023,2026  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -23,14 +23,26 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
-#include "alloc.h"
-#include "config.h"
-#include "zmath.h"
-#include "args.h"
+#include <stdlib.h>
+#include <string.h>
+#include <stdarg.h>
+#include <stdint.h>
+#include <stdbool.h>
 
+/*
+ * calc local src includes
+ */
+#include "zmath.h"
+#include "qmath.h"
+#include "config.h"
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 #define OUTBUFSIZE 200 /* realloc size for output buffers */
 
@@ -57,12 +69,12 @@ struct iostate {
     bool outputisstring;  /* true if output is to string buffer */
 };
 
-STATIC IOSTATE *oldiostates = NULL; /* list of saved output states */
-STATIC FILE *outfp = NULL;          /* file unit for output */
-STATIC char *outbuf = NULL;         /* current diverted buffer */
-STATIC bool outputisstring = false;
-STATIC size_t outbufsize;
-STATIC size_t outbufused;
+static IOSTATE *oldiostates = NULL; /* list of saved output states */
+static FILE *outfp = NULL;          /* file unit for output */
+static char *outbuf = NULL;         /* current diverted buffer */
+static bool outputisstring = false;
+static size_t outbufsize;
+static size_t outbufused;
 
 /*
  * zio_init - perform needed initialization work
@@ -74,7 +86,7 @@ STATIC size_t outbufused;
 void
 zio_init(void)
 {
-    STATIC int done = 0; /* 1 => routine already called */
+    static int done = 0; /* 1 => routine already called */
 
     if (!done) {
         outfp = stdout;
@@ -218,7 +230,7 @@ math_divertio(void)
 {
     register IOSTATE *sp;
 
-    sp = (IOSTATE *)malloc(sizeof(IOSTATE));
+    sp = (IOSTATE *)calloc(1, sizeof(IOSTATE));
     if (sp == NULL) {
         math_error("No memory for diverting output");
         not_reached();
@@ -235,7 +247,7 @@ math_divertio(void)
 
     outbufused = 0;
     outbufsize = 0;
-    outbuf = (char *)malloc(OUTBUFSIZE + 1);
+    outbuf = (char *)calloc(OUTBUFSIZE + 1, 1);
     if (outbuf == NULL) {
         math_error("Cannot allocate divert string");
         not_reached();
@@ -401,16 +413,20 @@ zprintx(ZVALUE z, long width)
     }
     hp = z.v + len;
 #if BASEB == 32
+
     PRINTF1("0x%lx", (PRINT)*hp--);
     while (--len >= 0) {
         PRINTF1("%08lx", (PRINT)*hp--);
     }
-#else  /* BASEB == 32 */
+
+#else
+
     PRINTF1("0x%lx", (FULL)*hp--);
     while (--len >= 0) {
         PRINTF1("%04lx", (FULL)*hp--);
     }
-#endif /* BASEB == 32 */
+
+#endif
 }
 
 /*

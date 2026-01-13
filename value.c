@@ -1,7 +1,7 @@
 /*
  * value - generic value manipulation routines
  *
- * Copyright (C) 1999-2007,2014,2017,2021-2023,2025  David I. Bell
+ * Copyright (C) 1999-2007,2014,2017,2021-2023,2025-2026  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -23,22 +23,30 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
+#include <stdint.h>
+#include <stdbool.h>
+
+/*
+ * calc local src includes
+ */
 #include "value.h"
+#include "calc.h"
 #include "opcodes.h"
+#include "label.h"
 #include "func.h"
 #include "symbol.h"
-#include "str.h"
-#include "zrand.h"
-#include "zrandom.h"
-#include "cmath.h"
-#include "nametype.h"
 #include "file.h"
-#include "config.h"
-
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 #define LINELEN 80 /* length of a typical tty line */
 
@@ -443,6 +451,7 @@ addvalue(VALUE *v1, VALUE *v2, VALUE *vres)
         return;
     case TWOVAL(V_VPTR, V_NUM):
 #if defined(PERMIT_DANGEROUS_ADDRESS_ARITHMETIC)
+
         /* NOTE: Defining PERMIT_DANGEROUS_ADDRESS_ARITHMETIC is NOT supported! */
         q = v2->v_num;
         if (qisfrac(q)) {
@@ -452,9 +461,12 @@ addvalue(VALUE *v1, VALUE *v2, VALUE *vres)
         i = qtoi(q);
         vres->v_addr = v1->v_addr + i;
         vres->v_type = V_VPTR;
-#else  /* Disable arithmetic on addresses */
+
+#else
+
         *vres = error_value(E_INVALID_ADDR_OP);
-#endif /* Disable arithmetic on addresses */
+
+#endif
         return;
     case TWOVAL(V_VPTR, V_VPTR):
         *vres = error_value(E_INVALID_ADDR_OP);
@@ -535,6 +547,7 @@ subvalue(VALUE *v1, VALUE *v2, VALUE *vres)
         return;
     case TWOVAL(V_VPTR, V_NUM):
 #if defined(PERMIT_DANGEROUS_ADDRESS_ARITHMETIC)
+
         /* NOTE: Defining PERMIT_DANGEROUS_ADDRESS_ARITHMETIC is NOT supported! */
         q = v2->v_num;
         if (qisfrac(q)) {
@@ -544,9 +557,11 @@ subvalue(VALUE *v1, VALUE *v2, VALUE *vres)
         i = qtoi(q);
         vres->v_addr = v1->v_addr - i;
         vres->v_type = V_VPTR;
-#else  /* Disable arithmetic on addresses */
+#else
+
         *vres = error_value(E_INVALID_ADDR_OP);
-#endif /* Disable arithmetic on addresses */
+
+#endif
         return;
     case TWOVAL(V_OPTR, V_NUM):
         q = v2->v_num;
@@ -1435,11 +1450,14 @@ incvalue(VALUE *vp, VALUE *vres)
         break;
     case V_VPTR:
 #if defined(PERMIT_DANGEROUS_ADDRESS_ARITHMETIC)
+
         /* NOTE: Defining PERMIT_DANGEROUS_ADDRESS_ARITHMETIC is NOT supported! */
         vres->v_addr = vp->v_addr + 1;
-#else  /* Disable arithmetic on addresses */
+
+#else
         *vres = error_value(E_INVALID_ADDR_OP);
-#endif /* Disable arithmetic on addresses */
+
+#endif
         break;
     default:
         if (vp->v_type > 0) {
@@ -1476,11 +1494,15 @@ decvalue(VALUE *vp, VALUE *vres)
         break;
     case V_VPTR:
 #if defined(PERMIT_DANGEROUS_ADDRESS_ARITHMETIC)
+
         /* NOTE: Defining PERMIT_DANGEROUS_ADDRESS_ARITHMETIC is NOT supported! */
         vres->v_addr = vp->v_addr - 1;
-#else  /* Disable arithmetic on addresses */
+
+#else
+
         *vres = error_value(E_INVALID_ADDR_OP);
-#endif /* Disable arithmetic on addresses */
+
+#endif
         break;
     default:
         if (vp->v_type >= 0) {
@@ -1676,7 +1698,7 @@ rootvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 void
 absvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 {
-    STATIC NUMBER *q;
+    static NUMBER *q;
 
     if (v1->v_type == V_OBJ || v2->v_type == V_OBJ) {
         *vres = objcall(OBJ_ABS, v1, v2, NULL_VALUE);

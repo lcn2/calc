@@ -1,7 +1,7 @@
 /*
  * zprime - rapid small prime routines
  *
- * Copyright (C) 1999-2007,2021-2023  Landon Curt Noll
+ * Copyright (C) 1999-2007,2021-2023,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -24,15 +24,24 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-#include "zmath.h"
+/*
+ * important <system> header includes
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdbool.h>
+
+/*
+ * calc local src includes
+ */
+#include "value.h"
 #include "prime.h"
 #include "jump.h"
-#include "config.h"
-#include "zrand.h"
-#include "have_const.h"
-
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 /*
  * When performing a probabilistic primality test, check to see
@@ -46,7 +55,7 @@
 /*
  * product of primes that fit into a long
  */
-STATIC CONST FULL pfact_tbl[MAX_PFACT_VAL + 1] = {1,
+static const FULL pfact_tbl[MAX_PFACT_VAL + 1] = {1,
                                                   1,
                                                   2,
                                                   6,
@@ -110,7 +119,7 @@ STATIC CONST FULL pfact_tbl[MAX_PFACT_VAL + 1] = {1,
  *      topbit[0] == 0 by convention
  *      topbit[x] gives the highest 1 bit of x
  */
-STATIC CONST unsigned char topbit[256] = {
+static const unsigned char topbit[256] = {
     0, 0, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5,
     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
     6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
@@ -126,7 +135,7 @@ STATIC CONST unsigned char topbit[256] = {
  *
  * We have enough table entries for a FULL that is 64 bits long.
  */
-STATIC CONST FULL isqrt_pow2[64] = {
+static const FULL isqrt_pow2[64] = {
     1,          1,          2,          2,         4,     5,     8,     11,    /*  0 ..  7 */
     16,         22,         32,         45,        64,    90,    128,   181,   /*  8 .. 15 */
     256,        362,        512,        724,       1024,  1448,  2048,  2896,  /* 16 .. 23 */
@@ -144,9 +153,9 @@ STATIC CONST FULL isqrt_pow2[64] = {
 /*
  * static functions
  */
-S_FUNC FULL fsqrt(FULL v);                      /* quick square root of v */
-S_FUNC long pix(FULL x);                        /* pi of x */
-S_FUNC FULL small_factor(ZVALUE n, FULL limit); /* factor or 0 */
+static FULL fsqrt(FULL v);                      /* quick square root of v */
+static long pix(FULL x);                        /* pi of x */
+static FULL small_factor(ZVALUE n, FULL limit); /* factor or 0 */
 
 /*
  * Determine if a value is a small (32 bit) prime
@@ -161,7 +170,7 @@ zisprime(ZVALUE z)
 {
     FULL n;                   /* number to test */
     FULL isqr;                /* factor limit */
-    CONST unsigned short *tp; /* pointer to a prime factor */
+    const unsigned short *tp; /* pointer to a prime factor */
 
     z.sign = 0;
     if (zisleone(z)) {
@@ -247,8 +256,8 @@ znprime(ZVALUE z)
 FULL
 next_prime(FULL n)
 {
-    CONST unsigned short *tp; /* pointer to a prime factor */
-    CONST unsigned char *j;   /* current jump increment */
+    const unsigned short *tp; /* pointer to a prime factor */
+    const unsigned char *j;   /* current jump increment */
     int tmp;
 
     /* find our search point */
@@ -333,10 +342,10 @@ next_prime(FULL n)
 FULL
 zpprime(ZVALUE z)
 {
-    CONST unsigned short *tp; /* pointer to a prime factor */
+    const unsigned short *tp; /* pointer to a prime factor */
     FULL isqr;                /* isqrt(z) */
     FULL n;                   /* search point */
-    CONST unsigned char *j;   /* current jump increment */
+    const unsigned char *j;   /* current jump increment */
     int tmp;
 
     z.sign = 0;
@@ -458,12 +467,12 @@ zpix(ZVALUE z)
  *      -1      error
  *      >=0     number of primes <= x
  */
-S_FUNC long
+static long
 pix(FULL x)
 {
     long count;               /* pi(x) */
     FULL top;                 /* top of the range to test */
-    CONST unsigned short *tp; /* pointer to a tiny prime */
+    const unsigned short *tp; /* pointer to a tiny prime */
     FULL i;
 
     /* compute pi(x) using the 2^8 step table */
@@ -612,19 +621,19 @@ zfactor(ZVALUE n, ZVALUE zlimit, ZVALUE *res)
  *      0       no prime <= the limit was found
  *      != 0    the smallest prime factor
  */
-S_FUNC FULL
+static FULL
 small_factor(ZVALUE z, FULL limit)
 {
     FULL top;                 /* current max factor level */
-    CONST unsigned short *tp; /* pointer to a tiny prime */
+    const unsigned short *tp; /* pointer to a tiny prime */
     FULL factlim;             /* highest factor to test */
-    CONST unsigned short *p;  /* test factor */
+    const unsigned short *p;  /* test factor */
     FULL factor;              /* test factor */
     HALF tlim;                /* limit on prime table use */
     HALF divval[2];           /* divisor value */
     ZVALUE div;               /* test factor/divisor */
     ZVALUE tmp;
-    CONST unsigned char *j;
+    const unsigned char *j;
 
     /*
      * catch impossible ranges
@@ -694,6 +703,7 @@ small_factor(ZVALUE z, FULL limit)
         }
 
 #if FULL_BITS == 64
+
         /*
          * Our search will carry us beyond the prime table.  We will
          * continue to values until we reach our limit or until a
@@ -716,7 +726,8 @@ small_factor(ZVALUE z, FULL limit)
                 return top;
             }
         }
-#endif /* FULL_BITS == 64 */
+
+#endif
 
         /* no prime factors found */
         return 0;
@@ -851,8 +862,8 @@ zpfact(ZVALUE z, ZVALUE *dest)
 {
     long n;                   /* limiting number to multiply by */
     long p;                   /* current prime */
-    CONST unsigned short *tp; /* pointer to a tiny prime */
-    CONST unsigned char *j;   /* current jump increment */
+    const unsigned short *tp; /* pointer to a tiny prime */
+    const unsigned char *j;   /* current jump increment */
     ZVALUE res, temp;
 
     /* firewall */
@@ -950,7 +961,7 @@ zprimetest(ZVALUE z, long count, ZVALUE skip)
     long i, ij, ik;
     ZVALUE zm1, z1, z2, z3;
     int type;                 /* random, prime or consecutive integers */
-    CONST unsigned short *pr; /* pointer to small prime */
+    const unsigned short *pr; /* pointer to small prime */
 
     /*
      * firewall - ignore sign of z, values 0 and 1 are not prime
@@ -1117,7 +1128,7 @@ zredcprimetest(ZVALUE z, long count, ZVALUE skip)
     ZVALUE zm1, z1, z2, z3;
     ZVALUE zredcm1;
     int type;                 /* random, prime or consecutive integers */
-    CONST unsigned short *pr; /* pointer to small prime */
+    const unsigned short *pr; /* pointer to small prime */
 
     rp = zredcalloc(z);
     zsub(z, rp->one, &zredcm1);
@@ -1444,7 +1455,7 @@ FULL
 zlowfactor(ZVALUE z, long count)
 {
     FULL factlim;            /* highest factor to test */
-    CONST unsigned short *p; /* test factor */
+    const unsigned short *p; /* test factor */
     FULL factor;             /* test factor */
     HALF tlim;               /* limit on prime table use */
     HALF divval[2];          /* divisor value */
@@ -1585,7 +1596,7 @@ zlcmfact(ZVALUE z, ZVALUE *dest)
     long p;                   /* current prime */
     long pp = 0;              /* power of prime */
     long i;                   /* test value */
-    CONST unsigned short *pr; /* pointer to a small prime */
+    const unsigned short *pr; /* pointer to a small prime */
     ZVALUE res, temp;
 
     /* firewall */
@@ -1650,7 +1661,7 @@ zlcmfact(ZVALUE z, ZVALUE *dest)
  * given:
  *      x               compute the integer square root of x
  */
-S_FUNC FULL
+static FULL
 fsqrt(FULL x)
 {
     FULL y; /* (FULL)temporary value */

@@ -1,7 +1,7 @@
 /*
  * lib_calc - calc link library initialization and shutdown routines
  *
- * Copyright (C) 1999-2007,2018,2021-2023  Landon Curt Noll
+ * Copyright (C) 1999-2007,2018,2021-2023,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -24,41 +24,24 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 #include <setjmp.h>
 #include <signal.h>
+#include <sys/types.h>
+#include <stdint.h>
+#include <stdbool.h>
 
+/*
+ * conditional <system> head includes
+ */
 #if !defined(_WIN32) && !defined(_WIN64)
 #  include <pwd.h>
-#endif
-
-#include "lib_calc.h"
-#include "calc.h"
-#include "zmath.h"
-#include "zrandom.h"
-#include "conf.h"
-#include "token.h"
-#include "symbol.h"
-#include "func.h"
-#include "strl.h"
-
-#if defined(CUSTOM)
-#  include "custom.h"
-#endif /* CUSTOM */
-
-#include "have_strdup.h"
-#if !defined(HAVE_STRDUP)
-#  define strdup(x) calc_strdup((CONST char *)(x))
-#endif /* HAVE_STRDUP */
-
-#include "have_unistd.h"
-#if defined(HAVE_UNISTD_H)
-#  include <unistd.h>
-#endif
-
-#include "have_stdlib.h"
-#if defined(HAVE_STDLIB_H)
-#  include <stdlib.h>
 #endif
 
 #include "terminal.h"
@@ -92,21 +75,27 @@ typedef struct {
 -=*#*=- We do not know how to compile for such a host, sorry!!!! -=*#*=-
 
 #  endif
-#endif /* Windows */
-
-#include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+#endif
 
 /*
- * in case we do not have certain .h files
+ * calc local src includes
  */
-#if !defined(HAVE_STDLIB_H) && !defined(HAVE_UNISTD_H)
-#  if !defined(HAVE_UID_T) && !defined(_UID_T)
-typedef unsigned short uid_t;
-#  endif
-E_FUNC char *getenv();
-E_FUNC uid_t geteuid();
+#include "value.h"
+#include "calc.h"
+#include "lib_calc.h"
+#include "conf.h"
+#include "token.h"
+#include "symbol.h"
+#include "label.h"
+#include "func.h"
+#include "strl.h"
+#if defined(CUSTOM)
+#  include "custom.h"
 #endif
+#include "attribute.h"
+#include "errtbl.h"
+
+#include "banned.h" /* include after all other includes */
 
 /*
  * Common definitions
@@ -152,7 +141,7 @@ char *calc_helpdir = NULL; /* $CALCHELP or /usr/local/share/calc/help */
 /* $CALCCUSTOMHELP or /usr/local/share/calc/custhelp */
 #if defined(CUSTOM)
 char *calc_customhelpdir = NULL;
-#endif                    /* CUSTOM */
+#endif
 int stdin_tty = false;    /* true if stdin is a tty */
 int havecommands = false; /* true if have one or more cmd args */
 long stoponerror = 0;     /* >0 => stop, <0 => continue, ==0 => use -c */
@@ -195,23 +184,23 @@ char *user_debug = NULL;     /* !=NULL => value of config("user_debug") */
 /*
  * initialization functions
  */
-E_FUNC void math_setfp(FILE *fp);
-E_FUNC void file_init(void);
-E_FUNC void zio_init(void);
-E_FUNC void initialize(void);
-E_FUNC void reinitialize(void);
+extern void math_setfp(FILE *fp);
+extern void file_init(void);
+extern void zio_init(void);
+extern void initialize(void);
+extern void reinitialize(void);
 
 /*
  * static declarations
  */
-STATIC int init_done = 0;          /* 1 => we already initialized */
-STATIC int *fd_setup = NULL;       /* fd's setup for interaction or -1 */
-STATIC int fd_setup_len = 0;       /* number of fd's in fd_setup */
-STATIC ttystruct *fd_orig = NULL;  /* fd original state */
-STATIC ttystruct *fd_cur = NULL;   /* fd current state */
-S_FUNC void initenv(void);         /* setup calc environment */
-S_FUNC int find_tty_state(int fd); /* find slot for saved tty state */
-STATIC bool initialized = false;   /* true => initialize() has been run */
+static bool init_done = false;     /* true => we already initialized */
+static int *fd_setup = NULL;       /* fd's setup for interaction or -1 */
+static int fd_setup_len = 0;       /* number of fd's in fd_setup */
+static ttystruct *fd_orig = NULL;  /* fd original state */
+static ttystruct *fd_cur = NULL;   /* fd current state */
+static void initenv(void);         /* setup calc environment */
+static int find_tty_state(int fd); /* find slot for saved tty state */
+static bool initialized = false;   /* true => initialize() has been run */
 
 /*
  * libcalc_call_me_first - users of libcalc.a must call this function first!
@@ -355,7 +344,7 @@ libcalc_call_me_first(void)
         printf("libcalc_call_me_first: run_state from %s to %s\n", run_state_name(run_state), run_state_name(RUN_BEGIN));
     }
     run_state = RUN_BEGIN;
-    init_done = 1;
+    init_done = true;
     return;
 }
 
@@ -410,13 +399,20 @@ initialize(void)
     conf->maxprint = MAXPRINT_DEFAULT;
 
 #if defined(CUSTOM)
+
     /*
      * initialize custom registers
      */
     if (allow_custom) {
         init_custreg();
     }
-#endif /* CUSTOM */
+
+#endif
+
+    /*
+     * on exit, call libcalc_call_me_last()
+     */
+    atexit(libcalc_call_me_last);
 
     /*
      * note that we are done
@@ -495,7 +491,7 @@ cvmalloc_error(char *message)
  * In all cases, the obtained value is a strdup-ed value so that the
  * final call to libcalc_call_me_last() can free the non-NULL string.
  */
-S_FUNC void
+static void
 initenv(void)
 {
 #if !defined(_WIN32) && !defined(_WIN64)
@@ -544,6 +540,7 @@ initenv(void)
     c = (no_env ? NULL : getenv(HOME));
     home = (c ? strdup(c) : NULL);
 #if defined(_WIN32) || defined(_WIN64)
+
     if (home == NULL || home[0] == '\0') {
         /* free home if it was previously allocated, but empty */
         if (home != NULL) {
@@ -553,7 +550,9 @@ initenv(void)
         /* just assume . is home if all else fails */
         home = strdup(".");
     }
-#else  /* Windows free systems */
+
+#else
+
     if (home == NULL || home[0] == '\0') {
         /* free home if it was previously allocated, but empty */
         if (home != NULL) {
@@ -570,7 +569,8 @@ initenv(void)
             home = strdup(ent->pw_dir);
         }
     }
-#endif /* Windows free systems */
+
+#endif
     if (home == NULL) {
         math_error("Unable to allocate string for home");
         not_reached();
@@ -619,6 +619,7 @@ initenv(void)
     }
 
 #if defined(CUSTOM)
+
     /* determine the $CALCCUSTOMHELP value */
     c = (no_env ? NULL : getenv(CALCCUSTOMHELP));
     calc_customhelpdir = (c ? strdup(c) : NULL);
@@ -630,7 +631,8 @@ initenv(void)
         math_error("Unable to allocate string for calc_customhelpdir");
         not_reached();
     }
-#endif /* CUSTOM */
+
+#endif
 }
 
 /*
@@ -653,7 +655,7 @@ libcalc_call_me_last(void)
     /*
      * firewall
      */
-    if (init_done == 0) {
+    if (init_done == false) {
         return;
     }
 
@@ -722,25 +724,34 @@ libcalc_call_me_last(void)
         free(shell);
         shell = NULL;
     }
-    if (calc_history != NULL) {
-        free(calc_history);
-        calc_history = NULL;
-    }
+    /*
+     * IMPORT NOTE: Do NOT free calc_history here !!!
+     *
+     * If you do, this will cause the history you have made to be lost!
+     *
+     * FYI In hist.c:
+     *
+     * The hist_finish() function, which is invoked due to a call to
+     * atexit(hist_finish) in hist_init() will take care of freeing
+     * the calc_history storage, if it was allocated in initenv().
+     */
     if (calc_helpdir != NULL) {
         free(calc_helpdir);
         calc_helpdir = NULL;
     }
 #if defined(CUSTOM)
+
     if (calc_customhelpdir != NULL) {
         free(calc_customhelpdir);
         calc_customhelpdir = NULL;
     }
-#endif /* CUSTOM */
+
+#endif
 
     /*
      * all done
      */
-    init_done = 0;
+    init_done = false;
     return;
 }
 
@@ -777,13 +788,13 @@ run_state_name(run state)
  * calc_strdup - calc interface to provide or simulate strdup()
  */
 char *
-calc_strdup(CONST char *s1)
+calc_strdup(const char *s1)
 {
 #if defined(HAVE_STRDUP)
 
     return strdup(s1);
 
-#else /* HAVE_STRDUP */
+#else
 
     char *ret;     /* return string */
     size_t s1_len; /* length of string to duplicate */
@@ -799,7 +810,7 @@ calc_strdup(CONST char *s1)
      * allocate duplicate storage
      */
     s1_len = strlen(s1);
-    ret = (char *)malloc(s1_len + 1);
+    ret = (char *)calloc(s1_len + 1, 1);
 
     /*
      * if we have storage, duplicate the string
@@ -813,7 +824,7 @@ calc_strdup(CONST char *s1)
      */
     return ret;
 
-#endif /* HAVE_STRDUP */
+#endif
 }
 
 /*
@@ -825,7 +836,7 @@ calc_strdup(CONST char *s1)
  * Returns:
  *      indx    The index into fd_setup[], fd_orig[] and fd_cur[] to use or -1
  */
-S_FUNC int
+static int
 find_tty_state(int fd)
 {
     int *new_fd_setup;      /* new fd_setup array */
@@ -847,16 +858,16 @@ find_tty_state(int fd)
     if (fd_setup_len <= 0 || fd_setup == NULL || fd_orig == NULL) {
 
         /* setup for a single descriptor */
-        fd_setup = (int *)malloc(sizeof(fd_setup[0]));
+        fd_setup = (int *)calloc(1, sizeof(fd_setup[0]));
         if (fd_setup == NULL) {
             return -1;
         }
         fd_setup[0] = -1;
-        fd_orig = (ttystruct *)malloc(sizeof(fd_orig[0]));
+        fd_orig = (ttystruct *)calloc(1, sizeof(fd_orig[0]));
         if (fd_orig == NULL) {
             return -1;
         }
-        fd_cur = (ttystruct *)malloc(sizeof(fd_cur[0]));
+        fd_cur = (ttystruct *)calloc(1, sizeof(fd_cur[0]));
         if (fd_cur == NULL) {
             return -1;
         }
@@ -1035,7 +1046,8 @@ calc_tty(int fd)
                fd);
     }
 
-#else /* Using none of the above */
+#else
+
     fd_cur[slot] = fd_orig[slot];
 
 #endif
@@ -1116,7 +1128,7 @@ orig_tty(int fd)
         printf("orig_tty: TCSANOW restored fd %d\n", fd);
     }
 
-#else /* nothing assigned */
+#else
 
     if (conf->calc_debug & CALCDBG_TTY) {
         printf("orig_tty: nothing restored to fd %d\n", fd);

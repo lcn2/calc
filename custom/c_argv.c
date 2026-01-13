@@ -1,7 +1,7 @@
 /*
  * c_argv - a custom function display info about its args
  *
- * Copyright (C) 1999-2006,2021,2023  Landon Curt Noll
+ * Copyright (C) 1999-2006,2021,2023,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -30,24 +30,28 @@
  */
 #if defined(CUSTOM)
 int c_argv_allowed = 1; /* CUSTOM defined */
-#else                   /* CUSTOM */
+#else
 int c_argv_allowed = 0; /* CUSTOM undefined */
-#endif                  /* CUSTOM */
+#endif
 
 #if defined(CUSTOM)
 
+/*
+ * important <system> header includes
+ */
 #  include <stdio.h>
+#  include <stdint.h>
+#  include <stdbool.h>
 
-#  include "../have_const.h"
+/*
+ * conditional <system> head includes
+ */
 #  include "../value.h"
 #  include "../custom.h"
-
-#  include "../config.h"
 #  include "../calc.h"
-
 #  include "../have_unused.h"
 
-#  include "../banned.h" /* include after system header <> includes */
+#  include "../banned.h" /* include after all other includes */
 
 /*
  * c_argv - a custom function display info about its args
@@ -170,4 +174,4 @@ c_argv(char *UNUSED(name), int count, VALUE **vals)
     return result;
 }
 
-#endif /* CUSTOM */
+#endif

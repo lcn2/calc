@@ -4,7 +4,7 @@
  * This code is used to generate errsym.h and help/errorcodes.
  * This code also verifies the consistency of the error_table[] array.
  *
- * Copyright (C) 1999-2006,2021,2023  Ernest Bowen and Landon Curt Noll
+ * Copyright (C) 1999-2006,2021,2023,2026  Ernest Bowen and Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -38,21 +38,33 @@
 /* exit code out of numerical order - ignore in sequencing - ooo */
 /* exit code change of order - use new value in sequencing - coo */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
-#include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <ctype.h>
 #include <errno.h>
+#include <stdint.h>
+#include <stdbool.h>
 
+/*
+ * calc local src includes
+ */
+#include "value.h"
+#include "label.h"
 #include "func.h"
+#include "attribute.h"
 #include "errtbl.h"
-#include "bool.h"
+
+#include "banned.h" /* include after all other includes */
 
 /*
  * Copyright (C) year for generated files
  */
-#define ERRTBL_COPYRIGHT_YEAR 2023
+#define ERRTBL_COPYRIGHT_YEAR 2026
 
 /*
  * number of calc computation error codes in the error_table[] array
@@ -141,7 +153,7 @@
  * Do not remove such computation error codes, nor change their errnum values,
  * not change their E_STRING errsym codes.
  */
-CONST struct errtbl error_table[] = {
+const struct errtbl error_table[] = {
 
     /* The E__BASE entry below must start with 10000 and must be first!! */
     {10000, "E__BASE", "No error"},
@@ -780,7 +792,7 @@ CONST struct errtbl error_table[] = {
  * IMPORTANT: DO NOT ADD NEW calc computation TO THIS TABLE!!!
  *            Add new calc computation to the error_table[] above.
  */
-STATIC struct errtbl private_error_alias[] = {
+static struct errtbl private_error_alias[] = {
 
     /* The E__NONE entry below must start with E__NONE (0) and must be first!! */
     {E__NONE, "E__NONE", "calc_errno cleared: libc errno codes above here"},
@@ -796,7 +808,7 @@ STATIC struct errtbl private_error_alias[] = {
 /*
  * external values
  */
-EXTERN char *program; /* our name */
+extern char *program; /* our name */
 
 /*
  * is_e_digits - E_STRING is of the form E_ followed by digits
@@ -818,9 +830,9 @@ EXTERN char *program; /* our name */
  *      false ==> E_STRING is NULL and/or not E_ followed by digits
  */
 bool
-is_e_digits(CONST char *errsym)
+is_e_digits(const char *errsym)
 {
-    CONST char *p;
+    const char *p;
 
     /*
      * firewall
@@ -964,7 +976,7 @@ is_errnum_in_error_table(int errnum)
  *      != NULL_ERRNUM == valid errnum corresponding to errsym
  */
 int
-e_digits_2_errnum(CONST char *errsym)
+e_digits_2_errnum(const char *errsym)
 {
     long errnum; /* digits converted into a possible errnum */
 
@@ -1042,9 +1054,9 @@ e_digits_2_errnum(CONST char *errsym)
  *      false ==> E_STRING is NULL and/or does not match expression: ^E_[A-Z][A-Z0-9_]+$
  */
 bool
-is_e_1string(CONST char *errsym)
+is_e_1string(const char *errsym)
 {
-    CONST char *p;
+    const char *p;
 
     /*
      * firewall
@@ -1107,9 +1119,9 @@ is_e_1string(CONST char *errsym)
  *      false ==> E_STRING is NULL and/or does not match expression: ^E__[A-Z][A-Z0-9_]+$
  */
 bool
-is_e_2string(CONST char *errsym)
+is_e_2string(const char *errsym)
 {
-    CONST char *p;
+    const char *p;
 
     /*
      * firewall
@@ -1166,9 +1178,9 @@ is_e_2string(CONST char *errsym)
  *      NULL ==> NULL arg, or errsym not found
  */
 struct errtbl *
-find_errsym_in_errtbl(CONST char *errsym, CONST struct errtbl *tbl)
+find_errsym_in_errtbl(const char *errsym, const struct errtbl *tbl)
 {
-    CONST struct errtbl *ret; /* pointer to struct errtbl entry with matching errsym */
+    const struct errtbl *ret; /* pointer to struct errtbl entry with matching errsym */
 
     /*
      * firewall
@@ -1211,9 +1223,9 @@ find_errsym_in_errtbl(CONST char *errsym, CONST struct errtbl *tbl)
  *      NULL ==> NULL arg, or matching errnum not foun
  */
 struct errtbl *
-find_errnum_in_errtbl(int errnum, CONST struct errtbl *tbl)
+find_errnum_in_errtbl(int errnum, const struct errtbl *tbl)
 {
-    CONST struct errtbl *ret; /* pointer to struct errtbl entry with matching errsym */
+    const struct errtbl *ret; /* pointer to struct errtbl entry with matching errsym */
 
     /*
      * firewall
@@ -1266,10 +1278,10 @@ find_errnum_in_errtbl(int errnum, CONST struct errtbl *tbl)
  *      != NULL ==> pointer to entry in error_table[] array with matching errnum
  *      NULL ==> NULL arg, or no matching errnum in error_table[] array
  */
-CONST struct errtbl *
+const struct errtbl *
 lookup_errnum_in_error_table(int errnum)
 {
-    CONST struct errtbl *ret; /* pointer to struct errtbl entry with matching errsym */
+    const struct errtbl *ret; /* pointer to struct errtbl entry with matching errsym */
     int offset;               /* offset within the error_table[] array */
 
     /*
@@ -1647,7 +1659,7 @@ verify_error_table(void)
  *                         or no corresponding errnum found
  */
 int
-errsym_2_errnum(CONST char *errsym)
+errsym_2_errnum(const char *errsym)
 {
     struct errtbl *found; /* pointer to entry in struct errtbl array with matching errsym */
     int errnum;           /* errnum to return */
@@ -1733,7 +1745,7 @@ char *
 errnum_2_errsym(int errnum, bool *palloced)
 {
     char *ret;                  /* return string, possibly malloced */
-    CONST struct errtbl *entry; /* struct errtbl entry lookup found or NULL */
+    const struct errtbl *entry; /* struct errtbl entry lookup found or NULL */
     size_t snprintf_len;        /* malloced snprintf buffer length */
 
     /*
@@ -1806,7 +1818,7 @@ char *
 errnum_2_errmsg(int errnum, bool *palloced)
 {
     char *ret;                  /* return string, possibly malloced */
-    CONST struct errtbl *entry; /* struct errtbl entry lookup found or NULL */
+    const struct errtbl *entry; /* struct errtbl entry lookup found or NULL */
     size_t snprintf_len;        /* malloced snprintf buffer length */
 
     /*
@@ -1931,7 +1943,7 @@ errnum_2_errmsg(int errnum, bool *palloced)
  *      == NULL ==> errsym is not valid, or palloced is NULL, or errsym is NULL
  */
 char *
-errsym_2_errmsg(CONST char *errsym, bool *palloced)
+errsym_2_errmsg(const char *errsym, bool *palloced)
 {
     int errnum; /* errsym E_STRING converted to errnum code or NULL_ERRNUM */
     char *ret;  /* errmsg string, possibly malloced, or NULL */
@@ -1966,7 +1978,7 @@ errsym_2_errmsg(CONST char *errsym, bool *palloced)
     return ret;
 }
 
-#endif /* !ERRCODE_SRC */
+#endif
 
 /*
  * The code below is used to form the errcode executable and is NOT part of libcalc
@@ -1976,7 +1988,7 @@ errsym_2_errmsg(CONST char *errsym, bool *palloced)
 /*
  * errcode command line
  */
-CONST char *usage = "usage: %s [-h] [-e | -d]\n"
+const char *usage = "usage: %s [-h] [-e | -d]\n"
                     "\n"
                     "\t-h\tprint help and exit\n"
                     "\t-e\tprint the contents of help/errorcodes\n"
@@ -1993,7 +2005,7 @@ char *program = "((NULL))"; /* our name */
 /*
  * print_errorcodes - print the help/errorcodes file
  */
-S_FUNC void
+static void
 print_errorcodes(void)
 {
     /*
@@ -2065,7 +2077,7 @@ print_errorcodes(void)
 /*
  * print_errsym - print the contents of errsym.h
  */
-S_FUNC void
+static void
 print_errsym(void)
 {
     size_t len; /* length of the error_table */
@@ -2129,15 +2141,15 @@ print_errsym(void)
            (unsigned long)MY_E__HIGHEST, (unsigned long)MY_ECOUNT);
     printf("\n"
            "\n"
-           "#endif /* !INCLUDE_ERRSYM_H */\n");
+           "#endif\n");
     return;
 }
 
 int
 main(int argc, char *argv[])
 {
-    EXTERN char *optarg; /* argv index of the next arg */
-    EXTERN int optind;   /* argv index of the next arg */
+    extern char *optarg; /* argv index of the next arg */
+    extern int optind;   /* argv index of the next arg */
     int e_flag = 0;      /* 1 ==> -e flag was used */
     int d_flag = 0;      /* 1 ==> -s flag was used */
     int i;
@@ -2194,4 +2206,4 @@ main(int argc, char *argv[])
     exit(0); /*ooo*/
 }
 
-#endif /* ERRCODE_SRC */
+#endif

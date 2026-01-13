@@ -1,7 +1,7 @@
 /*
  * obj - object handling primitives
  *
- * Copyright (C) 1999-2007,2021-2023  David I. Bell
+ * Copyright (C) 1999-2007,2021-2023,2026  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -22,22 +22,36 @@
  *
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
+
 /*
  * "Object" handling primitives.
  * This simply means that user-specified routines are called to perform
  * the indicated operations.
  */
 
+/*
+ * calc local src includes
+ */
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+#include <stdbool.h>
+
+/*
+ * calc local src includes
+ */
+#include "value.h"
 #include "calc.h"
 #include "opcodes.h"
+#include "label.h"
 #include "func.h"
 #include "symbol.h"
-#include "str.h"
 #include "strl.h"
-
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 /*
  * Types of values returned by calling object routines.
@@ -61,7 +75,7 @@
 #define ERR_VALUE 9   /* return value */
 #define ERR_ASSIGN 10 /* assign value */
 
-STATIC struct objectinfo {
+static struct objectinfo {
     short args;    /* number of arguments */
     short retval;  /* type of return value */
     short error;   /* special action on errors */
@@ -113,17 +127,17 @@ STATIC struct objectinfo {
                   {1, A_VALUE, ERR_NONE, "plus", "unary + op"},
                   {0, 0, 0, NULL, NULL}};
 
-STATIC STRINGHEAD objectnames;  /* names of objects */
-STATIC STRINGHEAD elements;     /* element names for parts of objects */
-STATIC OBJECTACTIONS **objects; /* table of actions for objects */
+static STRINGHEAD objectnames;  /* names of objects */
+static STRINGHEAD elements;     /* element names for parts of objects */
+static OBJECTACTIONS **objects; /* table of actions for objects */
 
 #define OBJALLOC 16
-STATIC long maxobjcount = 0;
+static long maxobjcount = 0;
 
-S_FUNC VALUE objpowi(VALUE *vp, NUMBER *q);
-S_FUNC bool objtest(OBJECT *op);
-S_FUNC bool objcmp(OBJECT *op1, OBJECT *op2);
-S_FUNC void objprint(OBJECT *op);
+static VALUE objpowi(VALUE *vp, NUMBER *q);
+static bool objtest(OBJECT *op);
+static bool objcmp(OBJECT *op1, OBJECT *op2);
+static void objprint(OBJECT *op);
 
 /*
  * Show all the routine names available for objects.
@@ -150,7 +164,7 @@ VALUE
 objcall(int action, VALUE *v1, VALUE *v2, VALUE *v3)
 {
     FUNC *fp;                      /* function to call */
-    STATIC OBJECTACTIONS *oap;     /* object to call for */
+    static OBJECTACTIONS *oap;     /* object to call for */
     struct objectinfo *oip;        /* information about action */
     long index;                    /* index of function (negative if undefined) */
     VALUE val;                     /* return value */
@@ -326,7 +340,7 @@ objcall(int action, VALUE *v1, VALUE *v2, VALUE *v3)
  * given:
  *      op              object being printed
  */
-S_FUNC void
+static void
 objprint(OBJECT *op)
 {
     int count; /* number of elements */
@@ -348,7 +362,7 @@ objprint(OBJECT *op)
  * This is the default routine if the user's is not defined.
  * Returns true if any of the elements are "nonzero".
  */
-S_FUNC bool
+static bool
 objtest(OBJECT *op)
 {
     int i; /* loop counter */
@@ -367,7 +381,7 @@ objtest(OBJECT *op)
  * This is the default routine if the user's is not defined.
  * For equality, all elements must be equal.
  */
-S_FUNC bool
+static bool
 objcmp(OBJECT *op1, OBJECT *op2)
 {
     int i; /* loop counter */
@@ -394,7 +408,7 @@ objcmp(OBJECT *op1, OBJECT *op2)
  *      vp              value to be powered
  *      q               power to raise number to
  */
-S_FUNC VALUE
+static VALUE
 objpowi(VALUE *vp, NUMBER *q)
 {
     VALUE res, tmp;
@@ -513,7 +527,7 @@ defineobject(char *name, int indices[], int count)
 
     if (hp->h_count >= maxobjcount) {
         if (maxobjcount == 0) {
-            newobjects = (OBJECTACTIONS **)malloc(OBJALLOC * sizeof(OBJECTACTIONS *));
+            newobjects = (OBJECTACTIONS **)calloc(OBJALLOC, sizeof(OBJECTACTIONS *));
             maxobjcount = OBJALLOC;
         } else {
             maxobjcount += OBJALLOC;
@@ -526,7 +540,7 @@ defineobject(char *name, int indices[], int count)
         objects = newobjects;
     }
 
-    oap = (OBJECTACTIONS *)malloc(objectactionsize(count));
+    oap = (OBJECTACTIONS *)calloc(1, objectactionsize(count));
     if (oap == NULL) {
         math_error("Cannot allocate object type #0");
         not_reached();
@@ -661,9 +675,9 @@ objalloc(long index)
         i = USUAL_ELEMENTS;
     }
     if (i == USUAL_ELEMENTS) {
-        op = (OBJECT *)malloc(sizeof(OBJECT));
+        op = (OBJECT *)calloc(1, sizeof(OBJECT));
     } else {
-        op = (OBJECT *)malloc(objectsize(i));
+        op = (OBJECT *)calloc(1, objectsize(i));
     }
     if (op == NULL) {
         math_error("Cannot allocate object");
@@ -718,9 +732,9 @@ objcopy(OBJECT *op)
         i = USUAL_ELEMENTS;
     }
     if (i == USUAL_ELEMENTS) {
-        np = (OBJECT *)malloc(sizeof(OBJECT));
+        np = (OBJECT *)calloc(1, sizeof(OBJECT));
     } else {
-        np = (OBJECT *)malloc(objectsize(i));
+        np = (OBJECT *)calloc(1, objectsize(i));
     }
     if (np == NULL) {
         math_error("Cannot allocate object");

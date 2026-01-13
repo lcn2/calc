@@ -35,4 +35,4 @@ typedef struct {
     long type;  /* type for configuration */
 } NAMETYPE;
 
-#endif /* !INCLUDE_NAMETYPE_H */
+#endif

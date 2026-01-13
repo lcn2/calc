@@ -1,7 +1,7 @@
 /*
  * block - fixed, dynamic, fifo and circular memory blocks
  *
- * Copyright (C) 1999-2007,2014,2021,2023  Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007,2014,2021,2023,2026  Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  Landon Curt Noll
  *
@@ -152,7 +152,7 @@ typedef struct nblock NBLOCK;
 /*
  * block debug
  */
-EXTERN int blk_debug; /* 0 => debug off */
+extern int blk_debug; /* 0 => debug off */
 
 /*
  * block defaults
@@ -192,21 +192,21 @@ typedef USB8 OCTET;
 /*
  * external functions
  */
-E_FUNC BLOCK *blkalloc(int, int);
-E_FUNC void blk_free(BLOCK *);
-E_FUNC BLOCK *blkrealloc(BLOCK *, int, int);
-E_FUNC void blktrunc(BLOCK *);
-E_FUNC BLOCK *blk_copy(BLOCK *);
-E_FUNC int blk_cmp(BLOCK *, BLOCK *);
-E_FUNC void blk_print(BLOCK *);
-E_FUNC void nblock_print(NBLOCK *);
-E_FUNC NBLOCK *createnblock(char *, int, int);
-E_FUNC NBLOCK *reallocnblock(int, int, int);
-E_FUNC int removenblock(int);
-E_FUNC int findnblockid(char *);
-E_FUNC NBLOCK *findnblock(int);
-E_FUNC BLOCK *copyrealloc(BLOCK *, int, int);
-E_FUNC int countnblocks(void);
-E_FUNC void shownblocks(void);
+extern BLOCK *blkalloc(int, int);
+extern void blk_free(BLOCK *);
+extern BLOCK *blkrealloc(BLOCK *, int, int);
+extern void blktrunc(BLOCK *);
+extern BLOCK *blk_copy(BLOCK *);
+extern int blk_cmp(BLOCK *, BLOCK *);
+extern void blk_print(BLOCK *);
+extern void nblock_print(NBLOCK *);
+extern NBLOCK *createnblock(char *, int, int);
+extern NBLOCK *reallocnblock(int, int, int);
+extern int removenblock(int);
+extern int findnblockid(char *);
+extern NBLOCK *findnblock(int);
+extern BLOCK *copyrealloc(BLOCK *, int, int);
+extern int countnblocks(void);
+extern void shownblocks(void);
 
-#endif /* !INCLUDE_BLOCK_H */
+#endif

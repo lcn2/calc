@@ -1,7 +1,7 @@
 /*
  * func - built-in functions implemented here
  *
- * Copyright (C) 1999-2007,2018,2021-2023  David I. Bell, Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007,2018,2021-2023,2026  David I. Bell, Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -25,83 +25,55 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <ctype.h>
-#include <sys/types.h>
 #include <errno.h>
+#include <time.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <sys/times.h>
+#include <stdint.h>
+#include <stdbool.h>
 
+/*
+ * conditional <system> head includes
+ */
 #if defined(_WIN32) || defined(_WIN64)
 #  include <io.h>
 #  define _access access
 #endif
 
-#if defined(FUNCLIST)
-
-#  define CONST /* disabled for FUNCLIST in case NATIVE_CC doesn't have it */
-#  undef HAVE_CONST
-
-#  include "decl.h"
-
-#else /* FUNCLIST */
-
-#  include "decl.h"
-
-#  include "have_unistd.h"
-#  if defined(HAVE_UNISTD_H)
-#    include <unistd.h>
-#  endif
-
-#  include "have_stdlib.h"
-#  if defined(HAVE_STDLIB_H)
-#    include <stdlib.h>
-#  endif
-
-#  include "have_string.h"
-#  if defined(HAVE_STRING_H)
-#    include <string.h>
-#  endif
-
-#  include "have_times.h"
-#  if defined(HAVE_TIME_H)
-#    include <time.h>
-#  endif
-
-#  if defined(HAVE_TIMES_H)
-#    include <times.h>
-#  endif
-
-#  if defined(HAVE_SYS_TIME_H)
-#    include <sys/time.h>
-#  endif
-
-#  if defined(HAVE_SYS_TIMES_H)
-#    include <sys/times.h>
-#  endif
-
-#  include "have_strdup.h"
-#  if !defined(HAVE_STRDUP)
-#    define strdup(x) calc_strdup((CONST char *)(x))
-#  endif
+#if !defined(FUNCLIST)
 
 #  include "have_rusage.h"
 #  if defined(HAVE_GETRUSAGE)
 #    include <sys/resource.h>
 #  endif
 
-#  include "have_const.h"
-#  include "have_unused.h"
+/*
+ * calc local src includes
+ */
+#  include "value.h"
 #  include "calc.h"
 #  include "opcodes.h"
 #  include "token.h"
+#  include "label.h"
 #  include "func.h"
-#  include "str.h"
 #  include "symbol.h"
 #  include "prime.h"
 #  include "file.h"
-#  include "zrand.h"
-#  include "zrandom.h"
 #  include "custom.h"
 #  include "strl.h"
+#  include "blkcpy.h"
+#  include "have_unused.h"
+#  include "attribute.h"
+#  include "errtbl.h"
 
 #  if defined(CUSTOM)
 #    define E_CUSTOM_ERROR E_NO_C_ARG
@@ -109,27 +81,26 @@
 #    define E_CUSTOM_ERROR E_NO_CUSTOM
 #  endif
 
-#  include "errtbl.h"
 #  include "banned.h"            /* include after system header <> includes */
 
 /*
  * forward declarations
  */
-S_FUNC NUMBER *base_value(long mode, int defval);
-S_FUNC int strscan(char *s, int count, VALUE **vals);
-S_FUNC int filescan(FILEID id, int count, VALUE **vals);
-S_FUNC VALUE f_fsize(VALUE *vp);
-S_FUNC int malloced_putenv(char *str);
+static NUMBER *base_value(long mode, int defval);
+static int strscan(char *s, int count, VALUE **vals);
+static int filescan(FILEID id, int count, VALUE **vals);
+static VALUE f_fsize(VALUE *vp);
+static int malloced_putenv(char *str);
 
 /*
  * external declarations
  */
-EXTERN char cmdbuf[]; /* command line expression */
-E_FUNC void matrandperm(MATRIX *M);
-E_FUNC void listrandperm(LIST *lp);
-E_FUNC int idungetc(FILEID id, int ch);
-E_FUNC LIST *associndices(ASSOC *ap, long index);
-E_FUNC LIST *matindices(MATRIX *mp, long index);
+extern char cmdbuf[]; /* command line expression */
+extern void matrandperm(MATRIX *M);
+extern void listrandperm(LIST *lp);
+extern int idungetc(FILEID id, int ch);
+extern LIST *associndices(ASSOC *ap, long index);
+extern LIST *matindices(MATRIX *mp, long index);
 
 /*
  * malloced environment storage
@@ -139,30 +110,30 @@ struct env_pool {
     char *getenv; /* what getenv() would return, NULL => unused */
     char *putenv; /* pointer given to putenv() */
 };
-STATIC int env_pool_cnt = 0;           /* number of env_pool elements in use */
-STATIC int env_pool_max = 0;           /* number of env_pool elements allocated */
-STATIC struct env_pool *e_pool = NULL; /* env_pool elements */
+static int env_pool_cnt = 0;           /* number of env_pool elements in use */
+static int env_pool_max = 0;           /* number of env_pool elements allocated */
+static struct env_pool *e_pool = NULL; /* env_pool elements */
 
 /*
  * constants used for hours or degrees conversion functions
  */
-STATIC HALF _nineval_[] = {9};
-STATIC HALF _twentyfourval_[] = {24};
-STATIC HALF _threesixtyval_[] = {360};
-STATIC HALF _fourhundredval_[] = {400};
-STATIC NUMBER _qtendivnine_ = {{_tenval_, 1, 0}, {_nineval_, 1, 0}, 1, NULL};
-STATIC NUMBER _qninedivten_ = {{_nineval_, 1, 0}, {_tenval_, 1, 0}, 1, NULL};
-STATIC NUMBER _qtwentyfour = {{_twentyfourval_, 1, 0}, {_oneval_, 1, 0}, 1, NULL};
-STATIC NUMBER _qthreesixty = {{_threesixtyval_, 1, 0}, {_oneval_, 1, 0}, 1, NULL};
-STATIC NUMBER _qfourhundred = {{_fourhundredval_, 1, 0}, {_oneval_, 1, 0}, 1, NULL};
+static HALF _nineval_[] = {9};
+static HALF _twentyfourval_[] = {24};
+static HALF _threesixtyval_[] = {360};
+static HALF _fourhundredval_[] = {400};
+static NUMBER _qtendivnine_ = {{_tenval_, 1, 0}, {_nineval_, 1, 0}, 1, NULL};
+static NUMBER _qninedivten_ = {{_nineval_, 1, 0}, {_tenval_, 1, 0}, 1, NULL};
+static NUMBER _qtwentyfour = {{_twentyfourval_, 1, 0}, {_oneval_, 1, 0}, 1, NULL};
+static NUMBER _qthreesixty = {{_threesixtyval_, 1, 0}, {_oneval_, 1, 0}, 1, NULL};
+static NUMBER _qfourhundred = {{_fourhundredval_, 1, 0}, {_oneval_, 1, 0}, 1, NULL};
 
 /*
  * user-defined error strings
  */
-STATIC short nexterrnum = E__USERDEF;
-STATIC STRINGHEAD newerrorstr;
+static short nexterrnum = E__USERDEF;
+static STRINGHEAD newerrorstr;
 
-#endif /* !FUNCLIST */
+#endif
 
 /*
  * arg count definitions
@@ -184,7 +155,7 @@ typedef union {
     NUMBER *(*numfunc_3)(NUMBER *, NUMBER *, NUMBER *);
     NUMBER *(*numfunc_4)(NUMBER *, NUMBER *, NUMBER *, NUMBER *);
     NUMBER *(*numfunc_cnt)(int, NUMBER **);
-#endif /* !FUNCLIST */
+#endif
 } numfunc;
 
 typedef union {
@@ -196,7 +167,7 @@ typedef union {
     VALUE (*valfunc_3)(VALUE *, VALUE *, VALUE *);
     VALUE (*valfunc_4)(VALUE *, VALUE *, VALUE *, VALUE *);
     VALUE (*valfunc_cnt)(int, VALUE **);
-#endif /* !FUNCLIST */
+#endif
 } valfunc;
 
 struct builtin {
@@ -229,8 +200,8 @@ struct builtin {
  *              eps value is 0 < eps < 1
  *      false   otherwise
  */
-S_FUNC bool
-verify_eps(VALUE CONST *veps)
+static bool
+verify_eps(VALUE const *veps)
 {
     NUMBER *eps; /* VALUE as a NUMBER */
 
@@ -310,7 +281,7 @@ name_newerrorstr(int errnum)
     return cp;
 }
 
-S_FUNC VALUE
+static VALUE
 f_eval(VALUE *vp)
 {
     FUNC *oldfunc;
@@ -366,7 +337,7 @@ f_eval(VALUE *vp)
     return error_value(E_EVAL);
 }
 
-S_FUNC VALUE
+static VALUE
 f_prompt(VALUE *vp)
 {
     VALUE result;
@@ -392,7 +363,7 @@ f_prompt(VALUE *vp)
         return result;
     }
     len = strlen(cp);
-    newcp = (char *)malloc(len + 1);
+    newcp = (char *)calloc(len + 1, 1);
     if (newcp == NULL) {
         math_error("Cannot allocate string");
         not_reached();
@@ -402,7 +373,7 @@ f_prompt(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_display(int count, VALUE **vals)
 {
     LEN oldvalue;
@@ -426,7 +397,7 @@ f_display(int count, VALUE **vals)
 }
 
 /*ARGSUSED*/
-S_FUNC VALUE
+static VALUE
 f_null(int UNUSED(count), VALUE **UNUSED(vals))
 {
     VALUE res;
@@ -438,7 +409,7 @@ f_null(int UNUSED(count), VALUE **UNUSED(vals))
     return res;
 }
 
-S_FUNC VALUE
+static VALUE
 f_str(VALUE *vp)
 {
     VALUE result;
@@ -476,7 +447,7 @@ f_str(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_estr(VALUE *vp)
 {
     VALUE result;
@@ -493,7 +464,7 @@ f_estr(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_name(VALUE *vp)
 {
     VALUE result;
@@ -527,7 +498,7 @@ f_name(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_poly(int count, VALUE **vals)
 {
     VALUE *x;
@@ -566,7 +537,7 @@ f_poly(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC NUMBER *
+static NUMBER *
 f_mne(NUMBER *val1, NUMBER *val2, NUMBER *val3)
 {
     NUMBER *tmp, *res;
@@ -577,7 +548,7 @@ f_mne(NUMBER *val1, NUMBER *val2, NUMBER *val3)
     return res;
 }
 
-S_FUNC NUMBER *
+static NUMBER *
 f_isrel(NUMBER *val1, NUMBER *val2)
 {
     if (qisfrac(val1) || qisfrac(val2)) {
@@ -587,13 +558,13 @@ f_isrel(NUMBER *val1, NUMBER *val2)
     return itoq((long)zrelprime(val1->num, val2->num));
 }
 
-S_FUNC NUMBER *
+static NUMBER *
 f_issquare(NUMBER *vp)
 {
     return itoq((long)qissquare(vp));
 }
 
-S_FUNC NUMBER *
+static NUMBER *
 f_isprime(int count, NUMBER **vals)
 {
     NUMBER *err; /* error return, NULL => use math_error */
@@ -634,7 +605,7 @@ f_isprime(int count, NUMBER **vals)
     return qlink(err);
 }
 
-S_FUNC NUMBER *
+static NUMBER *
 f_nprime(int count, NUMBER **vals)
 {
     NUMBER *err;    /* error return, NULL => use math_error */
@@ -677,7 +648,7 @@ f_nprime(int count, NUMBER **vals)
     return qlink(err);
 }
 
-S_FUNC NUMBER *
+static NUMBER *
 f_pprime(int count, NUMBER **vals)
 {
     NUMBER *err;     /* error return, NULL => use math_error */
@@ -724,7 +695,7 @@ f_pprime(int count, NUMBER **vals)
     return qlink(err);
 }
 
-S_FUNC NUMBER *
+static NUMBER *
 f_factor(int count, NUMBER **vals)
 {
     NUMBER *err;    /* error return, NULL => use math_error */
@@ -799,7 +770,7 @@ f_factor(int count, NUMBER **vals)
     return factor;
 }
 
-S_FUNC NUMBER *
+static NUMBER *
 f_pix(int count, NUMBER **vals)
 {
     NUMBER *err; /* error return, NULL => use math_error */
@@ -839,7 +810,7 @@ f_pix(int count, NUMBER **vals)
     return qlink(err);
 }
 
-S_FUNC NUMBER *
+static NUMBER *
 f_prevcand(int count, NUMBER **vals)
 {
     ZVALUE zmodulus;
@@ -917,7 +888,7 @@ f_prevcand(int count, NUMBER **vals)
     return qlink(&_qzero_);
 }
 
-S_FUNC NUMBER *
+static NUMBER *
 f_nextcand(int count, NUMBER **vals)
 {
     ZVALUE zmodulus;
@@ -997,13 +968,13 @@ f_nextcand(int count, NUMBER **vals)
     return qlink(&_qzero_);
 }
 
-S_FUNC NUMBER *
+static NUMBER *
 f_seed(void)
 {
     return pseudo_seed();
 }
 
-S_FUNC NUMBER *
+static NUMBER *
 f_rand(int count, NUMBER **vals)
 {
     NUMBER *ans;
@@ -1049,7 +1020,7 @@ f_rand(int count, NUMBER **vals)
     return ans;
 }
 
-S_FUNC NUMBER *
+static NUMBER *
 f_randbit(int count, NUMBER **vals)
 {
     NUMBER *ans;
@@ -1096,7 +1067,7 @@ f_randbit(int count, NUMBER **vals)
     return ans;
 }
 
-S_FUNC VALUE
+static VALUE
 f_srand(int count, VALUE **vals)
 {
     VALUE result;
@@ -1150,7 +1121,7 @@ f_srand(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC NUMBER *
+static NUMBER *
 f_random(int count, NUMBER **vals)
 {
     NUMBER *ans;
@@ -1196,7 +1167,7 @@ f_random(int count, NUMBER **vals)
     return ans;
 }
 
-S_FUNC NUMBER *
+static NUMBER *
 f_randombit(int count, NUMBER **vals)
 {
     NUMBER *ans;
@@ -1246,7 +1217,7 @@ f_randombit(int count, NUMBER **vals)
     return ans;
 }
 
-S_FUNC VALUE
+static VALUE
 f_srandom(int count, VALUE **vals)
 {
     VALUE result;
@@ -1331,7 +1302,7 @@ f_srandom(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC NUMBER *
+static NUMBER *
 f_primetest(int count, NUMBER **vals)
 {
     /* parse args */
@@ -1348,7 +1319,7 @@ f_primetest(int count, NUMBER **vals)
     }
 }
 
-S_FUNC VALUE
+static VALUE
 f_setbit(int count, VALUE **vals)
 {
     bool r;
@@ -1377,7 +1348,7 @@ f_setbit(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_digit(int count, VALUE **vals)
 {
     VALUE res;
@@ -1409,7 +1380,7 @@ f_digit(int count, VALUE **vals)
     return res;
 }
 
-S_FUNC VALUE
+static VALUE
 f_digits(int count, VALUE **vals)
 {
     ZVALUE base;
@@ -1432,7 +1403,7 @@ f_digits(int count, VALUE **vals)
     return res;
 }
 
-S_FUNC VALUE
+static VALUE
 f_places(int count, VALUE **vals)
 {
     long places;
@@ -1459,7 +1430,7 @@ f_places(int count, VALUE **vals)
     return res;
 }
 
-S_FUNC NUMBER *
+static NUMBER *
 f_popcnt(int count, NUMBER **vals)
 {
     int bitval = 1;
@@ -1481,7 +1452,7 @@ f_popcnt(int count, NUMBER **vals)
     }
 }
 
-S_FUNC VALUE
+static VALUE
 f_xor(int count, VALUE **vals)
 {
     NUMBER *q, *qtmp;
@@ -1627,7 +1598,7 @@ maxlistitems(LIST *lp)
     return max;
 }
 
-S_FUNC VALUE
+static VALUE
 f_min(int count, VALUE **vals)
 {
     VALUE min;
@@ -1682,7 +1653,7 @@ f_min(int count, VALUE **vals)
     return min;
 }
 
-S_FUNC VALUE
+static VALUE
 f_max(int count, VALUE **vals)
 {
     VALUE max;
@@ -1737,7 +1708,7 @@ f_max(int count, VALUE **vals)
     return max;
 }
 
-S_FUNC NUMBER *
+static NUMBER *
 f_gcd(int count, NUMBER **vals)
 {
     NUMBER *val, *tmp;
@@ -1751,7 +1722,7 @@ f_gcd(int count, NUMBER **vals)
     return val;
 }
 
-S_FUNC NUMBER *
+static NUMBER *
 f_lcm(int count, NUMBER **vals)
 {
     NUMBER *val, *tmp;
@@ -1768,7 +1739,7 @@ f_lcm(int count, NUMBER **vals)
     return val;
 }
 
-S_FUNC VALUE
+static VALUE
 f_hash(int count, VALUE **vals)
 {
     QCKHASH hash;
@@ -1832,7 +1803,7 @@ sumlistitems(LIST *lp)
     return sum;
 }
 
-S_FUNC VALUE
+static VALUE
 f_sum(int count, VALUE **vals)
 {
     VALUE tmp;
@@ -1876,7 +1847,7 @@ f_sum(int count, VALUE **vals)
     return sum;
 }
 
-S_FUNC VALUE
+static VALUE
 f_avg(int count, VALUE **vals)
 {
     VALUE tmp;
@@ -1919,7 +1890,7 @@ f_avg(int count, VALUE **vals)
     return tmp;
 }
 
-S_FUNC VALUE
+static VALUE
 f_fact(VALUE *vp)
 {
     VALUE res;
@@ -1939,7 +1910,7 @@ f_fact(VALUE *vp)
     return res;
 }
 
-S_FUNC VALUE
+static VALUE
 f_hmean(int count, VALUE **vals)
 {
     VALUE sum, tmp1, tmp2;
@@ -1978,7 +1949,7 @@ f_hmean(int count, VALUE **vals)
     return tmp2;
 }
 
-S_FUNC NUMBER *
+static NUMBER *
 f_hnrmod(NUMBER *val1, NUMBER *val2, NUMBER *val3, NUMBER *val4)
 {
     ZVALUE answer; /* v mod h*2^n+r */
@@ -2052,7 +2023,7 @@ ssqlistitems(LIST *lp)
     return sum;
 }
 
-S_FUNC VALUE
+static VALUE
 f_ssq(int count, VALUE **vals)
 {
     VALUE tmp;
@@ -2085,13 +2056,13 @@ f_ssq(int count, VALUE **vals)
     return sum;
 }
 
-S_FUNC NUMBER *
+static NUMBER *
 f_ismult(NUMBER *val1, NUMBER *val2)
 {
     return itoq((long)qdivides(val1, val2));
 }
 
-S_FUNC NUMBER *
+static NUMBER *
 f_meq(NUMBER *val1, NUMBER *val2, NUMBER *val3)
 {
     NUMBER *tmp, *res;
@@ -2102,7 +2073,7 @@ f_meq(NUMBER *val1, NUMBER *val2, NUMBER *val3)
     return res;
 }
 
-S_FUNC VALUE
+static VALUE
 f_exp(int count, VALUE **vals)
 {
     VALUE result;
@@ -2156,7 +2127,7 @@ f_exp(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_ln(int count, VALUE **vals)
 {
     VALUE result;
@@ -2217,7 +2188,7 @@ f_ln(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_log(int count, VALUE **vals)
 {
     VALUE result;
@@ -2281,7 +2252,7 @@ f_log(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_log2(int count, VALUE **vals)
 {
     VALUE result;
@@ -2345,7 +2316,7 @@ f_log2(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_logn(int count, VALUE **vals)
 {
     VALUE result;                    /* return value */
@@ -2654,7 +2625,7 @@ f_logn(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_cos(int count, VALUE **vals)
 {
     VALUE result;
@@ -2706,7 +2677,7 @@ f_cos(int count, VALUE **vals)
 /*
  * f_d2r - convert degrees to radians
  */
-S_FUNC VALUE
+static VALUE
 f_d2r(int count, VALUE **vals)
 {
     VALUE result;
@@ -2754,7 +2725,7 @@ f_d2r(int count, VALUE **vals)
 /*
  * f_r2d - convert radians to degrees
  */
-S_FUNC VALUE
+static VALUE
 f_r2d(int count, VALUE **vals)
 {
     VALUE result;
@@ -2802,7 +2773,7 @@ f_r2d(int count, VALUE **vals)
 /*
  * f_d2r - convert gradians to radians
  */
-S_FUNC VALUE
+static VALUE
 f_g2r(int count, VALUE **vals)
 {
     VALUE result;
@@ -2850,7 +2821,7 @@ f_g2r(int count, VALUE **vals)
 /*
  * f_r2g - convert radians to gradians
  */
-S_FUNC VALUE
+static VALUE
 f_r2g(int count, VALUE **vals)
 {
     VALUE result;
@@ -2901,7 +2872,7 @@ f_r2g(int count, VALUE **vals)
  * NOTE: The epsilon (vals[1]->v_num) argument is ignored.
  */
 /*ARGSUSED*/
-S_FUNC VALUE
+static VALUE
 f_d2g(int UNUSED(count), VALUE **vals)
 {
     VALUE result;
@@ -2933,7 +2904,7 @@ f_d2g(int UNUSED(count), VALUE **vals)
  * NOTE: The epsilon (vals[1]->v_num) argument is ignored.
  */
 /*ARGSUSED*/
-S_FUNC VALUE
+static VALUE
 f_g2d(int UNUSED(count), VALUE **vals)
 {
     VALUE result;
@@ -2959,7 +2930,7 @@ f_g2d(int UNUSED(count), VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_sin(int count, VALUE **vals)
 {
     VALUE result;
@@ -3008,7 +2979,7 @@ f_sin(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_tan(int count, VALUE **vals)
 {
     VALUE result;
@@ -3057,7 +3028,7 @@ f_tan(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_cot(int count, VALUE **vals)
 {
     VALUE result;
@@ -3112,7 +3083,7 @@ f_cot(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_sec(int count, VALUE **vals)
 {
     VALUE result;
@@ -3161,7 +3132,7 @@ f_sec(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_csc(int count, VALUE **vals)
 {
     VALUE result;
@@ -3216,7 +3187,7 @@ f_csc(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_sinh(int count, VALUE **vals)
 {
     VALUE result;
@@ -3270,7 +3241,7 @@ f_sinh(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_cosh(int count, VALUE **vals)
 {
     VALUE result;
@@ -3324,7 +3295,7 @@ f_cosh(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_tanh(int count, VALUE **vals)
 {
     VALUE result;
@@ -3379,7 +3350,7 @@ f_tanh(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_coth(int count, VALUE **vals)
 {
     VALUE result;
@@ -3437,7 +3408,7 @@ f_coth(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_sech(int count, VALUE **vals)
 {
     VALUE result;
@@ -3484,7 +3455,7 @@ f_sech(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_csch(int count, VALUE **vals)
 {
     VALUE result;
@@ -3534,7 +3505,7 @@ f_csch(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_atan(int count, VALUE **vals)
 {
     VALUE result;
@@ -3583,7 +3554,7 @@ f_atan(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_acot(int count, VALUE **vals)
 {
     VALUE result;
@@ -3632,7 +3603,7 @@ f_acot(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_asin(int count, VALUE **vals)
 {
     VALUE result;
@@ -3688,7 +3659,7 @@ f_asin(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_acos(int count, VALUE **vals)
 {
     VALUE result;
@@ -3744,7 +3715,7 @@ f_acos(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_asec(int count, VALUE **vals)
 {
     VALUE result;
@@ -3805,7 +3776,7 @@ f_asec(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_acsc(int count, VALUE **vals)
 {
     VALUE result;
@@ -3866,7 +3837,7 @@ f_acsc(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_asinh(int count, VALUE **vals)
 {
     VALUE result;
@@ -3915,7 +3886,7 @@ f_asinh(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_acosh(int count, VALUE **vals)
 {
     VALUE result;
@@ -3971,7 +3942,7 @@ f_acosh(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_atanh(int count, VALUE **vals)
 {
     VALUE result;
@@ -4029,7 +4000,7 @@ f_atanh(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_acoth(int count, VALUE **vals)
 {
     VALUE result;
@@ -4087,7 +4058,7 @@ f_acoth(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_asech(int count, VALUE **vals)
 {
     VALUE result;
@@ -4148,7 +4119,7 @@ f_asech(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_acsch(int count, VALUE **vals)
 {
     VALUE result;
@@ -4209,7 +4180,7 @@ f_acsch(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_gd(int count, VALUE **vals)
 {
     VALUE result;
@@ -4265,7 +4236,7 @@ f_gd(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_agd(int count, VALUE **vals)
 {
     VALUE result;
@@ -4321,7 +4292,7 @@ f_agd(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_comb(VALUE *v1, VALUE *v2)
 {
     long n;
@@ -4381,7 +4352,7 @@ f_comb(VALUE *v1, VALUE *v2)
     }
 }
 
-S_FUNC VALUE
+static VALUE
 f_bern(VALUE *vp)
 {
     VALUE res;
@@ -4399,7 +4370,7 @@ f_bern(VALUE *vp)
     return res;
 }
 
-S_FUNC VALUE
+static VALUE
 f_freebern(void)
 {
     VALUE res;
@@ -4410,7 +4381,7 @@ f_freebern(void)
     return res;
 }
 
-S_FUNC VALUE
+static VALUE
 f_euler(VALUE *vp)
 {
     VALUE res;
@@ -4427,7 +4398,7 @@ f_euler(VALUE *vp)
     return res;
 }
 
-S_FUNC VALUE
+static VALUE
 f_freeeuler(void)
 {
     VALUE res;
@@ -4438,7 +4409,7 @@ f_freeeuler(void)
     return res;
 }
 
-S_FUNC VALUE
+static VALUE
 f_catalan(VALUE *vp)
 {
     VALUE res;
@@ -4455,7 +4426,7 @@ f_catalan(VALUE *vp)
     return res;
 }
 
-S_FUNC VALUE
+static VALUE
 f_arg(int count, VALUE **vals)
 {
     VALUE result;
@@ -4504,14 +4475,14 @@ f_arg(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC NUMBER *
+static NUMBER *
 f_legtoleg(NUMBER *val1, NUMBER *val2)
 {
     /* qlegtoleg() performs the val2 != 0 check */
     return qlegtoleg(val1, val2, false);
 }
 
-S_FUNC NUMBER *
+static NUMBER *
 f_trunc(int count, NUMBER **vals)
 {
     NUMBER *val;
@@ -4523,7 +4494,7 @@ f_trunc(int count, NUMBER **vals)
     return qtrunc(*vals, val);
 }
 
-S_FUNC VALUE
+static VALUE
 f_bround(int count, VALUE **vals)
 {
     VALUE tmp1, tmp2, res;
@@ -4547,7 +4518,7 @@ f_bround(int count, VALUE **vals)
     return res;
 }
 
-S_FUNC VALUE
+static VALUE
 f_appr(int count, VALUE **vals)
 {
     VALUE tmp1, tmp2, res;
@@ -4573,7 +4544,7 @@ f_appr(int count, VALUE **vals)
     return res;
 }
 
-S_FUNC VALUE
+static VALUE
 f_round(int count, VALUE **vals)
 {
     VALUE tmp1, tmp2, res;
@@ -4597,7 +4568,7 @@ f_round(int count, VALUE **vals)
     return res;
 }
 
-S_FUNC NUMBER *
+static NUMBER *
 f_btrunc(int count, NUMBER **vals)
 {
     NUMBER *val;
@@ -4609,7 +4580,7 @@ f_btrunc(int count, NUMBER **vals)
     return qbtrunc(*vals, val);
 }
 
-S_FUNC VALUE
+static VALUE
 f_quo(int count, VALUE **vals)
 {
     VALUE tmp, res;
@@ -4627,7 +4598,7 @@ f_quo(int count, VALUE **vals)
     return res;
 }
 
-S_FUNC VALUE
+static VALUE
 f_mod(int count, VALUE **vals)
 {
     VALUE tmp, res;
@@ -4645,7 +4616,7 @@ f_mod(int count, VALUE **vals)
     return res;
 }
 
-S_FUNC VALUE
+static VALUE
 f_quomod(int count, VALUE **vals)
 {
     VALUE *v1, *v2, *v3, *v4, *v5;
@@ -4712,7 +4683,7 @@ f_quomod(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_d2dms(int count, VALUE **vals)
 {
     VALUE *v1, *v2, *v3, *v4, *v5;
@@ -4827,7 +4798,7 @@ f_d2dms(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_d2dm(int count, VALUE **vals)
 {
     VALUE *v1, *v2, *v3, *v4;
@@ -4920,7 +4891,7 @@ f_d2dm(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_g2gms(int count, VALUE **vals)
 {
     VALUE *v1, *v2, *v3, *v4, *v5;
@@ -5035,7 +5006,7 @@ f_g2gms(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_g2gm(int count, VALUE **vals)
 {
     VALUE *v1, *v2, *v3, *v4;
@@ -5128,7 +5099,7 @@ f_g2gm(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_h2hms(int count, VALUE **vals)
 {
     VALUE *v1, *v2, *v3, *v4, *v5;
@@ -5243,7 +5214,7 @@ f_h2hms(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_h2hm(int count, VALUE **vals)
 {
     VALUE *v1, *v2, *v3, *v4;
@@ -5336,7 +5307,7 @@ f_h2hm(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_dms2d(int count, VALUE **vals)
 {
     VALUE *v1, *v2, *v3, *v4;
@@ -5405,7 +5376,7 @@ f_dms2d(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_dm2d(int count, VALUE **vals)
 {
     VALUE *v1, *v2, *v3;
@@ -5461,7 +5432,7 @@ f_dm2d(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_gms2g(int count, VALUE **vals)
 {
     VALUE *v1, *v2, *v3, *v4;
@@ -5530,7 +5501,7 @@ f_gms2g(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_gm2g(int count, VALUE **vals)
 {
     VALUE *v1, *v2, *v3;
@@ -5586,7 +5557,7 @@ f_gm2g(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_hms2h(int count, VALUE **vals)
 {
     VALUE *v1, *v2, *v3, *v4;
@@ -5655,7 +5626,7 @@ f_hms2h(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_hm2h(int count, VALUE **vals)
 {
     VALUE *v1, *v2, *v3;
@@ -5711,7 +5682,7 @@ f_hm2h(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_mmin(VALUE *v1, VALUE *v2)
 {
     VALUE sixteen, res;
@@ -5727,7 +5698,7 @@ f_mmin(VALUE *v1, VALUE *v2)
     return res;
 }
 
-S_FUNC NUMBER *
+static NUMBER *
 f_near(int count, NUMBER **vals)
 {
     NUMBER *err; /* epsilon error tolerance */
@@ -5756,7 +5727,7 @@ f_near(int count, NUMBER **vals)
     return ret;
 }
 
-S_FUNC NUMBER *
+static NUMBER *
 f_cfsim(int count, NUMBER **vals)
 {
     long R;
@@ -5765,7 +5736,7 @@ f_cfsim(int count, NUMBER **vals)
     return qcfsim(vals[0], R);
 }
 
-S_FUNC NUMBER *
+static NUMBER *
 f_cfappr(int count, NUMBER **vals)
 {
     long R;
@@ -5787,7 +5758,7 @@ f_cfappr(int count, NUMBER **vals)
     return qcfappr(vals[0], q, R);
 }
 
-S_FUNC VALUE
+static VALUE
 f_ceil(VALUE *val)
 {
     VALUE tmp, res;
@@ -5802,7 +5773,7 @@ f_ceil(VALUE *val)
     return res;
 }
 
-S_FUNC VALUE
+static VALUE
 f_floor(VALUE *val)
 {
     VALUE tmp1, tmp2, res;
@@ -5820,7 +5791,7 @@ f_floor(VALUE *val)
     return res;
 }
 
-S_FUNC VALUE
+static VALUE
 f_sqrt(int count, VALUE **vals)
 {
     VALUE tmp1, tmp2, result;
@@ -5844,7 +5815,7 @@ f_sqrt(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_root(int count, VALUE **vals)
 {
     VALUE *vp, err, result;
@@ -5876,7 +5847,7 @@ f_root(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_power(int count, VALUE **vals)
 {
     VALUE *vp, err, result;
@@ -5908,7 +5879,7 @@ f_power(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_polar(int count, VALUE **vals)
 {
     VALUE *vp, err, result;
@@ -5953,7 +5924,7 @@ f_polar(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_ilog(VALUE *v1, VALUE *v2)
 {
     VALUE res;
@@ -5982,7 +5953,7 @@ f_ilog(VALUE *v1, VALUE *v2)
     return res;
 }
 
-S_FUNC VALUE
+static VALUE
 f_ilog2(VALUE *vp)
 {
     VALUE res;
@@ -6007,7 +5978,7 @@ f_ilog2(VALUE *vp)
     return res;
 }
 
-S_FUNC VALUE
+static VALUE
 f_ilog10(VALUE *vp)
 {
     VALUE res;
@@ -6032,7 +6003,7 @@ f_ilog10(VALUE *vp)
     return res;
 }
 
-S_FUNC NUMBER *
+static NUMBER *
 f_faccnt(NUMBER *val1, NUMBER *val2)
 {
     if (qisfrac(val1) || qisfrac(val2)) {
@@ -6041,7 +6012,7 @@ f_faccnt(NUMBER *val1, NUMBER *val2)
     return itoq(zdivcount(val1->num, val2->num));
 }
 
-S_FUNC VALUE
+static VALUE
 f_matfill(int count, VALUE **vals)
 {
     VALUE *v1, *v2, *v3;
@@ -6084,7 +6055,7 @@ f_matfill(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_matsum(VALUE *vp)
 {
     VALUE result;
@@ -6102,7 +6073,7 @@ f_matsum(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_isident(VALUE *vp)
 {
     VALUE result;
@@ -6119,7 +6090,7 @@ f_isident(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_mattrace(VALUE *vp)
 {
     if (vp->v_type != V_MAT) {
@@ -6128,7 +6099,7 @@ f_mattrace(VALUE *vp)
     return mattrace(vp->v_mat);
 }
 
-S_FUNC VALUE
+static VALUE
 f_mattrans(VALUE *vp)
 {
     VALUE result;
@@ -6147,7 +6118,7 @@ f_mattrans(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_det(VALUE *vp)
 {
     if (vp->v_type != V_MAT) {
@@ -6157,7 +6128,7 @@ f_det(VALUE *vp)
     return matdet(vp->v_mat);
 }
 
-S_FUNC VALUE
+static VALUE
 f_matdim(VALUE *vp)
 {
     VALUE result;
@@ -6179,7 +6150,7 @@ f_matdim(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_matmin(VALUE *v1, VALUE *v2)
 {
     VALUE result;
@@ -6208,7 +6179,7 @@ f_matmin(VALUE *v1, VALUE *v2)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_matmax(VALUE *v1, VALUE *v2)
 {
     VALUE result;
@@ -6237,7 +6208,7 @@ f_matmax(VALUE *v1, VALUE *v2)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_cp(VALUE *v1, VALUE *v2)
 {
     MATRIX *m1, *m2;
@@ -6262,7 +6233,7 @@ f_cp(VALUE *v1, VALUE *v2)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_dp(VALUE *v1, VALUE *v2)
 {
     MATRIX *m1, *m2;
@@ -6281,7 +6252,7 @@ f_dp(VALUE *v1, VALUE *v2)
     return matdot(m1, m2);
 }
 
-S_FUNC VALUE
+static VALUE
 f_strlen(VALUE *vp)
 {
     VALUE result;
@@ -6303,7 +6274,7 @@ f_strlen(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_strcmp(VALUE *v1, VALUE *v2)
 {
     VALUE result;
@@ -6323,7 +6294,7 @@ f_strcmp(VALUE *v1, VALUE *v2)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_strcasecmp(VALUE *v1, VALUE *v2)
 {
     VALUE result;
@@ -6343,7 +6314,7 @@ f_strcasecmp(VALUE *v1, VALUE *v2)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_strncmp(VALUE *v1, VALUE *v2, VALUE *v3)
 {
     long n1, n2, n;
@@ -6376,7 +6347,7 @@ f_strncmp(VALUE *v1, VALUE *v2, VALUE *v3)
     result.v_num = itoq((long)flag);
     return result;
 }
-S_FUNC VALUE
+static VALUE
 f_strncasecmp(VALUE *v1, VALUE *v2, VALUE *v3)
 {
     long n1, n2, n;
@@ -6410,7 +6381,7 @@ f_strncasecmp(VALUE *v1, VALUE *v2, VALUE *v3)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_strtoupper(VALUE *vp)
 {
     VALUE result;
@@ -6427,7 +6398,7 @@ f_strtoupper(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_strtolower(VALUE *vp)
 {
     VALUE result;
@@ -6444,7 +6415,7 @@ f_strtolower(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_strcat(int count, VALUE **vals)
 {
     VALUE **vp;
@@ -6472,7 +6443,7 @@ f_strcat(int count, VALUE **vals)
         result.v_str = slink(&_nullstring_);
         return result;
     }
-    c = (char *)malloc(len + 1);
+    c = (char *)calloc(len + 1, 1);
     if (c == NULL) {
         math_error("No memory for strcat");
         not_reached();
@@ -6490,7 +6461,7 @@ f_strcat(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_strcpy(VALUE *v1, VALUE *v2)
 {
     VALUE result;
@@ -6506,7 +6477,7 @@ f_strcpy(VALUE *v1, VALUE *v2)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_strncpy(VALUE *v1, VALUE *v2, VALUE *v3)
 {
     VALUE result;
@@ -6528,7 +6499,7 @@ f_strncpy(VALUE *v1, VALUE *v2, VALUE *v3)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_substr(VALUE *v1, VALUE *v2, VALUE *v3)
 {
     NUMBER *q1, *q2;
@@ -6565,7 +6536,7 @@ f_substr(VALUE *v1, VALUE *v2, VALUE *v3)
         len = v1->v_str->s_len - start;
     }
     cp = v1->v_str->s_str + start;
-    ccp = (char *)malloc(len + 1);
+    ccp = (char *)calloc(len + 1, 1);
     if (ccp == NULL) {
         math_error("No memory for substr");
         not_reached();
@@ -6580,7 +6551,7 @@ f_substr(VALUE *v1, VALUE *v2, VALUE *v3)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_char(VALUE *vp)
 {
     char ch;
@@ -6613,7 +6584,7 @@ f_char(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_ord(VALUE *vp)
 {
     OCTET *c;
@@ -6638,7 +6609,7 @@ f_ord(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_isupper(VALUE *vp)
 {
     char c;
@@ -6663,7 +6634,7 @@ f_isupper(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_islower(VALUE *vp)
 {
     char c;
@@ -6688,7 +6659,7 @@ f_islower(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_isalnum(VALUE *vp)
 {
     char c;
@@ -6713,7 +6684,7 @@ f_isalnum(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_isalpha(VALUE *vp)
 {
     char c;
@@ -6739,32 +6710,34 @@ f_isalpha(VALUE *vp)
 }
 
 #  if 0  /* XXX - add isascii builtin funcion - XXX */
-S_FUNC VALUE
+
+static VALUE
 f_isascii(VALUE *vp)
 {
-        char c;
-        VALUE result;
+    char c;
+    VALUE result;
 
-        result.v_subtype = V_NOSUBTYPE;
+    result.v_subtype = V_NOSUBTYPE;
 
-        switch(vp->v_type) {
-        case V_STR:
-                c = *vp->v_str->s_str;
-                break;
-        case V_OCTET:
-                c = *vp->v_octet;
-                break;
-        default:
-                return error_value(E_ISASCII);
-        }
+    switch(vp->v_type) {
+    case V_STR:
+        c = *vp->v_str->s_str;
+        break;
+    case V_OCTET:
+        c = *vp->v_octet;
+        break;
+    default:
+        return error_value(E_ISASCII);
+    }
 
-        result.v_type = V_NUM;
-        result.v_num = itoq( (isascii( c ))?1l:0l);
-        return result;
+    result.v_type = V_NUM;
+    result.v_num = itoq( (isascii( c ))?1l:0l);
+    return result;
 }
-#  endif /* 0 */
 
-S_FUNC VALUE
+#  endif
+
+static VALUE
 f_iscntrl(VALUE *vp)
 {
     char c;
@@ -6789,7 +6762,7 @@ f_iscntrl(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_isdigit(VALUE *vp)
 {
     char c;
@@ -6814,7 +6787,7 @@ f_isdigit(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_isgraph(VALUE *vp)
 {
     char c;
@@ -6839,7 +6812,7 @@ f_isgraph(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_isprint(VALUE *vp)
 {
     char c;
@@ -6864,7 +6837,7 @@ f_isprint(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_ispunct(VALUE *vp)
 {
     char c;
@@ -6889,7 +6862,7 @@ f_ispunct(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_isspace(VALUE *vp)
 {
     char c;
@@ -6914,7 +6887,7 @@ f_isspace(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_isxdigit(VALUE *vp)
 {
     char c;
@@ -6939,7 +6912,7 @@ f_isxdigit(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_protect(int count, VALUE **vals)
 {
     int i, depth;
@@ -6992,7 +6965,7 @@ f_protect(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_size(VALUE *vp)
 {
     VALUE result;
@@ -7019,7 +6992,7 @@ f_size(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_sizeof(VALUE *vp)
 {
     VALUE result;
@@ -7038,7 +7011,7 @@ f_sizeof(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_memsize(VALUE *vp)
 {
     VALUE result;
@@ -7057,7 +7030,7 @@ f_memsize(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_search(int count, VALUE **vals)
 {
     VALUE *v1, *v2, *v3, *v4;
@@ -7233,7 +7206,7 @@ f_search(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_rsearch(int count, VALUE **vals)
 {
     VALUE *v1, *v2, *v3, *v4;
@@ -7429,7 +7402,7 @@ f_rsearch(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_list(int count, VALUE **vals)
 {
     VALUE result;
@@ -7446,7 +7419,7 @@ f_list(int count, VALUE **vals)
 }
 
 /*ARGSUSED*/
-S_FUNC VALUE
+static VALUE
 f_assoc(int UNUSED(count), VALUE **UNUSED(vals))
 {
     VALUE result;
@@ -7459,7 +7432,7 @@ f_assoc(int UNUSED(count), VALUE **UNUSED(vals))
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_indices(VALUE *v1, VALUE *v2)
 {
     VALUE result;
@@ -7489,7 +7462,7 @@ f_indices(VALUE *v1, VALUE *v2)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_listinsert(int count, VALUE **vals)
 {
     VALUE *v1, *v2, *v3;
@@ -7527,7 +7500,7 @@ f_listinsert(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_listpush(int count, VALUE **vals)
 {
     VALUE result;
@@ -7555,7 +7528,7 @@ f_listpush(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_listappend(int count, VALUE **vals)
 {
     VALUE *v1, *v2;
@@ -7583,7 +7556,7 @@ f_listappend(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_listdelete(VALUE *v1, VALUE *v2)
 {
     VALUE result;
@@ -7608,7 +7581,7 @@ f_listdelete(VALUE *v1, VALUE *v2)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_listpop(VALUE *vp)
 {
     VALUE result;
@@ -7625,7 +7598,7 @@ f_listpop(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_listremove(VALUE *vp)
 {
     VALUE result;
@@ -7645,10 +7618,11 @@ f_listremove(VALUE *vp)
 /*
  * Return the current user time of calc in seconds.
  */
-S_FUNC NUMBER *
+static NUMBER *
 f_usertime(void)
 {
 #  if defined(HAVE_GETRUSAGE)
+
     struct rusage usage;   /* system resource usage */
     int who = RUSAGE_SELF; /* obtain time for just this process */
     int status;            /* getrusage() return code */
@@ -7673,20 +7647,23 @@ f_usertime(void)
     /* return user CPU time */
     return ret;
 
-#  else  /* HAVE_GETRUSAGE */
+#  else
+
     /* not a POSIX system */
     return qlink(&_qzero_);
-#  endif /* HAVE_GETRUSAGE */
+
+#  endif
 }
 
 /*
  * Return the current kernel time of calc in seconds.
  * This is the kernel mode time only.
  */
-S_FUNC NUMBER *
+static NUMBER *
 f_systime(void)
 {
 #  if defined(HAVE_GETRUSAGE)
+
     struct rusage usage;   /* system resource usage */
     int who = RUSAGE_SELF; /* obtain time for just this process */
     int status;            /* getrusage() return code */
@@ -7711,19 +7688,22 @@ f_systime(void)
     /* return kernel CPU time */
     return ret;
 
-#  else  /* HAVE_GETRUSAGE */
+#  else
+
     /* not a POSIX system */
     return qlink(&_qzero_);
-#  endif /* HAVE_GETRUSAGE */
+
+#  endif
 }
 
 /*
  * Return the current user and kernel time of calc in seconds.
  */
-S_FUNC NUMBER *
+static NUMBER *
 f_runtime(void)
 {
 #  if defined(HAVE_GETRUSAGE)
+
     struct rusage usage;   /* system resource usage */
     int who = RUSAGE_SELF; /* obtain time for just this process */
     int status;            /* getrusage() return code */
@@ -7762,16 +7742,18 @@ f_runtime(void)
     /* return CPU time */
     return ret;
 
-#  else  /* HAVE_GETRUSAGE */
+#  else
+
     /* not a POSIX system */
     return qlink(&_qzero_);
-#  endif /* HAVE_GETRUSAGE */
+
+#  endif
 }
 
 /*
  * return the number of second since the Epoch (00:00:00 1 Jan 1970 UTC).
  */
-S_FUNC NUMBER *
+static NUMBER *
 f_time(void)
 {
     return itoq((long)time(0));
@@ -7780,7 +7762,7 @@ f_time(void)
 /*
  * time in asctime()/ctime() format
  */
-S_FUNC VALUE
+static VALUE
 f_ctime(void)
 {
     VALUE res;
@@ -7796,7 +7778,7 @@ f_ctime(void)
     return res;
 }
 
-S_FUNC VALUE
+static VALUE
 f_fopen(VALUE *v1, VALUE *v2)
 {
     VALUE result;
@@ -7842,7 +7824,7 @@ f_fopen(VALUE *v1, VALUE *v2)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_fpathopen(int count, VALUE **vals)
 {
     VALUE result;
@@ -7897,7 +7879,7 @@ f_fpathopen(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_freopen(int count, VALUE **vals)
 {
     VALUE result;
@@ -7950,7 +7932,7 @@ f_freopen(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_fclose(int count, VALUE **vals)
 {
     VALUE result;
@@ -7985,7 +7967,7 @@ f_fclose(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_rm(int count, VALUE **vals)
 {
     VALUE result;
@@ -8038,7 +8020,7 @@ f_rm(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_error(int count, VALUE **vals)
 {
     VALUE *vp;
@@ -8111,7 +8093,7 @@ f_error(int count, VALUE **vals)
     return error_value(newerr);
 }
 
-S_FUNC VALUE
+static VALUE
 f_errno(int count, VALUE **vals)
 {
     int olderr;               /* previous errno value */
@@ -8192,7 +8174,7 @@ f_errno(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_strerror(int count, VALUE **vals)
 {
     int errnum = NULL_ERRNUM; /* errnum to convert */
@@ -8291,7 +8273,7 @@ f_strerror(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_errsym(VALUE *vp)
 {
     int errnum = NULL_ERRNUM; /* global calc_errno value */
@@ -8371,7 +8353,7 @@ f_errsym(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_errcount(int count, VALUE **vals)
 {
     int newcount, oldcount;
@@ -8399,7 +8381,7 @@ f_errcount(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_errmax(int count, VALUE **vals)
 {
     long oldmax;
@@ -8425,7 +8407,7 @@ f_errmax(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_stoponerror(int count, VALUE **vals)
 {
     long oldval;
@@ -8451,7 +8433,7 @@ f_stoponerror(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_iserror(VALUE *vp)
 {
     VALUE res;
@@ -8464,7 +8446,7 @@ f_iserror(VALUE *vp)
     return res;
 }
 
-S_FUNC VALUE
+static VALUE
 f_newerror(int count, VALUE **vals)
 {
     char *str;
@@ -8494,7 +8476,7 @@ f_newerror(int count, VALUE **vals)
     return error_value(errnum);
 }
 
-S_FUNC VALUE
+static VALUE
 f_ferror(VALUE *vp)
 {
     VALUE result;
@@ -8515,7 +8497,7 @@ f_ferror(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_feof(VALUE *vp)
 {
     VALUE result;
@@ -8536,7 +8518,7 @@ f_feof(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_fflush(int count, VALUE **vals)
 {
     VALUE result;
@@ -8549,8 +8531,10 @@ f_fflush(int count, VALUE **vals)
     errno = 0;
     if (count == 0) {
 #  if !defined(_WIN32) && !defined(_WIN64)
+
         i = flushall();
-#  endif /* Windows free systems */
+
+#  endif
     } else {
         for (n = 0; n < count; n++) {
             if (vals[n]->v_type != V_FILE) {
@@ -8568,7 +8552,7 @@ f_fflush(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_fsize(VALUE *vp)
 {
     VALUE result;
@@ -8594,7 +8578,7 @@ f_fsize(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_fseek(int count, VALUE **vals)
 {
     VALUE result;
@@ -8638,7 +8622,7 @@ f_fseek(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_ftell(VALUE *vp)
 {
     VALUE result;
@@ -8663,7 +8647,7 @@ f_ftell(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_rewind(int count, VALUE **vals)
 {
     VALUE result;
@@ -8691,7 +8675,7 @@ f_rewind(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_fprintf(int count, VALUE **vals)
 {
     VALUE result;
@@ -8714,7 +8698,7 @@ f_fprintf(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC int
+static int
 strscan(char *s, int count, VALUE **vals)
 {
     char ch, chtmp;
@@ -8760,7 +8744,7 @@ strscan(char *s, int count, VALUE **vals)
     return n;
 }
 
-S_FUNC int
+static int
 filescan(FILEID id, int count, VALUE **vals)
 {
     STRING *str;
@@ -8798,7 +8782,7 @@ filescan(FILEID id, int count, VALUE **vals)
     return n;
 }
 
-S_FUNC VALUE
+static VALUE
 f_scan(int count, VALUE **vals)
 {
     char *cp;
@@ -8820,7 +8804,7 @@ f_scan(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_strscan(int count, VALUE **vals)
 {
     VALUE *vp;
@@ -8845,7 +8829,7 @@ f_strscan(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_fscan(int count, VALUE **vals)
 {
     VALUE *vp;
@@ -8878,7 +8862,7 @@ f_fscan(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_scanf(int count, VALUE **vals)
 {
     VALUE *vp;
@@ -8909,7 +8893,7 @@ f_scanf(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_strscanf(int count, VALUE **vals)
 {
     VALUE *vp, *vq;
@@ -8951,7 +8935,7 @@ f_strscanf(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_fscanf(int count, VALUE **vals)
 {
     VALUE *vp, *sp;
@@ -8993,7 +8977,7 @@ f_fscanf(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_fputc(VALUE *v1, VALUE *v2)
 {
     VALUE result;
@@ -9033,7 +9017,7 @@ f_fputc(VALUE *v1, VALUE *v2)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_fputs(int count, VALUE **vals)
 {
     VALUE result;
@@ -9060,7 +9044,7 @@ f_fputs(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_fputstr(int count, VALUE **vals)
 {
     VALUE result;
@@ -9087,7 +9071,7 @@ f_fputstr(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_printf(int count, VALUE **vals)
 {
     VALUE result;
@@ -9107,7 +9091,7 @@ f_printf(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_strprintf(int count, VALUE **vals)
 {
     VALUE result;
@@ -9133,7 +9117,7 @@ f_strprintf(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_fgetc(VALUE *vp)
 {
     VALUE result;
@@ -9157,7 +9141,7 @@ f_fgetc(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_ungetc(VALUE *v1, VALUE *v2)
 {
     VALUE result;
@@ -9197,7 +9181,7 @@ f_ungetc(VALUE *v1, VALUE *v2)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_fgetline(VALUE *vp)
 {
     VALUE result;
@@ -9222,7 +9206,7 @@ f_fgetline(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_fgets(VALUE *vp)
 {
     VALUE result;
@@ -9247,7 +9231,7 @@ f_fgets(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_fgetstr(VALUE *vp)
 {
     VALUE result;
@@ -9272,7 +9256,7 @@ f_fgetstr(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_fgetfield(VALUE *vp)
 {
     VALUE result;
@@ -9297,7 +9281,7 @@ f_fgetfield(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_fgetfile(VALUE *vp)
 {
     VALUE result;
@@ -9325,7 +9309,7 @@ f_fgetfile(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_files(int count, VALUE **vals)
 {
     VALUE result;
@@ -9349,7 +9333,7 @@ f_files(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_reverse(VALUE *val)
 {
     VALUE res;
@@ -9378,7 +9362,7 @@ f_reverse(VALUE *val)
     return res;
 }
 
-S_FUNC VALUE
+static VALUE
 f_sort(VALUE *val)
 {
     VALUE res;
@@ -9401,7 +9385,7 @@ f_sort(VALUE *val)
     return res;
 }
 
-S_FUNC VALUE
+static VALUE
 f_join(int count, VALUE **vals)
 {
     LIST *lp;
@@ -9429,7 +9413,7 @@ f_join(int count, VALUE **vals)
     return res;
 }
 
-S_FUNC VALUE
+static VALUE
 f_head(VALUE *v1, VALUE *v2)
 {
     VALUE res;
@@ -9471,7 +9455,7 @@ f_head(VALUE *v1, VALUE *v2)
     }
 }
 
-S_FUNC VALUE
+static VALUE
 f_tail(VALUE *v1, VALUE *v2)
 {
     long n;
@@ -9512,7 +9496,7 @@ f_tail(VALUE *v1, VALUE *v2)
     }
 }
 
-S_FUNC VALUE
+static VALUE
 f_segment(int count, VALUE **vals)
 {
     VALUE *vp;
@@ -9553,7 +9537,7 @@ f_segment(int count, VALUE **vals)
     }
 }
 
-S_FUNC VALUE
+static VALUE
 f_modify(VALUE *v1, VALUE *v2)
 {
     FUNC *fp;
@@ -9620,7 +9604,7 @@ f_modify(VALUE *v1, VALUE *v2)
     return res;
 }
 
-S_FUNC VALUE
+static VALUE
 f_forall(VALUE *v1, VALUE *v2)
 {
     FUNC *fp;
@@ -9666,7 +9650,7 @@ f_forall(VALUE *v1, VALUE *v2)
     return res;
 }
 
-S_FUNC VALUE
+static VALUE
 f_select(VALUE *v1, VALUE *v2)
 {
     LIST *lp;
@@ -9704,7 +9688,7 @@ f_select(VALUE *v1, VALUE *v2)
     return res;
 }
 
-S_FUNC VALUE
+static VALUE
 f_count(VALUE *v1, VALUE *v2)
 {
     LISTELEM *ep;
@@ -9759,7 +9743,7 @@ f_count(VALUE *v1, VALUE *v2)
     return res;
 }
 
-S_FUNC VALUE
+static VALUE
 f_makelist(VALUE *v1)
 {
     LIST *lp;
@@ -9788,7 +9772,7 @@ f_makelist(VALUE *v1)
     return res;
 }
 
-S_FUNC VALUE
+static VALUE
 f_randperm(VALUE *val)
 {
     VALUE res;
@@ -9813,7 +9797,7 @@ f_randperm(VALUE *val)
     return res;
 }
 
-S_FUNC VALUE
+static VALUE
 f_cmdbuf(void)
 {
     VALUE result;
@@ -9825,7 +9809,7 @@ f_cmdbuf(void)
     result.v_subtype = V_NOSUBTYPE;
 
     cmdbuf_len = strlen(cmdbuf);
-    newcp = (char *)malloc(cmdbuf_len + 1);
+    newcp = (char *)calloc(cmdbuf_len + 1, 1);
     if (newcp == NULL) {
         math_error("Cannot allocate string in cmdbuf");
         not_reached();
@@ -9835,7 +9819,7 @@ f_cmdbuf(void)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_getenv(VALUE *v1)
 {
     VALUE result;
@@ -9858,7 +9842,7 @@ f_getenv(VALUE *v1)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_isatty(VALUE *vp)
 {
     VALUE result;
@@ -9875,7 +9859,7 @@ f_isatty(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_calc_tty(void)
 {
     VALUE res;
@@ -9888,7 +9872,7 @@ f_calc_tty(void)
     return res;
 }
 
-S_FUNC VALUE
+static VALUE
 f_inputlevel(void)
 {
     VALUE result;
@@ -9901,7 +9885,7 @@ f_inputlevel(void)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_calclevel(void)
 {
     VALUE result;
@@ -9914,7 +9898,7 @@ f_calclevel(void)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_calcpath(void)
 {
     VALUE result;
@@ -9927,7 +9911,7 @@ f_calcpath(void)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_access(int count, VALUE **vals)
 {
     NUMBER *q;
@@ -9988,7 +9972,7 @@ f_access(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_putenv(int count, VALUE **vals)
 {
     VALUE result;
@@ -10012,7 +9996,7 @@ f_putenv(int count, VALUE **vals)
 
         /* convert putenv("foo","bar") into putenv("foo=bar") */
         snprintf_len = vals[0]->v_str->s_len + 1 + vals[1]->v_str->s_len;
-        putenv_str = (char *)malloc(snprintf_len + 1);
+        putenv_str = (char *)calloc(snprintf_len + 1, 1);
         if (putenv_str == NULL) {
             math_error("Cannot allocate string in putenv");
             not_reached();
@@ -10054,7 +10038,7 @@ f_putenv(int count, VALUE **vals)
          * make a copy of the arg because subsequent changes
          * would change the environment.
          */
-        putenv_str = (char *)malloc(vals[0]->v_str->s_len + 1);
+        putenv_str = (char *)calloc(vals[0]->v_str->s_len + 1, 1);
         if (putenv_str == NULL) {
             math_error("Cannot allocate string in putenv");
             not_reached();
@@ -10067,7 +10051,7 @@ f_putenv(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_strpos(VALUE *haystack, VALUE *needle)
 {
     VALUE result;
@@ -10092,7 +10076,7 @@ f_strpos(VALUE *haystack, VALUE *needle)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_system(VALUE *vp)
 {
     VALUE result;
@@ -10113,19 +10097,23 @@ f_system(VALUE *vp)
         printf("%s\n", vp->v_str->s_str);
     }
 #  if defined(_WIN32) || defined(_WIN64)
+
     /* if the execute length is 0 then just return 0 */
     if (vp->v_str->s_len == 0) {
         result.v_num = itoq((long)0);
     } else {
         result.v_num = itoq((long)system(vp->v_str->s_str));
     }
-#  else  /* Windows free systems */
+
+#  else
+
     result.v_num = itoq((long)system(vp->v_str->s_str));
-#  endif /* Windows free systems */
+
+#  endif
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_sleep(int count, VALUE **vals)
 {
     long time;
@@ -10135,6 +10123,7 @@ f_sleep(int count, VALUE **vals)
     res.v_type = V_NULL;
     res.v_subtype = V_NOSUBTYPE;
 #  if !defined(_WIN32) && !defined(_WIN64)
+
     if (count > 0) {
         if (vals[0]->v_type != V_NUM || qisneg(vals[0]->v_num)) {
             return error_value(E_SLEEP);
@@ -10166,14 +10155,15 @@ f_sleep(int count, VALUE **vals)
         res.v_type = V_NUM;
         res.v_num = itoq(time);
     }
-#  endif /* Windows free systems */
+
+#  endif
     return res;
 }
 
 /*
  * set the default output base/mode
  */
-S_FUNC NUMBER *
+static NUMBER *
 f_base(int count, NUMBER **vals)
 {
     long base;        /* output base/mode */
@@ -10226,7 +10216,7 @@ f_base(int count, NUMBER **vals)
 /*
  * set the default secondary output base/mode
  */
-S_FUNC NUMBER *
+static NUMBER *
 f_base2(int count, NUMBER **vals)
 {
     long base;        /* output base/mode */
@@ -10282,7 +10272,7 @@ f_base2(int count, NUMBER **vals)
 /*
  * return a numerical 'value' of the mode/base
  */
-S_FUNC NUMBER *
+static NUMBER *
 base_value(long mode, int defval)
 {
     NUMBER *result;
@@ -10364,7 +10354,7 @@ base_value(long mode, int defval)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_custom(int count, VALUE **vals)
 {
     VALUE result;
@@ -10379,11 +10369,13 @@ f_custom(int count, VALUE **vals)
     if (!allow_custom) {
         fprintf(stderr,
 #  if defined(CUSTOM)
+
                 "%sCalc must be run with a -C argument to "
                 "use custom function\n",
-#  else  /* CUSTOM */
+#  else
                 "%sCalc was built with custom functions disabled\n",
-#  endif /* CUSTOM */
+
+#  endif
                 (conf->tab_ok ? "\t" : ""));
         return error_value(E_CUSTOM_ERROR);
     }
@@ -10411,7 +10403,7 @@ f_custom(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_blk(int count, VALUE **vals)
 {
     int len;   /* number of octets to malloc */
@@ -10490,7 +10482,7 @@ f_blk(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_blkfree(VALUE *vp)
 {
     int id;
@@ -10530,7 +10522,7 @@ f_blkfree(VALUE *vp)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_blocks(int count, VALUE **vals)
 {
     NBLOCK *nblk;
@@ -10561,7 +10553,7 @@ f_blocks(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_free(int count, VALUE **vals)
 {
     VALUE result;
@@ -10580,7 +10572,7 @@ f_free(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_freeglobals(void)
 {
     VALUE result;
@@ -10593,7 +10585,7 @@ f_freeglobals(void)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_freeredc(void)
 {
     VALUE result;
@@ -10606,7 +10598,7 @@ f_freeredc(void)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_freestatics(void)
 {
     VALUE result;
@@ -10627,7 +10619,7 @@ f_freestatics(void)
  * Copy 'num' consecutive items from 'src' with index 'ssi' to
  * 'dest', starting at position with index 'dsi'.
  */
-S_FUNC VALUE
+static VALUE
 f_copy(int count, VALUE **vals)
 {
     long ssi = 0;  /* source start index */
@@ -10702,7 +10694,7 @@ f_copy(int count, VALUE **vals)
  * Copy 'num' consecutive items from 'src' with index 'ssi' to
  * 'dest', starting at position with index 'dsi'.
  */
-S_FUNC VALUE
+static VALUE
 f_blkcpy(int count, VALUE **vals)
 {
     VALUE *args[5];   /* args to re-order */
@@ -10743,7 +10735,7 @@ f_blkcpy(int count, VALUE **vals)
     return f_copy(count, args);
 }
 
-S_FUNC VALUE
+static VALUE
 f_sha1(int count, VALUE **vals)
 {
     VALUE result;
@@ -10807,7 +10799,7 @@ f_sha1(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_argv(int count, VALUE **vals)
 {
     int arg; /* the argv_value string index */
@@ -10860,7 +10852,7 @@ f_argv(int count, VALUE **vals)
     return result;
 }
 
-S_FUNC VALUE
+static VALUE
 f_version(void)
 {
     VALUE result;
@@ -10876,7 +10868,7 @@ f_version(void)
 /*
  * f_versin - versed trigonometric sine
  */
-S_FUNC VALUE
+static VALUE
 f_versin(int count, VALUE **vals)
 {
     VALUE result;
@@ -10932,7 +10924,7 @@ f_versin(int count, VALUE **vals)
 /*
  * f_aversin - inverse versed trigonometric sine
  */
-S_FUNC VALUE
+static VALUE
 f_aversin(int count, VALUE **vals)
 {
     VALUE result; /* value to return */
@@ -11012,7 +11004,7 @@ f_aversin(int count, VALUE **vals)
 /*
  * f_coversin - coversed trigonometric sine
  */
-S_FUNC VALUE
+static VALUE
 f_coversin(int count, VALUE **vals)
 {
     VALUE result;
@@ -11068,7 +11060,7 @@ f_coversin(int count, VALUE **vals)
 /*
  * f_acoversin - inverse coversed trigonometric sine
  */
-S_FUNC VALUE
+static VALUE
 f_acoversin(int count, VALUE **vals)
 {
     VALUE result; /* value to return */
@@ -11148,7 +11140,7 @@ f_acoversin(int count, VALUE **vals)
 /*
  * f_vercos - versed trigonometric cosine
  */
-S_FUNC VALUE
+static VALUE
 f_vercos(int count, VALUE **vals)
 {
     VALUE result;
@@ -11204,7 +11196,7 @@ f_vercos(int count, VALUE **vals)
 /*
  * f_avercos - inverse versed trigonometric cosine
  */
-S_FUNC VALUE
+static VALUE
 f_avercos(int count, VALUE **vals)
 {
     VALUE result; /* value to return */
@@ -11284,7 +11276,7 @@ f_avercos(int count, VALUE **vals)
 /*
  * f_covercos - coversed trigonometric cosine
  */
-S_FUNC VALUE
+static VALUE
 f_covercos(int count, VALUE **vals)
 {
     VALUE result;
@@ -11340,7 +11332,7 @@ f_covercos(int count, VALUE **vals)
 /*
  * f_acovercos - inverse coversed trigonometric cosine
  */
-S_FUNC VALUE
+static VALUE
 f_acovercos(int count, VALUE **vals)
 {
     VALUE result; /* value to return */
@@ -11420,7 +11412,7 @@ f_acovercos(int count, VALUE **vals)
 /*
  * f_haversin - half versed trigonometric sine
  */
-S_FUNC VALUE
+static VALUE
 f_haversin(int count, VALUE **vals)
 {
     VALUE result;
@@ -11476,7 +11468,7 @@ f_haversin(int count, VALUE **vals)
 /*
  * f_ahaversin - inverse half versed trigonometric sine
  */
-S_FUNC VALUE
+static VALUE
 f_ahaversin(int count, VALUE **vals)
 {
     VALUE result; /* value to return */
@@ -11556,7 +11548,7 @@ f_ahaversin(int count, VALUE **vals)
 /*
  * f_hacoversin - half coversed trigonometric sine
  */
-S_FUNC VALUE
+static VALUE
 f_hacoversin(int count, VALUE **vals)
 {
     VALUE result;
@@ -11612,7 +11604,7 @@ f_hacoversin(int count, VALUE **vals)
 /*
  * f_ahacoversin - inverse half coversed trigonometric sine
  */
-S_FUNC VALUE
+static VALUE
 f_ahacoversin(int count, VALUE **vals)
 {
     VALUE result; /* value to return */
@@ -11692,7 +11684,7 @@ f_ahacoversin(int count, VALUE **vals)
 /*
  * f_havercos - half versed trigonometric cosine
  */
-S_FUNC VALUE
+static VALUE
 f_havercos(int count, VALUE **vals)
 {
     VALUE result;
@@ -11748,7 +11740,7 @@ f_havercos(int count, VALUE **vals)
 /*
  * f_ahavercos - inverse half versed trigonometric cosine
  */
-S_FUNC VALUE
+static VALUE
 f_ahavercos(int count, VALUE **vals)
 {
     VALUE result; /* value to return */
@@ -11828,7 +11820,7 @@ f_ahavercos(int count, VALUE **vals)
 /*
  * f_hacovercos - half coversed trigonometric cosine
  */
-S_FUNC VALUE
+static VALUE
 f_hacovercos(int count, VALUE **vals)
 {
     VALUE result;
@@ -11884,7 +11876,7 @@ f_hacovercos(int count, VALUE **vals)
 /*
  * f_ahacovercos - inverse half coversed trigonometric cosine
  */
-S_FUNC VALUE
+static VALUE
 f_ahacovercos(int count, VALUE **vals)
 {
     VALUE result; /* value to return */
@@ -11964,7 +11956,7 @@ f_ahacovercos(int count, VALUE **vals)
 /*
  * f_exsec - exterior trigonometric secant
  */
-S_FUNC VALUE
+static VALUE
 f_exsec(int count, VALUE **vals)
 {
     VALUE result;
@@ -12016,7 +12008,7 @@ f_exsec(int count, VALUE **vals)
 /*
  * f_aexsec - inverse exterior trigonometric secant
  */
-S_FUNC VALUE
+static VALUE
 f_aexsec(int count, VALUE **vals)
 {
     VALUE result; /* value to return */
@@ -12101,7 +12093,7 @@ f_aexsec(int count, VALUE **vals)
 /*
  * f_excsc - exterior trigonometric cosecant
  */
-S_FUNC VALUE
+static VALUE
 f_excsc(int count, VALUE **vals)
 {
     VALUE result;
@@ -12159,7 +12151,7 @@ f_excsc(int count, VALUE **vals)
 /*
  * f_aexcsc - exterior trigonometric cosecant
  */
-S_FUNC VALUE
+static VALUE
 f_aexcsc(int count, VALUE **vals)
 {
     VALUE result; /* value to return */
@@ -12244,7 +12236,7 @@ f_aexcsc(int count, VALUE **vals)
 /*
  * f_crd - trigonometric chord of a unit circle
  */
-S_FUNC VALUE
+static VALUE
 f_crd(int count, VALUE **vals)
 {
     VALUE result;
@@ -12296,7 +12288,7 @@ f_crd(int count, VALUE **vals)
 /*
  * f_acrd - inverse trigonometric chord of a unit circle
  */
-S_FUNC VALUE
+static VALUE
 f_acrd(int count, VALUE **vals)
 {
     VALUE result; /* value to return */
@@ -12376,7 +12368,7 @@ f_acrd(int count, VALUE **vals)
 /*
  * f_cas - trigonometric chord of a unit circle
  */
-S_FUNC VALUE
+static VALUE
 f_cas(int count, VALUE **vals)
 {
     VALUE result;
@@ -12428,7 +12420,7 @@ f_cas(int count, VALUE **vals)
 /*
  * f_cis - Euler's formula
  */
-S_FUNC VALUE
+static VALUE
 f_cis(int count, VALUE **vals)
 {
     VALUE result;
@@ -12502,7 +12494,7 @@ f_cis(int count, VALUE **vals)
     return result;
 }
 
-#endif /* !FUNCLIST */
+#endif
 
 /*
  * builtins - List of primitive built-in functions
@@ -12540,7 +12532,7 @@ f_cis(int count, VALUE **vals)
  *      b_valfunc       routine to calculate general values
  *      b_desc          description of function
  */
-STATIC CONST struct builtin builtins[] = {
+static const struct builtin builtins[] = {
     /* clang-format off */
         {"abs", 1, 2, 0, OP_ABS, {.null = NULL}, {.null = NULL},
          "absolute value, within accuracy b"},
@@ -13273,10 +13265,11 @@ STATIC CONST struct builtin builtins[] = {
  * See the builtin rule in the help/Makefile for details.
  */
 #if defined(FUNCLIST)
+
 int
 main(void)
 {
-    CONST struct builtin *bp; /* current function */
+    const struct builtin *bp; /* current function */
 
     printf("\nName\tArgs\tDescription\n\n");
     for (bp = builtins; bp->b_name; bp++) {
@@ -13293,11 +13286,13 @@ main(void)
     printf("\n");
     return 0; /* exit(0); */
 }
-#else  /* FUNCLIST */
+
+#else
+
 void
 showbuiltins(void)
 {
-    CONST struct builtin *bp; /* current function */
+    const struct builtin *bp; /* current function */
     int i;
 
     printf("\nName\tArgs\tDescription\n\n");
@@ -13320,7 +13315,8 @@ showbuiltins(void)
     }
     printf("\n");
 }
-#endif /* FUNCLIST */
+
+#endif
 
 #if !defined(FUNCLIST)
 
@@ -13339,7 +13335,7 @@ builtinfunc(long index, int argcount, VALUE *stck)
 {
     VALUE *sp;                /* pointer to stack entries */
     VALUE **vpp;              /* pointer to current value address */
-    CONST struct builtin *bp; /* builtin function to be called */
+    const struct builtin *bp; /* builtin function to be called */
     NUMBER *numargs[IN];      /* numeric arguments for function */
     VALUE *valargs[IN];       /* addresses of actual arguments */
     VALUE result;             /* general result of function */
@@ -13444,7 +13440,7 @@ builtinfunc(long index, int argcount, VALUE *stck)
 int
 getbuiltinfunc(char *name)
 {
-    CONST struct builtin *bp;
+    const struct builtin *bp;
 
     for (bp = builtins; bp->b_name; bp++) {
         if ((*name == *bp->b_name) && (strcmp(name, bp->b_name) == 0)) {
@@ -13474,7 +13470,7 @@ builtinname(long index)
 void
 builtincheck(long index, int count)
 {
-    CONST struct builtin *bp;
+    const struct builtin *bp;
 
     if ((unsigned long)index >= (sizeof(builtins) / sizeof(builtins[0])) - 1) {
         math_error("Unknown built in index");
@@ -13529,7 +13525,7 @@ showerrors(void)
  *
  * NOTE: The caller MUST pass a string that the caller has previously malloced.
  */
-S_FUNC int
+static int
 malloced_putenv(char *str)
 {
     char *value;          /* location of the value part of the str argument */
@@ -13600,7 +13596,7 @@ malloced_putenv(char *str)
     if (env_pool_max == 0) {
 
         /* allocate an initial pool (with one extra guard value) */
-        new = (struct env_pool *)malloc((ENV_POOL_CHUNK + 1) * sizeof(struct env_pool));
+        new = (struct env_pool *)calloc(ENV_POOL_CHUNK + 1, sizeof(struct env_pool));
         if (new == NULL) {
             math_error("malloced_putenv malloc failed");
             not_reached();
@@ -13653,4 +13649,4 @@ malloced_putenv(char *str)
     return putenv(str);
 }
 
-#endif /* FUNCLIST */
+#endif

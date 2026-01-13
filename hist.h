@@ -1,7 +1,7 @@
 /*
  * hist - definitions for command history module
  *
- * Copyright (C) 1999-2007,2014,2021  David I. Bell
+ * Copyright (C) 1999-2007,2014,2021,2026  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -60,9 +60,9 @@
 #  define HIST_NOTTY 3     /* terminal modes could not be set */
 #  define HIST_NULL_HIST 4 /* failed to set non-NULL name of history file in calc_history */
 
-E_FUNC int hist_init(char *filename);
-E_FUNC void hist_term(void);
-E_FUNC size_t hist_getline(char *prompt, char *buf, size_t len);
-E_FUNC void hist_saveline(char *line, int len);
+extern int hist_init(char *filename);
+extern void hist_term(void);
+extern size_t hist_getline(char *prompt, char *buf, size_t len);
+extern void hist_saveline(char *line, int len);
 
-#endif /* !INCLUDE_HIST_H */
+#endif

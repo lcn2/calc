@@ -1,7 +1,7 @@
 /*
  * poly - polynomial functions
  *
- * Copyright (C) 1999,2021,2023  Ernest Bowen and Landon Curt Noll
+ * Copyright (C) 1999,2021,2023,2026  Ernest Bowen and Landon Curt Noll
  *
  * Primary author:  Ernest Bowen
  *
@@ -26,9 +26,20 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdbool.h>
+
+/*
+ * calc local src includes
+ */
 #include "value.h"
 
-#include "banned.h" /* include after system header <> includes */
+#include "banned.h" /* include after all other includes */
 
 bool
 evp(LISTELEM *cp, LISTELEM *x, VALUE *vres)

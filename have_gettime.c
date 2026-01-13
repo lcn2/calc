@@ -1,7 +1,7 @@
 /*
  * have_gettime - determine if we have clock_gettime()
  *
- * Copyright (C) 1999,2021  Landon Curt Noll
+ * Copyright (C) 1999,2021,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -39,10 +39,17 @@
  *                            CLOCK_REALTIME
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
 #include <time.h>
 
-#include "banned.h" /* include after system header <> includes */
+/*
+ * calc local src includes
+ */
+
+#include "banned.h" /* include after all other includes */
 
 int
 main(void)
@@ -51,7 +58,7 @@ main(void)
 
     printf("#undef HAVE_GETTIME /* no */\n");
 
-#else /* HAVE_NO_GETTIME */
+#else
 
 #  if defined(CLOCK_REALTIME)
 
@@ -63,9 +70,8 @@ main(void)
 
     printf("#undef HAVE_GETTIME /* no - no CLOCK_REALTIME */\n");
 
-#  endif /* CLOCK_REALTIME */
-
-#endif /* HAVE_NO_GETTIME */
+#  endif
+#endif
     /* exit(0); */
     return 0;
 }

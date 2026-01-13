@@ -1,7 +1,7 @@
 /*
  * jump - trivial prime jump table
  *
- * Copyright (C) 1999-2007,2014  Landon Curt Noll
+ * Copyright (C) 1999-2007,2014,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -60,14 +60,6 @@
 #if !defined(INCLUDE_JUMP_H)
 #  define INCLUDE_JUMP_H
 
-#  if defined(CALC_SRC) /* if we are building from the calc source tree */
-#    include "have_const.h"
-#    include "decl.h"
-#  else
-#    include <calc/have_const.h>
-#    include <calc/decl.h>
-#  endif
-
 /*
  * trivial prime CONSTants
  */
@@ -96,8 +88,8 @@
 /*
  * external jump tables
  */
-EXTERN CONST short jmpindx[];
-EXTERN CONST unsigned char jmp[];
-EXTERN CONST unsigned char *CONST lastjmp;
+extern const short jmpindx[];
+extern const unsigned char jmp[];
+extern const unsigned char *const lastjmp;
 
-#endif /* !INCLUDE_JUMP_H */
+#endif

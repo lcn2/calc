@@ -1,7 +1,7 @@
 /*
  * const - constant number storage module
  *
- * Copyright (C) 1999-2007,2021-2023  David I. Bell
+ * Copyright (C) 1999-2007,2021-2023,2026  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -23,18 +23,29 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
-#include "calc.h"
-#include "qmath.h"
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdbool.h>
 
+/*
+ * calc local src includes
+ */
+#include "value.h"
+#include "calc.h"
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 #define CONSTALLOCSIZE 400 /* number of constants to allocate */
 
-STATIC unsigned long constcount; /* number of constants defined */
-STATIC long constavail;          /* number of constants available */
-STATIC NUMBER **consttable;      /* table of constants */
+static unsigned long constcount; /* number of constants defined */
+static long constavail;          /* number of constants available */
+static NUMBER **consttable;      /* table of constants */
 
 void
 initconstants(void)

@@ -1,7 +1,7 @@
 /*
  * have_environ - Determine if we have the environ user environment synbol
  *
- * Copyright (C) 2021  Landon Curt Noll
+ * Copyright (C) 2021,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -41,9 +41,16 @@
  *              undefined ==> environ is NOT an extern symbol or is NULL
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
 
-#include "banned.h" /* include after system header <> includes */
+/*
+ * calc local src includes
+ */
+
+#include "banned.h" /* include after all other includes */
 
 int
 main(void)
@@ -52,7 +59,7 @@ main(void)
 
     printf("#undef HAVE_ENVIRON /* no */\n");
 
-#else /* HAVE_NO_ENVIRON */
+#else
 
     extern char **environ;
 
@@ -62,7 +69,7 @@ main(void)
         printf("#define HAVE_ENVIRON /* yes */\n");
     }
 
-#endif /* HAVE_NO_ENVIRON */
+#endif
 
     /* exit(0); */
     return 0;

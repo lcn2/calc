@@ -1,4 +1,4 @@
-Guidelines for adding custom functions
+G0uidelines for adding custom functions
 --------------------------------------
 
 Step 0: Determine if is should it be done?
@@ -165,7 +165,7 @@ Step 5: Write your custom function
 
                 ... all code, #includes, #defines etc.
 
-                #endif /* CUSTOM */
+                #endif
 
            This allows this code to 'go away' when the upper Makefile
            disables the custom code when CUSTOM is not defined.
@@ -238,7 +238,6 @@ Step 5: Write your custom function
 
                 /* any #include <foobar.h> here */
 
-                #include "../have_const.h"
                 #include "../value.h"
                 #include "custom.h"
 
@@ -385,7 +384,7 @@ Step 5: Write your custom function
 Step 6: Register the function in the custom interface table
 
     To allow the custom() builtin to transfer control to your function,
-    you need to add an entry into the CONST struct custom cust table
+    you need to add an entry into the const struct custom cust table
     found in custom/custtbl.c:
 
         /*
@@ -408,10 +407,9 @@ Step 6: Register the function in the custom interface table
          * without wrapping on a 80 col window, the description is probably
          * too long and will not look nice in the show custom output.
          */
-        CONST struct custom cust[] = {
+        const struct custom cust[] = {
 
         #if defined(CUSTOM)
-
 
                 /*
                  * add your own custom functions here
@@ -432,8 +430,7 @@ Step 6: Register the function in the custom interface table
                 { "sysinfo", "return a calc #define value",
                  0, 1, c_sysinfo },
 
-
-        #endif /* CUSTOM */
+        #endif
 
                 /*
                  * This must be at the end of this table!!!
@@ -446,7 +443,7 @@ Step 6: Register the function in the custom interface table
 
     It is important that your entry be placed inside the:
 
-        #if defined(CUSTOM) ... #endif /* CUSTOM */
+        #if defined(CUSTOM) ... #endif
 
     lines so that when the custom interface is disabled by the upper
     level Makefile, one does not have unsatisfied symbols.
@@ -492,18 +489,18 @@ Step 6: Register the function in the custom interface table
          *
          * Declare custom functions as follows:
          *
-         *      E_FUNC VALUE c_xyz(char*, int, VALUE**);
+         *      extern VALUE c_xyz(char*, int, VALUE**);
          *
          * We suggest that you sort the entries below by name.
          */
-        E_FUNC VALUE c_argv(char*, int, VALUE**);
-        E_FUNC VALUE c_devnull(char*, int, VALUE**);
-        E_FUNC VALUE c_help(char*, int, VALUE**);
-        E_FUNC VALUE c_sysinfo(char*, int, VALUE**);
+        extern VALUE c_argv(char*, int, VALUE**);
+        extern VALUE c_devnull(char*, int, VALUE**);
+        extern VALUE c_help(char*, int, VALUE**);
+        extern VALUE c_sysinfo(char*, int, VALUE**);
 
     For u_curds we would add the line:
 
-        E_FUNC VALUE u_curds(char*, int, VALUE**);
+        extern VALUE u_curds(char*, int, VALUE**);
 
 
 Step 7: Add the required information to the custom/Makefile.head
@@ -567,7 +564,6 @@ Step 9: Add the Make dependency tools
     the Makefile.  Given the required include files, you will at least
     have the following entries placed at the bottom of the Makefile:
 
-        u_curds.o: ../alloc.h
         u_curds.o: ../block.h
         u_curds.o: ../byteswap.h
         u_curds.o: ../cmath.h
@@ -575,11 +571,7 @@ Step 9: Add the Make dependency tools
         u_curds.o: ../endian_calc.h
         u_curds.o: ../errsym.h
         u_curds.o: ../hash.h
-        u_curds.o: ../have_const.h
         u_curds.o: ../have_malloc.h
-        u_curds.o: ../have_newstr.h
-        u_curds.o: ../have_stdlib.h
-        u_curds.o: ../have_string.h
         u_curds.o: ../longbits.h
         u_curds.o: ../nametype.h
         u_curds.o: ../qmath.h
@@ -644,7 +636,7 @@ Step 12: Contribute
     and consider submitting your custom function for possible
     inclusion in later versions of calc.
 
-## Copyright (C) 1999-2007,2021  Landon Curt Noll
+## Copyright (C) 1999-2007,2021,2026  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

@@ -1,7 +1,7 @@
 /*
  * file - file I/O routines callable by users
  *
- * Copyright (C) 1999-2007,2014,2021,2023  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2007,2014,2021,2023,2026  David I. Bell and Landon Curt Noll
  *
  * Primary author:  David I. Bell
  *
@@ -29,16 +29,6 @@
 #if !defined(INCLUDE_FILE_H)
 #  define INCLUDE_FILE_H
 
-#  include <stdio.h>
-
-#  if defined(CALC_SRC) /* if we are building from the calc source tree */
-#    include "value.h"
-#    include "have_fgetsetpos.h"
-#  else
-#    include <calc/value.h>
-#    include <calc/have_fgetsetpos.h>
-#  endif
-
 /*
  * Definition of opened files.
  */
@@ -58,39 +48,13 @@ typedef struct {
 } FILEIO;
 
 /*
- * fgetpos/fsetpos vs fseek/ftell interface
- *
- * f_seek_set(FILE *stream, FILEPOS *loc)
- *      Seek loc bytes from the beginning of the open file, stream.
- *
- * f_tell(FILE *stream, FILEPOS *loc)
- *      Set loc to bytes from the beginning of the open file, stream.
- *
- * We assume that if your system does not have fgetpos/fsetpos,
- * then it will have a FILEPOS that is a scalar type (e.g., long).
- * Some obscure systems without fgetpos/fsetpos may not have a simple
- * scalar type.  In these cases the f_tell macro below will fail.
- */
-#  if defined(HAVE_FGETSETPOS)
-
-#    define f_seek_set(stream, loc) fsetpos((FILE *)(stream), (FILEPOS *)(loc))
-#    define f_tell(stream, loc) fgetpos((FILE *)(stream), (FILEPOS *)(loc))
-
-#  else
-
-#    define f_seek_set(stream, loc) fseek((FILE *)(stream), *(FILEPOS *)(loc), SEEK_SET)
-#    define f_tell(stream, loc) (*((FILEPOS *)(loc)) = ftell((FILE *)(stream)))
-
-#  endif
-
-/*
  * external functions
  */
-E_FUNC FILEIO *findid(FILEID id, int writable);
-E_FUNC int fgetposid(FILEID id, FILEPOS *ptr);
-E_FUNC int fsetposid(FILEID id, FILEPOS *ptr);
-E_FUNC int get_open_siz(FILE *fp, ZVALUE *res);
-E_FUNC char *findfname(FILEID);
-E_FUNC FILE *f_pathopen(char *name, char *mode, char *pathlist, char **openpath);
+extern FILEIO *findid(FILEID id, int writable);
+extern int fgetposid(FILEID id, fpos_t *ptr);
+extern int fsetposid(FILEID id, fpos_t *ptr);
+extern int get_open_siz(FILE *fp, ZVALUE *res);
+extern char *findfname(FILEID);
+extern FILE *f_pathopen(char *name, char *mode, char *pathlist, char **openpath);
 
-#endif /* !INCLUDE_FILE_H */
+#endif

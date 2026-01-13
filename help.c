@@ -1,7 +1,7 @@
 /*
  * help - display help for calc
  *
- * Copyright (C) 1999-2007,2014,2018,2021  Landon Curt Noll
+ * Copyright (C) 1999-2007,2014,2018,2021,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -24,32 +24,40 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 #include <ctype.h>
-#include <sys/types.h>
 #include <signal.h>
+#include <setjmp.h>
 #include <sys/errno.h>
+#include <sys/types.h>
+#include <stdint.h>
+#include <stdbool.h>
 
+/*
+ * calc local src includes
+ */
+#include "value.h"
 #include "calc.h"
 #include "conf.h"
 #include "lib_calc.h"
-
-#include "have_unistd.h"
-#if defined(HAVE_UNISTD_H)
-#  include <unistd.h>
-#endif
 
 #if defined(_WIN32) || defined(_WIN64)
 #  define popen _popen
 #  define pclose _pclose
 #endif
 
-#include "banned.h" /* include after system header <> includes */
+#include "banned.h" /* include after all other includes */
 
 /*
  * some help topics are symbols, so we alias them to nice filenames
  */
-STATIC struct help_alias {
+static struct help_alias {
     char *topic;
     char *filename;
 } halias[] = {
@@ -93,7 +101,7 @@ STATIC struct help_alias {
 /*
  * external values
  */
-EXTERN char *pager; /* $PAGER or default */
+extern char *pager; /* $PAGER or default */
 
 /*
  * page_file - output an open file thru a pager
@@ -107,7 +115,7 @@ EXTERN char *pager; /* $PAGER or default */
  * given:
  *      stream  open file stream of the file to send to the pager
  */
-S_FUNC void
+static void
 page_file(FILE *stream)
 {
     FILE *cmd;            /* pager command */
@@ -251,7 +259,7 @@ givehelp(char *type)
      * open the helpfile (looking in HELPDIR first)
      */
     snprintf_len = strlen(calc_helpdir) + 1 + strlen(type) + 1;
-    helppath = (char *)malloc(snprintf_len + 1);
+    helppath = (char *)calloc(snprintf_len + 1, 1);
     if (helppath == NULL) {
         fprintf(stderr, "malloc failure in givehelp #0\n");
         return;
@@ -269,6 +277,7 @@ givehelp(char *type)
         (void)fclose(stream);
 
 #if defined(CUSTOM)
+
         /*
          * open the helpfile (looking in CUSTOMHELPDIR last)
          */
@@ -277,7 +286,7 @@ givehelp(char *type)
         size_t cust_snprintf_len; /* malloced custom snprintf buf len */
 
         cust_snprintf_len = strlen(calc_customhelpdir) + 1 + strlen(type) + 1;
-        cust_helppath = (char *)malloc(cust_snprintf_len + 1);
+        cust_helppath = (char *)calloc(cust_snprintf_len + 1, 1);
         if (cust_helppath == NULL) {
             fprintf(stderr, "malloc failure for givehelp #1\n");
             return;
@@ -301,11 +310,13 @@ givehelp(char *type)
         free(cust_helppath);
         cust_helppath = NULL;
 
-#else  /* CUSTOM */
+#else
+
         /* unable to open help file */
     } else {
         fprintf(stderr, "unable to open help file: %s - %s\n", type, strerror(errno));
-#endif /* CUSTOM */
+
+#endif
     }
 
     /*

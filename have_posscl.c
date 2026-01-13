@@ -1,7 +1,7 @@
 /*
- * have_posscl - determine if we have a scalar FILEPOS element
+ * have_posscl - determine if we have a scalar fpos_t element
  *
- * Copyright (C) 1999,2021  Landon Curt Noll
+ * Copyright (C) 1999,2021,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -28,47 +28,50 @@
  * usage:
  *      have_posscl
  *
- * On some systems, FILEPOS is a scalar value on which one can perform
+ * On some systems, fpos_t is a scalar value on which one can perform
  * arithmetic operations, assignments and comparisons.  On some systems
- * FILEPOS is some sort of union or struct which must be converted into
+ * fpos_t is some sort of union or struct which must be converted into
  * a ZVALUE in order to perform arithmetic operations, assignments and
  * comparisons.
  *
  * This prog outputs several defines:
  *
- *      HAVE_FILEPOS_SCALAR
+ *      HAVE_FPOS_T_SCALAR
  *              defined ==> OK to perform arithmetic ops, = and comparisons
  *              undefined ==> convert to ZVALUE first
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include "have_unistd.h"
-#if defined(HAVE_UNISTD_H)
-#  include <unistd.h>
-#endif
-#include "have_fgetsetpos.h"
 
-#include "banned.h" /* include after system header <> includes */
+/*
+ * calc local src includes
+ */
+
+#include "banned.h" /* include after all other includes */
 
 int
 main(void)
 {
 #if !defined(FILEPOS_NON_SCALAR)
-    FILEPOS value;  /* an FILEPOS to perform arithmetic on */
-    FILEPOS value2; /* an FILEPOS to perform arithmetic on */
+    fpos_t value;  /* an fpos_t to perform arithmetic on */
+    fpos_t value2; /* an fpos_t to perform arithmetic on */
 
     /*
-     * do some math opts on an FILEPOS
+     * do some math opts on an fpos_t
      */
-    value = (FILEPOS)getpid();
-    value2 = (FILEPOS)-1;
-    if (value > (FILEPOS)1) {
+    value = (fpos_t)getpid();
+    value2 = (fpos_t)-1;
+    if (value > (fpos_t)1) {
         --value;
     }
 #  if !defined(_WIN32) && !defined(_WIN64)
-    if (value <= (FILEPOS)getppid()) {
+    if (value <= (fpos_t)getppid()) {
         --value;
     }
 #  endif
@@ -77,17 +80,17 @@ main(void)
     }
     value <<= 1;
     if (!value) {
-        printf("/* something for the FILEPOS to do */\n");
+        printf("/* something for the fpos_t to do */\n");
     }
 
     /*
-     * report FILEPOS as a scalar
+     * report fpos_t as a scalar
      */
-    printf("#undef HAVE_FILEPOS_SCALAR\n");
-    printf("#define HAVE_FILEPOS_SCALAR /* FILEPOS is a simple value */\n");
+    printf("#undef HAVE_FPOS_T_SCALAR\n");
+    printf("#define HAVE_FPOS_T_SCALAR /* fpos_t is a simple value */\n");
 #else
-    printf("#undef HAVE_FILEPOS_SCALAR "
-           "/* FILEPOS is not a simple value */\n");
+    printf("#undef HAVE_FPOS_T_SCALAR "
+           "/* fpos_t is not a simple value */\n");
 #endif
     /* exit(0); */
     return 0;

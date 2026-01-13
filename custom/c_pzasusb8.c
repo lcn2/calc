@@ -1,7 +1,7 @@
 /*
  * c_pzasusb8 - print numerator as a string of USB8s
  *
- * Copyright (C) 1999-2004,2021-2023  Ernest Bowen
+ * Copyright (C) 1999-2004,2021-2023,2026  Ernest Bowen
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -29,23 +29,29 @@
  */
 #if defined(CUSTOM)
 int c_pzasusb8_allowed = 1; /* CUSTOM defined */
-#else                       /* CUSTOM */
+#else
 int c_pzasusb8_allowed = 0; /* CUSTOM undefined */
-#endif                      /* CUSTOM */
+#endif
 
 #if defined(CUSTOM)
 
+/*
+ * important <system> header includes
+ */
 #  include <stdio.h>
+#  include <stdint.h>
+#  include <stdbool.h>
 
-#  include "../have_const.h"
+/*
+ * calc local src includes
+ */
 #  include "../value.h"
 #  include "../custom.h"
-#  include "../zmath.h"
-
 #  include "../have_unused.h"
-
+#  include "../attribute.h"
 #  include "../errtbl.h"
-#  include "../banned.h" /* include after system header <> includes */
+
+#  include "../banned.h" /* include after all other includes */
 
 /*
  * c_pzasusb8 - print numerator as a string of USB8s
@@ -99,4 +105,4 @@ c_pzasusb8(char *UNUSED(name), int UNUSED(count), VALUE **vals)
     return result;
 }
 
-#endif /* CUSTOM */
+#endif

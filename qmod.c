@@ -1,7 +1,7 @@
 /*
  * qmod - modular arithmetic routines for normal numbers and REDC numbers
  *
- * Copyright (C) 1999-2007,2021-2023  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023,2026  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -25,12 +25,24 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdbool.h>
+
+/*
+ * calc local src includes
+ */
+#include "zmath.h"
 #include "qmath.h"
 #include "config.h"
-
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 /*
  * Structure used for caching REDC information.
@@ -41,10 +53,10 @@ typedef struct {
     long age;     /* age counter for reallocation */
 } REDC_CACHE;
 
-STATIC long redc_age;                  /* current age counter */
-STATIC REDC_CACHE redc_cache[MAXREDC]; /* cached REDC info */
+static long redc_age;                  /* current age counter */
+static REDC_CACHE redc_cache[MAXREDC]; /* cached REDC info */
 
-S_FUNC REDC *qfindredc(NUMBER *q);
+static REDC *qfindredc(NUMBER *q);
 
 /*
  * qmod(q1, q2, rnd) returns zero if q1 is a multiple of q2; it
@@ -341,7 +353,7 @@ qredcpower(NUMBER *q1, NUMBER *q2, NUMBER *q3)
  * given:
  *      q               modulus to find REDC information of
  */
-S_FUNC REDC *
+static REDC *
 qfindredc(NUMBER *q)
 {
     register REDC_CACHE *rcp;

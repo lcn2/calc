@@ -1,7 +1,7 @@
 /*
  * lib_util - calc library utility routines
  *
- * Copyright (C) 1999-2006,2021-2023  Landon Curt Noll
+ * Copyright (C) 1999-2006,2021-2023,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -29,12 +29,24 @@
  * are not directly used by calc itself, however.
  */
 
-#include "zmath.h"
-#include "alloc.h"
-#include "lib_util.h"
+/*
+ * important <system> header includes
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+#include <stdbool.h>
 
+/*
+ * calc local src includes
+ */
+#include "zmath.h"
+#include "lib_util.h"
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 /*
  * lowhex2bin - quick low order ASCII hex to binary conversion
@@ -137,7 +149,7 @@ convstr2z(char *str)
      * allocate HALF storage
      */
     len = (strlen(str) + sizeof(HALF) - 1) / sizeof(HALF);
-    v = (HALF *)malloc(len * sizeof(HALF));
+    v = (HALF *)calloc(len, sizeof(HALF));
     if (v == NULL) {
         math_error("convstr2z bad malloc");
         not_reached();
@@ -207,7 +219,7 @@ convhex2z(char *hex)
      */
     slen = strlen(hex);
     len = ((slen * 4) + BASEB - 1) / BASEB;
-    v = (HALF *)malloc(len * sizeof(HALF));
+    v = (HALF *)calloc(len, sizeof(HALF));
     if (v == NULL) {
         math_error("convhex2z bad malloc");
         not_reached();
@@ -297,7 +309,7 @@ convz2hex(ZVALUE z)
      */
     if (z.v == NULL || ziszero(z)) {
         /* malloc and return "0" */
-        ret = (char *)malloc(sizeof("0"));
+        ret = (char *)calloc(1, sizeof("0"));
         if (ret == NULL) {
             math_error("convz2hex bad malloc of 0 value");
             not_reached();

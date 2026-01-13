@@ -1,7 +1,7 @@
 /*
  * hash - one-way hash routines
  *
- * Copyright (C) 1999-2007,2014,2023  Landon Curt Noll
+ * Copyright (C) 1999-2007,2014,2023,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -26,14 +26,6 @@
 
 #if !defined(INCLUDE_HASH_H)
 #  define INCLUDE_HASH_H
-
-#  if defined(CALC_SRC) /* if we are building from the calc source tree */
-#    include "sha1.h"
-#    include "zmath.h"
-#  else
-#    include <calc/sha1.h>
-#    include <calc/zmath.h>
-#  endif
 
 /* MAX_CHUNKSIZE is the largest chunksize of any hash */
 #  define MAX_CHUNKSIZE (SHA1_CHUNKSIZE)
@@ -105,18 +97,18 @@ struct hashstate {
 /*
  * external functions
  */
-E_FUNC HASH *hash_init(int, HASH *);
-E_FUNC void hash_free(HASH *);
-E_FUNC HASH *hash_copy(HASH *);
-E_FUNC int hash_cmp(HASH *, HASH *);
-E_FUNC void hash_print(HASH *);
-E_FUNC ZVALUE hash_final(HASH *);
-E_FUNC HASH *hash_long(int, long, HASH *);
-E_FUNC HASH *hash_zvalue(int, ZVALUE, HASH *);
-E_FUNC HASH *hash_number(int, void *, HASH *);
-E_FUNC HASH *hash_complex(int, void *, HASH *);
-E_FUNC HASH *hash_str(int, char *, HASH *);
-E_FUNC HASH *hash_usb8(int, USB8 *, int, HASH *);
-E_FUNC HASH *hash_value(int, void *, HASH *);
+extern HASH *hash_init(int, HASH *);
+extern void hash_free(HASH *);
+extern HASH *hash_copy(HASH *);
+extern int hash_cmp(HASH *, HASH *);
+extern void hash_print(HASH *);
+extern ZVALUE hash_final(HASH *);
+extern HASH *hash_long(int, long, HASH *);
+extern HASH *hash_zvalue(int, ZVALUE, HASH *);
+extern HASH *hash_number(int, void *, HASH *);
+extern HASH *hash_complex(int, void *, HASH *);
+extern HASH *hash_str(int, char *, HASH *);
+extern HASH *hash_usb8(int, USB8 *, int, HASH *);
+extern HASH *hash_value(int, void *, HASH *);
 
-#endif /* !INCLUDE_HASH_H */
+#endif

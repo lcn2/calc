@@ -1,7 +1,7 @@
 /*
  * opcodes - opcode execution module definition
  *
- * Copyright (C) 1999-2007,2014,2021  David I. Bell
+ * Copyright (C) 1999-2007,2014,2021,2026  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -25,12 +25,6 @@
 
 #if !defined(INCLUDE_OPCODES_H)
 #  define INCLUDE_OPCODES_H
-
-#  if defined(CALC_SRC) /* if we are building from the calc source tree */
-#    include "decl.h"
-#  else
-#    include <calc/decl.h>
-#  endif
 
 /*
  * Opcodes
@@ -167,12 +161,13 @@
 #  define OP_PLUS 129L       /* unary + */
 #  define OP_JUMPNN 130L     /* jump if top value is non-null */
 #  define OP_ABORT 131L      /* abort operation */
-#  define MAX_OPCODE 131L    /* highest legal opcode */
+
+#  define MAX_OPCODE 131L    /* MUST BE LAST - highest legal opcode */
 
 /*
  * external declarations
  */
-EXTERN char *funcname; /* function being executed */
-EXTERN long funcline;  /* function line being executed */
+extern char *funcname; /* function being executed */
+extern long funcline;  /* function line being executed */
 
-#endif /* !INCLUDE_OPCODES_H */
+#endif

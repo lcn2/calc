@@ -1,7 +1,7 @@
 /*
  * endian - determine the byte order of a long on your machine
  *
- * Copyright (C) 1999-2013,2021  Landon Curt Noll
+ * Copyright (C) 1999-2013,2021,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -29,19 +29,17 @@
  * Little Endian:   Vax, 32k, Spim (Dec Mips), i386, i486, ...
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-#include "have_stdlib.h"
-#if defined(HAVE_STDLIB_H)
-#  include <stdlib.h>
-#endif
-
-#include "have_unistd.h"
-#if defined(HAVE_UNISTD_H)
-#  include <unistd.h>
-#endif
-
-#include "banned.h" /* include after system header <> includes */
+/*
+ * calc local src includes
+ */
+#include "banned.h" /* include after all other includes */
 
 /* byte order array */
 char byte[8] = {(char)0x12, (char)0x36, (char)0x48, (char)0x59, (char)0x01, (char)0x23, (char)0x45, (char)0x67};

@@ -1,7 +1,7 @@
 /*
  * have_rusage - Determine if we have getrusage()
  *
- * Copyright (C) 1999,2021  Landon Curt Noll
+ * Copyright (C) 1999,2021,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -38,11 +38,18 @@
  *              undefined ==> do not call or cannot call getrusage()
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
 #include <sys/time.h>
 #include <sys/resource.h>
 
-#include "banned.h" /* include after system header <> includes */
+/*
+ * calc local src includes
+ */
+
+#include "banned.h" /* include after all other includes */
 
 int
 main(void)
@@ -51,7 +58,7 @@ main(void)
 
     printf("#undef HAVE_GETRUSAGE /* no */\n");
 
-#else /* HAVE_NO_GETRUSAGE */
+#else
 
     struct rusage rusage; /* resource utilization */
 
@@ -59,7 +66,7 @@ main(void)
 
     printf("#define HAVE_GETRUSAGE /* yes */\n");
 
-#endif /* HAVE_NO_GETRUSAGE */
+#endif
 
     /* exit(0); */
     return 0;

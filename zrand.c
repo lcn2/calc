@@ -1,7 +1,7 @@
 /*
  * zrand - subtractive 100 shuffle generator
  *
- * Copyright (C) 1999-2007,2021-2023  Landon Curt Noll
+ * Copyright (C) 1999-2007,2021-2023,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -23,6 +23,25 @@
  * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
+
+/*
+ * important <system> header includes
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+#include <stdbool.h>
+
+/*
+ * calc local src includes
+ */
+#include "value.h"
+#include "have_unused.h"
+#include "attribute.h"
+#include "errtbl.h"
+
+#include "banned.h" /* include after all other includes */
 
 /*
  * AN OVERVIEW OF THE FUNCTIONS:
@@ -349,23 +368,13 @@
  * (used by more than one input seed).
  */
 
-#include <stdio.h>
-
-#include "alloc.h"
-#include "zrand.h"
-#include "have_const.h"
-#include "have_unused.h"
-
-#include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
-
 /*
  * default s100 generator state
  *
  * This is the state of the s100 generator after initialization, or srand(0),
  * or srand(0) is called.  The init_s100 value is never changed, only copied.
  */
-STATIC CONST RAND init_s100 = {
+static const RAND init_s100 = {
     1,                 /* seeded */
     0,                 /* no buffered bits */
 #if FULL_BITS == SBITS /* buffer */
@@ -590,7 +599,7 @@ STATIC CONST RAND init_s100 = {
  *
  * This array is never changed, only copied.
  */
-STATIC CONST FULL def_subtract[SCNT] = {
+static const FULL def_subtract[SCNT] = {
 #if FULL_BITS == SBITS
     (FULL)U(0xc8c0370c7db7dc19), (FULL)U(0x738e33b940a06fbb), (FULL)U(0x481abb76a859ed2b),
     (FULL)U(0x74106bb39ccdccb5), (FULL)U(0x05a8eeb5c3173bfc), (FULL)U(0xefd5100d5a02e577),
@@ -670,28 +679,28 @@ STATIC CONST FULL def_subtract[SCNT] = {
  * These constants are used in the randreseed64().  See below.
  */
 #if FULL_BITS == SBITS
-STATIC CONST HALF a_vec[SHALFS] = {(HALF)0x73c0ccbd, (HALF)0x57aa0ff4};
-STATIC CONST HALF c_vec[SHALFS] = {(HALF)0x18e09865, (HALF)0x12ea8057};
+static const HALF a_vec[SHALFS] = {(HALF)0x73c0ccbd, (HALF)0x57aa0ff4};
+static const HALF c_vec[SHALFS] = {(HALF)0x18e09865, (HALF)0x12ea8057};
 #elif 2 * FULL_BITS == SBITS
-STATIC CONST HALF a_vec[SHALFS] = {(HALF)0xccbd, (HALF)0x73c0, (HALF)0x0ff4, (HALF)0x57aa};
-STATIC CONST HALF c_vec[SHALFS] = {(HALF)0x9865, (HALF)0x18e0, (HALF)0x8057, (HALF)0x12ea};
+static const HALF a_vec[SHALFS] = {(HALF)0xccbd, (HALF)0x73c0, (HALF)0x0ff4, (HALF)0x57aa};
+static const HALF c_vec[SHALFS] = {(HALF)0x9865, (HALF)0x18e0, (HALF)0x8057, (HALF)0x12ea};
 #else
 /\../\ FULL_BITS must be 32 or 64 /\../\ !!!
 #endif
-STATIC CONST ZVALUE a_val = {(HALF *)a_vec, SHALFS, 0};
-STATIC CONST ZVALUE c_val = {(HALF *)c_vec, SHALFS, 0};
+static const ZVALUE a_val = {(HALF *)a_vec, SHALFS, 0};
+static const ZVALUE c_val = {(HALF *)c_vec, SHALFS, 0};
 
 /*
  * current s100 generator state
  */
-STATIC RAND s100;
+static RAND s100;
 
 /*
  * declare static functions
  */
-S_FUNC void randreseed64(ZVALUE seed, ZVALUE *res);
-S_FUNC int slotcp(BITSTR *bitstr, FULL *src, int count);
-S_FUNC void slotcp64(BITSTR *bitstr, FULL *src);
+static void randreseed64(ZVALUE seed, ZVALUE *res);
+static int slotcp(BITSTR *bitstr, FULL *src, int count);
+static void slotcp64(BITSTR *bitstr, FULL *src);
 
 /*
  * randreseed64 - scramble seed in 64 bit chunks
@@ -822,7 +831,7 @@ S_FUNC void slotcp64(BITSTR *bitstr, FULL *src);
  * NOTE: This is NOT a pseudo random number generator.  This function is
  *       intended to be used internally by ss100rand() and sshufrand().
  */
-S_FUNC void
+static void
 randreseed64(ZVALUE seed, ZVALUE *res)
 {
     ZVALUE t;      /* temp value */
@@ -951,10 +960,10 @@ randreseed64(ZVALUE seed, ZVALUE *res)
  *      previous s100 state
  */
 RAND *
-zsrand(CONST ZVALUE *pseed, CONST MATRIX *pmat100)
+zsrand(const ZVALUE *pseed, const MATRIX *pmat100)
 {
     RAND *ret;          /* previous s100 state */
-    CONST VALUE *v;     /* value from a passed matrix */
+    const VALUE *v;     /* value from a passed matrix */
     ZVALUE zscram;      /* scrambled 64 bit seed */
     ZVALUE ztmp;        /* temp holding value for zscram */
     ZVALUE seed;        /* to hold *pseed */
@@ -983,7 +992,7 @@ zsrand(CONST ZVALUE *pseed, CONST MATRIX *pmat100)
     /*
      * save the current state to return later
      */
-    ret = (RAND *)malloc(sizeof(RAND));
+    ret = (RAND *)calloc(1, sizeof(RAND));
     if (ret == NULL) {
         math_error("cannot allocate RAND state");
         not_reached();
@@ -1182,7 +1191,7 @@ zsrand(CONST ZVALUE *pseed, CONST MATRIX *pmat100)
  *      previous s100 state
  */
 RAND *
-zsetrand(CONST RAND *state)
+zsetrand(const RAND *state)
 {
     RAND *ret; /* previous s100 state */
 
@@ -1238,7 +1247,7 @@ zsetrand(CONST RAND *state)
  * returns:
  *      number of bits transferred
  */
-S_FUNC int
+static int
 slotcp(BITSTR *bitstr, FULL *src, int count)
 {
     HALF *dh;    /* most significant HALF in dest */
@@ -1411,7 +1420,7 @@ slotcp(BITSTR *bitstr, FULL *src, int count)
  * returns:
  *      number of bits transferred
  */
-S_FUNC void
+static void
 slotcp64(BITSTR *bitstr, FULL *src)
 {
     HALF *dh = bitstr->loc;        /* most significant HALF in dest */
@@ -1975,7 +1984,7 @@ zrand(long cnt, ZVALUE *res)
  *      res - where to place the random bits as ZVALUE
  */
 void
-zrandrange(CONST ZVALUE low, CONST ZVALUE beyond, ZVALUE *res)
+zrandrange(const ZVALUE low, const ZVALUE beyond, ZVALUE *res)
 {
     ZVALUE range;   /* beyond-low */
     ZVALUE rval;    /* random value [0, 2^bitlen) */
@@ -2075,7 +2084,7 @@ irand(long s)
  *      a malloced copy of the state
  */
 RAND *
-randcopy(CONST RAND *state)
+randcopy(const RAND *state)
 {
     RAND *ret; /* return copy of state */
 
@@ -2088,7 +2097,7 @@ randcopy(CONST RAND *state)
     /*
      * malloc state
      */
-    ret = (RAND *)malloc(sizeof(RAND));
+    ret = (RAND *)calloc(1, sizeof(RAND));
     if (ret == NULL) {
         math_error("can't allocate RAND state");
         not_reached();
@@ -2125,7 +2134,7 @@ randfree(RAND *state)
  *      true if states differ
  */
 bool
-randcmp(CONST RAND *s1, CONST RAND *s2)
+randcmp(const RAND *s1, const RAND *s2)
 {
     /* firewall */
     if (s1 == NULL) {
@@ -2166,7 +2175,7 @@ randcmp(CONST RAND *s1, CONST RAND *s2)
  */
 /*ARGSUSED*/
 void
-randprint(CONST RAND *UNUSED(state), int UNUSED(flags))
+randprint(const RAND *UNUSED(state), int UNUSED(flags))
 {
     /* NOTE: It is OK for state == NULL */
     math_str("RAND state");

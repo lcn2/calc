@@ -27,12 +27,6 @@
 #if !defined(INCLUDE_BYTESWAP_H)
 #  define INCLUDE_BYTESWAP_H
 
-#  if defined(CALC_SRC) /* if we are building from the calc source tree */
-#    include "longbits.h"
-#  else
-#    include <calc/longbits.h>
-#  endif
-
 /*
  * SWAP_B8_IN_B16 - swap 8 bits in 16 bits
  *
@@ -98,7 +92,7 @@
         (SWAP_B16_IN_B64(dest, src), (*((USB64 *)(dest)) = ((((*((USB64 *)(dest))) & (USB64)0xff00ff00ff00ff00) >> 8) |  \
                                                             (((*((USB64 *)(dest))) & (USB64)0x00ff00ff00ff00ff) << 8))))
 
-#  else /* HAVE_B64 */
+#  else
 
 /*
  * SWAP_B32_IN_B64 - swap 32 bits in 64 bits (simulated by 2 32 bit values)
@@ -129,7 +123,7 @@
 #    define SWAP_B8_IN_B64(dest, src)                                                                              \
         (SWAP_B8_IN_B32(((USB32 *)dest) + 1, ((USB32 *)src)), SWAP_B8_IN_B32(((USB32 *)dest), ((USB32 *)src) + 1))
 
-#  endif /* HAVE_B64 */
+#  endif
 
 #  if LONG_BITS == 64
 
@@ -137,12 +131,12 @@
 #    define SWAP_B16_IN_LONG(dest, src) SWAP_B16_IN_B64(dest, src)
 #    define SWAP_B8_IN_LONG(dest, src) SWAP_B8_IN_B64(dest, src)
 
-#  else /* LONG_BITS == 64 */
+#  else
 
 #    define SWAP_B32_IN_LONG(dest, src) SWAP_B32_IN_B32(dest, src)
 #    define SWAP_B16_IN_LONG(dest, src) SWAP_B16_IN_B32(dest, src)
 #    define SWAP_B8_IN_LONG(dest, src) SWAP_B8_IN_B32(dest, src)
 
-#  endif /* LONG_BITS == 64 */
+#  endif
 
-#endif /* !INCLUDE_BYTESWAP_H */
+#endif

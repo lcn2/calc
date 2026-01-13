@@ -6,7 +6,7 @@
  *
  *      http://www.isthe.com/chongo/tech/comp/fnv/index.html
  *
- * Copyright (C) 1999-2007,2014,2021-2023  Landon Curt Noll
+ * Copyright (C) 1999-2007,2014,2021-2023,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -34,29 +34,39 @@
  *       associative arrays and other internal processes.
  */
 
-#include "value.h"
-#include "zrand.h"
-#include "zrandom.h"
+/*
+ * important <system> header includes
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdbool.h>
 
+/*
+ * calc local src includes
+ */
+#include "value.h"
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 /*
  * forward declarations
  */
-S_FUNC QCKHASH assochash(ASSOC *ap, QCKHASH val);
-S_FUNC QCKHASH listhash(LIST *lp, QCKHASH val);
-S_FUNC QCKHASH mathash(MATRIX *m, QCKHASH val);
-S_FUNC QCKHASH objhash(OBJECT *op, QCKHASH val);
-S_FUNC QCKHASH randhash(RAND *r, QCKHASH val);
-S_FUNC QCKHASH randomhash(RANDOM *state, QCKHASH val);
-S_FUNC QCKHASH config_hash(CONFIG *cfg, QCKHASH val);
-S_FUNC QCKHASH fnv_strhash(char *ch, QCKHASH val);
-S_FUNC QCKHASH fnv_STRhash(STRING *str, QCKHASH val);
-S_FUNC QCKHASH fnv_fullhash(FULL *v, LEN len, QCKHASH val);
-S_FUNC QCKHASH fnv_zhash(ZVALUE z, QCKHASH val);
-S_FUNC QCKHASH hash_hash(HASH *hash, QCKHASH val);
-S_FUNC QCKHASH blk_hash(BLOCK *blk, QCKHASH val);
+static QCKHASH assochash(ASSOC *ap, QCKHASH val);
+static QCKHASH listhash(LIST *lp, QCKHASH val);
+static QCKHASH mathash(MATRIX *m, QCKHASH val);
+static QCKHASH objhash(OBJECT *op, QCKHASH val);
+static QCKHASH randhash(RAND *r, QCKHASH val);
+static QCKHASH randomhash(RANDOM *state, QCKHASH val);
+static QCKHASH config_hash(CONFIG *cfg, QCKHASH val);
+static QCKHASH fnv_strhash(char *ch, QCKHASH val);
+static QCKHASH fnv_STRhash(STRING *str, QCKHASH val);
+static QCKHASH fnv_fullhash(FULL *v, LEN len, QCKHASH val);
+static QCKHASH fnv_zhash(ZVALUE z, QCKHASH val);
+static QCKHASH hash_hash(HASH *hash, QCKHASH val);
+static QCKHASH blk_hash(BLOCK *blk, QCKHASH val);
 
 /*
  * quasi_fnv - quasi Fowler/Noll/Vo-0 32 bit hash
@@ -226,7 +236,7 @@ hashvalue(VALUE *vp, QCKHASH val)
 /*
  * Return a trivial hash value for an association.
  */
-S_FUNC QCKHASH
+static QCKHASH
 assochash(ASSOC *ap, QCKHASH val)
 {
     /*
@@ -241,7 +251,7 @@ assochash(ASSOC *ap, QCKHASH val)
 /*
  * Return a trivial hash value for a list.
  */
-S_FUNC QCKHASH
+static QCKHASH
 listhash(LIST *lp, QCKHASH val)
 {
     /*
@@ -265,7 +275,7 @@ listhash(LIST *lp, QCKHASH val)
 /*
  * Return a trivial hash value for a matrix.
  */
-S_FUNC QCKHASH
+static QCKHASH
 mathash(MATRIX *m, QCKHASH val)
 {
     long skip;
@@ -314,7 +324,7 @@ mathash(MATRIX *m, QCKHASH val)
 /*
  * Return a trivial hash value for an object.
  */
-S_FUNC QCKHASH
+static QCKHASH
 objhash(OBJECT *op, QCKHASH val)
 {
     int i;
@@ -337,7 +347,7 @@ objhash(OBJECT *op, QCKHASH val)
  * returns:
  *      trivial hash integer
  */
-S_FUNC QCKHASH
+static QCKHASH
 randhash(RAND *r, QCKHASH val)
 {
     /*
@@ -368,7 +378,7 @@ randhash(RAND *r, QCKHASH val)
  * returns:
  *      trivial hash integer
  */
-S_FUNC QCKHASH
+static QCKHASH
 randomhash(RANDOM *state, QCKHASH val)
 {
     /*
@@ -395,7 +405,7 @@ randomhash(RANDOM *state, QCKHASH val)
 /*
  * config_hash - return a trivial hash for a configuration state
  */
-S_FUNC QCKHASH
+static QCKHASH
 config_hash(CONFIG *cfg, QCKHASH val)
 {
     USB32 value; /* value to hash from hash elements */
@@ -503,7 +513,7 @@ config_hash(CONFIG *cfg, QCKHASH val)
  * returns:
  *      a 32 bit QCKHASH value
  */
-S_FUNC QCKHASH
+static QCKHASH
 fnv_strhash(char *ch, QCKHASH val)
 {
     /*
@@ -525,7 +535,7 @@ fnv_strhash(char *ch, QCKHASH val)
  * returns:
  *      a 32 bit QCKHASH value
  */
-S_FUNC QCKHASH
+static QCKHASH
 fnv_STRhash(STRING *str, QCKHASH val)
 {
     char *ch;
@@ -554,7 +564,7 @@ fnv_STRhash(STRING *str, QCKHASH val)
  * returns:
  *      a 32 bit QCKHASH value
  */
-S_FUNC QCKHASH
+static QCKHASH
 fnv_fullhash(FULL *v, LEN len, QCKHASH val)
 {
     /*
@@ -576,7 +586,7 @@ fnv_fullhash(FULL *v, LEN len, QCKHASH val)
  * returns:
  *      a 32 bit QCKHASH value
  */
-S_FUNC QCKHASH
+static QCKHASH
 fnv_zhash(ZVALUE z, QCKHASH val)
 {
     LEN n;
@@ -623,7 +633,7 @@ fnv_zhash(ZVALUE z, QCKHASH val)
  * returns:
  *      a 32 bit QCKHASH value
  */
-S_FUNC QCKHASH
+static QCKHASH
 hash_hash(HASH *hash, QCKHASH val)
 {
     int i;
@@ -647,7 +657,7 @@ hash_hash(HASH *hash, QCKHASH val)
  * returns:
  *      a 32 bit QCKHASH value
  */
-S_FUNC QCKHASH
+static QCKHASH
 blk_hash(BLOCK *blk, QCKHASH val)
 {
     int i;

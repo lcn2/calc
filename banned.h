@@ -42,7 +42,7 @@
  *
  * for how to send us such a bug report.
  *
- * Copyright (C) 2021  Landon Curt Noll
+ * Copyright (C) 2021,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -67,7 +67,7 @@
 
 #if !defined(PRE_HAVE_BAN_PRAGMA_H)
 #  include "have_ban_pragma.h"
-#endif /* ! PRE_HAVE_BAN_PRAGMA_H */
+#endif
 
 #if !defined(INCLUDE_BANNED_H)
 #  define INCLUDE_BANNED_H
@@ -105,7 +105,7 @@
 #    if defined(HAVE_PRAGMA_GCC_POSION)
 #      undef strcpy
 #      pragma GCC poison strcpy
-#    endif /* HAVE_PRAGMA_GCC_POSION */
+#    endif
 
 /*
  * If one is not careful, strcat() can lead to buffer overflows.
@@ -114,7 +114,7 @@
 #    if defined(HAVE_PRAGMA_GCC_POSION)
 #      undef strcat
 #      pragma GCC poison strcat
-#    endif /* HAVE_PRAGMA_GCC_POSION */
+#    endif
 
 /*
  * If one is not careful, strncpy() can lead to buffer overflows.
@@ -123,7 +123,7 @@
 #    if defined(HAVE_PRAGMA_GCC_POSION)
 #      undef strncpy
 #      pragma GCC poison strncpy
-#    endif /* HAVE_PRAGMA_GCC_POSION */
+#    endif
 
 /*
  * If one is not careful, strncat() can lead to buffer overflows.
@@ -132,7 +132,7 @@
 #    if defined(HAVE_PRAGMA_GCC_POSION)
 #      undef strncat
 #      pragma GCC poison strncat
-#    endif /* HAVE_PRAGMA_GCC_POSION */
+#    endif
 
 /*
  * If one is not careful, sprintf() can lead to buffer overflows.
@@ -141,7 +141,7 @@
 #    if defined(HAVE_PRAGMA_GCC_POSION)
 #      undef sprintf
 #      pragma GCC poison sprintf
-#    endif /* HAVE_PRAGMA_GCC_POSION */
+#    endif
 
 /*
  * If one is not careful, vsprintf() can lead to buffer overflows.
@@ -150,15 +150,25 @@
 #    if defined(HAVE_PRAGMA_GCC_POSION)
 #      undef vsprintf
 #      pragma GCC poison vsprintf
-#    endif /* HAVE_PRAGMA_GCC_POSION */
+#    endif
 
 /*
- * XXX - As of 2021, functions such as:
+ * If one is not careful, mktemp() can lead to buffer overflows.
+ * Use mkstemp() instead.
+ */
+#    if defined(HAVE_PRAGMA_GCC_POSION)
+#      undef mktemp
+#      pragma GCC poison mktemp
+#    endif
+
+/*
+ * As of 2026, functions such as:
  *
  *      gmtime_s
  *      localtime_s
  *      ctime_s
  *      asctime_s
+ *      strtok_s
  *
  * are not universal.  We cannot yet ban the following
  * functions because we do not have a portable AND
@@ -171,8 +181,10 @@
  *      ctime_r
  *      asctime
  *      asctime_r
+ *      strtok
+ *      strtok_r
  */
 
-#  endif /* !UNBAN */
+#  endif
 
-#endif /* !INCLUDE_BANNED_H */
+#endif

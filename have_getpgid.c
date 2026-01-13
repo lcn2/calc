@@ -1,7 +1,7 @@
 /*
  * have_getpgid - determine if we have getpgid()
  *
- * Copyright (C) 1999,2021  Landon Curt Noll
+ * Copyright (C) 1999,2021,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -38,14 +38,14 @@
  *              undefined ==> do not or cannot call getpgid()
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
+#include <unistd.h>
 #include <sys/types.h>
-#include "have_unistd.h"
-#if defined(HAVE_UNISTD_H)
-#  include <unistd.h>
-#endif
 
-#include "banned.h" /* include after system header <> includes */
+#include "banned.h" /* include after all other includes */
 
 int
 main(void)
@@ -54,13 +54,13 @@ main(void)
 
     printf("#undef HAVE_GETPGID /* no */\n");
 
-#else /* HAVE_NO_GETPGID */
+#else
 
     (void)getpgid((pid_t)0);
 
     printf("#define HAVE_GETPGID /* yes */\n");
 
-#endif /* HAVE_NO_GETPGID */
+#endif
 
     /* exit(0); */
     return 0;

@@ -1,7 +1,7 @@
 /*
  * hash - one-way hash routines
  *
- * Copyright (C) 1999-2007,2021-2023  Landon Curt Noll
+ * Copyright (C) 1999-2007,2021-2023,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -24,29 +24,33 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
-#include "have_string.h"
-#ifdef HAVE_STRING_H
-#  include <string.h>
-#endif
+#include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include "calc.h"
-#include "alloc.h"
-#include "value.h"
-#include "zrand.h"
-#include "zrandom.h"
-#include "hash.h"
+#include <stdint.h>
+#include <stdbool.h>
 
+/*
+ * calc local src includes
+ */
+#include "value.h"
+#include "calc.h"
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 /*
  * external hash_setup functions
  */
-E_FUNC void shs_init_state(HASH *);
-E_FUNC void sha1_init_state(HASH *);
-E_FUNC void MD5_init_state(HASH *);
+extern void shs_init_state(HASH *);
+extern void sha1_init_state(HASH *);
+extern void MD5_init_state(HASH *);
 
 /*
  * hash_long can deal with bool's, int's, FLAGS's and LEN's
@@ -59,7 +63,7 @@ E_FUNC void MD5_init_state(HASH *);
 /*
  * hash_setup - setup the hash state for a given hash
  */
-STATIC struct hash_setup {
+static struct hash_setup {
     int type;                   /* hash type (see XYZ_HASH_TYPE below) */
     void (*init_state)(HASH *); /* initialize a hash state */
 } htbl[] = {
@@ -86,7 +90,7 @@ hash_init(int type, HASH *state)
      * malloc if needed
      */
     if (state == NULL) {
-        state = (HASH *)malloc(sizeof(HASH));
+        state = (HASH *)calloc(1, sizeof(HASH));
         if (state == NULL) {
             math_error("hash_init: cannot malloc HASH");
             not_reached();
@@ -163,7 +167,7 @@ hash_copy(HASH *state)
     /*
      * malloc new state
      */
-    hnew = (HASH *)malloc(sizeof(HASH));
+    hnew = (HASH *)calloc(1, sizeof(HASH));
     if (hnew == NULL) {
         math_error("hash_init: cannot malloc HASH");
         not_reached();

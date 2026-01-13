@@ -1,7 +1,7 @@
 /*
  * custtbl - custom interface table
  *
- * Copyright (C) 1999-2007,2021,2023  Landon Curt Noll
+ * Copyright (C) 1999-2007,2021,2023,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -24,14 +24,20 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
 #include <unistd.h>
+#include <stdint.h>
+#include <stdbool.h>
 
-#include "../have_const.h"
+/*
+ * calc local src includes
+ */
 #include "../value.h"
 #include "../custom.h"
 
-#include "../errtbl.h"
-#include "../banned.h" /* include after system header <> includes */
+#  include "../banned.h" /* include after all other includes */
 
 /*
  * custom_compiled - determine if custom functions are compiled into libcustcalc
@@ -40,14 +46,18 @@
 s*      true  ==> libcustcalc was compiled with CUSTOM defined
  *      false ==> libcustcalc was compiled with CUSTOM undefined
  */
-E_FUNC bool
+extern bool
 custom_compiled(void)
 {
 #if defined(CUSTOM)
+
     return true;
-#else  /* CUSTOM */
+
+#else
+
     return false;
-#endif /* CUSTOM */
+
+#endif
 }
 
 /*
@@ -61,19 +71,19 @@ custom_compiled(void)
  *
  * Declare custom functions as follows:
  *
- *      E_FUNC VALUE c_xyz(char*, int, VALUE**);
+ *      extern VALUE c_xyz(char*, int, VALUE**);
  *
  * We suggest that you sort the entries below by name.
  */
-E_FUNC VALUE c_argv(char *, int, VALUE **);
-E_FUNC VALUE c_devnull(char *, int, VALUE **);
-E_FUNC VALUE c_help(char *, int, VALUE **);
-E_FUNC VALUE c_sysinfo(char *, int, VALUE **);
-E_FUNC VALUE c_pzasusb8(char *, int, VALUE **);
-E_FUNC VALUE c_pmodm127(char *, int, VALUE **);
-E_FUNC VALUE c_register(char *, int, VALUE **);
+extern VALUE c_argv(char *, int, VALUE **);
+extern VALUE c_devnull(char *, int, VALUE **);
+extern VALUE c_help(char *, int, VALUE **);
+extern VALUE c_sysinfo(char *, int, VALUE **);
+extern VALUE c_pzasusb8(char *, int, VALUE **);
+extern VALUE c_pmodm127(char *, int, VALUE **);
+extern VALUE c_register(char *, int, VALUE **);
 
-#  define U_FUNC(name) E_FUNC VALUE name(char *, int, VALUE **);
+#  define U_FUNC(name) extern VALUE name(char *, int, VALUE **);
 
 // pipe/fork/exec
 U_FUNC(u_pfe_fork)
@@ -101,7 +111,7 @@ U_FUNC(u_vadd_getpid)
 U_FUNC(u_vadd_getppid)
 U_FUNC(u_vadd_inputname) // cspell:ignore inputname
 
-#endif /* CUSTOM */
+#endif
 
 /*
  * custom interface table
@@ -123,7 +133,7 @@ U_FUNC(u_vadd_inputname) // cspell:ignore inputname
  * without wrapping on a 80 col window, the description is probably
  * too long and will not look nice in the show custom output.
  */
-CONST struct custom cust[] = {
+const struct custom cust[] = {
 
 #if defined(CUSTOM)
 
@@ -172,7 +182,7 @@ CONST struct custom cust[] = {
     {"basename", "extract the base portion of a pathname", 1, 1, u_vadd_basename},
     {"dirname", "extract the directory part of a pathname", 1, 1, u_vadd_dirname},
 
-#endif /* CUSTOM */
+#endif
 
     /*
      * This must be at the end of this table!!!

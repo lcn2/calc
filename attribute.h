@@ -34,8 +34,7 @@
  * For example, MSVC, TenDRAm and Little C Compiler doesn't support __attribute__.
  * Early gcc does not support __attribute__.
  *
- * Not all compiles have __has_builtin
- */
+ * Not all compiles have __has_builtin */
 #  if !defined(__attribute__) && (defined(__cplusplus) || !defined(__GNUC__) || __GNUC__ == 2 && __GNUC_MINOR__ < 8)
 #    define __attribute__(A)
 #  endif
@@ -59,6 +58,6 @@
 #    define not_reached() __builtin_unreachable()
 #  else
 #    define not_reached() abort()
-#  endif /* __has_builtin(__builtin_unreachable) */
+#  endif
 
-#endif /* !INCLUDE_ATTRIBUTE_H */
+#endif

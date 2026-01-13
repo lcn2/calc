@@ -1,7 +1,7 @@
 /*
  * c_sysinfo - names and values of selected #defines
  *
- * Copyright (C) 1999-2007,2021-2023  Landon Curt Noll
+ * Copyright (C) 1999-2007,2021-2023,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -30,42 +30,45 @@
  */
 #if defined(CUSTOM)
 int c_sysinfo_allowed = 1; /* CUSTOM defined */
-#else                      /* CUSTOM */
+#else
 int c_sysinfo_allowed = 0; /* CUSTOM undefined */
-#endif                     /* CUSTOM */
+#endif
 
 #if defined(CUSTOM)
 
+/*
+ * important <system> header includes
+ */
 #  include <stdio.h>
+#  include <stdlib.h>
+#  include <string.h>
 #  include <ctype.h>
+#  include <setjmp.h>
+#  include <sys/stat.h>
+#  include <stdint.h>
+#  include <stdbool.h>
 
-#  include "../have_string.h"
-#  if defined(HAVE_STRING_H)
-#    include <string.h>
-#  endif
-
-#  include "../have_const.h"
+/*
+ * calc local src includes
+ */
 #  include "../value.h"
 #  include "../custom.h"
-
-#  include "../config.h"
 #  include "../lib_calc.h"
 #  include "../calc.h"
 #  include "../longbits.h"
 #  define CHECK_L_FORMAT
-#  include "../block.h"
 #  include "../conf.h"
 #  include "../endian_calc.h"
+#  include "../file.h"
+#  include "../have_fpos_pos.h"
 #  include "../fposval.h"
 #  include "../hist.h"
 #  include "../prime.h"
-#  include "../zrand.h"
-#  include "../zrandom.h"
-
+#  include "../attribute.h"
 #  include "../have_unused.h"
-
 #  include "../errtbl.h"
-#  include "../banned.h" /* include after system header <> includes */
+
+#  include "../banned.h" /* include after all other includes */
 
 /*
  * sys_info - names and values of selected #defines
@@ -76,18 +79,20 @@ struct infoname {
     char *str;     /* non-NULL ==> value of #define is a string */
     FULL nmbr;     /* if str==NULL ==> value fo #define as a FULL */
 };
-STATIC struct infoname sys_info[] = {
-    {"S100", "slots in an subtractive 100 table", NULL, (FULL)S100},
-    {"BASE", "base for calculations", NULL, (FULL)BASE},
+static struct infoname sys_info[] = {
+    {"ADDR_REDUCT", "power of 2 address space reduction", NULL, (FULL)ADDR_REDUCT},
     {"BASE1", "one less than base", NULL, (FULL)BASE},
+    {"BASE", "base for calculations", NULL, (FULL)BASE},
     {"BASEB", "bits in the calculation base", NULL, (FULL)BASEB},
+    {"BASEB_LOG2", "log base 2 of bits in the calculation base", NULL, (FULL)BASEB_LOG2},
     {"BASEDIG", "number of digits in base", NULL, (FULL)BASEDIG},
     {"BIG_ENDIAN", "Most Significant Byte first symbol", NULL, (FULL)BIG_ENDIAN},
     {"BLK_CHUNKSIZE", "default allocation chunk size for blocks", NULL, (FULL)BLK_CHUNKSIZE},
     {"BLK_DEF_MAXPRINT", "default block octets to print", NULL, (FULL)BLK_DEF_MAXPRINT},
     {"BLUM_PREGEN", "non-default predefined Blum generators", NULL, (FULL)BLUM_PREGEN},
-    {"CALCEXT", "extension for files read in", CALCEXT, (FULL)0},
     {"CALC_BYTE_ORDER", "Byte order (LITTLE_ENDIAN or BIG_ENDIAN)", NULL, (FULL)CALC_BYTE_ORDER},
+    {"CALC_CHARBIT", "length in bits of a character, or byte", NULL, (FULL)CALC_CHARBIT},
+    {"CALCEXT", "extension for files read in", CALCEXT, (FULL)0},
     {"CUSTOMHELPDIR", "location of the custom help directory", CUSTOMHELPDIR, (FULL)0},
     {"DEFAULTCALCBINDINGS", "default key bindings file", DEFAULTCALCBINDINGS, (FULL)0},
     {"DEFAULTCALCHELP", "help file that -h prints", DEFAULTCALCHELP, (FULL)0},
@@ -95,56 +100,99 @@ STATIC struct infoname sys_info[] = {
     {"DEFAULTCALCPATH", "default :-separated search path", DEFAULTCALCPATH, (FULL)0},
     {"DEFAULTCALCRC", "default :-separated startup file list", DEFAULTCALCRC, (FULL)0},
     {"DEFAULTSHELL", "default shell to use", DEFAULTSHELL, (FULL)0},
-    {"DEV_BITS", "device number size in bits", NULL, (FULL)DEV_BITS},
+#if defined(DEV_BITS)
+    {"DEV_BITS", "length in bits of the st_dev stat element, or device number", NULL, (FULL)DEV_BITS},
+#endif
+#if defined(DEV_LEN)
+    {"DEV_LEN", "length in bytes of the st_dev stat element, or device number", NULL, (FULL)DEV_LEN},
+#endif
     {"DISPLAY_DEFAULT", "default digits for float display", NULL, (FULL)DISPLAY_DEFAULT},
-    {"EPSILONPREC_DEFAULT", "2^-EPSILON_DEFAULT <= EPSILON_DEFAULT", NULL, (FULL)EPSILONPREC_DEFAULT},
     {"EPSILON_DEFAULT", "allowed error for float calculations", EPSILON_DEFAULT, (FULL)0},
+    {"EPSILONPREC_DEFAULT", "2^-EPSILON_DEFAULT <= EPSILON_DEFAULT", NULL, (FULL)EPSILONPREC_DEFAULT},
     {"ERRMAX", "default errmax value", NULL, (FULL)ERRMAX},
-    {"false", "boolean false", NULL, (FULL) false},
-    {"FILEPOS_BITS", "file position size in bits", NULL, (FULL)FILEPOS_BITS},
+#if defined(FPOS_POS_BITS)
+    {"FPOS_POS_BITS", "length in bits of a file position value", NULL, (FULL)FPOS_POS_BITS},
+#endif
+#if defined(FPOS_POS_LEN)
+    {"FPOS_POS_LEN", "length in bytes of a file position value", NULL, (FULL)FPOS_POS_LEN},
+#endif
+#if defined(FPOS_T_BITS)
+    {"FPOS_T_BITS", "length in bits of the type fpos_t, or file position bit length", NULL, (FULL)FPOS_T_BITS},
+#endif
+#if defined(FPOS_T_LEN)
+    {"FPOS_T_LEN", "length in bytes of the type fpos_t, or file position byte length", NULL, (FULL)FPOS_T_LEN},
+#endif
     {"FULL_BITS", "bits in a FULL", NULL, (FULL)FULL_BITS},
+    {"FULL_LEN", "length in bytes of a FULL", NULL, (FULL)FULL_LEN},
+    {"HALF_BITS", "bits in a HALF, or alias for BASEB", NULL, (FULL)HALF_BITS},
+    {"HALF_LEN", "length in bytes of a HALF", NULL, (FULL)HALF_LEN},
     {"HELPDIR", "location of the help directory", HELPDIR, (FULL)0},
     {"HIST_BINDING_FILE", "Default binding file", HIST_BINDING_FILE, (FULL)0},
     {"HIST_SIZE", "Default history size", NULL, (FULL)HIST_SIZE},
     {"INIT_J", "initial 1st walking subtractive 100 shuffle table index", NULL, (FULL)INIT_J},
     {"INIT_K", "initial 2nd walking subtractive 100 shuffle table index", NULL, (FULL)INIT_K},
-    {"INODE_BITS", "inode number size in bits", NULL, (FULL)INODE_BITS},
+#if defined(INODE_BITS)
+    {"INODE_BITS", "length in bits of the type st_ino, or inode number bit length", NULL, (FULL)INODE_BITS},
+#endif
+#if defined(INODE_LEN)
+    {"INODE_LEN", "length in bits of the type st_ino, or inode number byte length", NULL, (FULL)INODE_LEN},
+#endif
+#if defined(INTPTR_WIDTH)
+    {"INTPTR_WIDTH", "bits in a intptr_t", NULL, (FULL)INTPTR_WIDTH},
+#endif
     {"LITTLE_ENDIAN", "Least Significant Byte first symbol", NULL, (FULL)LITTLE_ENDIAN},
     {"LONG_BITS", "bit length of a long", NULL, (FULL)LONG_BITS},
     {"MAP_POPCNT", "number of odd primes in pr_map", NULL, (FULL)MAP_POPCNT},
     {"MAX_CALCRC", "maximum allowed length of $CALCRC", NULL, (FULL)MAX_CALCRC},
     {"MAXCMD", "max length of command invocation", NULL, (FULL)MAXCMD},
+    {"MAXDATA", "largest data object in bytes", NULL, (FULL)MAXDATA},
+    {"MAXDATA_LOG2", "log base 2 of the largest data object in bytes", NULL, (FULL)MAXDATA_LOG2},
     {"MAXDIM", "max number of dimensions in matrices", NULL, (FULL)MAXDIM},
     {"MAXERROR", "max length of error message string", NULL, (FULL)MAXERROR},
     {"MAXFILES", "max number of opened files", NULL, (FULL)MAXFILES},
     {"MAXFULL", "largest SFULL value", NULL, (FULL)MAXFULL},
     {"MAXHALF", "largest SHALF value", NULL, (FULL)MAXHALF},
     {"MAXLABELS", "max number of user labels in function", NULL, (FULL)MAXLABELS},
+    {"MAXLEN_LOG2", "log base 2 of MAXLEN+1", NULL, (FULL)MAXLEN_LOG2},
     {"MAXLEN", "longest storage size allowed", NULL, (FULL)MAXLEN},
+    {"MAXLEN", "maximum length of internal integer values in in units of HALF", NULL, (FULL)MAXLEN},
     {"MAXLONG", "largest long val", NULL, (FULL)MAXLONG},
-    {"MAXPRINT_DEFAULT", "default number of elements printed", NULL, (FULL)MAXPRINT_DEFAULT},
-    {"MAXREDC", "number of entries in REDC cache", NULL, (FULL)MAXREDC},
-    {"MAXSCANCOUNT", "default max scan errors before an abort", NULL, (FULL)MAXSCANCOUNT},
-    {"MAXSTACK", "max depth of evaluation stack", NULL, (FULL)MAXSTACK},
-    {"MAXUFULL", "largest FULL value", NULL, (FULL)MAXUFULL},
-    {"MAXULONG", "largest unsigned long val", NULL, (FULL)MAXULONG},
     {"MAX_MAP_PRIME", "largest prime in pr_map", NULL, (FULL)MAX_MAP_PRIME},
     {"MAX_MAP_VAL", "largest bit in pr_map", NULL, (FULL)MAX_MAP_VAL},
     {"MAX_PFACT_VAL", "max x, for which pfact(x) is a long", NULL, (FULL)MAX_PFACT_VAL},
+    {"MAXPRINT_DEFAULT", "default number of elements printed", NULL, (FULL)MAXPRINT_DEFAULT},
+    {"MAXREDC", "number of entries in REDC cache", NULL, (FULL)MAXREDC},
+    {"MAXSCANCOUNT", "default max scan errors before an abort", NULL, (FULL)MAXSCANCOUNT},
     {"MAX_SM_PRIME", "largest 32 bit prime", NULL, (FULL)MAX_SM_PRIME},
     {"MAX_SM_VAL", "largest 32 bit value", NULL, (FULL)MAX_SM_VAL},
+    {"MAXSTACK", "max depth of evaluation stack", NULL, (FULL)MAXSTACK},
+    {"MAXUFULL", "largest FULL value", NULL, (FULL)MAXUFULL},
+    {"MAXULONG", "largest unsigned long val", NULL, (FULL)MAXULONG},
+    {"MODE_LEN", "maximum length of a file mode string", NULL, (FULL)MODE_LEN},
     {"MUL_ALG2", "default size for alternative multiply", NULL, (FULL)MUL_ALG2},
     {"NXT_MAP_PRIME", "smallest odd prime not in pr_map", NULL, (FULL)NXT_MAP_PRIME},
     {"NXT_PFACT_VAL", "next prime for higher pfact values", NULL, (FULL)NXT_PFACT_VAL},
-    {"OFF_T_BITS", "file offset size in bits", NULL, (FULL)OFF_T_BITS},
+#if defined(OFF_T_BITS)
+    {"OFF_T_BITS", "length in bits of the st_size stat element, or file offset bit length", NULL, (FULL)OFF_T_BITS},
+#endif
+#if defined(OFF_T_LEN)
+    {"OFF_T_LEN", "length in bytes of the st_size stat element, or file offset byte length", NULL, (FULL)OFF_T_LEN},
+#endif
     {"PIX_32B", "max pix() value", NULL, (FULL)PIX_32B},
     {"POW_ALG2", "default size for using REDC for powers", NULL, (FULL)POW_ALG2},
+#if defined(PTR_BITS)
+    {"PTR_BITS", "length in bits of a memory pointer", NULL, (FULL)PTR_BITS},
+#endif
+#if defined(PTR_LEN)
+    {"PTR_LEN", "length in bytes of a memory pointer", NULL, (FULL)PTR_LEN},
+#endif
     {"REDC_ALG2", "default size using alternative REDC alg", NULL, (FULL)REDC_ALG2},
+    {"REGNUM_MAX", "highest custom register number", NULL, (FULL)CUSTOM_REG_MAX},
+    {"S100", "slots in an subtractive 100 table", NULL, (FULL)S100},
     {"SBITS", "size of additive or shuffle entry in bits", NULL, (FULL)SBITS},
     {"SBYTES", "size of additive or shuffle entry in bytes", NULL, (FULL)SBYTES},
     {"SCNT", "length of subtractive 100 table in FULLs", NULL, (FULL)SCNT},
-    {"SEEDXORBITS", "low bits of subtractive 100 shuffle pseudo-random number generator seed devoted to xor", NULL,
-     (FULL)SEEDXORBITS},
+    {"SEEDXORBITS", "low bits of subtractive 100 shuffle PRNG seed devoted to xor", NULL, (FULL)SEEDXORBITS},
     {"SHALFS", "size of additive or shuffle entry in HALFs", NULL, (FULL)SHALFS},
     {"SHUFCNT", "size of shuffle table in entries", NULL, (FULL)SHUFCNT},
     {"SHUFLEN", "length of shuffle table in FULLs", NULL, (FULL)SHUFLEN},
@@ -153,13 +201,11 @@ STATIC struct infoname sys_info[] = {
     {"SLEN", "number of FULLs in a shuffle table entry", NULL, (FULL)SLEN},
     {"SQ_ALG2", "default size for alternative squaring", NULL, (FULL)SQ_ALG2},
     {"SYMBOLSIZE", "max symbol name size", NULL, (FULL)SYMBOLSIZE},
-    {"TEN_MAX", "10^(2^TEN_MAX): largest base10 conversion const", NULL, (FULL)TEN_MAX},
+    {"TEN_MAX", "10^(2^TEN_MAX) is largest base10 conversion const", NULL, (FULL)TEN_MAX},
     {"TOPFULL", "highest bit in FULL", NULL, (FULL)TOPFULL},
     {"TOPHALF", "highest bit in a HALF", NULL, (FULL)TOPHALF},
     {"TOPLONG", "top long bit", NULL, (FULL)TOPLONG},
-    {"true", "boolean true", NULL, (FULL) true},
     {"USUAL_ELEMENTS", "usual number of elements for objects", NULL, (FULL)USUAL_ELEMENTS},
-    {"REGNUM_MAX", "highest custom register number", NULL, (FULL)CUSTOM_REG_MAX},
 
     /* must be last */
     {NULL, NULL, NULL, (FULL)0}};
@@ -167,9 +213,9 @@ STATIC struct infoname sys_info[] = {
 /*
  * forward declarations
  */
-S_FUNC void dump_name_meaning(void); /* custom("sysinfo", 0) */
-S_FUNC void dump_name_value(void);   /* custom("sysinfo", 1) */
-S_FUNC void dump_mening_value(void); /* custom("sysinfo", 2) */
+static void dump_name_meaning(void); /* custom("sysinfo", 0) */
+static void dump_name_value(void);   /* custom("sysinfo", 1) */
+static void dump_mening_value(void); /* custom("sysinfo", 2) */
 
 /*
  * c_sysinfo - return a calc #define value
@@ -298,7 +344,7 @@ c_sysinfo(char *UNUSED(name), int count, VALUE **vals)
 /*
  * dump_name_meaning - print all infonames and meanings
  */
-S_FUNC void
+static void
 dump_name_meaning(void)
 {
     struct infoname *p; /* current infoname */
@@ -312,7 +358,7 @@ dump_name_meaning(void)
 /*
  * dump_name_value - print all infonames and values
  */
-S_FUNC void
+static void
 dump_name_value(void)
 {
     struct infoname *p; /* current infoname */
@@ -336,7 +382,7 @@ dump_name_value(void)
 /*
  * dump_mening_value - print all values and meanings
  */
-S_FUNC void
+static void
 dump_mening_value(void)
 {
     struct infoname *p; /* current infoname */
@@ -357,4 +403,4 @@ dump_mening_value(void)
     }
 }
 
-#endif /* CUSTOM */
+#endif

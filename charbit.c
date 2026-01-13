@@ -1,7 +1,7 @@
 /*
  * charbit - determine what CHAR_BIT is and define CALC_CHARBIT
  *
- * Copyright (C) 2021  Landon Curt Noll
+ * Copyright (C) 2021,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -31,34 +31,29 @@
  * This prog outputs several defines:
  *
  *      CALC_CHARBIT
- *              after including have_limits.h and perhaps <limits.h>,
- *              output CALC_CHARBIT as CHAR_BIT (from <limits.h>, or as 8.
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
-#include "have_limits.h"
-#if defined(HAVE_LIMITS_H)
-#  include <limits.h>
-#endif
+#include <limits.h>
 
-#include "banned.h" /* include after system header <> includes */
+#include "banned.h" /* include after all other includes */
 
 int
 main(void)
 {
-    printf("#include \"have_limits.h\"\n");
-    printf("#if defined(HAVE_LIMITS_H)\n");
     printf("#include <limits.h>\n");
-    printf("#endif\n\n");
 #if defined(CHAR_BIT)
 
     printf("#define CALC_CHARBIT (CHAR_BIT) /* from <limits.h> */\n");
 
-#else /* CHAR_BIT */
+#else
 
     printf("#define CALC_CHARBIT (8) /* no CHAR_BIT, assume 8 */\n");
 
-#endif /* CHAR_BIT */
+#endif
 
     /* exit(0); */
     return 0;

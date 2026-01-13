@@ -1,7 +1,7 @@
 /*
  * longbits - Determine the number if bits in a char, short, int or long
  *
- * Copyright (C) 1999-2007,2014,2021,2023  Landon Curt Noll
+ * Copyright (C) 1999-2007,2014,2021,2023,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -23,6 +23,21 @@
  * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
+
+/*
+ * important <system> header includes
+ */
+#include <stdio.h>
+#include <unistd.h>
+#include <ctype.h>
+#include <stdlib.h>
+
+/*
+ * calc local src includes
+ */
+#include "charbit.h"
+
+#include "banned.h" /* include after all other includes */
 
 /*
  * usage:
@@ -65,10 +80,6 @@
  *                                and SB64 (signed 64 bit value)
  *              undefined ==> do not use USB64 nor SB64
  *
- *      BOOL_B64
- *              If HAVE_B64 undefined ==> false
- *              If HAVE_B64 defined ==> true
- *
  *      USB64   unsigned 64 bit value if HAVE_B64 is defined
  *      SB64    signed 64 bit value if HAVE_B64 is defined
  *
@@ -82,23 +93,6 @@
  *
  * We will exit 0 if all is well, non-zero with an error to stderr otherwise.
  */
-
-#include <stdio.h>
-#include <ctype.h>
-
-#include "have_unistd.h"
-#if defined(HAVE_UNISTD_H)
-#  include <unistd.h>
-#endif
-
-#include "have_stdlib.h"
-#ifdef HAVE_STDLIB_H
-#  include <stdlib.h>
-#endif
-
-#include "charbit.h"
-
-#include "banned.h" /* include after system header <> includes */
 
 char *program; /* our name */
 
@@ -150,13 +144,17 @@ main(int argc, char **argv)
      * We use "void *" as the size of a generic pointer.
      */
     printf("#undef PTR_LEN\n");
-#if MAJOR_VER < 3
-    printf("#define PTR_LEN %ld\t\t/%s/\n", (long int)sizeof(void *), "* length of a pointer *");
-#else  /* MAJOR_VER < 3 */
-    printf("#define PTR_LEN UINTPTR_WIDTH\t\t/%s/\n", "* length of a pointer *");
-#endif /* MAJOR_VER < 3 */
+#if MAJOR_VER >= 3
+    printf("#define PTR_LEN INTPTR_WIDTH\t\t/%s/\n", "* length of a pointer *");
+#else
+    printf("#define PTR_LEN %zu\t\t/%s/\n", sizeof(void *), "* length of a pointer *");
+#endif
     printf("#undef PTR_BITS\n");
-    printf("#define PTR_BITS %ld\t\t/%s/\n", (long int)sizeof(void *) * CALC_CHARBIT, "* bit length of a pointer *");
+#if MAJOR_VER >= 3
+    printf("#define PTR_BITS %zu\t\t/%s/\n", INTPTR_WIDTH * CALC_CHARBIT, "* bit length of a pointer *");
+#else
+    printf("#define PTR_BITS %zu\t\t/%s/\n", sizeof(void *) * CALC_CHARBIT, "* bit length of a pointer *");
+#endif
     putchar('\n');
 
     /*

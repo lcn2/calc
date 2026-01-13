@@ -1,7 +1,7 @@
 /*
  * qio - scanf and printf routines for arbitrary precision rational numbers
  *
- * Copyright (C) 1999-2007,2021-2023  David I. Bell
+ * Copyright (C) 1999-2007,2021-2023,2026  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -23,22 +23,33 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
+#include <stdlib.h>
+#include <stdarg.h>
+#include <stdint.h>
+#include <stdbool.h>
+
+/*
+ * calc local src includes
+ */
+#include "zmath.h"
 #include "qmath.h"
 #include "config.h"
-#include "args.h"
-
 #include "have_unused.h"
-
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 #define PUTCHAR(ch) math_chr(ch)
 #define PUTSTR(str) math_str(str)
 #define PRINTF1(fmt, a1) math_fmt(fmt, a1)
 #define PRINTF2(fmt, a1, a2) math_fmt(fmt, a1, a2)
 
-STATIC long scalefactor;
-STATIC ZVALUE scalenumber = {0, 0, 0};
+static long scalefactor;
+static ZVALUE scalenumber = {0, 0, 0};
 
 /*
  * Print a formatted string containing arbitrary numbers, similar to printf.
@@ -116,12 +127,11 @@ qprintf(char *fmt, ...)
             break;
         case 'g':
             q = va_arg(ap, NUMBER *);
-            /* XXX - we need a qprintfg function */
 #if 0 /* XXX - we need a qprintfg() function */
-                        qprintfg(q, width, precision);
-#else /* XXX - use qprintfe until we have a qprintfg() function */
+            qprintfg(q, width, precision);
+#else
             qprintfe(q, width, precision);
-#endif /* XXX - we need a qprintfg() function */
+#endif
             break;
         case 'r':
         case 'R':

@@ -1,7 +1,7 @@
 /*
  * blkcpy - general values and related routines used by the calculator
  *
- * Copyright (C) 1999-2007,2021-2023,2025  Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023,2025-2026  Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  Landon Curt Noll
  *
@@ -25,17 +25,27 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
-#include "calc.h"
-#include "alloc.h"
+#include <stdint.h>
+#include <stdbool.h>
+
+/*
+ * calc local src includes
+ */
 #include "value.h"
+#include "calc.h"
 #include "file.h"
 #include "blkcpy.h"
-#include "str.h"
-
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 /*
  * copystod - copy num indexed items from source value to destination value
@@ -49,7 +59,7 @@
  *      zero if successful, otherwise error-code number
  */
 int
-copystod(VALUE *svp, long ssi, long num, VALUE *dvp, long dsi)
+copystod(VALUE *svp, LEN ssi, LEN num, VALUE *dvp, LEN dsi)
 {
     BLOCK *sblk;
     BLOCK *dblk;
@@ -264,9 +274,9 @@ copystod(VALUE *svp, long ssi, long num, VALUE *dvp, long dsi)
  * copymat2mat - copy matrix to matrix
  */
 int
-copymat2mat(MATRIX *smat, long ssi, long num, MATRIX *dmat, long dsi)
+copymat2mat(MATRIX *smat, LEN ssi, LEN num, MATRIX *dmat, LEN dsi)
 {
-    long i;
+    LEN i;
     VALUE *vp;
     VALUE *vq;
     VALUE *vtemp;
@@ -291,7 +301,7 @@ copymat2mat(MATRIX *smat, long ssi, long num, MATRIX *dmat, long dsi)
     if (dsi + num > dmat->m_size) {
         return E_COPY_07;
     }
-    vtemp = (VALUE *)malloc(num * sizeof(VALUE));
+    vtemp = (VALUE *)calloc(num, sizeof(VALUE));
     if (vtemp == NULL) {
         math_error("Out of memory for mat-to-mat copy");
         not_reached();
@@ -318,13 +328,13 @@ copymat2mat(MATRIX *smat, long ssi, long num, MATRIX *dmat, long dsi)
  * copyblk2mat - copy block to matrix
  */
 int
-copyblk2mat(BLOCK *blk, long ssi, long num, MATRIX *dmat, long dsi)
+copyblk2mat(BLOCK *blk, LEN ssi, LEN num, MATRIX *dmat, LEN dsi)
 {
     OCTET *op;
     VALUE *vp;
     VALUE *vq;
     VALUE *vtemp;
-    long i;
+    LEN i;
     unsigned short subtype;
 
     if (ssi > blk->datalen) {
@@ -346,7 +356,7 @@ copyblk2mat(BLOCK *blk, long ssi, long num, MATRIX *dmat, long dsi)
         return E_COPY_07;
     }
     op = blk->data + ssi;
-    vtemp = (VALUE *)malloc(num * sizeof(VALUE));
+    vtemp = (VALUE *)calloc(num, sizeof(VALUE));
     if (vtemp == NULL) {
         math_error("Out of memory for block-to-matrix copy");
         not_reached();
@@ -356,7 +366,7 @@ copyblk2mat(BLOCK *blk, long ssi, long num, MATRIX *dmat, long dsi)
     while (i-- > 0) {
         vp->v_type = V_NUM;
         vp->v_subtype = V_NOSUBTYPE;
-        vp->v_num = itoq((long)*op++);
+        vp->v_num = itoq((LEN)*op++);
         vp++;
     }
     vp = vtemp;
@@ -375,11 +385,11 @@ copyblk2mat(BLOCK *blk, long ssi, long num, MATRIX *dmat, long dsi)
  * copymat2blk - copy matrix to block
  */
 int
-copymat2blk(MATRIX *smat, long ssi, long num, BLOCK *dblk, long dsi, bool noreloc)
+copymat2blk(MATRIX *smat, LEN ssi, LEN num, BLOCK *dblk, LEN dsi, bool noreloc)
 {
-    long i;
-    long newlen;
-    long newsize;
+    LEN i;
+    LEN newlen;
+    LEN newsize;
     USB8 *newdata;
     VALUE *vp;
     OCTET *op;
@@ -431,13 +441,13 @@ copymat2blk(MATRIX *smat, long ssi, long num, BLOCK *dblk, long dsi, bool norelo
  * copymat2list - copy matrix to list
  */
 int
-copymat2list(MATRIX *smat, long ssi, long num, LIST *lp, long dsi)
+copymat2list(MATRIX *smat, LEN ssi, LEN num, LIST *lp, LEN dsi)
 {
     VALUE *vp;
     VALUE *vq;
     LISTELEM *ep;
     VALUE *vtemp;
-    long i;
+    LEN i;
     unsigned short subtype;
 
     if (ssi > smat->m_size) {
@@ -458,7 +468,7 @@ copymat2list(MATRIX *smat, long ssi, long num, LIST *lp, long dsi)
     if (dsi + num > lp->l_count) {
         return E_COPY_07;
     }
-    vtemp = (VALUE *)malloc(num * sizeof(VALUE));
+    vtemp = (VALUE *)calloc(num, sizeof(VALUE));
     if (vtemp == NULL) {
         math_error("Out of memory for matrix-to-list copy");
         not_reached();
@@ -470,7 +480,7 @@ copymat2list(MATRIX *smat, long ssi, long num, LIST *lp, long dsi)
         copyvalue(vp++, vq++);
     }
     vq = vtemp;
-    ep = listelement(lp, (long)dsi);
+    ep = listelement(lp, (LEN)dsi);
     i = num;
     while (i-- > 0) {
         subtype = ep->e_value.v_subtype;
@@ -487,13 +497,13 @@ copymat2list(MATRIX *smat, long ssi, long num, LIST *lp, long dsi)
  * copymat2list - copy list to matrix
  */
 int
-copylist2mat(LIST *lp, long ssi, long num, MATRIX *dmat, long dsi)
+copylist2mat(LIST *lp, LEN ssi, LEN num, MATRIX *dmat, LEN dsi)
 {
     VALUE *vp;
     VALUE *vq;
     LISTELEM *ep;
     VALUE *vtemp;
-    long i;
+    LEN i;
     unsigned short subtype;
 
     if (ssi > lp->l_count) {
@@ -514,12 +524,12 @@ copylist2mat(LIST *lp, long ssi, long num, MATRIX *dmat, long dsi)
     if (dsi + num > dmat->m_size) {
         return E_COPY_07;
     }
-    vtemp = (VALUE *)malloc(num * sizeof(VALUE));
+    vtemp = (VALUE *)calloc(num, sizeof(VALUE));
     if (vtemp == NULL) {
         math_error("Out of memory for list-to-matrix copy");
         not_reached();
     }
-    ep = listelement(lp, (long)ssi);
+    ep = listelement(lp, (LEN)ssi);
     vp = vtemp;
     i = num;
     while (i-- > 0) {
@@ -542,9 +552,9 @@ copylist2mat(LIST *lp, long ssi, long num, MATRIX *dmat, long dsi)
  * copylist2list - copy list to list
  */
 int
-copylist2list(LIST *slp, long ssi, long num, LIST *dlp, long dsi)
+copylist2list(LIST *slp, LEN ssi, LEN num, LIST *dlp, LEN dsi)
 {
-    long i;
+    LEN i;
     LISTELEM *sep;
     LISTELEM *dep;
     VALUE *vtemp;
@@ -569,19 +579,19 @@ copylist2list(LIST *slp, long ssi, long num, LIST *dlp, long dsi)
     if (dsi + num > dlp->l_count) {
         return E_COPY_07;
     }
-    vtemp = (VALUE *)malloc(num * sizeof(VALUE));
+    vtemp = (VALUE *)calloc(num, sizeof(VALUE));
     if (vtemp == NULL) {
         math_error("Out of memory for list-to-list copy");
         not_reached();
     }
-    sep = listelement(slp, (long)ssi);
+    sep = listelement(slp, (LEN)ssi);
     vp = vtemp;
     i = num;
     while (i-- > 0) {
         copyvalue(&sep->e_value, vp++);
         sep = sep->e_next;
     }
-    dep = listelement(dlp, (long)dsi);
+    dep = listelement(dlp, (LEN)dsi);
     vp = vtemp;
     i = num;
     while (i-- > 0) {
@@ -599,11 +609,11 @@ copylist2list(LIST *slp, long ssi, long num, LIST *dlp, long dsi)
  * copyblk2file - copy block to file
  */
 int
-copyblk2file(BLOCK *sblk, long ssi, long num, FILEID id, long dsi)
+copyblk2file(BLOCK *sblk, LEN ssi, LEN num, FILEID id, LEN dsi)
 {
     FILEIO *fiop;
     FILE *fp;
-    long numw;
+    LEN numw;
 
     if (ssi > sblk->datalen) {
         return E_COPY_02;
@@ -641,15 +651,15 @@ copyblk2file(BLOCK *sblk, long ssi, long num, FILEID id, long dsi)
  * copyfile2blk - copy file to block
  */
 int
-copyfile2blk(FILEID id, long ssi, long num, BLOCK *dblk, long dsi, bool noreloc)
+copyfile2blk(FILEID id, LEN ssi, LEN num, BLOCK *dblk, LEN dsi, bool noreloc)
 {
     FILEIO *fiop;
     FILE *fp;
-    long numw;
+    LEN numw;
     ZVALUE fsize;
-    long filelen;
-    long newlen;
-    long newsize;
+    LEN filelen;
+    LEN newlen;
+    LEN newsize;
     OCTET *newdata;
 
     if (id < 3) { /* excludes copying from stdin */
@@ -721,11 +731,11 @@ copyfile2blk(FILEID id, long ssi, long num, BLOCK *dblk, long dsi, bool noreloc)
  * copystr2file - copy string to file
  */
 int
-copystr2file(STRING *str, long ssi, long num, FILEID id, long dsi)
+copystr2file(STRING *str, LEN ssi, LEN num, FILEID id, LEN dsi)
 {
-    long len;
+    LEN len;
     FILEIO *fiop;
-    long numw;
+    LEN numw;
     FILE *fp;
 
     len = str->s_len;
@@ -768,10 +778,10 @@ copystr2file(STRING *str, long ssi, long num, FILEID id, long dsi)
  * copyblk2blk - copy block to block
  */
 int
-copyblk2blk(BLOCK *sblk, long ssi, long num, BLOCK *dblk, long dsi, bool noreloc)
+copyblk2blk(BLOCK *sblk, LEN ssi, LEN num, BLOCK *dblk, LEN dsi, bool noreloc)
 {
-    long newlen;
-    long newsize;
+    LEN newlen;
+    LEN newsize;
     USB8 *newdata;
 
     if (ssi > sblk->datalen) {
@@ -817,11 +827,11 @@ copyblk2blk(BLOCK *sblk, long ssi, long num, BLOCK *dblk, long dsi, bool noreloc
  * copystr2blk - copy string to block
  */
 int
-copystr2blk(STRING *str, long ssi, long num, BLOCK *dblk, long dsi, bool noreloc)
+copystr2blk(STRING *str, LEN ssi, LEN num, BLOCK *dblk, LEN dsi, bool noreloc)
 {
-    long len;
-    long newlen;
-    long newsize;
+    LEN len;
+    LEN newlen;
+    LEN newsize;
     USB8 *newdata;
 
     len = str->s_len;
@@ -869,7 +879,7 @@ copystr2blk(STRING *str, long ssi, long num, BLOCK *dblk, long dsi, bool noreloc
  * are insufficient characters in sstr or insufficient space in dstr.
  */
 int
-copystr2str(STRING *sstr, long ssi, long num, STRING *dstr, long dsi)
+copystr2str(STRING *sstr, LEN ssi, LEN num, STRING *dstr, LEN dsi)
 {
     char *c, *c1;
 
@@ -899,7 +909,7 @@ copystr2str(STRING *sstr, long ssi, long num, STRING *dstr, long dsi)
  * is insufficient data in blk or insufficient space in str
  */
 int
-copyblk2str(BLOCK *sblk, long ssi, long num, STRING *dstr, long dsi)
+copyblk2str(BLOCK *sblk, LEN ssi, LEN num, STRING *dstr, LEN dsi)
 {
     USB8 *c, *c1;
 
@@ -926,7 +936,7 @@ copyblk2str(BLOCK *sblk, long ssi, long num, STRING *dstr, long dsi)
  * copyostr2str - copy octet-specified string to string
  */
 int
-copyostr2str(char *sstr, long ssi, long num, STRING *dstr, long dsi)
+copyostr2str(char *sstr, LEN ssi, LEN num, STRING *dstr, LEN dsi)
 {
     size_t len;
     char *c, *c1;
@@ -957,7 +967,7 @@ copyostr2str(char *sstr, long ssi, long num, STRING *dstr, long dsi)
  * copyostr2blk - copy octet-specified string to block
  */
 int
-copyostr2blk(char *str, long ssi, long num, BLOCK *dblk, long dsi, bool noreloc)
+copyostr2blk(char *str, LEN ssi, LEN num, BLOCK *dblk, LEN dsi, bool noreloc)
 {
     size_t len;
     size_t newlen;
@@ -1006,7 +1016,7 @@ copyostr2blk(char *str, long ssi, long num, BLOCK *dblk, long dsi, bool noreloc)
  * copynum2blk - copy number numerator to block
  */
 int
-copynum2blk(NUMBER *snum, long ssi, long num, BLOCK *dblk, long dsi, bool noreloc)
+copynum2blk(NUMBER *snum, LEN ssi, LEN num, BLOCK *dblk, LEN dsi, bool noreloc)
 {
     size_t newlen;
     size_t newsize;
@@ -1064,15 +1074,15 @@ copynum2blk(NUMBER *snum, long ssi, long num, BLOCK *dblk, long dsi, bool norelo
  * copyblk2num - copy block to number
  */
 int
-copyblk2num(BLOCK *sblk, long ssi, long num, NUMBER *dnum, long dsi, NUMBER **res)
+copyblk2num(BLOCK *sblk, LEN ssi, LEN num, NUMBER *dnum, LEN dsi, NUMBER **res)
 {
     size_t newlen;
     NUMBER *ret; /* cloned and modified numerator */
 #if CALC_BYTE_ORDER == BIG_ENDIAN
-    HALF *swapped;         /* byte swapped input data */
-    unsigned long halflen; /* length of the input rounded up to HALFs */
-    HALF *h;               /* copy byteswap pointer */
-    unsigned long i;
+    HALF *swapped; /* byte swapped input data */
+    LEN halflen;   /* length of the input rounded up to HALFs */
+    HALF *h;       /* copy byteswap pointer */
+    LEN i;
 #endif
 
     if (ssi > sblk->datalen) {
@@ -1115,7 +1125,7 @@ copyblk2num(BLOCK *sblk, long ssi, long num, NUMBER *dnum, long dsi, NUMBER **re
 #else
     /* form a HALF aligned copy of the input */
     halflen = (num + sizeof(HALF) - 1) / sizeof(HALF);
-    swapped = (HALF *)malloc(halflen * sizeof(HALF));
+    swapped = (HALF *)calloc(halflen, sizeof(HALF));
     if (swapped == NULL) {
         math_error("Out of memory for block-to-num copy");
         not_reached();

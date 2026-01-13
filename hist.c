@@ -1,7 +1,7 @@
 /*
  * hist - interactive readline module
  *
- * Copyright (C) 1999-2007,2021-2023  David I. Bell
+ * Copyright (C) 1999-2007,2021-2023,2026  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -33,48 +33,44 @@
  * The key bindings for the editing commands are (slightly) configurable.
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 #include <ctype.h>
+#include <setjmp.h>
+#include <stdint.h>
+#include <stdbool.h>
+
+/*
+ * conditional <system> head includes
+ */
 #if !defined(_WIN32) && !defined(_WIN64)
 #  include <pwd.h>
 #endif
 
-#include "have_unistd.h"
-#if defined(HAVE_UNISTD_H)
-#  include <unistd.h>
-#endif
-
-#include "have_stdlib.h"
-#if defined(HAVE_STDLIB_H)
-#  include <stdlib.h>
-#endif
-
+/*
+ * calc local src includes
+ */
+#include "value.h"
 #include "calc.h"
 #include "lib_calc.h"
-#include "alloc.h"
 #include "hist.h"
 #include "strl.h"
-
-#include "have_strdup.h"
-#if !defined(HAVE_STRDUP)
-#  define strdup(x) calc_strdup((CONST char *)(x))
-#endif /* HAVE_STRDUP */
-
-#include "have_string.h"
-#ifdef HAVE_STRING_H
-#  include <string.h>
-#endif
-
 #include "have_unused.h"
-
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 #define MIN(a, b) (((a) <= (b)) ? (a) : (b))
 
 #if !defined(USE_READLINE)
 
-E_FUNC FILE *curstream(void);
+extern FILE *curstream(void);
 
 #  define STDIN 0
 #  define SAVE_SIZE 256 /* size of save buffer */
@@ -82,7 +78,7 @@ E_FUNC FILE *curstream(void);
 
 #  define CONTROL(x) ((char)(((int)(x)) & 0x1f))
 
-STATIC struct {
+static struct {
     char *prompt;
     char *buf;
     char *pos;
@@ -103,40 +99,40 @@ typedef struct {
 } FUNC;
 
 /* declare binding functions */
-S_FUNC void flush_input(int key);
-S_FUNC void start_of_line(int key);
-S_FUNC void end_of_line(int key);
-S_FUNC void forward_char(int key);
-S_FUNC void backward_char(int key);
-S_FUNC void forward_word(int key);
-S_FUNC void backward_word(int key);
-S_FUNC void delete_char(int key);
-S_FUNC void forward_kill_char(int key);
-S_FUNC void backward_kill_char(int key);
-S_FUNC void forward_kill_word(int key);
-S_FUNC void kill_line(int key);
-S_FUNC void new_line(int key);
-S_FUNC void save_line(int key);
-S_FUNC void forward_history(int key);
-S_FUNC void backward_history(int key);
-S_FUNC void insert_char(int key);
-S_FUNC void goto_line(int key);
-S_FUNC void list_history(int key);
-S_FUNC void refresh_line(int key);
-S_FUNC void swap_chars(int key);
-S_FUNC void set_mark(int key);
-S_FUNC void yank(int key);
-S_FUNC void save_region(int key);
-S_FUNC void kill_region(int key);
-S_FUNC void reverse_search(int key);
-S_FUNC void quote_char(int key);
-S_FUNC void uppercase_word(int key);
-S_FUNC void lowercase_word(int key);
-S_FUNC void ignore_char(int key);
-S_FUNC void arrow_key(int key);
-S_FUNC void quit_calc(int key) __attribute__((noreturn));
+static void flush_input(int key);
+static void start_of_line(int key);
+static void end_of_line(int key);
+static void forward_char(int key);
+static void backward_char(int key);
+static void forward_word(int key);
+static void backward_word(int key);
+static void delete_char(int key);
+static void forward_kill_char(int key);
+static void backward_kill_char(int key);
+static void forward_kill_word(int key);
+static void kill_line(int key);
+static void new_line(int key);
+static void save_line(int key);
+static void forward_history(int key);
+static void backward_history(int key);
+static void insert_char(int key);
+static void goto_line(int key);
+static void list_history(int key);
+static void refresh_line(int key);
+static void swap_chars(int key);
+static void set_mark(int key);
+static void yank(int key);
+static void save_region(int key);
+static void kill_region(int key);
+static void reverse_search(int key);
+static void quote_char(int key);
+static void uppercase_word(int key);
+static void lowercase_word(int key);
+static void ignore_char(int key);
+static void arrow_key(int key);
+static void quit_calc(int key) __attribute__((noreturn));
 
-STATIC FUNC funcs[] = {{"ignore-char", ignore_char},
+static FUNC funcs[] = {{"ignore-char", ignore_char},
                        {"flush-input", flush_input},
                        {"start-of-line", start_of_line},
                        {"end-of-line", end_of_line},
@@ -184,10 +180,10 @@ struct key_map {
     KEY_ENT *map[256];
 };
 
-STATIC char base_map_name[] = "base-map";
-STATIC char esc_map_name[] = "esc-map";
+static char base_map_name[] = "base-map";
+static char esc_map_name[] = "esc-map";
 
-STATIC KEY_MAP maps[] = {
+static KEY_MAP maps[] = {
     {base_map_name, {NULL, NULL}, {NULL, NULL}},
     {esc_map_name, {NULL, NULL}, {NULL, NULL}},
 };
@@ -199,45 +195,45 @@ typedef struct history_entry {
     struct history_entry *next;
 } HIST;
 
-STATIC int inited;
-STATIC int canedit;
-STATIC int key_count;
-STATIC int save_len;
-STATIC KEY_MAP *cur_map;
-STATIC KEY_MAP *base_map;
-STATIC KEY_ENT key_table[MAX_KEYS];
-STATIC HIST *hist_first = NULL;
-STATIC HIST *hist_last = NULL;
-STATIC char save_buffer[SAVE_SIZE];
+static int inited;
+static int canedit;
+static int key_count;
+static int save_len;
+static KEY_MAP *cur_map;
+static KEY_MAP *base_map;
+static KEY_ENT key_table[MAX_KEYS];
+static HIST *hist_first = NULL;
+static HIST *hist_last = NULL;
+static char save_buffer[SAVE_SIZE];
 
 /* declare other static functions */
-S_FUNC FUNCPTR find_func(char *name);
-S_FUNC HIST *get_event(int n);
-S_FUNC HIST *find_event(char *pat, int len);
-S_FUNC void read_key(void);
-S_FUNC void erasechar(void);
-S_FUNC void newline(void);
-S_FUNC void backspace(void);
-S_FUNC void beep(void);
-S_FUNC void echo_char(int ch);
-S_FUNC void echo_string(char *str, int len);
-S_FUNC void savetext(char *str, int len);
-S_FUNC void memrcpy(char *dest, char *src, int len);
-S_FUNC int read_bindings(FILE *fp);
-S_FUNC int in_word(int ch);
-S_FUNC KEY_MAP *find_map(char *map);
-S_FUNC void unbind_key(KEY_MAP *map, int key);
-S_FUNC void raw_bind_key(KEY_MAP *map, int key, FUNCPTR func, KEY_MAP *next_map);
-S_FUNC KEY_MAP *do_map_line(char *line);
-S_FUNC void do_default_line(KEY_MAP *map, char *line);
-S_FUNC void do_bind_line(KEY_MAP *map, char *line);
-S_FUNC void back_over_char(int ch);
-S_FUNC void echo_rest_of_line(void);
-S_FUNC void goto_start_of_line(void);
-S_FUNC void goto_end_of_line(void);
-S_FUNC void remove_char(int ch);
-S_FUNC void decrement_end(int n);
-S_FUNC void insert_string(char *str, int len);
+static FUNCPTR find_func(char *name);
+static HIST *get_event(int n);
+static HIST *find_event(char *pat, int len);
+static void read_key(void);
+static void erasechar(void);
+static void newline(void);
+static void backspace(void);
+static void beep(void);
+static void echo_char(int ch);
+static void echo_string(char *str, int len);
+static void savetext(char *str, int len);
+static void memrcpy(char *dest, char *src, int len);
+static int read_bindings(FILE *fp);
+static int in_word(int ch);
+static KEY_MAP *find_map(char *map);
+static void unbind_key(KEY_MAP *map, int key);
+static void raw_bind_key(KEY_MAP *map, int key, FUNCPTR func, KEY_MAP *next_map);
+static KEY_MAP *do_map_line(char *line);
+static void do_default_line(KEY_MAP *map, char *line);
+static void do_bind_line(KEY_MAP *map, char *line);
+static void back_over_char(int ch);
+static void echo_rest_of_line(void);
+static void goto_start_of_line(void);
+static void goto_end_of_line(void);
+static void remove_char(int ch);
+static void decrement_end(int n);
+static void insert_string(char *str, int len);
 
 /*
  * Read a line into the specified buffer.  The line ends in a newline,
@@ -411,7 +407,7 @@ hist_term(void)
     (void)orig_tty(STDIN);
 }
 
-S_FUNC KEY_MAP *
+static KEY_MAP *
 find_map(char *map)
 {
     unsigned int i;
@@ -424,13 +420,13 @@ find_map(char *map)
     return NULL;
 }
 
-S_FUNC void
+static void
 unbind_key(KEY_MAP *map, int key)
 {
     map->map[key] = NULL;
 }
 
-S_FUNC void
+static void
 raw_bind_key(KEY_MAP *map, int key, FUNCPTR func, KEY_MAP *next_map)
 {
     if (map->map[key] == NULL) {
@@ -443,7 +439,7 @@ raw_bind_key(KEY_MAP *map, int key, FUNCPTR func, KEY_MAP *next_map)
     map->map[key]->next = next_map;
 }
 
-S_FUNC KEY_MAP *
+static KEY_MAP *
 do_map_line(char *line)
 {
     char *cp;
@@ -464,7 +460,7 @@ do_map_line(char *line)
     return find_map(map_name);
 }
 
-S_FUNC void
+static void
 do_bind_line(KEY_MAP *map, char *line)
 {
     char *cp;
@@ -542,7 +538,7 @@ do_bind_line(KEY_MAP *map, char *line)
     raw_bind_key(map, key, func, next);
 }
 
-S_FUNC void
+static void
 do_default_line(KEY_MAP *map, char *line)
 {
     char *cp;
@@ -605,7 +601,7 @@ do_default_line(KEY_MAP *map, char *line)
  *
  * Returns nonzero on error.
  */
-S_FUNC int
+static int
 read_bindings(FILE *fp)
 {
     char *cp;
@@ -646,7 +642,7 @@ read_bindings(FILE *fp)
     return 0;
 }
 
-S_FUNC void
+static void
 read_key(void)
 {
     KEY_ENT *ent;
@@ -678,7 +674,7 @@ read_key(void)
  * Return the Nth history event, indexed from zero.
  * Earlier history events are lower in number.
  */
-S_FUNC HIST *
+static HIST *
 get_event(int n)
 {
     register HIST *hp = hist_first;
@@ -701,7 +697,7 @@ get_event(int n)
  * Search the history list for the specified pattern.
  * Returns the found history, or NULL.
  */
-S_FUNC HIST *
+static HIST *
 find_event(char *pat, int len)
 {
     register HIST *hp = hist_first;
@@ -771,7 +767,7 @@ hist_saveline(char *line, int len)
     /*
      * Add the line to the end of the history table.
      */
-    hp = malloc(sizeof(HIST));
+    hp = calloc(1, sizeof(HIST));
     if (hp == NULL) {
         fprintf(stderr, "Out of memory adding line to the history table #0\n");
         return;
@@ -779,7 +775,7 @@ hist_saveline(char *line, int len)
     hp->next = NULL;
     hp->prev = NULL;
     hp->len = len;
-    hp->data = malloc(len);
+    hp->data = calloc(len, 1);
     if (hp->data == NULL) {
         fprintf(stderr, "Out of memory adding line to the history table #1\n");
         return;
@@ -801,7 +797,7 @@ hist_saveline(char *line, int len)
 /*
  * Find the function for a specified name.
  */
-S_FUNC FUNCPTR
+static FUNCPTR
 find_func(char *name)
 {
     FUNC *fp;
@@ -814,7 +810,7 @@ find_func(char *name)
     return NULL;
 }
 
-S_FUNC void
+static void
 arrow_key(int UNUSED(key))
 {
     switch (fgetc(stdin)) {
@@ -833,7 +829,7 @@ arrow_key(int UNUSED(key))
     }
 }
 
-S_FUNC void
+static void
 back_over_char(int ch)
 {
     backspace();
@@ -842,7 +838,7 @@ back_over_char(int ch)
     }
 }
 
-S_FUNC void
+static void
 remove_char(int ch)
 {
     erasechar();
@@ -851,13 +847,13 @@ remove_char(int ch)
     }
 }
 
-S_FUNC void
+static void
 echo_rest_of_line(void)
 {
     echo_string(HS.pos, HS.end - HS.pos);
 }
 
-S_FUNC void
+static void
 goto_start_of_line(void)
 {
     while (HS.pos > HS.buf) {
@@ -865,14 +861,14 @@ goto_start_of_line(void)
     }
 }
 
-S_FUNC void
+static void
 goto_end_of_line(void)
 {
     echo_rest_of_line();
     HS.pos = HS.end;
 }
 
-S_FUNC void
+static void
 decrement_end(int n)
 {
     HS.end -= n;
@@ -881,12 +877,12 @@ decrement_end(int n)
     }
 }
 
-S_FUNC void
+static void
 ignore_char(int UNUSED(key))
 {
 }
 
-S_FUNC void
+static void
 flush_input(int UNUSED(key))
 {
     echo_rest_of_line();
@@ -897,19 +893,19 @@ flush_input(int UNUSED(key))
     HS.mark = NULL;
 }
 
-S_FUNC void
+static void
 start_of_line(int UNUSED(key))
 {
     goto_start_of_line();
 }
 
-S_FUNC void
+static void
 end_of_line(int UNUSED(key))
 {
     goto_end_of_line();
 }
 
-S_FUNC void
+static void
 forward_char(int UNUSED(key))
 {
     if (HS.pos < HS.end) {
@@ -917,7 +913,7 @@ forward_char(int UNUSED(key))
     }
 }
 
-S_FUNC void
+static void
 backward_char(int UNUSED(key))
 {
     if (HS.pos > HS.buf) {
@@ -925,7 +921,7 @@ backward_char(int UNUSED(key))
     }
 }
 
-S_FUNC void
+static void
 uppercase_word(int UNUSED(key))
 {
     while ((HS.pos < HS.end) && !in_word((int)(*HS.pos))) {
@@ -940,7 +936,7 @@ uppercase_word(int UNUSED(key))
     }
 }
 
-S_FUNC void
+static void
 lowercase_word(int UNUSED(key))
 {
     while ((HS.pos < HS.end) && !in_word((int)(*HS.pos))) {
@@ -955,7 +951,7 @@ lowercase_word(int UNUSED(key))
     }
 }
 
-S_FUNC void
+static void
 forward_word(int UNUSED(key))
 {
     while ((HS.pos < HS.end) && !in_word((int)(*HS.pos))) {
@@ -966,7 +962,7 @@ forward_word(int UNUSED(key))
     }
 }
 
-S_FUNC void
+static void
 backward_word(int UNUSED(key))
 {
     if ((HS.pos > HS.buf) && in_word((int)(*HS.pos))) {
@@ -983,7 +979,7 @@ backward_word(int UNUSED(key))
     }
 }
 
-S_FUNC void
+static void
 forward_kill_char(int UNUSED(key))
 {
     int rest;
@@ -1006,7 +1002,7 @@ forward_kill_char(int UNUSED(key))
     }
 }
 
-S_FUNC void
+static void
 delete_char(int UNUSED(key))
 {
     /*
@@ -1028,7 +1024,7 @@ delete_char(int UNUSED(key))
     }
 }
 
-S_FUNC void
+static void
 backward_kill_char(int UNUSED(key))
 {
     if (HS.pos > HS.buf) {
@@ -1038,7 +1034,7 @@ backward_kill_char(int UNUSED(key))
     }
 }
 
-S_FUNC void
+static void
 forward_kill_word(int UNUSED(key))
 {
     char *cp;
@@ -1066,7 +1062,7 @@ forward_kill_word(int UNUSED(key))
     }
 }
 
-S_FUNC void
+static void
 kill_line(int UNUSED(key))
 {
     if (HS.end <= HS.pos) {
@@ -1086,7 +1082,7 @@ kill_line(int UNUSED(key))
  * The line is NOT put into the edit history, so that the caller can
  * decide whether or not this should be done.
  */
-S_FUNC void
+static void
 new_line(int UNUSED(key))
 {
     int len;
@@ -1109,7 +1105,7 @@ new_line(int UNUSED(key))
     HS.linelen = len;
 }
 
-S_FUNC void
+static void
 save_line(int UNUSED(key))
 {
     int len;
@@ -1122,7 +1118,7 @@ save_line(int UNUSED(key))
     HS.curhist = HS.histcount;
 }
 
-S_FUNC void
+static void
 goto_line(int UNUSED(key))
 {
     int num;
@@ -1146,7 +1142,7 @@ goto_line(int UNUSED(key))
     goto_end_of_line();
 }
 
-S_FUNC void
+static void
 forward_history(int UNUSED(key))
 {
     HIST *hp;
@@ -1163,7 +1159,7 @@ forward_history(int UNUSED(key))
     goto_end_of_line();
 }
 
-S_FUNC void
+static void
 backward_history(int UNUSED(key))
 {
     HIST *hp;
@@ -1180,7 +1176,7 @@ backward_history(int UNUSED(key))
     goto_end_of_line();
 }
 
-S_FUNC void
+static void
 insert_char(int key)
 {
     int len;
@@ -1204,7 +1200,7 @@ insert_char(int key)
     }
 }
 
-S_FUNC void
+static void
 insert_string(char *str, int len)
 {
     int rest;
@@ -1232,7 +1228,7 @@ insert_string(char *str, int len)
     }
 }
 
-S_FUNC void
+static void
 list_history(int UNUSED(key))
 {
     HIST *hp;
@@ -1246,7 +1242,7 @@ list_history(int UNUSED(key))
     refresh_line(0);
 }
 
-S_FUNC void
+static void
 refresh_line(int UNUSED(key))
 {
     char *cp;
@@ -1262,7 +1258,7 @@ refresh_line(int UNUSED(key))
     }
 }
 
-S_FUNC void
+static void
 swap_chars(int UNUSED(key))
 {
     char ch1;
@@ -1281,13 +1277,13 @@ swap_chars(int UNUSED(key))
     back_over_char((int)ch2);
 }
 
-S_FUNC void
+static void
 set_mark(int UNUSED(key))
 {
     HS.mark = HS.pos;
 }
 
-S_FUNC void
+static void
 save_region(int UNUSED(key))
 {
     int len;
@@ -1304,7 +1300,7 @@ save_region(int UNUSED(key))
     }
 }
 
-S_FUNC void
+static void
 kill_region(int UNUSED(key))
 {
     char *cp;
@@ -1339,13 +1335,13 @@ kill_region(int UNUSED(key))
     }
 }
 
-S_FUNC void
+static void
 yank(int UNUSED(key))
 {
     insert_string(save_buffer, save_len);
 }
 
-S_FUNC void
+static void
 reverse_search(int UNUSED(key))
 {
     int len;
@@ -1382,7 +1378,7 @@ reverse_search(int UNUSED(key))
     }
 }
 
-S_FUNC void
+static void
 quote_char(int UNUSED(key))
 {
     int ch;
@@ -1396,7 +1392,7 @@ quote_char(int UNUSED(key))
 /*
  * Save data in the save buffer.
  */
-S_FUNC void
+static void
 savetext(char *str, int len)
 {
     save_len = 0;
@@ -1413,37 +1409,37 @@ savetext(char *str, int len)
 /*
  * Test whether a character is part of a word.
  */
-S_FUNC int
+static int
 in_word(int ch)
 {
     return (isalnum(ch) || (ch == '_'));
 }
 
-S_FUNC void
+static void
 erasechar(void)
 {
     fputs("\b \b", stdout);
 }
 
-S_FUNC void
+static void
 newline(void)
 {
     fputc('\n', stdout);
 }
 
-S_FUNC void
+static void
 backspace(void)
 {
     fputc('\b', stdout);
 }
 
-S_FUNC void
+static void
 beep(void)
 {
     fputc('\007', stdout);
 }
 
-S_FUNC void
+static void
 echo_char(int ch)
 {
     if (isprint(ch)) {
@@ -1454,7 +1450,7 @@ echo_char(int ch)
     }
 }
 
-S_FUNC void
+static void
 echo_string(char *str, int len)
 {
     while (len-- > 0) {
@@ -1462,7 +1458,7 @@ echo_string(char *str, int len)
     }
 }
 
-S_FUNC void
+static void
 memrcpy(char *dest, char *src, int len)
 {
     dest += len - 1;
@@ -1472,9 +1468,9 @@ memrcpy(char *dest, char *src, int len)
     }
 }
 
-#endif /* !USE_READLINE */
+#endif
 
-S_FUNC void
+static void
 quit_calc(int UNUSED(ch))
 {
     hist_term();
@@ -1485,7 +1481,7 @@ quit_calc(int UNUSED(ch))
 
 #if defined(USE_READLINE)
 
-#  define HISTORY_LEN (1024) /* number of entries to save */
+#  define HISTORY_LEN (4096) /* number of entries to save */
 
 #  include <readline/readline.h>
 #  include <readline/history.h>
@@ -1497,7 +1493,7 @@ quit_calc(int UNUSED(ch))
  * calc expects. For hist_saveline(), we have to undo this. hist_getline()
  * also has to cope with the different memory management schemes of calc and
  * readline (pointer to target buffer passed to hist_getline() vs. returned
- * malloc()ed buffer from readline()). While doing that, we also split
+ * calloc()ed buffer from readline()). While doing that, we also split
  * multi-line strings potentially returned by readline() in case of
  * bracketed paste mode even though its documentation promises to only return
  * single lines. For details, see https://github.com/lcn2/calc/issues/138
@@ -1507,7 +1503,7 @@ quit_calc(int UNUSED(ch))
 size_t
 hist_getline(char *prompt, char *buf, size_t len)
 {
-    STATIC char *rlbuf, *rlcur;
+    static char *rlbuf, *rlcur;
 
     if (!rlbuf) {
         rlbuf = rlcur = readline(prompt);
@@ -1563,7 +1559,7 @@ hist_term(void)
 {
 }
 
-S_FUNC void
+static void
 my_stifle_history(void)
 {
     /* only save last number of entries */
@@ -1571,6 +1567,20 @@ my_stifle_history(void)
 
     if (calc_history) {
         write_history(calc_history);
+    }
+}
+
+/*
+ * close down and complete history and free the calc_history value allocated by initenv().
+ */
+static void
+hist_finish(void)
+{
+    /* only save last number of entries */
+    my_stifle_history();
+    if (calc_history != NULL) {
+        free(calc_history);
+        calc_history = NULL;
     }
 }
 
@@ -1605,7 +1615,8 @@ hist_init(char *UNUSED(filename))
     /* read previous history */
     read_history(calc_history);
 
-    atexit(my_stifle_history);
+    /* close and flush history when exiting */
+    atexit(hist_finish);
 
     return HIST_SUCCESS;
 }
@@ -1613,7 +1624,7 @@ hist_init(char *UNUSED(filename))
 void
 hist_saveline(char *line, int len)
 {
-    STATIC char *prev = NULL;
+    static char *prev = NULL;
 
     if (len <= 1) {
         return;
@@ -1634,7 +1645,7 @@ hist_saveline(char *line, int len)
     line[len - 1] = '\n';
 }
 
-#endif /* USE_READLINE */
+#endif
 
 #if defined(HIST_TEST)
 
@@ -1679,4 +1690,4 @@ main(int argc, char **argv)
     exit(0);
 }
 
-#endif /* HIST_TEST */
+#endif

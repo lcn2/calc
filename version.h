@@ -1,7 +1,7 @@
 /*
  * version - determine the version of calc
  *
- * Copyright (C) 1989-2025  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1989-2026  David I. Bell and Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -30,7 +30,10 @@
 /*
  * MAJOR_VER
  *
- *      The MAJOR_VER is 2 is the classical version of calc.
+ *      The MAJOR_VER is 2 is the old classical version of calc.
+ *      The MAJOR_VER is 3 is the new calc going forward. See:
+ *
+ *          https://github.com/lcn2/calc/issues/103
  *
  *      One of the main reasons why MAJOR_VER might incremented is
  *      if fundamental calc data objects (such as when ZVALUE or NUMBER
@@ -59,10 +62,10 @@
  *      Moreover, when we are working towards a new production release,
  *      bug fix and improvement updates will cause MINOR_PATCH to increment.
  */
-#  define MAJOR_VER 2   /* level 1: major library version */
-#  define MINOR_VER 16  /* level 2: minor library version */
-#  define MAJOR_PATCH 1 /* level 3: major software version level */
-#  define MINOR_PATCH 1 /* level 4: minor software version level */
+#  define MAJOR_VER 3   /* level 1: major library version */
+#  define MINOR_VER 0   /* level 2: minor library version */
+#  define MAJOR_PATCH 0 /* level 3: major software version level */
+#  define MINOR_PATCH 0 /* level 4: minor software version level */
 
 /*
  * Defining PERMIT_DANGEROUS_ADDRESS_ARITHMETIC is NOT supported!
@@ -78,4 +81,4 @@
 #    undef TEMP_MAJOR_VER
 #  endif
 
-#endif /* !INCLUDE_VERSION_H*/
+#endif

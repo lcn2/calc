@@ -81,4 +81,4 @@ typedef struct {
           }                                                     \
       }
 
-#endif /* !INCLUDE_SHA1_H */
+#endif

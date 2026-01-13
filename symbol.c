@@ -1,7 +1,7 @@
 /*
  * symbol - global and local symbol routines
  *
- * Copyright (C) 1999-2007,2021-2023  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023,2026  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -25,34 +25,47 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+#include <stdbool.h>
+
+/*
+ * calc local src includes
+ */
+#include "value.h"
 #include "calc.h"
 #include "token.h"
 #include "symbol.h"
-#include "str.h"
 #include "opcodes.h"
+#include "label.h"
 #include "func.h"
-
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 #define HASHSIZE 37 /* size of hash table */
 
-E_FUNC FILE *f_open(char *name, char *mode);
+extern FILE *f_open(char *name, char *mode);
 
-STATIC int filescope;                /* file scope level for static variables */
-STATIC int funcscope;                /* function scope level for static variables */
-STATIC STRINGHEAD localnames;        /* list of local variable names */
-STATIC STRINGHEAD globalnames;       /* list of global variable names */
-STATIC STRINGHEAD paramnames;        /* list of parameter variable names */
-STATIC GLOBAL *globalhash[HASHSIZE]; /* hash table for globals */
+static int filescope;                /* file scope level for static variables */
+static int funcscope;                /* function scope level for static variables */
+static STRINGHEAD localnames;        /* list of local variable names */
+static STRINGHEAD globalnames;       /* list of global variable names */
+static STRINGHEAD paramnames;        /* list of parameter variable names */
+static GLOBAL *globalhash[HASHSIZE]; /* hash table for globals */
 
-S_FUNC void printtype(VALUE *);
-S_FUNC void unscope(void);
-S_FUNC void addstatic(GLOBAL *);
-STATIC long staticcount = 0;
-STATIC long staticavail = 0;
-STATIC GLOBAL **statictable;
+static void printtype(VALUE *);
+static void unscope(void);
+static void addstatic(GLOBAL *);
+static long staticcount = 0;
+static long staticavail = 0;
+static GLOBAL **statictable;
 
 /*
  * Hash a symbol name so we can find it in the hash table.
@@ -111,7 +124,7 @@ addglobal(char *name, bool isstatic)
             return sp;
         }
     }
-    sp = (GLOBAL *)malloc(sizeof(GLOBAL));
+    sp = (GLOBAL *)calloc(1, sizeof(GLOBAL));
     if (sp == NULL) {
         return sp;
     }
@@ -228,7 +241,7 @@ showallglobals(void)
     }
 }
 
-S_FUNC void
+static void
 printtype(VALUE *vp)
 {
     int type;
@@ -336,7 +349,7 @@ writeglobals(char *name)
     GLOBAL **hp;         /* hash table head address */
     register GLOBAL *sp; /* current global symbol pointer */
     int savemode;        /* saved output mode */
-    E_FUNC void math_setfp(FILE * fp);
+    extern void math_setfp(FILE * fp);
 
     fp = f_open(name, "w");
     if (fp == NULL) {
@@ -527,7 +540,7 @@ addstatic(GLOBAL *sp)
 
     if (staticavail <= 0) {
         if (staticcount <= 0) {
-            stp = (GLOBAL **)malloc(20 * sizeof(GLOBAL *));
+            stp = (GLOBAL **)calloc(20, sizeof(GLOBAL *));
         } else {
             stp = (GLOBAL **)realloc(statictable, (20 + staticcount) * sizeof(GLOBAL *));
         }
@@ -576,7 +589,7 @@ showstatics(void)
  * function scopes larger than the current scope levels.  Their memory
  * remains allocated since their values still actually exist.
  */
-S_FUNC void
+static void
 unscope(void)
 {
     GLOBAL **hp;         /* hash table head address */

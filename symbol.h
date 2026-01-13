@@ -1,7 +1,7 @@
 /*
  * symbol - global and local symbol routines
  *
- * Copyright (C) 1999-2007,2014  David I. Bell
+ * Copyright (C) 1999-2007,2014,2026  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -25,12 +25,6 @@
 
 #if !defined(INCLUDE_SYMBOL_H)
 #  define INCLUDE_SYMBOL_H
-
-#  if defined(CALC_SRC) /* if we are building from the calc source tree */
-#    include "zmath.h"
-#  else
-#    include <calc/zmath.h>
-#  endif
 
 /*
  * Symbol Declarations.
@@ -57,41 +51,41 @@ struct global {
 /*
  * Routines to search for global symbols.
  */
-E_FUNC GLOBAL *addglobal(char *name, bool isstatic);
-E_FUNC GLOBAL *findglobal(char *name);
+extern GLOBAL *addglobal(char *name, bool isstatic);
+extern GLOBAL *findglobal(char *name);
 
 /*
  * Routines to return names of variables.
  */
-E_FUNC char *localname(long n);
-E_FUNC char *paramname(long n);
-E_FUNC char *globalname(GLOBAL *sp);
+extern char *localname(long n);
+extern char *paramname(long n);
+extern char *globalname(GLOBAL *sp);
 
 /*
  * Routines to handle entering and leaving of scope levels.
  */
-E_FUNC void resetscopes(void);
-E_FUNC void enterfilescope(void);
-E_FUNC void exitfilescope(void);
-E_FUNC void enterfuncscope(void);
-E_FUNC void exitfuncscope(void);
-E_FUNC void endscope(char *name, bool isglobal);
+extern void resetscopes(void);
+extern void enterfilescope(void);
+extern void exitfilescope(void);
+extern void enterfuncscope(void);
+extern void exitfuncscope(void);
+extern void endscope(char *name, bool isglobal);
 
 /*
  * Other routines.
  */
-E_FUNC long addlocal(char *name);
-E_FUNC long findlocal(char *name);
-E_FUNC long addparam(char *name);
-E_FUNC long findparam(char *name);
-E_FUNC void initlocals(void);
-E_FUNC void initglobals(void);
-E_FUNC int writeglobals(char *name);
-E_FUNC int symboltype(char *name);
-E_FUNC void showglobals(void);
-E_FUNC void showallglobals(void);
-E_FUNC void freeglobals(void);
-E_FUNC void showstatics(void);
-E_FUNC void freestatics(void);
+extern long addlocal(char *name);
+extern long findlocal(char *name);
+extern long addparam(char *name);
+extern long findparam(char *name);
+extern void initlocals(void);
+extern void initglobals(void);
+extern int writeglobals(char *name);
+extern int symboltype(char *name);
+extern void showglobals(void);
+extern void showallglobals(void);
+extern void freeglobals(void);
+extern void showstatics(void);
+extern void freestatics(void);
 
-#endif /* !INCLUDE_SYMBOL_H */
+#endif

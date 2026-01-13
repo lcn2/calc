@@ -1,7 +1,7 @@
 /*
  * have_strlcat - determine if we have strlcat()
  *
- * Copyright (C) 2021  Landon Curt Noll
+ * Copyright (C) 2021,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -38,13 +38,17 @@
  *              undefined ==> do not or cannot call strlcat()
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
-#include "have_string.h"
-#ifdef HAVE_STRING_H
-#  include <string.h>
-#endif
+#include <string.h>
 
-#include "banned.h" /* include after system header <> includes */
+/*
+ * calc local src includes
+ */
+
+#include "banned.h" /* include after all other includes */
 
 #define BUF_SIZ 5
 
@@ -57,7 +61,8 @@ main(void)
 
     printf("#undef HAVE_STRLCAT /* no */\n");
 
-#else /* HAVE_NO_STRLCAT */
+#else
+
     char dst[BUF_SIZ + 1 + 1];
 
     dst[0] = 'S';
@@ -66,7 +71,7 @@ main(void)
 
     printf("#define HAVE_STRLCAT /* yes */\n");
 
-#endif /* HAVE_NO_STRLCAT */
+#endif
 
     /* exit(0); */
     return 0;

@@ -12,7 +12,7 @@ DESCRIPTION
     After evaluating in order any arguments it may have, null(...)
     returns the null value.  This is a particular value, different from
     all other types; it is the only value v for which isnull(v) returns
-    TRUE.  The null value tests as FALSE in conditions, and normally
+    true.  The null value tests as false in conditions, and normally
     delivers no output in print statements, except that when a list or
     matrix is printed, null elements are printed as "NULL".
 
@@ -74,7 +74,7 @@ LINK LIBRARY
 SEE ALSO
     isnull, test
 
-## Copyright (C) 1999-2006  Landon Curt Noll
+## Copyright (C) 1999-2006,2026  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

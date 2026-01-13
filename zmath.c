@@ -1,7 +1,7 @@
 /*
  * zmath - extended precision integral arithmetic primitives
  *
- * Copyright (C) 1999-2007,2021-2023  David I. Bell, Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023,2026  David I. Bell, Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -25,13 +25,23 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
-#include "int.h"
-#include "alloc.h"
-#include "zmath.h"
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+#include <stdbool.h>
 
+/*
+ * calc local src includes
+ */
+#include "zmath.h"
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 HALF _zeroval_[] = {0};
 ZVALUE _zero_ = {_zeroval_, 1, 0};
@@ -189,8 +199,8 @@ char popcnt[256] = {0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4, 1, 2, 2, 3, 
                     6, 7, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7, 4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8};
 
 #ifdef ALLOCTEST
-STATIC long nalloc = 0;
-STATIC long nfree = 0;
+static long nalloc = 0;
+static long nfree = 0;
 #endif
 
 HALF *
@@ -202,7 +212,7 @@ alloc(LEN len)
         math_error("Calculation aborted");
         not_reached();
     }
-    hp = (HALF *)malloc((len + 1) * sizeof(HALF));
+    hp = (HALF *)calloc(len + 1, sizeof(HALF));
     if (hp == 0) {
         math_error("Not enough memory");
         not_reached();

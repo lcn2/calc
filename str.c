@@ -1,7 +1,7 @@
 /*
  * str - string list routines
  *
- * Copyright (C) 1999-2007,2021-2023,2025  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023,2025-2026  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -25,19 +25,26 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <ctype.h>
-#include "have_string.h"
-#ifdef HAVE_STRING_H
-#  include <string.h>
-#endif
-#include "calc.h"
-#include "alloc.h"
-#include "str.h"
-#include "strl.h"
+#include <stdint.h>
+#include <stdbool.h>
 
+/*
+ * calc local src includes
+ */
+#include "value.h"
+#include "calc.h"
+#include "strl.h"
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 #define STR_TABLECHUNK (1 << 16) /* how often to reallocate string literal table */
 #define STR_CHUNK (1 << 16)      /* size of string storage allocation */
@@ -46,9 +53,9 @@
 
 STRING _nullstring_ = {"", 0, 1, NULL};
 
-STATIC char *chartable; /* single character string table */
+static char *chartable; /* single character string table */
 
-STATIC struct {
+static struct {
     long l_count;    /* count of strings in table */
     long l_maxcount; /* maximum strings storable in table */
     size_t l_avail;  /* characters available in current string */
@@ -67,7 +74,7 @@ initstr(STRINGHEAD *hp)
 {
     if (hp->h_list == NULL) {
         /* alloc + 1 guard paranoia */
-        hp->h_list = (char *)malloc(STR_CHUNK + 1);
+        hp->h_list = (char *)calloc(STR_CHUNK + 1, 1);
         if (hp->h_list == NULL) {
             math_error("Cannot allocate string header");
             not_reached();
@@ -206,7 +213,7 @@ namestr(STRINGHEAD *hp, long n)
  * Return a null-terminated string which consists of a single character.
  * The table is initialized on the first call.
  */
-S_FUNC char *
+static char *
 charstr(int ch)
 {
     char *cp;
@@ -214,7 +221,7 @@ charstr(int ch)
 
     if (chartable == NULL) {
         /* alloc + 1 guard paranoia */
-        cp = (char *)malloc((OCTET_VALUES + 1) * 2);
+        cp = (char *)calloc((OCTET_VALUES + 1) * 2, 1);
         if (cp == NULL) {
             math_error("Cannot allocate character table");
             not_reached();
@@ -269,7 +276,7 @@ addliteral(char *str)
             table[count] = NULL; /* guard paranoia */
         } else {
             /* alloc + 1 guard paranoia */
-            table = (char **)malloc((count + 1) * sizeof(char *));
+            table = (char **)calloc(count + 1, sizeof(char *));
             table[count] = NULL; /* guard paranoia */
         }
         if (table == NULL) {
@@ -290,7 +297,7 @@ addliteral(char *str)
     len = ROUNDUP(len + 1, FULL_LEN);
     if (len >= STR_UNIQUE) {
         /* alloc + 1 guard paranoia */
-        newstr = (char *)malloc(len + 1);
+        newstr = (char *)calloc(len + 1, 1);
         if (newstr == NULL) {
             math_error("Cannot allocate large literal string");
             not_reached();
@@ -306,7 +313,7 @@ addliteral(char *str)
      */
     if (literals.l_avail < len) {
         /* alloc + 1 guard paranoia */
-        newstr = (char *)malloc(STR_CHUNK + 1);
+        newstr = (char *)calloc(STR_CHUNK + 1, 1);
         if (newstr == NULL) {
             math_error("Cannot allocate new literal string");
             not_reached();
@@ -336,7 +343,7 @@ stringadd(STRING *s1, STRING *s2)
     len = s1->s_len + s2->s_len;
     s = stralloc();
     s->s_len = len;
-    s->s_str = (char *)malloc(len + 1);
+    s->s_str = (char *)calloc(len + 1, 1);
     if (s->s_str == NULL) {
         return NULL;
     }
@@ -369,7 +376,7 @@ stringneg(STRING *str)
     if (len <= 1) {
         return slink(str);
     }
-    c = (char *)malloc(len + 1);
+    c = (char *)calloc(len + 1, 1);
     if (c == NULL) {
         return NULL;
     }
@@ -435,7 +442,7 @@ stringmul(NUMBER *q, STRING *str)
     if (len == 0) {
         return slink(&_nullstring_);
     }
-    c = (char *)malloc(len + 1);
+    c = (char *)calloc(len + 1, 1);
     if (c == NULL) {
         return NULL;
     }
@@ -473,7 +480,7 @@ stringand(STRING *s1, STRING *s2)
     }
     s = stralloc();
     s->s_len = len;
-    c = malloc(len + 1);
+    c = calloc(len + 1, 1);
     if (c == NULL) {
         return NULL;
     }
@@ -508,7 +515,7 @@ stringor(STRING *s1, STRING *s2)
     len = s1->s_len;
     s = stralloc();
     s->s_len = len;
-    c = malloc(len + 1);
+    c = calloc(len + 1, 1);
     if (c == NULL) {
         return NULL;
     }
@@ -548,7 +555,7 @@ stringxor(STRING *s1, STRING *s2)
     len = s1->s_len;
     s = stralloc();
     s->s_len = len;
-    c = malloc(len + 1);
+    c = calloc(len + 1, 1);
     if (c == NULL) {
         return NULL;
     }
@@ -600,7 +607,7 @@ stringcomp(STRING *s1)
     if (len == 0) {
         return slink(&_nullstring_);
     }
-    c = malloc(len + 1);
+    c = calloc(len + 1, 1);
     if (c == NULL) {
         return NULL;
     }
@@ -639,7 +646,7 @@ stringsegment(STRING *s1, long n1, long n2)
     }
     len = (n1 >= n2) ? n1 - n2 + 1 : n2 - n1 + 1;
     s = stralloc();
-    c = malloc(len + 1);
+    c = calloc(len + 1, 1);
     if (c == NULL) {
         return NULL;
     }
@@ -696,7 +703,7 @@ stringshift(STRING *s1, long n)
     j = n & 7;
     k = 8 - j;
     n >>= 3;
-    c = malloc(len + 1);
+    c = calloc(len + 1, 1);
     if (c == NULL) {
         return NULL;
     }
@@ -897,7 +904,7 @@ stringlowbit(STRING *s)
  * Returns true if and only if a difference is encountered.
  * Essentially a local version of memcmp.
  */
-S_FUNC bool
+static bool
 stringcompare(char *c1, char *c2, long len)
 {
     while (len-- > 0) {
@@ -1168,9 +1175,9 @@ stringrsearch(STRING *s1, STRING *s2, long start, long end, ZVALUE *index)
 
 #define STRALLOC 100
 
-STATIC STRING *freeStr = NULL;
-STATIC STRING **firstStrs = NULL;
-STATIC long blockcount = 0;
+static STRING *freeStr = NULL;
+static STRING **firstStrs = NULL;
+static long blockcount = 0;
 
 STRING *
 stralloc(void)
@@ -1180,7 +1187,7 @@ stralloc(void)
 
     if (freeStr == NULL) {
         /* alloc + 1 guard paranoia */
-        freeStr = (STRING *)malloc(sizeof(STRING) * (STRALLOC + 1));
+        freeStr = (STRING *)calloc(STRALLOC + 1, sizeof(STRING));
         if (freeStr == NULL) {
             math_error("Unable to allocate memory for stralloc");
             not_reached();
@@ -1209,7 +1216,7 @@ stralloc(void)
         blockcount++;
         if (firstStrs == NULL) {
             /* alloc + 1 guard paranoia */
-            newfn = (STRING **)malloc((blockcount + 1) * sizeof(STRING *));
+            newfn = (STRING **)calloc(blockcount + 1, sizeof(STRING *));
             newfn[blockcount] = NULL; /* guard paranoia */
         } else {
             /* alloc + 1 guard paranoia */
@@ -1252,7 +1259,7 @@ charstring(int ch)
     STRING *s;
     char *c;
 
-    c = (char *)malloc(2);
+    c = (char *)calloc(2, 1);
     if (c == NULL) {
         math_error("Allocation failure for charstring");
         not_reached();
@@ -1280,7 +1287,7 @@ makenewstring(char *str)
     if (len == 0) {
         return slink(&_nullstring_);
     }
-    c = (char *)malloc(len + 1);
+    c = (char *)calloc(len + 1, 1);
     if (c == NULL) {
         math_error("malloc for makenewstring failed");
         not_reached();
@@ -1304,7 +1311,7 @@ stringcopy(STRING *s1)
     if (len == 0) {
         return slink(s1);
     }
-    c = malloc(len + 1);
+    c = calloc(len + 1, 1);
     if (c == NULL) {
         math_error("Malloc failed for stringcopy");
         not_reached();
@@ -1343,16 +1350,16 @@ sfree(STRING *s)
     freeStr = s;
 }
 
-STATIC long stringconstcount = 0;
-STATIC long stringconstavail = 0;
-STATIC STRING **stringconsttable;
+static long stringconstcount = 0;
+static long stringconstavail = 0;
+static STRING **stringconsttable;
 #define STRCONSTALLOC 100
 
 void
 initstrings(void)
 {
     /* alloc + 1 guard paranoia */
-    stringconsttable = (STRING **)malloc(sizeof(STRING *) * (STRCONSTALLOC + 1));
+    stringconsttable = (STRING **)calloc(STRCONSTALLOC + 1, sizeof(STRING *));
     if (stringconsttable == NULL) {
         math_error("Unable to allocate constant table");
         not_reached();
@@ -1416,7 +1423,7 @@ addstring(char *str, size_t len)
         }
     }
     s = stralloc();
-    c = (char *)malloc(len + 1);
+    c = (char *)calloc(len + 1, 1);
     if (c == NULL) {
         math_error("Unable to allocate string constant memory");
         not_reached();

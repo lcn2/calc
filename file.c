@@ -1,7 +1,7 @@
 /*
  * file - file I/O routines callable by users
  *
- * Copyright (C) 1999-2007,2018,2021-2023  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2007,2018,2021-2023,2026  David I. Bell and Landon Curt Noll
  *
  * Primary author:  David I. Bell
  *
@@ -26,30 +26,40 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <ctype.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <stdlib.h>
-#include "have_unistd.h"
-#if defined(HAVE_UNISTD_H)
-#  include <unistd.h>
-#endif /* HAVE_UNISTD_H */
-#include <ctype.h>
-#include "calc.h"
-#include "alloc.h"
-#include "longbits.h"
-#include "have_fgetsetpos.h"
-#include "have_fpos_pos.h"
-#include "fposval.h"
-#include "file.h"
-#include "strl.h"
+#include <stdint.h>
+#include <stdbool.h>
 
+/*
+ * conditional <system> head includes
+ */
 #if defined(_WIN32) || defined(_WIN64)
 #  include <io.h>
 #endif
 
+/*
+ * calc local src includes
+ */
+#include "value.h"
+#include "calc.h"
+#include "longbits.h"
+#include "have_fpos_pos.h"
+#include "fposval.h"
+#include "file.h"
+#include "strl.h"
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 #define READSIZE 1024 /* buffer size for reading */
 
@@ -58,37 +68,37 @@
 /*
  * external STDIO functions
  */
-E_FUNC void math_setfp(FILE *fp);
-E_FUNC FILE *f_open(char *name, char *mode);
+extern void math_setfp(FILE *fp);
+extern FILE *f_open(char *name, char *mode);
 
 /*
  * Table of opened files.
  * The first three entries always correspond to stdin, stdout, and stderr,
  * and cannot be closed.  Their file ids are always 0, 1, and 2.
  */
-STATIC FILEIO files[MAXFILES] = {{FILEID_STDIN, NULL, (dev_t)0, (ino_t)0, "(stdin)", true, false, false, false, 'r', "r"},
+static FILEIO files[MAXFILES] = {{FILEID_STDIN, NULL, (dev_t)0, (ino_t)0, "(stdin)", true, false, false, false, 'r', "r"},
                                  {FILEID_STDOUT, NULL, (dev_t)0, (ino_t)0, "(stdout)", false, true, false, false, 'w', "w"},
                                  {FILEID_STDERR, NULL, (dev_t)0, (ino_t)0, "(stderr)", false, true, false, false, 'w', "w"}};
 
-STATIC int ioindex[MAXFILES] = {0, 1, 2}; /* Indices for FILEIO table */
-STATIC FILEID lastid = FILEID_STDERR;     /* Last allocated file id */
-STATIC int idnum = 3;                     /* Number of allocated file ids */
+static int ioindex[MAXFILES] = {0, 1, 2}; /* Indices for FILEIO table */
+static FILEID lastid = FILEID_STDERR;     /* Last allocated file id */
+static int idnum = 3;                     /* Number of allocated file ids */
 
 /* forward static declarations */
-S_FUNC ZVALUE filepos2z(FILEPOS pos);
-S_FUNC FILEPOS z2filepos(ZVALUE pos);
-S_FUNC int set_open_pos(FILE *fp, ZVALUE zpos);
-S_FUNC int get_open_pos(FILE *fp, ZVALUE *res);
-S_FUNC ZVALUE off_t2z(off_t siz);
-S_FUNC ZVALUE dev2z(dev_t dev);
-S_FUNC ZVALUE inode2z(ino_t inode);
-S_FUNC void getscanfield(FILE *fp, bool skip, unsigned int width, int scannum, char *scanptr, char **strptr);
-S_FUNC void getscanwhite(FILE *fp, bool skip, unsigned int width, int scannum, char **strptr);
-S_FUNC int fscanfile(FILE *fp, char *fmt, int count, VALUE **vals);
-S_FUNC void freadnum(FILE *fp, VALUE *valptr);
-S_FUNC void freadsum(FILE *fp, VALUE *valptr);
-S_FUNC void freadprod(FILE *fp, VALUE *valptr);
-S_FUNC void fskipnum(FILE *fp);
+static ZVALUE filepos2z(fpos_t pos);
+static fpos_t z2filepos(ZVALUE pos);
+static int set_open_pos(FILE *fp, ZVALUE zpos);
+static int get_open_pos(FILE *fp, ZVALUE *res);
+static ZVALUE off_t2z(off_t siz);
+static ZVALUE dev2z(dev_t dev);
+static ZVALUE inode2z(ino_t inode);
+static void getscanfield(FILE *fp, bool skip, unsigned int width, int scannum, char *scanptr, char **strptr);
+static void getscanwhite(FILE *fp, bool skip, unsigned int width, int scannum, char **strptr);
+static int fscanfile(FILE *fp, char *fmt, int count, VALUE **vals);
+static void freadnum(FILE *fp, VALUE *valptr);
+static void freadsum(FILE *fp, VALUE *valptr);
+static void freadprod(FILE *fp, VALUE *valptr);
+static void fskipnum(FILE *fp);
 
 /*
  * file_init - perform needed initialization work
@@ -102,7 +112,7 @@ S_FUNC void fskipnum(FILE *fp);
 void
 file_init(void)
 {
-    STATIC int done = 0; /* 1 => routine already called */
+    static int done = 0; /* 1 => routine already called */
     struct stat sbuf;    /* file status */
     FILEIO *fiop;
     FILE *fp;
@@ -158,7 +168,7 @@ file_init(void)
                     }
                 }
                 snprintf_len = sizeof("descriptor[12345678901234567890]") + 1;
-                tname = (char *)malloc(snprintf_len + 1);
+                tname = (char *)calloc(snprintf_len + 1, 1);
                 if (tname == NULL) {
                     math_error("Out of memory for init_file");
                     not_reached();
@@ -195,7 +205,7 @@ file_init(void)
  *      id      calc file ID
  *      fp      open file stream
  */
-S_FUNC void
+static void
 init_fileio(FILEIO *fiop, char *name, char *mode, struct stat *sbufp, FILEID id, FILE *fp)
 {
     char modestr[MODE_LEN + 1]; /* mode [rwa]b?\+? */
@@ -208,7 +218,7 @@ init_fileio(FILEIO *fiop, char *name, char *mode, struct stat *sbufp, FILEID id,
     namelen = 0;
     if (name != NULL) {
         namelen = strlen(name);
-        fiop->name = (char *)malloc(namelen + 1);
+        fiop->name = (char *)calloc(namelen + 1, 1);
         if (fiop->name == NULL) {
             math_error("No memory for filename");
             not_reached();
@@ -501,7 +511,7 @@ reopenid(FILEID id, char *mode, char *name)
         ioindex[idnum++] = i;
         fiop->id = id;
     } else {
-        (void) fclose(fiop->fp);
+        (void)fclose(fiop->fp);
         if (name == NULL) {
             fp = f_open(fiop->name, mode);
         } else {
@@ -716,6 +726,7 @@ flushid(FILEID id)
 }
 
 #if !defined(_WIN32) && !defined(_WIN64)
+
 int
 flushall(void)
 {
@@ -732,7 +743,8 @@ flushall(void)
     }
     return err;
 }
-#endif /* Windows free systems */
+
+#endif
 
 /*
  * Read the next line, string or word from an opened file.
@@ -764,7 +776,7 @@ readid(FILEID id, int flags, STRING **retstr)
     char *b;
     int c;
     bool nlstop, nullstop, wsstop, rmstop, done;
-    FILEPOS fpos;
+    fpos_t fpos;
     STRING *newstr;
 
     totlen = 0;
@@ -782,9 +794,9 @@ readid(FILEID id, int flags, STRING **retstr)
     fp = fiop->fp;
 
     if (fiop->action == 'w') {
-        f_tell(fp, &fpos);
+        fgetpos(fp, &fpos);
         fflush(fp);
-        if (f_seek_set(fp, &fpos) < 0) {
+        if (fsetpos(fp, &fpos) < 0) {
             return 3;
         }
     }
@@ -823,7 +835,7 @@ readid(FILEID id, int flags, STRING **retstr)
         if (totlen) {
             str = (char *)realloc(str, totlen + n + 1);
         } else {
-            str = (char *)malloc(n + 1);
+            str = (char *)calloc(n + 1, 1);
         }
         if (str == NULL) {
             math_error("Out of memory for readid");
@@ -863,16 +875,16 @@ int
 getcharid(FILEID id)
 {
     FILEIO *fiop;
-    FILEPOS fpos;
+    fpos_t fpos;
 
     fiop = findid(id, false);
     if (fiop == NULL) {
         return -2;
     }
     if (fiop->action == 'w') {
-        f_tell(fiop->fp, &fpos);
+        fgetpos(fiop->fp, &fpos);
         fflush(fiop->fp);
-        if (f_seek_set(fiop->fp, &fpos) < 0) {
+        if (fsetpos(fiop->fp, &fpos) < 0) {
             return -3;
         }
     }
@@ -975,7 +987,7 @@ idprintf(FILEID id, char *fmt, int count, VALUE **vals)
     long olddigits, newdigits;
     long width, precision;
     bool didneg, didprecision;
-    FILEPOS fpos;
+    fpos_t fpos;
     bool printstring;
     bool printchar;
 
@@ -984,8 +996,8 @@ idprintf(FILEID id, char *fmt, int count, VALUE **vals)
         return 1;
     }
     if (fiop->action == 'r') {
-        f_tell(fiop->fp, &fpos);
-        if (f_seek_set(fiop->fp, &fpos) < 0) {
+        fgetpos(fiop->fp, &fpos);
+        if (fsetpos(fiop->fp, &fpos) < 0) {
             return 3;
         }
     }
@@ -1213,7 +1225,7 @@ int
 idfputc(FILEID id, int ch)
 {
     FILEIO *fiop;
-    FILEPOS fpos;
+    fpos_t fpos;
 
     /* get the file info pointer */
     fiop = findid(id, true);
@@ -1221,8 +1233,8 @@ idfputc(FILEID id, int ch)
         return 1;
     }
     if (fiop->action == 'r') {
-        f_tell(fiop->fp, &fpos);
-        if (f_seek_set(fiop->fp, &fpos) < 0) {
+        fgetpos(fiop->fp, &fpos);
+        if (fsetpos(fiop->fp, &fpos) < 0) {
             return 2;
         }
     }
@@ -1273,7 +1285,7 @@ int
 idfputs(FILEID id, STRING *str)
 {
     FILEIO *fiop;
-    FILEPOS fpos;
+    fpos_t fpos;
     FILE *fp;
     char *c;
     long len;
@@ -1285,8 +1297,8 @@ idfputs(FILEID id, STRING *str)
     }
 
     if (fiop->action == 'r') {
-        f_tell(fiop->fp, &fpos);
-        if (f_seek_set(fiop->fp, &fpos) < 0) {
+        fgetpos(fiop->fp, &fpos);
+        if (fsetpos(fiop->fp, &fpos) < 0) {
             return 2;
         }
     }
@@ -1315,7 +1327,7 @@ int
 idfputstr(FILEID id, char *str)
 {
     FILEIO *fiop;
-    FILEPOS fpos;
+    fpos_t fpos;
 
     /* get the file info pointer */
     fiop = findid(id, true);
@@ -1324,8 +1336,8 @@ idfputstr(FILEID id, char *str)
     }
 
     if (fiop->action == 'r') {
-        f_tell(fiop->fp, &fpos);
-        if (f_seek_set(fiop->fp, &fpos) < 0) {
+        fgetpos(fiop->fp, &fpos);
+        if (fsetpos(fiop->fp, &fpos) < 0) {
             return 2;
         }
     }
@@ -1385,18 +1397,18 @@ rewindall(void)
  * NOTE: Does not support negative file positions.
  */
 /*ARGSUSED*/
-S_FUNC ZVALUE
-filepos2z(FILEPOS pos)
+static ZVALUE
+filepos2z(fpos_t pos)
 {
     ZVALUE ret; /* ZVALUE file position to return */
 
     /*
-     * store FILEPOS in a ZVALUE as a positive value
+     * store fpos_t in a ZVALUE as a positive value
      */
-    ret.len = FILEPOS_BITS / BASEB;
+    ret.len = FPOS_T_BITS / BASEB;
     ret.v = alloc(ret.len);
     zclearval(ret);
-    SWAP_HALF_IN_FILEPOS(ret.v, (HALF *)&pos);
+    SWAP_HALF_IN_FPOS_T(ret.v, (HALF *)&pos);
     ret.sign = 0;
     ztrim(&ret);
 
@@ -1413,18 +1425,18 @@ filepos2z(FILEPOS pos)
  *      zpos            file position as a ZVALUE
  *
  * returns:
- *      file position as a FILEPOS
+ *      file position as a fpos_t
  *
  * NOTE: Does not support negative file positions.
  */
-S_FUNC FILEPOS
+static fpos_t
 z2filepos(ZVALUE zpos)
 {
-#if FILEPOS_BITS > FULL_BITS
-    FILEPOS tmp; /* temp file position as a FILEPOS */
+#if FPOS_T_BITS > FULL_BITS
+    fpos_t tmp; /* temp file position as a fpos_t */
 #endif
-    FILEPOS ret; /* file position as a FILEPOS */
-#if FILEPOS_BITS < FULL_BITS
+    fpos_t ret; /* file position as a fpos_t */
+#if FPOS_T_BITS < FULL_BITS
     long pos; /* zpos as a long */
 #else
     FULL pos; /* zpos as a FULL */
@@ -1438,23 +1450,28 @@ z2filepos(ZVALUE zpos)
     /*
      * quick return if the position can fit into a long
      */
-#if FILEPOS_BITS == FULL_BITS
+#if FPOS_T_BITS == FULL_BITS
+
     /* ztofull puts the value into native byte order */
     pos = ztofull(zpos);
-    memset(&ret, 0, sizeof(ret)); /* FILEPOS could be non-scalar */
+    memset(&ret, 0, sizeof(ret)); /* fpos_t could be non-scalar */
     memcpy((void *)&ret, (void *)&pos, MIN(sizeof(ret), sizeof(pos)));
     return ret;
-#elif FILEPOS_BITS < FULL_BITS
+
+#elif FPOS_T_BITS < FULL_BITS
+
     /* ztofull puts the value into native byte order */
     pos = ztolong(zpos);
-    memset(&ret, 0, sizeof(ret)); /* FILEPOS could be non-scalar */
+    memset(&ret, 0, sizeof(ret)); /* fpos_t could be non-scalar */
     memcpy((void *)&ret, (void *)&pos, MIN(sizeof(ret), sizeof(pos)));
     return ret;
-#else  /* FILEPOS_BITS > FULL_BITS */
+
+#else
+
     if (!zgtmaxfull(zpos)) {
         /* ztofull puts the value into native byte order */
         pos = ztofull(zpos);
-        memset(&ret, 0, sizeof(ret)); /* FILEPOS could be non-scalar */
+        memset(&ret, 0, sizeof(ret)); /* fpos_t could be non-scalar */
         memcpy((void *)&ret, (void *)&pos, MIN(sizeof(ret), sizeof(pos)));
         return ret;
     }
@@ -1462,23 +1479,25 @@ z2filepos(ZVALUE zpos)
     /*
      * copy (and swap if needed) lower part of the ZVALUE as needed
      */
-    if (zpos.len >= FILEPOS_BITS / BASEB) {
-        /* copy the lower FILEPOS_BITS of the ZVALUE */
-        memset(&tmp, 0, sizeof(tmp)); /* FILEPOS could be non-scalar */
-        memcpy(&tmp, zpos.v, MIN(sizeof(tmp), FILEPOS_LEN));
+    if (zpos.len >= FPOS_T_BITS / BASEB) {
+        /* copy the lower FPOS_T_BITS of the ZVALUE */
+        memset(&tmp, 0, sizeof(tmp)); /* fpos_t could be non-scalar */
+        memcpy(&tmp, zpos.v, MIN(sizeof(tmp), FPOS_T_LEN));
     } else {
         /* copy what bits we can into the temp value */
-        memset(&tmp, 0, sizeof(tmp)); /* FILEPOS could be non-scalar */
-        memcpy(&tmp, zpos.v, MIN(sizeof(tmp), MIN(zpos.len * BASEB / 8, FILEPOS_LEN)));
+        memset(&tmp, 0, sizeof(tmp)); /* fpos_t could be non-scalar */
+        /* cast to uintmax_t to avoid problems with 32-bit systems comparing 'unsigned int' and 'int' */
+        memcpy(&tmp, zpos.v, MIN((uintmax_t)sizeof(tmp), (uintmax_t)MIN(zpos.len * BASEB / 8, FPOS_T_LEN)));
     }
     /* swap into native byte order */
-    SWAP_HALF_IN_FILEPOS(&ret, &tmp);
+    SWAP_HALF_IN_FPOS_T(&ret, &tmp);
 
     /*
      * return our result
      */
     return ret;
-#endif /* FILEPOS_BITS <= FULL_BITS */
+
+#endif
 }
 
 /*
@@ -1492,15 +1511,15 @@ z2filepos(ZVALUE zpos)
  *      0               res points to the file position
  *      -1              error
  */
-S_FUNC int
+static int
 get_open_pos(FILE *fp, ZVALUE *res)
 {
-    FILEPOS pos; /* current file position */
+    fpos_t pos; /* current file position */
 
     /*
      * get the file position
      */
-    if (f_tell(fp, &pos) < 0) {
+    if (fgetpos(fp, &pos) < 0) {
         /* cannot get file position, return -1 */
         return -1;
     }
@@ -1553,7 +1572,7 @@ int
 ftellid(FILEID id, ZVALUE *res)
 {
     FILEIO *fiop;
-    FILEPOS fpos; /* current file position */
+    fpos_t fpos; /* current file position */
 
     /* get FILEIO */
     fiop = findid(id, -1);
@@ -1562,7 +1581,7 @@ ftellid(FILEID id, ZVALUE *res)
     }
 
     /* get the file position */
-    if (f_tell(fiop->fp, &fpos) < 0) {
+    if (fgetpos(fiop->fp, &fpos) < 0) {
         return -3;
     }
 
@@ -1575,7 +1594,7 @@ int
 fseekid(FILEID id, ZVALUE offset, int whence)
 {
     FILEIO *fiop;    /* FILEIO of file */
-    FILEPOS off;     /* offset as a FILEPOS */
+    fpos_t off;      /* offset as a fpos_t */
     ZVALUE cur, tmp; /* current or end of file location */
     int ret = 0;     /* return code */
 
@@ -1595,12 +1614,12 @@ fseekid(FILEID id, ZVALUE offset, int whence)
         off = z2filepos(offset);
 
         /* seek there */
-        ret = f_seek_set(fiop->fp, &off);
+        ret = fsetpos(fiop->fp, &off);
         break;
 
     case 1:
         /* construct seek position, off = cur+offset */
-        f_tell(fiop->fp, &off);
+        fgetpos(fiop->fp, &off);
         cur = filepos2z(off);
         zadd(cur, offset, &tmp);
         zfree(cur);
@@ -1612,7 +1631,7 @@ fseekid(FILEID id, ZVALUE offset, int whence)
         zfree(tmp);
 
         /* seek there */
-        ret = f_seek_set(fiop->fp, &off);
+        ret = fsetpos(fiop->fp, &off);
         break;
 
     case 2:
@@ -1630,7 +1649,7 @@ fseekid(FILEID id, ZVALUE offset, int whence)
         zfree(tmp);
 
         /* seek there */
-        ret = f_seek_set(fiop->fp, &off);
+        ret = fsetpos(fiop->fp, &off);
         break;
 
     default:
@@ -1653,10 +1672,10 @@ fseekid(FILEID id, ZVALUE offset, int whence)
  * NOTE: Due to fsetpos limitation, position is set relative to only
  *       the beginning of the file.
  */
-S_FUNC int
+static int
 set_open_pos(FILE *fp, ZVALUE zpos)
 {
-    FILEPOS pos; /* current file position */
+    fpos_t pos; /* current file position */
 
     /*
      * convert ZVALUE to file position
@@ -1666,7 +1685,7 @@ set_open_pos(FILE *fp, ZVALUE zpos)
     /*
      * set the file position
      */
-    if (f_seek_set(fp, &pos) < 0) {
+    if (fsetpos(fp, &pos) < 0) {
         /* cannot set file position, return -1 */
         return -1;
     }
@@ -1734,7 +1753,7 @@ setloc(FILEID id, ZVALUE zpos)
  *      file size as a ZVALUE
  */
 /*ARGSUSED*/
-S_FUNC ZVALUE
+static ZVALUE
 off_t2z(off_t siz)
 {
     ZVALUE ret; /* ZVALUE file size to return */
@@ -1764,7 +1783,7 @@ off_t2z(off_t siz)
  * returns:
  *      file size as a ZVALUE
  */
-S_FUNC ZVALUE
+static ZVALUE
 dev2z(dev_t dev)
 {
     ZVALUE ret; /* ZVALUE file size to return */
@@ -1795,7 +1814,7 @@ dev2z(dev_t dev)
  *      file size as a ZVALUE
  */
 /*ARGSUSED*/
-S_FUNC ZVALUE
+static ZVALUE
 inode2z(ino_t inode)
 {
     ZVALUE ret; /* ZVALUE file size to return */
@@ -1948,7 +1967,7 @@ get_inode(FILEID id, ZVALUE *inode)
     return 0;
 }
 
-S_FUNC off_t
+static off_t
 filesize(FILEIO *fiop)
 {
     struct stat sbuf;
@@ -2045,7 +2064,7 @@ showfiles(void)
  *      scanptr         string of characters considered separators
  *      strptr          pointer to where the new field pointer may be found
  */
-S_FUNC void
+static void
 getscanfield(FILE *fp, bool skip, unsigned int width, int scannum, char *scanptr, char **strptr)
 {
     char *str;            /* current string */
@@ -2094,7 +2113,7 @@ getscanfield(FILE *fp, bool skip, unsigned int width, int scannum, char *scanptr
             if (totlen) {
                 str = (char *)realloc(str, totlen + len + 1);
             } else {
-                str = (char *)malloc(len + 1);
+                str = (char *)calloc(len + 1, 1);
             }
             if (str == NULL) {
                 math_error("Out of memory for scanning");
@@ -2130,7 +2149,7 @@ getscanfield(FILE *fp, bool skip, unsigned int width, int scannum, char *scanptr
  *      scannum         Number of characters in scanset
  *      strptr          pointer to where the new field pointer may be found
  */
-S_FUNC void
+static void
 getscanwhite(FILE *fp, bool skip, unsigned int width, int scannum, char **strptr)
 {
     char *str;            /* current string */
@@ -2179,7 +2198,7 @@ getscanwhite(FILE *fp, bool skip, unsigned int width, int scannum, char **strptr
             if (totlen) {
                 str = (char *)realloc(str, totlen + len + 1);
             } else {
-                str = (char *)malloc(len + 1);
+                str = (char *)calloc(len + 1, 1);
             }
             if (str == NULL) {
                 math_error("Out of memory for scanning");
@@ -2205,7 +2224,7 @@ getscanwhite(FILE *fp, bool skip, unsigned int width, int scannum, char **strptr
     }
 }
 
-S_FUNC int
+static int
 fscanfile(FILE *fp, char *fmt, int count, VALUE **vals)
 {
     int assnum;    /* Number of assignments made */
@@ -2219,7 +2238,7 @@ fscanfile(FILE *fp, char *fmt, int count, VALUE **vals)
     int width;
     VALUE *var;             /* lvalue to be assigned to */
     unsigned short subtype; /* for var->v_subtype */
-    FILEPOS cur;            /* current location */
+    fpos_t cur;             /* current location */
 
     if (feof(fp)) {
         return EOF;
@@ -2335,7 +2354,7 @@ fscanfile(FILE *fp, char *fmt, int count, VALUE **vals)
             freevalue(var);
             var->v_type = V_NUM;
             var->v_num = qalloc();
-            f_tell(fp, &cur);
+            fgetpos(fp, &cur);
             var->v_num->num = filepos2z(cur);
             var->v_subtype = subtype;
             continue;
@@ -2364,7 +2383,7 @@ fscanfid(FILEID id, char *fmt, int count, VALUE **vals)
 {
     FILEIO *fiop;
     FILE *fp;
-    FILEPOS fpos;
+    fpos_t fpos;
 
     fiop = findid(id, false);
     if (fiop == NULL) {
@@ -2374,9 +2393,9 @@ fscanfid(FILEID id, char *fmt, int count, VALUE **vals)
     fp = fiop->fp;
 
     if (fiop->action == 'w') {
-        f_tell(fp, &fpos);
+        fgetpos(fp, &fpos);
         fflush(fp);
-        if (f_seek_set(fp, &fpos) < 0) {
+        if (fsetpos(fp, &fpos) < 0) {
             return -4;
         }
     }
@@ -2412,7 +2431,7 @@ scanfstr(char *str, char *fmt, int count, VALUE **vals)
  * a sign immediately following 'e' or 'E', or a dot is encountered.
  * Absence of digits is interpreted as zero.
  */
-S_FUNC void
+static void
 freadnum(FILE *fp, VALUE *valptr)
 {
     ZVALUE num, zden, newnum, newden, div, tmp;
@@ -2553,7 +2572,7 @@ freadnum(FILE *fp, VALUE *valptr)
     *valptr = val;
 }
 
-S_FUNC void
+static void
 freadsum(FILE *fp, VALUE *valptr)
 {
     VALUE v1, v2, v3;
@@ -2578,7 +2597,7 @@ freadsum(FILE *fp, VALUE *valptr)
     *valptr = v1;
 }
 
-S_FUNC void
+static void
 freadprod(FILE *fp, VALUE *valptr)
 {
     VALUE v1, v2, v3;
@@ -2602,7 +2621,7 @@ freadprod(FILE *fp, VALUE *valptr)
     *valptr = v1;
 }
 
-S_FUNC void
+static void
 fskipnum(FILE *fp)
 {
     char ch;
@@ -2666,7 +2685,7 @@ int
 fsearch(FILEID id, char *str, ZVALUE start, ZVALUE end, ZVALUE *res)
 {
     FILEIO *fiop;     /* FILEIO of file id */
-    FILEPOS cur;      /* current file position */
+    fpos_t cur;       /* current file position */
     ZVALUE tmp, tmp2; /* temporary ZVALUEs */
     char c;           /* str comparison character */
     int r;            /* character read from file */
@@ -2701,7 +2720,7 @@ fsearch(FILEID id, char *str, ZVALUE start, ZVALUE end, ZVALUE *res)
 
     cur = z2filepos(start);
 
-    if (f_seek_set(fiop->fp, &cur) < 0) {
+    if (fsetpos(fiop->fp, &cur) < 0) {
         zfree(tmp);
         return EOF;
     }
@@ -2719,7 +2738,7 @@ fsearch(FILEID id, char *str, ZVALUE start, ZVALUE end, ZVALUE *res)
     clearerr(fiop->fp);
     while ((r = fgetc(fiop->fp)) != EOF) {
         if ((char)r == c) {
-            (void)f_tell(fiop->fp, &cur);
+            (void)fgetpos(fiop->fp, &cur);
             s = str;
             while (*s) {
                 r = fgetc(fiop->fp);
@@ -2738,7 +2757,7 @@ fsearch(FILEID id, char *str, ZVALUE start, ZVALUE end, ZVALUE *res)
                 zfree(tmp);
                 return 0;
             }
-            (void)f_seek_set(fiop->fp, &cur);
+            (void)fsetpos(fiop->fp, &cur);
         }
         if (*tmp.v) {
             (*tmp.v)--;
@@ -2790,7 +2809,7 @@ int
 frsearch(FILEID id, char *str, ZVALUE first, ZVALUE last, ZVALUE *res)
 {
     FILEIO *fiop; /* FILEIO of file id */
-    FILEPOS cur;  /* current file position */
+    fpos_t cur;   /* current file position */
     ZVALUE pos;   /* current file position as ZVALUE */
     ZVALUE tmp;   /* temporary ZVALUEs */
     char c;       /* str comparison character */
@@ -2820,7 +2839,7 @@ frsearch(FILEID id, char *str, ZVALUE first, ZVALUE last, ZVALUE *res)
 
     if (c == '\0') {
         cur = z2filepos(pos);
-        if (f_seek_set(fiop->fp, &cur) < 0) {
+        if (fsetpos(fiop->fp, &cur) < 0) {
             zfree(pos);
             return EOF;
         }
@@ -2832,7 +2851,7 @@ frsearch(FILEID id, char *str, ZVALUE first, ZVALUE last, ZVALUE *res)
 
     while (zrel(pos, last) >= 0) {
         cur = z2filepos(pos);
-        if (f_seek_set(fiop->fp, &cur) < 0) {
+        if (fsetpos(fiop->fp, &cur) < 0) {
             zfree(pos);
             return EOF;
         }
@@ -2865,7 +2884,7 @@ frsearch(FILEID id, char *str, ZVALUE first, ZVALUE last, ZVALUE *res)
         pos = tmp;
     }
     cur = z2filepos(last);
-    f_seek_set(fiop->fp, &cur);
+    fsetpos(fiop->fp, &cur);
     zfree(pos);
     if (ferror(fiop->fp)) {
         return EOF;

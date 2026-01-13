@@ -1,7 +1,7 @@
 /*
  * qtrans - transcendental functions for real numbers
  *
- * Copyright (C) 1999-2007,2021-2023  David I. Bell, Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023,2026  David I. Bell, Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -30,11 +30,23 @@
  * These are sin, cos, exp, ln, power, cosh, sinh.
  */
 
+/*
+ * important <system> header includes
+ */
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdbool.h>
+
+/*
+ * calc local src includes
+ */
+#include "zmath.h"
 #include "qmath.h"
 #include "config.h"
-
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 HALF _qlgenum_[] = {36744};
 HALF _qlgeden_[] = {25469};
@@ -43,12 +55,12 @@ NUMBER _qlge_ = {{_qlgenum_, 1, 0}, {_qlgeden_, 1, 0}, 1, NULL};
 /*
  * cache the natural logarithm of 10 and 2
  */
-STATIC NUMBER *ln_10 = NULL;
-STATIC NUMBER *ln_10_epsilon = NULL;
-STATIC NUMBER *ln_2 = NULL;
-STATIC NUMBER *ln_2_epsilon = NULL;
-STATIC NUMBER *ln_n = NULL;
-STATIC NUMBER *ln_n_epsilon = NULL;
+static NUMBER *ln_10 = NULL;
+static NUMBER *ln_10_epsilon = NULL;
+static NUMBER *ln_2 = NULL;
+static NUMBER *ln_2_epsilon = NULL;
+static NUMBER *ln_n = NULL;
+static NUMBER *ln_n_epsilon = NULL;
 
 /*
  * cache pi
@@ -72,7 +84,7 @@ enum pi_cache {
     LAST_PI_DIV_200_VALUE,
     PI_CACHE_LEN /* must be last */
 };
-STATIC NUMBER *pivalue[PI_CACHE_LEN] = {
+static NUMBER *pivalue[PI_CACHE_LEN] = {
     NULL, /* LAST_PI_EPSILON */
     NULL, /* LAST_PI_VALUE */
     NULL, /* LAST_PI_DIV_180_EPSILON */
@@ -84,7 +96,7 @@ STATIC NUMBER *pivalue[PI_CACHE_LEN] = {
 /*
  * other static function declarations
  */
-STATIC NUMBER *qexprel(NUMBER *q, long bitnum);
+static NUMBER *qexprel(NUMBER *q, long bitnum);
 
 /*
  * Evaluate and store in specified locations the sin and cos of a given
@@ -961,7 +973,7 @@ qexp(NUMBER *q, NUMBER *epsilon)
  * Requires *q >= 0, bitnum >= 0.
  * This returns NULL if more than 2^30 working bits would be required.
  */
-S_FUNC NUMBER *
+static NUMBER *
 qexprel(NUMBER *q, long bitnum)
 {
     long n, m, k, h, s, t, d;
