@@ -27,6 +27,7 @@
 /*
  * important <system> header includes
  */
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -34,7 +35,6 @@
 #include <ctype.h>
 #include <signal.h>
 #include <setjmp.h>
-#include <sys/errno.h>
 #include <sys/types.h>
 #include <stdint.h>
 #include <stdbool.h>

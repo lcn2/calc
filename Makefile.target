@@ -256,6 +256,47 @@ MAKE= gmake
 endif	# ($(target),FreeBSD)
 
 
+#################
+# NetBSD target #
+#################
+
+ifeq ($(target),NetBSD)
+
+# default build type for this target
+#
+BLD_TYPE= calc-dynamic-only
+
+# target specific library parameters
+#
+CC_SHARE= -fPIC
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
+LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
+    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}" -L/usr/pkg/lib
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}" -L/usr/pkg/lib
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
+
+CC_STATIC=
+LD_STATIC=
+LIBCALC_STATIC=
+LIBCUSTCALC_STATIC=
+
+# common values set for this target
+#
+#CCWARN= -Wall
+CCWARN= -Wall -Wextra -pedantic -Wno-char-subscripts
+WNO_IMPLICT= -Wno-implicit
+WNO_ERROR_LONG_LONG= -Wno-error=long-long
+WNO_LONG_LONG= -Wno-long-long
+CCWERR=
+CCOPT= ${DEBUG}
+CCMISC=
+LCC= gcc
+CC= ${PURIFY} ${LCC} ${CCWERR}
+
+MAKE= gmake
+
+endif	# ($(target),NetBSD)
+
 ##################
 # OpenBSD target #
 ##################

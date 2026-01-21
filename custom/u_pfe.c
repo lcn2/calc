@@ -54,6 +54,7 @@ int u_pfe_allowed = 0; /* CUSTOM undefined */
 /*
  * important <system> header includes
  */
+#  include <errno.h>
 #  include <stdio.h>
 #  include <stdlib.h>
 #  include <string.h>
@@ -62,7 +63,6 @@ int u_pfe_allowed = 0; /* CUSTOM undefined */
 #  include <poll.h>
 #  include <sys/wait.h>
 #  include <sys/time.h>
-#  include <sys/errno.h>
 #  include <sys/param.h> /* MAXPATHLEN attow */
 #  include <sys/types.h>
 #  include <sys/resource.h>
