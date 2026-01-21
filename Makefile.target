@@ -271,8 +271,8 @@ BLD_TYPE= calc-dynamic-only
 CC_SHARE= -fPIC
 DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
-    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
-LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}" -L/usr/pkg/lib
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}" -L/usr/pkg/lib
 LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
 
 CC_STATIC=
