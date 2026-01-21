@@ -36,6 +36,8 @@
 #include <sys/types.h>
 #include <stdint.h>
 #include <stdbool.h>
+#  include <termios.h>
+typedef struct termios ttystruct;
 
 /*
  * conditional <system> head includes
@@ -44,38 +46,6 @@
 #  include <pwd.h>
 #endif
 
-#include "terminal.h"
-#if defined(USE_TERMIOS)
-
-#  include <termios.h>
-typedef struct termios ttystruct;
-
-#elif defined(USE_TERMIO)
-
-#  include <termio.h>
-typedef struct termio ttystruct;
-
-#elif defined(USE_SGTTY)
-
-#  include <sys/ioctl.h>
-typedef struct sgttyb ttystruct;
-
-#else
-
-typedef struct {
-    int fd;
-} ttystruct;
-
-#endif
-
-#if !defined(_WIN32) && !defined(_WIN64)
-#  if !defined(USE_SGTTY) && !defined(USE_TERMIOS) && !defined(USE_TERMIO)
-
--=*#*=- A Windows free system without termio, termios or sgtty!!! -=*#*=-
--=*#*=- We do not know how to compile for such a host, sorry!!!! -=*#*=-
-
-#  endif
-#endif
 
 /*
  * calc local src includes
@@ -957,68 +927,8 @@ calc_tty(int fd)
         return false;
     }
 
-#if defined(USE_SGTTY)
-
     /*
-     * USE_SGTTY tty state method
-     */
-    /* save original state if needed */
-    if (fd_setup[slot] < 0 && ioctl(fd, TIOCGETP, fd_orig + slot) < 0) {
-        if (conf->calc_debug & CALCDBG_TTY) {
-            printf("calc_tty: Cannot TIOCGETP fd %d\n", fd);
-        }
-        return false;
-    }
-    /* setup for new state */
-    fd_cur[slot] = fd_orig[slot];
-    fd_cur[slot].sg_flags &= ~ECHO;
-    fd_cur[slot].sg_flags |= CBREAK;
-    /* enable new state */
-    if (ioctl(fd, TIOCSETP, fd_cur + slot) < 0) {
-        if (conf->calc_debug & CALCDBG_TTY) {
-            printf("calc_tty: Cannot TIOCSETP fd %d\n", fd);
-        }
-        return false;
-    }
-    if (conf->calc_debug & CALCDBG_TTY) {
-        printf("calc_tty: stty -ECHO +CBREAK: fd %d\n", fd);
-    }
-
-#elif defined(USE_TERMIO)
-
-    /*
-     * USE_TERMIO tty state method
-     */
-    if (fd_setup[slot] < 0 && ioctl(fd, TCGETA, fd_orig + slot) < 0) {
-        if (conf->calc_debug & CALCDBG_TTY) {
-            printf("calc_tty: Cannot TCGETA fd %d\n", fd);
-        }
-        return false;
-    }
-    /* setup for new state */
-    fd_cur[slot] = fd_orig[slot];
-    fd_cur[slot].c_lflag &= ~(ECHO | ECHOE | ECHOK);
-    fd_cur[slot].c_iflag |= ISTRIP;
-    fd_cur[slot].c_lflag &= ~ICANON;
-    fd_cur[slot].c_cc[VMIN] = 1;
-    fd_cur[slot].c_cc[VTIME] = 0;
-    /* enable new state */
-    if (ioctl(fd, TCSETAW, fd_cur + slot) < 0) {
-        if (conf->calc_debug & CALCDBG_TTY) {
-            printf("calc_tty: Cannot TCSETAW fd %d\n", fd);
-        }
-        return false;
-    }
-    if (conf->calc_debug & CALCDBG_TTY) {
-        printf("calc_tty: stty -ECHO -ECHOE -ECHOK -ICANON +ISTRIP "
-               "VMIN=1 VTIME=0: fd %d\n",
-               fd);
-    }
-
-#elif defined(USE_TERMIOS)
-
-    /*
-     * USE_TERMIOS tty state method
+     * use termios tty state method
      */
     if (fd_setup[slot] < 0 && tcgetattr(fd, fd_orig + slot) < 0) {
         if (conf->calc_debug & CALCDBG_TTY) {
@@ -1045,12 +955,6 @@ calc_tty(int fd)
                "VMIN=1 VTIME=0: fd %d\n",
                fd);
     }
-
-#else
-
-    fd_cur[slot] = fd_orig[slot];
-
-#endif
 
     /*
      * note that the tty slot is on use
@@ -1098,43 +1002,13 @@ orig_tty(int fd)
         return false;
     }
 
-#if defined(USE_SGTTY)
-
     /*
-     * USE_SGTTY tty state method
-     */
-    (void)ioctl(fd, TIOCSETP, fd_orig + slot);
-    if (conf->calc_debug & CALCDBG_TTY) {
-        printf("orig_tty: TIOCSETP restored fd %d\n", fd);
-    }
-
-#elif defined(USE_TERMIO)
-
-    /*
-     * USE_TERMIO tty state method
-     */
-    (void)ioctl(fd, TCSETAW, fd_orig + slot);
-    if (conf->calc_debug & CALCDBG_TTY) {
-        printf("orig_tty: TCSETAW restored fd %d\n", fd);
-    }
-
-#elif defined(USE_TERMIOS)
-
-    /*
-     * assume USE_SGTTY tty state method
+     * assume termios tty state method
      */
     (void)tcsetattr(fd, TCSANOW, fd_orig + slot);
     if (conf->calc_debug & CALCDBG_TTY) {
         printf("orig_tty: TCSANOW restored fd %d\n", fd);
     }
-
-#else
-
-    if (conf->calc_debug & CALCDBG_TTY) {
-        printf("orig_tty: nothing restored to fd %d\n", fd);
-    }
-
-#endif
 
     /*
      * note new current state

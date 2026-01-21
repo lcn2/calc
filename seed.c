@@ -61,6 +61,13 @@
 #include <sys/time.h>
 #include <sys/times.h>
 
+#include <stdlib.h>
+/* NOTE: RANDOM_CNT should remain 32 to circular shift 31-bit returns */
+#define RANDOM_CNT (32)      /* random() call repeat and circular shift */
+#define INITSTATE_SIZE (256) /* initstate pool size */
+
+#include <setjmp.h>
+
 /*
  * conditional <system> head includes
  */
@@ -70,19 +77,10 @@
 #endif
 
 #if !defined(_WIN32) && !defined(_WIN64)
+#  include <sys/statvfs.h>
 #  include <sys/resource.h>
-#endif
-
-#include <stdlib.h>
-/* NOTE: RANDOM_CNT should remain 32 to circular shift 31-bit returns */
-#define RANDOM_CNT (32)      /* random() call repeat and circular shift */
-#define INITSTATE_SIZE (256) /* initstate pool size */
-
-#include <setjmp.h>
-
-#include "have_getsid.h"
-#if defined(HAVE_USTAT)
-#  include <ustat.h>
+#  include <sys/param.h>
+#  include <sys/mount.h>
 #endif
 
 #include "have_urandom.h"
@@ -92,34 +90,16 @@
 #  define DEV_URANDOM_POOL (16)
 #endif
 
-#include "have_sys_vfs.h"
-#if defined(HAVE_SYS_VFS_H)
-#  include <sys/vfs.h>
-#endif
-
-#include "have_sys_param.h"
-#if defined(HAVE_SYS_PARAM_H)
-#  include <sys/param.h>
-#endif
-
-#include "have_sys_mount.h"
-#if defined(HAVE_SYS_MOUNT_H)
-#  include <sys/mount.h>
-#endif
-
 /*
  * calc local src includes
  */
 #include "zmath.h"
 #include "qmath.h"
 #include "longbits.h"
-#include "have_ustat.h"
 #include "have_getpgid.h"
-#include "have_gettime.h"
 #include "have_rusage.h"
 #include "have_environ.h"
 #include "have_arc4random.h"
-#include "have_statfs.h"
 #include "errtbl.h"
 
 #include "banned.h" /* include after all other includes */
@@ -367,10 +347,8 @@ pseudo_seed(void)
      * sdata - data used for quasi-random seed
      */
     struct {
-#if defined(HAVE_GETTIME)
-#  if defined(CLOCK_REALTIME)
+#if defined(CLOCK_REALTIME)
         struct timespec realtime; /* POSIX realtime clock */
-#  endif
 #endif
 #if defined(HAVE_URANDOM)
         int urandom_fd;                      /* open descriptor for /dev/urandom */
@@ -399,47 +377,24 @@ pseudo_seed(void)
         struct stat stat_null;    /* stat of "/dev/null" */
         struct stat stat_sh;      /* stat of "/bin/sh" */
         struct stat stat_ls;      /* stat of "/bin/ls" */
-        /* stat of "/var/log/system.log" */
-        struct stat stat_system;
-        /* stat of "/var/log/messages" */
-        struct stat stat_messages;
-#if defined(HAVE_USTAT)
-        struct ustat ustat_dot;     /* usage stat of "." */
-        struct ustat ustat_dotdot;  /* usage stat of ".." */
-        struct ustat ustat_tmp;     /* usage stat of "/tmp" */
-        struct ustat ustat_root;    /* usage stat of "/" */
-        struct ustat ustat_tty;     /* usage stat of "/dev/tty" */
-        struct ustat ustat_console; /* usage stat of "/dev/console" */
-        struct ustat ustat_stdin;   /* usage stat of stdin */
-        struct ustat ustat_stdout;  /* usage stat of stdout */
-        struct ustat ustat_stderr;  /* usage stat of stderr */
-        struct ustat ustat_zero;    /* usage stat of "/dev/zero" */
-        struct ustat ustat_null;    /* usage stat of "/dev/null" */
-        struct ustat ustat_sh;      /* usage stat of "/bin/sh" */
-        struct ustat ustat_ls;      /* usage stat of "/bin/ls" */
-        /* usage stat of "/var/log/system.log" */
-        struct ustat ustat_system;
-        /* usage stat of "/var/log/messages" */
-        struct ustat ustat_messages;
-#endif
-#if defined(HAVE_STATFS)
-        struct statfs statfs_dot;     /* filesystem stat of "." */
-        struct statfs statfs_dotdot;  /* filesystem stat of ".." */
-        struct statfs statfs_tmp;     /* filesystem stat of "/tmp" */
-        struct statfs statfs_root;    /* filesystem stat of "/" */
-        struct statfs statfs_tty;     /* filesystem stat of "/dev/tty" */
-        struct statfs statfs_console; /* filesystem stat of "/dev/console" */
-        struct statfs statfs_stdin;   /* filesystem stat of stdin */
-        struct statfs statfs_stdout;  /* filesystem stat of stdout */
-        struct statfs statfs_stderr;  /* filesystem stat of stderr */
-        struct statfs statfs_zero;    /* filesystem stat of "/dev/zero" */
-        struct statfs statfs_null;    /* filesystem stat of "/dev/null" */
-        struct statfs statfs_sh;      /* filesystem stat of "/bin/sh" */
-        struct statfs statfs_ls;      /* filesystem stat of "/bin/ls" */
-        /* filesystem stat of "/var/log/system.log" */
-        struct statfs statfs_system;
-        /* filesystem stat of "/var/log/messages" */
-        struct statfs statfs_messages;
+        struct stat stat_system;        /* stat of "/var/log/system.log" */
+        struct stat stat_messages;      /* stat of "/var/log/messages" */
+#if !defined(_WIN32) && !defined(_WIN64)
+        struct statvfs statfs_dot;     /* filesystem stat of "." */
+        struct statvfs statfs_dotdot;  /* filesystem stat of ".." */
+        struct statvfs statfs_tmp;     /* filesystem stat of "/tmp" */
+        struct statvfs statfs_root;    /* filesystem stat of "/" */
+        struct statvfs statfs_tty;     /* filesystem stat of "/dev/tty" */
+        struct statvfs statfs_console; /* filesystem stat of "/dev/console" */
+        struct statvfs statfs_stdin;   /* filesystem stat of stdin */
+        struct statvfs statfs_stdout;  /* filesystem stat of stdout */
+        struct statvfs statfs_stderr;  /* filesystem stat of stderr */
+        struct statvfs statfs_zero;    /* filesystem stat of "/dev/zero" */
+        struct statvfs statfs_null;    /* filesystem stat of "/dev/null" */
+        struct statvfs statfs_sh;      /* filesystem stat of "/bin/sh" */
+        struct statvfs statfs_ls;      /* filesystem stat of "/bin/ls" */
+        struct statvfs statfs_system;  /* filesystem stat of "/var/log/system.log" */
+        struct statvfs statfs_messages; /* filesystem stat of "/var/log/messages" */
 #endif
 #if defined(HAVE_GETSID)
         pid_t getsid; /* session ID */
@@ -458,21 +413,16 @@ pseudo_seed(void)
         struct timeval times_tmp[2];    /* access & mod files of "/tmp" */
         struct timeval times_root[2];   /* access & mod files of "/" */
         struct timeval times_tty[2];    /* access & mod files of "/dev/tty" */
-        /* access & mod files of "/dev/console" */
-        struct timeval times_console[2];
-        struct timeval times_stdin[2]; /* access & mod files of "/dev/stdin" */
-        /* access & mod files of "/dev/stdout" */
-        struct timeval times_stdout[2];
-        /* access & mod files of "/dev/stderr" */
-        struct timeval times_stderr[2];
+        struct timeval times_console[2]; /* access & mod files of "/dev/console" */
+        struct timeval times_stdin[2];   /* access & mod files of "/dev/stdin" */
+        struct timeval times_stdout[2];  /* access & mod files of "/dev/stdout" */
+        struct timeval times_stderr[2];  /* access & mod files of "/dev/stderr" */
         struct timeval times_zero[2]; /* access & mod files of "/dev/zero" */
         struct timeval times_null[2]; /* access & mod files of "/dev/null" */
         struct timeval times_sh[2];   /* access & mod files of "/bin/sh" */
         struct timeval times_ls[2];   /* access & mod files of "/bin/ls" */
-        /* access & mod files of "/var/log/system.log" */
-        struct timeval times_system[2];
-        /* access & mod files of "/var/log/messages" */
-        struct timeval times_messages[2];
+        struct timeval times_system[2];   /* access & mod files of "/var/log/system.log" */
+        struct timeval times_messages[2]; /* access & mod files of "/var/log/messages" */
         time_t time;             /* local time */
         size_t size;             /* size of this data structure */
         hash64 prev_hash64_copy; /* copy if the previous hash value */
@@ -515,12 +465,10 @@ pseudo_seed(void)
      *    need to hash any results that might be store in the sdata structure.
      */
     memset(&sdata, 0, sizeof(sdata)); /* zeroize sdata */
-#if defined(HAVE_GETTIME)
-#  if defined(CLOCK_REALTIME)
+#if defined(CLOCK_REALTIME)
 
     (void)clock_gettime(CLOCK_REALTIME, &sdata.realtime);
 
-#  endif
 #endif
 #if defined(HAVE_URANDOM)
 
@@ -558,39 +506,22 @@ pseudo_seed(void)
     (void)stat("/bin/ls", &sdata.stat_ls);
     (void)stat("/var/log/system.log", &sdata.stat_system);
     (void)stat("/var/log/messages", &sdata.stat_messages);
-#if defined(HAVE_USTAT)
-    (void)ustat(sdata.stat_dotdot.st_dev, &sdata.ustat_dotdot);
-    (void)ustat(sdata.stat_dot.st_dev, &sdata.ustat_dot);
-    (void)ustat(sdata.stat_tmp.st_dev, &sdata.ustat_tmp);
-    (void)ustat(sdata.stat_root.st_dev, &sdata.ustat_root);
-    (void)ustat(sdata.stat_tty.st_dev, &sdata.ustat_tty);
-    (void)ustat(sdata.stat_console.st_dev, &sdata.ustat_console);
-    (void)ustat(sdata.fstat_stdin.st_dev, &sdata.ustat_stdin);
-    (void)ustat(sdata.fstat_stdout.st_dev, &sdata.ustat_stdout);
-    (void)ustat(sdata.fstat_stderr.st_dev, &sdata.ustat_stderr);
-    (void)ustat(sdata.stat_zero.st_dev, &sdata.ustat_zero);
-    (void)ustat(sdata.stat_null.st_dev, &sdata.ustat_null);
-    (void)ustat(sdata.stat_sh.st_dev, &sdata.ustat_sh);
-    (void)ustat(sdata.stat_ls.st_dev, &sdata.ustat_ls);
-    (void)ustat(sdata.stat_system.st_dev, &sdata.ustat_system);
-    (void)ustat(sdata.stat_messages.st_dev, &sdata.ustat_messages);
-#endif
-#if defined(HAVE_STATFS)
-    (void)statfs("..", &sdata.statfs_dot);
-    (void)statfs(".", &sdata.statfs_dotdot);
-    (void)statfs("/tmp", &sdata.statfs_tmp);
-    (void)statfs("/", &sdata.statfs_root);
-    (void)statfs("/dev/tty", &sdata.statfs_tty);
-    (void)statfs("/dev/console", &sdata.statfs_console);
-    (void)statfs(".dev/stdin", &sdata.statfs_stdin);
-    (void)statfs("/dev/stdout", &sdata.statfs_stdout);
-    (void)statfs("/dev/stderr", &sdata.statfs_stderr);
-    (void)statfs("/dev/zero", &sdata.statfs_zero);
-    (void)statfs("/dev/null", &sdata.statfs_null);
-    (void)statfs("/bin/sh", &sdata.statfs_sh);
-    (void)statfs("/dev/ls", &sdata.statfs_ls);
-    (void)statfs("/var/log/system.log", &sdata.statfs_system);
-    (void)statfs("/var/log/messages", &sdata.statfs_messages);
+#if !defined(_WIN32) && !defined(_WIN64)
+    (void)statvfs("..", &sdata.statfs_dot);
+    (void)statvfs(".", &sdata.statfs_dotdot);
+    (void)statvfs("/tmp", &sdata.statfs_tmp);
+    (void)statvfs("/", &sdata.statfs_root);
+    (void)statvfs("/dev/tty", &sdata.statfs_tty);
+    (void)statvfs("/dev/console", &sdata.statfs_console);
+    (void)statvfs(".dev/stdin", &sdata.statfs_stdin);
+    (void)statvfs("/dev/stdout", &sdata.statfs_stdout);
+    (void)statvfs("/dev/stderr", &sdata.statfs_stderr);
+    (void)statvfs("/dev/zero", &sdata.statfs_zero);
+    (void)statvfs("/dev/null", &sdata.statfs_null);
+    (void)statvfs("/bin/sh", &sdata.statfs_sh);
+    (void)statvfs("/dev/ls", &sdata.statfs_ls);
+    (void)statvfs("/var/log/system.log", &sdata.statfs_system);
+    (void)statvfs("/var/log/messages", &sdata.statfs_messages);
 #endif
 #if defined(HAVE_GETSID)
     sdata.getsid = getsid((pid_t)0);

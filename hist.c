@@ -1615,7 +1615,7 @@ hist_init(char *UNUSED(filename))
     /* read previous history */
     read_history(calc_history);
 
-    /* close and flush history when exiting */
+    /* setup how history is closed down and synced when exiting */
     atexit(hist_finish);
 
     return HIST_SUCCESS;
