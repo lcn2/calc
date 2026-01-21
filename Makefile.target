@@ -328,7 +328,7 @@ LD_STATIC=
 # common values set for this target
 #
 #CCWARN= -Wall
-CCWARN= -Wall -Wextra -pedantic
+CCWARN= -Wall -Wextra -pedantic -Wno-char-subscripts
 WNO_IMPLICT= -Wno-implicit
 WNO_ERROR_LONG_LONG= -Wno-error=long-long
 WNO_LONG_LONG= -Wno-long-long
