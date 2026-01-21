@@ -1,4 +1,11 @@
-The following are the changes from calc version 3.0.0.1 to date:
+The following are the changes from calc version 3.0.0.2 to date:
+
+    Add Makefile.target to build for NetBSD per PR #184.
+
+    Cygwin disable a gcc warning as per PR #186.
+
+
+The following are the changes from calc version 3.0.0.1 to 3.0.0.1:
 
     Removed `terminal.h` rule: system include `<termios.h>` must exist
     Removed `have_gettime.h` and `have_gettime.c`: if CLOCK_REALTIME in defined in system include `<time.h>`,
