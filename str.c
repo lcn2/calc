@@ -1246,6 +1246,11 @@ makestring(char *str)
     STRING *s;
     size_t len;
 
+    /* Ensure that str is allocated. */
+    if (str == NULL) {
+	/* Empty string.*/
+        str = calloc(1, sizeof (*str));
+    }
     len = strlen(str);
     s = stralloc();
     s->s_str = str;

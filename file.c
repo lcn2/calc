@@ -2232,7 +2232,7 @@ fscanfile(FILE *fp, char *fmt, int count, VALUE **vals)
     char f;        /* Character read from format string */
     int scannum;   /* Number of characters in scanlist */
     char *scanptr; /* Start of scanlist */
-    char *str;
+    char *str = NULL;
     bool comp; /* True scanset is complementary */
     bool skip; /* True if string to be skipped rather than read */
     int width;
