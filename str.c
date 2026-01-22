@@ -1246,10 +1246,10 @@ makestring(char *str)
     STRING *s;
     size_t len;
 
-    /* Ensure that str is allocated. */
     if (str == NULL) {
-	/* Empty string.*/
-        str = calloc(1, sizeof (*str));
+        /* paranoia */
+        math_error("makestring called with NULL str");
+        not_reached();
     }
     len = strlen(str);
     s = stralloc();
