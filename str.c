@@ -1246,6 +1246,11 @@ makestring(char *str)
     STRING *s;
     size_t len;
 
+    if (str == NULL) {
+        /* paranoia */
+        math_error("makestring called with NULL str");
+        not_reached();
+    }
     len = strlen(str);
     s = stralloc();
     s->s_str = str;

@@ -4,6 +4,10 @@ The following are the changes from calc version 3.0.0.2 to date:
 
     Cygwin disable a gcc warning as per PR #186.
 
+    Improve error messages and checks for `getscanfield()`.
+    Improve error messages and checks for `fscanfile()`.
+    Prevent NULL from being passed to `makestring(str)`.
+
 
 The following are the changes from calc version 3.0.0.1 to 3.0.0.1:
 

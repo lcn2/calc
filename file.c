@@ -2067,17 +2067,14 @@ showfiles(void)
 static void
 getscanfield(FILE *fp, bool skip, unsigned int width, int scannum, char *scanptr, char **strptr)
 {
-    char *str;            /* current string */
-    unsigned long len;    /* current length of string */
-    unsigned long totlen; /* total length of string */
-    char buf[READSIZE];   /* temporary buffer */
+    char *str = NULL;         /* current string */
+    unsigned long len;        /* current length of string */
+    unsigned long totlen = 0; /* total length of string */
+    char buf[READSIZE];       /* temporary buffer */
     int c;
     char *b;
     bool comp; /* Use complement of scanset */
     unsigned int chnum;
-
-    totlen = 0;
-    str = NULL;
 
     comp = (scannum < 0);
     if (comp) {
@@ -2111,12 +2108,18 @@ getscanfield(FILE *fp, bool skip, unsigned int width, int scannum, char *scanptr
         }
         if (!skip) {
             if (totlen) {
-                str = (char *)realloc(str, totlen + len + 1);
+                if (str == NULL) {
+                    /* paranoia */
+                    math_error("getscanfield: str was NULL while totlen != 0");
+                    not_reached();
+                } else {
+                    str = (char *)realloc(str, totlen + len + 1);
+                }
             } else {
                 str = (char *)calloc(len + 1, 1);
             }
             if (str == NULL) {
-                math_error("Out of memory for scanning");
+                math_error("getscanfield: Out of memory for scanning");
                 not_reached();
             }
             if (len) {
@@ -2232,9 +2235,9 @@ fscanfile(FILE *fp, char *fmt, int count, VALUE **vals)
     char f;        /* Character read from format string */
     int scannum;   /* Number of characters in scanlist */
     char *scanptr; /* Start of scanlist */
-    char *str;
-    bool comp; /* True scanset is complementary */
-    bool skip; /* True if string to be skipped rather than read */
+    char *str = NULL;
+    bool comp = false;      /* True scanset is complementary */
+    bool skip = false;      /* True if string to be skipped rather than read */
     int width;
     VALUE *var;             /* lvalue to be assigned to */
     unsigned short subtype; /* for var->v_subtype */
@@ -2333,7 +2336,8 @@ fscanfile(FILE *fp, char *fmt, int count, VALUE **vals)
             assnum++;
             var = *vals++;
             if (var->v_type != V_ADDR) {
-                math_error("This should not happen!!");
+                math_error("fscanfile: i case and var->v_type != V_ADDR");
+                not_reached();
             }
             var = var->v_addr;
             subtype = var->v_subtype;
@@ -2347,7 +2351,8 @@ fscanfile(FILE *fp, char *fmt, int count, VALUE **vals)
             var = *vals++;
             count--;
             if (var->v_type != V_ADDR) {
-                math_error("This should not happen!!");
+                math_error("fscanfile: n case and var->v_type != V_ADDR");
+                not_reached();
             }
             var = var->v_addr;
             subtype = var->v_subtype;
@@ -2367,12 +2372,18 @@ fscanfile(FILE *fp, char *fmt, int count, VALUE **vals)
             var = *vals++;
             count--;
             if (var->v_type != V_ADDR) {
-                math_error("Assigning to non-variable");
+                math_error("fscanfile: assigning to non-variable");
+                not_reached();
             }
             var = var->v_addr;
             subtype = var->v_subtype;
             freevalue(var);
             var->v_type = V_STR;
+            if (str == NULL) {
+                /* paranoia */
+                math_error("fscanfile: getscanfield not called and/or str is NULL");
+                not_reached();
+            }
             var->v_str = makestring(str);
         }
     }
