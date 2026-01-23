@@ -31,7 +31,6 @@ calc.spec
 calc-static
 calc.usage
 cal/test082.cal
-charbit.h
 chatbit
 chk_c
 compile_commands.json

@@ -44,6 +44,11 @@
 #include "banned.h" /* include after all other includes */
 
 /*
+ * U(x) - form x as a unsigned long constant
+ */
+#define U(x) x ## UL
+
+/*
  * AN OVERVIEW OF THE FUNCTIONS:
  *
  * This module contains an Subtractive 100 shuffle generator wrapped inside
@@ -911,7 +916,7 @@ randreseed64(ZVALUE seed, ZVALUE *res)
         /*
          * form chunk mod 2^64
          */
-        if (chunk.len > (SB32)SHALFS) {
+        if (chunk.len > (int32_t)SHALFS) {
             /* result is too large, reduce to 64 bits */
             v64 = alloc(SHALFS);
             memcpy(v64, chunk.v, SHALFS * sizeof(HALF));

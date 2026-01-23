@@ -8,6 +8,47 @@ The following are the changes from calc version 3.0.0.2 to date:
     Improve error messages and checks for `fscanfile()`.
     Prevent NULL from being passed to `makestring(str)`.
 
+    Added `long`, `unsigned long`, `long long`, and `unsigned long long` to `chk_c.c`.
+    C compiles must support `long long`, and `unsigned long long` types.
+    Added `<limits.h>` to  `chk_c.c`.
+    Changed `CHK_C_VERSION` to "2.1 2026-01-22".
+
+    Added `unsigned long`m `long long`, and `unsigned long long` to `show sizes` output.
+
+    Removed `terminal.h` rule: system include `<termios.h>` must exist
+    Removed `CALC_CHARBIT` define: system include `<limits.h>` must define `CHAR_BIT`
+    Removed `HAVE_B64` define: system must have a `int64_t` and `uint64_t` type
+
+    Removed code faked 64-bit values: system must have a `int64_t` and `uint64_t` type
+
+    Removed `CALC_CHARBIT` make symbol: system include `<limits.h>` must define `CHAR_BIT`
+    Removed `LONG_BITS` make symbol: `LONG_BITS` define, if undefined, is now defined in `zmath.h`
+
+    Removed `charbit.h` rule and `charbit.c`:  system include `<limits.h>` must define `CHAR_BIT`
+    Removed `longbits.h` rule and `charbit.c`:  system include `<stdint.h>` must exist
+
+    The `LONG_BITS` define, if undefined, is now defined in `zmath.h`
+
+    The `PTR_LEN` define has been renamed to `INTPTR_LEN`
+    The `INTPTR_LEN` defined, if undefined, is now defined in `zmath.h`
+
+    Removed use of the `SB8` type.
+    Renamed `USB8` type to just `uint8_t`
+    Removed use of the `SB16` type
+    Renamed `USB16` type to just `uint16_t`
+    Renamed `SB32` type to just `int32_t`
+    Renamed `USB32` type to just `uint32_t`
+    Renamed `SB64` type to just `int64_t`
+    Renamed `USB64` type to just `uint64_t`
+
+    Removed `SWAP_B16_IN_PRINT(dest, src)` macro: it was unused.
+    Removed `SWAP_B8_IN_PRINT(dest, src)` macro: it was unused.
+
+    Fix how `zprintx()` and `zprinto()` in `zio.c` print C integer
+    variables in hex or octal by using PRI macros from `<inttypes.h>`.
+    Add `PRI_DEC`, `PRI_OCT`, `PRI_HEX` to `zmath.h` to perform the above.
+    Add `PRI_DEC_LEN`, `PRI_OCT_LEN`, `PRI_HEX_LEN` to `zmath.h` to perform the above.
+
 
 The following are the changes from calc version 3.0.0.1 to 3.0.0.1:
 

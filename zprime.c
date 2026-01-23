@@ -31,6 +31,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <limits.h>
 
 /*
  * calc local src includes
@@ -42,6 +43,11 @@
 #include "errtbl.h"
 
 #include "banned.h" /* include after all other includes */
+
+/*
+ * U(x) - form x as a unsigned long constant
+ */
+#define U(x) x ## UL
 
 /*
  * When performing a probabilistic primality test, check to see

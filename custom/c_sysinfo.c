@@ -47,6 +47,7 @@ int c_sysinfo_allowed = 0; /* CUSTOM undefined */
 #  include <sys/stat.h>
 #  include <stdint.h>
 #  include <stdbool.h>
+#  include <limits.h>
 
 /*
  * calc local src includes
@@ -55,7 +56,6 @@ int c_sysinfo_allowed = 0; /* CUSTOM undefined */
 #  include "../custom.h"
 #  include "../lib_calc.h"
 #  include "../calc.h"
-#  include "../longbits.h"
 #  define CHECK_L_FORMAT
 #  include "../conf.h"
 #  include "../endian_calc.h"
@@ -91,8 +91,8 @@ static struct infoname sys_info[] = {
     {"BLK_DEF_MAXPRINT", "default block octets to print", NULL, (FULL)BLK_DEF_MAXPRINT},
     {"BLUM_PREGEN", "non-default predefined Blum generators", NULL, (FULL)BLUM_PREGEN},
     {"CALC_BYTE_ORDER", "Byte order (LITTLE_ENDIAN or BIG_ENDIAN)", NULL, (FULL)CALC_BYTE_ORDER},
-    {"CALC_CHARBIT", "length in bits of a character, or byte", NULL, (FULL)CALC_CHARBIT},
     {"CALCEXT", "extension for files read in", CALCEXT, (FULL)0},
+    {"CHAR_BIT", "length in bits of a character, or byte", NULL, (FULL)CHAR_BIT},
     {"CUSTOMHELPDIR", "location of the custom help directory", CUSTOMHELPDIR, (FULL)0},
     {"DEFAULTCALCBINDINGS", "default key bindings file", DEFAULTCALCBINDINGS, (FULL)0},
     {"DEFAULTCALCHELP", "help file that -h prints", DEFAULTCALCHELP, (FULL)0},
@@ -136,6 +136,9 @@ static struct infoname sys_info[] = {
 #endif
 #if defined(INODE_LEN)
     {"INODE_LEN", "length in bits of the type st_ino, or inode number byte length", NULL, (FULL)INODE_LEN},
+#endif
+#if defined(INTPTR_LEN)
+    {"INTPTR_LEN", "length in bytes of a memory pointer", NULL, (FULL)INTPTR_LEN},
 #endif
 #if defined(INTPTR_WIDTH)
     {"INTPTR_WIDTH", "bits in a intptr_t", NULL, (FULL)INTPTR_WIDTH},
@@ -182,9 +185,6 @@ static struct infoname sys_info[] = {
     {"POW_ALG2", "default size for using REDC for powers", NULL, (FULL)POW_ALG2},
 #if defined(PTR_BITS)
     {"PTR_BITS", "length in bits of a memory pointer", NULL, (FULL)PTR_BITS},
-#endif
-#if defined(PTR_LEN)
-    {"PTR_LEN", "length in bytes of a memory pointer", NULL, (FULL)PTR_LEN},
 #endif
     {"REDC_ALG2", "default size using alternative REDC alg", NULL, (FULL)REDC_ALG2},
     {"REGNUM_MAX", "highest custom register number", NULL, (FULL)CUSTOM_REG_MAX},

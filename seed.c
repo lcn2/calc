@@ -95,7 +95,6 @@
  */
 #include "zmath.h"
 #include "qmath.h"
-#include "longbits.h"
 #include "have_getpgid.h"
 #include "have_rusage.h"
 #include "have_environ.h"
@@ -107,16 +106,8 @@
 /*
  * 64 bit hash value
  */
-#if defined(HAVE_B64)
-typedef USB64 hash64;
+typedef uint64_t hash64;
 static hash64 prev_hash64 = 0; /* previous pseudo_seed() return or 0 */
-#else
-struct s_hash64 {
-    USB32 w32[2];
-};
-typedef struct s_hash64 hash64;
-static hash64 prev_hash64 = {0, 0}; /* previous pseudo_seed() return or 0 */
-#endif
 
 #if defined(HAVE_ENVIRON)
 extern char **environ; /* user environment */
@@ -166,14 +157,7 @@ static FULL call_count = 0;
  * to be a cryptographic hash function, just a fast and reasonably
  * good hash function.
  */
-#if defined(HAVE_B64)
 #  define PRIVATE_64_BASIS ((hash64)(0xcbf29ce484222325ULL))
-#else
-#  define PRIVATE_64_BASIS_0 ((USB32)0x2325)
-#  define PRIVATE_64_BASIS_1 ((USB32)0x8422)
-#  define PRIVATE_64_BASIS_2 ((USB32)0x9ce4)
-#  define PRIVATE_64_BASIS_3 ((USB32)0xcbf2)
-#endif
 
 /*
  * initial_private_hash64 - initial basis of Fowler/Noll/Vo-1 64 bit hash
@@ -182,26 +166,7 @@ static hash64
 initial_private_hash64(void)
 {
     hash64 hval; /* current hash value */
-#if defined(HAVE_B64)
-
     hval = PRIVATE_64_BASIS;
-
-#else
-
-    USB32 val[4]; /* hash value in base 2^16 */
-
-    /* hash each octet of the buffer */
-    val[0] = PRIVATE_64_BASIS_0;
-    val[1] = PRIVATE_64_BASIS_1;
-    val[2] = PRIVATE_64_BASIS_2;
-    val[3] = PRIVATE_64_BASIS_3;
-
-    /* convert to hash64 */
-    /* hval.w32[1] = 0xffff&(val[3]<<16)+val[2]; */
-    hval.w32[1] = (val[3] << 16) + val[2];
-    hval.w32[0] = (val[1] << 16) + val[0];
-
-#endif
 
     /* return our initial hash value */
     return hval;
@@ -250,13 +215,7 @@ initial_private_hash64(void)
 static hash64
 private_hash64_buf(hash64 hval, char *buf, unsigned len)
 {
-#if !defined(HAVE_B64)
-    USB32 val[4];              /* hash value in base 2^16 */
-    USB32 tmp[4];              /* tmp 64 bit value */
-#endif
     char *buf_end = buf + len; /* beyond end of hash area */
-
-#if defined(HAVE_B64)
 
     /* hash each octet of the buffer */
     for (; buf < buf_end; ++buf) {
@@ -267,55 +226,6 @@ private_hash64_buf(hash64 hval, char *buf, unsigned len)
         /* xor the bottom with the current octet */
         hval ^= (hash64)(*buf);
     }
-
-#else
-
-    /* load val array from hval argument */
-    val[0] = hval.w32[0] & 0xffff;
-    val[1] = (hval.w32[0] >> 16) & 0xffff;
-    val[2] = hval.w32[1] & 0xffff;
-    val[3] = (hval.w32[1] >> 16) & 0xffff;
-
-    for (; buf < buf_end; ++buf) {
-
-        /*
-         * multiply by 1099511628211 mod 2^64 using 32 bit longs
-         *
-         * Using 1099511628211, we have the following digits base 2^16:
-         *
-         *  0x0     0x100   0x0     0x1b3
-         */
-        /* multiply by the lowest order digit base 2^16 */
-        tmp[0] = val[0] * 0x1b3;
-        tmp[1] = val[1] * 0x1b3;
-        tmp[1] = val[2] * 0x1b3;
-        tmp[3] = val[3] * 0x1b3;
-        /* multiply by the other non-zero digit */
-        tmp[2] += val[0] << 8; /* tmp[2] += val[0] * 0x100 */
-        tmp[3] += val[1] << 8; /* tmp[1] += val[1] * 0x100 */
-        /* propagate carries */
-        tmp[1] += (tmp[0] >> 16);
-        val[0] = tmp[0] & 0xffff;
-        tmp[2] += (tmp[1] >> 16);
-        val[1] = tmp[1] & 0xffff;
-        val[3] = tmp[3] + (tmp[2] >> 16);
-        val[2] = tmp[2] & 0xffff;
-        /*
-         * Doing a val[3] &= 0xffff; is not really needed since it simply
-         * removes multiples of 2^64.  We can discard these excess bits
-         * outside of the loop when we convert to hash64.
-         */
-
-        /* xor the bottom with the current octet */
-        val[0] ^= (USB32)(*buf);
-    }
-
-    /* convert to hash64 */
-    /* hval.w32[1] = 0xffff&(val[3]<<16)+val[2]; */
-    hval.w32[1] = (val[3] << 16) + val[2];
-    hval.w32[0] = (val[1] << 16) + val[0];
-
-#endif
 
     /* return our hash value */
     return hval;
@@ -599,14 +509,7 @@ pseudo_seed(void)
      */
 
     /* form the xor-fold of the previous hash */
-#if defined(HAVE_B64)
-
     past_hash = (unsigned)(((prev_hash64 >> 32) & 0xffffffff) ^ (prev_hash64 & 0xffffffff));
-
-#else
-    pash_hash = (unsigned)(prev_hash64.w32[0] ^ prev_hash64.w32[1]);
-
-#endif
 
     /* classic 31-bit random seeded with time of day, count, prev hash */
     srandom((unsigned)(sdata.time) ^ (unsigned)call_count ^ past_hash);
@@ -618,15 +521,8 @@ pseudo_seed(void)
     }
 
     /* init with large random state with 32-bit xor fold FNV hash of sdata */
-#if defined(HAVE_B64)
-
     initstate_ret =
         initstate((unsigned)(((hash_val >> 32) & 0xffffffff) ^ (hash_val & 0xffffffff)), initstate_tbl, INITSTATE_SIZE);
-
-#else
-    initstate_ret = initstate((unsigned)(hash_val.w32[0] ^ hash_val.w32[1]), initstate_tbl, INITSTATE_SIZE);
-
-#endif
 
     /* use 31-bit random some more with the new random state */
     random_after[0] = random(); /* 31-bit value */

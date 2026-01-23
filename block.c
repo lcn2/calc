@@ -94,7 +94,7 @@ blkalloc(int len, int chunk)
      */
     nblk->blkchunk = chunk;
     nblk->maxsize = ((len + chunk) / chunk) * chunk;
-    nblk->data = (USB8 *)calloc(nblk->maxsize, 1);
+    nblk->data = (uint8_t *)calloc(nblk->maxsize, 1);
     if (nblk->data == NULL) {
         math_error("cannot allocate block data storage");
         not_reached();
@@ -221,7 +221,7 @@ blkchk(BLOCK *blk)
 BLOCK *
 blkrealloc(BLOCK *blk, int newlen, int newchunk)
 {
-    USB8 *nblk; /* realloced storage */
+    uint8_t *nblk; /* realloced storage */
     int newmax; /* new maximum stoage size */
 
     /*
@@ -252,7 +252,7 @@ blkrealloc(BLOCK *blk, int newlen, int newchunk)
     if (newmax != blk->maxsize) {
 
         /* reallocate new storage */
-        nblk = (USB8 *)realloc(blk->data, newmax);
+        nblk = (uint8_t *)realloc(blk->data, newmax);
         if (nblk == NULL) {
             math_error("cannot reallocate block storage");
             not_reached();
@@ -359,12 +359,12 @@ blktrunc(BLOCK *blk)
     blk->blkchunk = 1;
     blk->maxsize = 1;
     blk->datalen = 0;
-    blk->data = (USB8 *)calloc(1, 1);
+    blk->data = (uint8_t *)calloc(1, 1);
     if (blk->data == NULL) {
         math_error("cannot allocate truncated block storage");
         not_reached();
     }
-    blk->data[0] = (USB8)0;
+    blk->data[0] = (uint8_t)0;
     if (conf->calc_debug & CALCDBG_BLOCK) {
         blkchk(blk);
     }
@@ -402,7 +402,7 @@ blk_copy(BLOCK *blk)
     /*
      * duplicate block data
      */
-    nblk->data = (USB8 *)calloc(1, blk->maxsize);
+    nblk->data = (uint8_t *)calloc(1, blk->maxsize);
     if (nblk->data == NULL) {
         math_error("blk_copy: cannot duplicate block data");
         not_reached();
@@ -471,7 +471,7 @@ blk_print(BLOCK *blk)
 {
     long i;
     bool havetail;
-    USB8 *ptr;
+    uint8_t *ptr;
 
     /* XXX - should use the config parameters for better print control */
 
@@ -525,7 +525,7 @@ reallocnblock(int id, int len, int chunk)
     BLOCK *blk;
     int newsize;
     int oldsize;
-    USB8 *newdata;
+    uint8_t *newdata;
 
     /* Fire wall */
     if (id < 0 || id >= nblockcount) {

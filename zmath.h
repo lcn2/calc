@@ -35,17 +35,15 @@
 #  if defined(CALC_SRC) /* if we are building from the calc source tree */
 #    include "version.h"
 #    include "int.h"
-#    include "endian_calc.h"
 #    include "longbits.h"
+#    include "endian_calc.h"
 #    include "byteswap.h"
-#    include "charbit.h"
 #  else
 #    include <calc/version.h>
 #    include <calc/int.h>
-#    include <calc/endian_calc.h>
 #    include <calc/longbits.h>
+#    include <calc/endian_calc.h>
 #    include <calc/byteswap.h>
-#    include <calc/charbit.h>
 #  endif
 
 #  ifndef ALLOCTEST
@@ -58,57 +56,40 @@
 #  endif
 
 /*
+ * length of a pointer
+ */
+#if !defined(INTPTR_LEN)
+#  define INTPTR_LEN (INTPTR_WIDTH / CHAR_BIT)
+#endif
+
+/*
  * NOTE: FULL must be twice the storage size of a HALF
  *       HALF must be BASEB bits long
  */
 
-#  if defined(HAVE_B64)
-
 /* BTW: BASEB is effectively HALF_BITS */
+
+/* XXX - add code to allow for base 2^64, if available/possible, and perhaps base 2^128, if available/possible XXX */
 
 #    define BASEB_LOG2 (5)          /* use base 2^32 */
 #    define BASEB (1 << BASEB_LOG2) /* use base 2^32 */
-typedef USB32 HALF;  /* unit of number storage */
-typedef SB32 SHALF;  /* signed HALF */
-typedef USB64 FULL;  /* double unit of number storage */
-typedef SB64 SFULL;  /* signed FULL */
+typedef uint32_t HALF;  /* unit of number storage */
+typedef int32_t SHALF;  /* signed HALF */
+typedef uint64_t FULL;  /* double unit of number storage */
+typedef int64_t SFULL;  /* signed FULL */
 
-#    define SWAP_HALF_IN_B64(dest, src) SWAP_B32_IN_B64(dest, src)
-#    define SWAP_HALF_IN_B32(dest, src) (*((HALF *)(dest)) = *((HALF *)(src)))
-#    define SWAP_HALF_IN_FULL(dest, src) SWAP_B32_IN_B64(dest, src)
-#    define SWAP_HALF_IN_HASH(dest, src) SWAP_B16_IN_HASH(dest, src)
-#    define SWAP_HALF_IN_FLAG(dest, src) SWAP_B16_IN_FLAG(dest, src)
-#    define SWAP_HALF_IN_bool(dest, src) SWAP_B16_IN_bool(dest, src)
-#    define SWAP_HALF_IN_LEN(dest, src) SWAP_B16_IN_LEN(dest, src)
-#    define SWAP_B32_IN_FULL(dest, src) SWAP_B32_IN_B64(dest, src)
-#    define SWAP_B16_IN_FULL(dest, src) SWAP_B16_IN_B64(dest, src)
-#    define SWAP_B16_IN_HALF(dest, src) SWAP_B16_IN_B32(dest, src)
-#    define SWAP_B8_IN_FULL(dest, src) SWAP_B8_IN_B64(dest, src)
-#    define SWAP_B8_IN_HALF(dest, src) SWAP_B8_IN_B32(dest, src)
-
-#  else
-
-#    define BASEB_LOG2 (4)          /* use base 2^16 */
-#    define BASEB (1 << BASEB_LOG2) /* use base 2^16 */
-typedef USB16 HALF; /* unit of number storage */
-typedef SB16 SHALF; /* signed HALF */
-typedef USB32 FULL; /* double unit of number storage */
-typedef SB32 SFULL; /* signed FULL */
-
-#    define SWAP_HALF_IN_B64(dest, src) SWAP_B16_IN_B64(dest, src)
-#    define SWAP_HALF_IN_B32(dest, src) SWAP_B16_IN_B32(dest, src)
-#    define SWAP_HALF_IN_FULL(dest, src) SWAP_B16_IN_B32(dest, src)
-#    define SWAP_HALF_IN_HASH(dest, src) SWAP_B16_IN_HASH(dest, src)
-#    define SWAP_HALF_IN_FLAG(dest, src) SWAP_B16_IN_FLAG(dest, src)
-#    define SWAP_HALF_IN_bool(dest, src) SWAP_B16_IN_bool(dest, src)
-#    define SWAP_HALF_IN_LEN(dest, src) SWAP_B16_IN_LEN(dest, src)
-#    define SWAP_B32_IN_FULL(dest, src) (*((FULL *)(dest)) = *((FULL *)(src)))
-#    define SWAP_B16_IN_FULL(dest, src) SWAP_B16_IN_B32(dest, src)
-#    define SWAP_B16_IN_HALF(dest, src) (*((HALF *)(dest)) = *((HALF *)(src)))
-#    define SWAP_B8_IN_FULL(dest, src) SWAP_B8_IN_B32(dest, src)
-#    define SWAP_B8_IN_HALF(dest, src) SWAP_B8_IN_B16(dest, src)
-
-#  endif
+#  define SWAP_HALF_IN_B64(dest, src) SWAP_B32_IN_B64(dest, src)
+#  define SWAP_HALF_IN_B32(dest, src) (*((HALF *)(dest)) = *((HALF *)(src)))
+#  define SWAP_HALF_IN_FULL(dest, src) SWAP_B32_IN_B64(dest, src)
+#  define SWAP_HALF_IN_HASH(dest, src) SWAP_B16_IN_HASH(dest, src)
+#  define SWAP_HALF_IN_FLAG(dest, src) SWAP_B16_IN_FLAG(dest, src)
+#  define SWAP_HALF_IN_bool(dest, src) SWAP_B16_IN_bool(dest, src)
+#  define SWAP_HALF_IN_LEN(dest, src) SWAP_B16_IN_LEN(dest, src)
+#  define SWAP_B32_IN_FULL(dest, src) SWAP_B32_IN_B64(dest, src)
+#  define SWAP_B16_IN_FULL(dest, src) SWAP_B16_IN_B64(dest, src)
+#  define SWAP_B16_IN_HALF(dest, src) SWAP_B16_IN_B32(dest, src)
+#  define SWAP_B8_IN_FULL(dest, src) SWAP_B8_IN_B64(dest, src)
+#  define SWAP_B8_IN_HALF(dest, src) SWAP_B8_IN_B32(dest, src)
 
 #  define BASE ((FULL)1 << BASEB)    /* base for calculations */
 #  define BASE1 (BASE - (FULL)1)     /* one less than base */
@@ -143,19 +124,91 @@ typedef SB32 SFULL; /* signed FULL */
 #  define MAXULONG (MAXLONG | TOPLONG)                  /* largest unsigned long val */
 
 /*
+ * How to print C integer types
+ *
+ * This impacts zio.c: specifically the zprintx() and zprinto() functions.
+ */
+#  if LONG_BITS == 64
+
+    /*
+     * 64-bit processors - how to print C integer variables
+     *
+     * FULL and PRINT are uint64_t
+     *
+     * When using printf formats:
+     *
+     *   Variables cast as (PRINT) are effectively long unsigned int
+     *
+     *   %lx  is OK
+     *   %llx causes warnings
+     *     format ‘%llx’ expects argument of type ‘long long unsigned int’, but ... has type ‘long unsigned int’
+     */
+#    if BASEB == 32
+      typedef FULL PRINT; /* cast for zio.c printing in zprintx() and zprinto() */
+#   elif BASEB == 16
+      typedef FULL PRINT; /* cast for zio.c printing in zprintx() and zprinto() */
+#   else
+#     error "BASEB is not 32 nor 16, do not yet know how to typedef a PRINT value"
+#   endif
+#   define PRI_DEC PRId64
+#   define PRI_OCT PRIo64
+#   define PRI_HEX PRIx64
+
+#  elif LONG_BITS == 32
+
+    /*
+     * 32-bit processors - how to print C integer variables
+     *
+     * FULL and PRINT are uint32_t
+     *
+     * When using printf formats:
+     *
+     *   Variables cast as (PRINT) are effectively unsigned int
+     *
+     *   %lx causes warnings
+     *     format ‘%lx’ expects argument of type ‘long unsigned int’, but ... has type ‘unsigned int’
+     *   %llx  is OK
+     */
+#    if BASEB == 32
+      /* Yes, the larger base needs a smaller type! */
+      typedef HALF PRINT; /* cast for zio.c printing in zprintx() and zprinto() */
+#   elif BASEB == 16
+      typedef FULL PRINT; /* cast for zio.c printing in zprintx() and zprinto() */
+#   else
+#     error "BASEB is not 32 nor 16, do not yet know how to typedef a PRINT value"
+#   endif
+#   define PRI_DEC PRId32
+#   define PRI_OCT PRIo32
+#   define PRI_HEX PRIx32
+
+#  else
+
+#   error "LONG_BITS is not 64 nor 32, do not yet know how to typedef PRINT"
+
+#  endif
+#  if BASEB == 32
+
+#    define PRI_DEC_LEN "10"    /* base 2^32 requires values fully print with a width of 10 decimal digits */
+#    define PRI_HEX_LEN "8"     /* base 2^32 requires values fully print with a width of 8 hex digits */
+#    define PRI_OCT_LEN "11"    /* base 2^32 requires values fully print with a width of 11 octal digits */
+
+#  elif BASEB == 16
+
+#    define PRI_DEC_LEN "5"     /* base 2^16 requires values fully print with a width of 5 decimal digits */
+#    define PRI_HEX_LEN "4"     /* base 2^16 requires values fully print with a width of 4 hex digits */
+#    define PRI_OCT_LEN "6"     /* base 2^16 requires values fully print with a width of 6 octal digits */
+
+#  else
+
+#   error "BASEB is not 32 nor 16, do not yet know how to printf size a PRINT value"
+
+#  endif
+
+/*
  * other miscellaneous typedefs
  */
-typedef USB32 QCKHASH; /* 32 bit hash value */
-#  if defined(HAVE_B64) && LONG_BITS == 32
-typedef HALF PRINT; /* cast for zio printing functions */
-#    define SWAP_B16_IN_PRINT(dest, src) SWAP_B16_IN_HALF(dest, src)
-#    define SWAP_B8_IN_PRINT(dest, src) SWAP_B8_IN_HALF(dest, src)
-#  else
-typedef FULL PRINT; /* cast for zio printing functions */
-#    define SWAP_B16_IN_PRINT(dest, src) SWAP_B16_IN_FULL(dest, src)
-#    define SWAP_B8_IN_PRINT(dest, src) SWAP_B8_IN_FULL(dest, src)
-#  endif
-typedef SB32 FLAG; /* small value (e.g. comparison) */
+typedef uint32_t QCKHASH; /* 32 bit hash value */
+typedef int32_t FLAG; /* small value (e.g., comparison) */
 
 /*
  * length of internal integer values in units of HALF
@@ -163,7 +216,7 @@ typedef SB32 FLAG; /* small value (e.g. comparison) */
 #  if MAJOR_VER >= 3
 typedef intptr_t LEN; /* unit of length storage */
 #  else
-typedef SB32 LEN; /* calc v2 compatible unit of length storage */
+typedef int32_t LEN; /* calc v2 compatible unit of length storage */
 #  endif
 
 #  define SWAP_B32_IN_bool(dest, src) (*((bool *)(dest)) = *((bool *)(src)))
@@ -340,7 +393,7 @@ typedef union {
 #  if MAJOR_VER >= 3
 typedef bool SIGN; /* sign of a multi-precision integer */
 #  else
-typedef SB32 SIGN; /* sign of a multi-precision integer */
+typedef int32_t SIGN; /* sign of a multi-precision integer */
 #  endif
 
 /*

@@ -49,7 +49,7 @@ typedef struct hashstate HASH;
 struct hashstate {
     int hashtype;                          /* XYZ_HASH_TYPE debug value */
     bool bytes;                            /* true => reading bytes rather than words */
-    void (*update)(HASH *, USB8 *, USB32); /* update arbitrary length */
+    void (*update)(HASH *, uint8_t *, uint32_t); /* update arbitrary length */
     void (*chkpt)(HASH *);                 /* checkpoint a state */
     void (*note)(int, HASH *);             /* note a special value */
     void (*type)(int, HASH *);             /* note a VALUE type */
@@ -60,7 +60,7 @@ struct hashstate {
     int chunksize;                         /* XYZ_CHUNKSIZE input chunk size */
     int unionsize;                         /* h_union element size */
     union {                                /* hash dependent states */
-        USB8 data[1];                      /* used by hash_value to hash below */
+        uint8_t data[1];                      /* used by hash_value to hash below */
         SHA1_INFO h_sha1;                  /* new SHA-1 internal state */
     } h_union;
 };
@@ -108,7 +108,7 @@ extern HASH *hash_zvalue(int, ZVALUE, HASH *);
 extern HASH *hash_number(int, void *, HASH *);
 extern HASH *hash_complex(int, void *, HASH *);
 extern HASH *hash_str(int, char *, HASH *);
-extern HASH *hash_usb8(int, USB8 *, int, HASH *);
+extern HASH *hash_usb8(int, uint8_t *, int, HASH *);
 extern HASH *hash_value(int, void *, HASH *);
 
 #endif

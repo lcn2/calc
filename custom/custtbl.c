@@ -152,7 +152,7 @@ const struct custom cust[] = {
 
     {"sysinfo", "return a calc #define value", 0, 1, c_sysinfo},
 
-    {"pzasusb8", "print ZVALUE as USB8", 0, 1, c_pzasusb8},
+    {"pzasusb8", "print ZVALUE as uint8_t", 0, 1, c_pzasusb8},
 
     {"pmodm127", "calculate q mod 2^(2^127-1)", 1, 1, c_pmodm127},
 

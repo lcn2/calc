@@ -35,6 +35,7 @@
 #include <sys/types.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <limits.h>
 
 /*
  * calc local src includes
@@ -762,7 +763,7 @@ o_assign(FUNC *UNUSED(fp))
     VALUE *vp;
     VALUE tmp;
     unsigned short subtype;
-    USB8 octet;
+    uint8_t octet;
 
     /*
      * get what we will store into
@@ -989,7 +990,7 @@ o_swap(FUNC *UNUSED(fp))
 {
     VALUE *v1, *v2; /* variables to be swapped */
     VALUE tmp;
-    USB8 usb;
+    uint8_t usb;
 
     v1 = stack--;
     v2 = stack;
@@ -3618,6 +3619,9 @@ showsizes(void)
     printf("\tshort\t\t%4zu\n", sizeof(short));
     printf("\tint\t\t%4zu\n", sizeof(int));
     printf("\tlong\t\t%4zu\n", sizeof(long));
+    printf("\tunsigned long\t%4zu\n", sizeof(unsigned long));
+    printf("\tlong long\t%4zu\n", sizeof(long long));
+    printf("\tunsigned long long%2zu\n", sizeof(unsigned long long));
     printf("\tpointer\t\t%4zu\n", sizeof(void *));
     printf("\tfpos_t\t\t%4zu\n", sizeof(fpos_t));
     printf("\toff_t\t\t%4zu\n", sizeof(off_t));
@@ -3644,8 +3648,8 @@ showsizes(void)
 #if defined(MODE_LEN)
     printf("\tMODE_LEN\t%4zu\n", MODE_LEN);
 #endif
-#if defined(CALC_CHARBIT)
-    printf("\tCALC_CHARBIT\t%4d\n", CALC_CHARBIT);
+#if defined(CHAR_BIT)
+    printf("\tCHAR_BIT\t%4d\n", CHAR_BIT);
 #endif
 #if defined(FPOS_POS_BITS)
     printf("\tFPOS_POS_BITS\t%4d\n", FPOS_POS_BITS);
@@ -3698,8 +3702,8 @@ showsizes(void)
 #if defined(PTR_BITS)
     printf("\tPTR_BITS\t%4d\n", PTR_BITS);
 #endif
-#if defined(PTR_LEN)
-    printf("\tPTR_LEN\t\t%4d\n", PTR_LEN);
+#if defined(INTPTR_LEN)
+    printf("\tINTPTR_LEN\t%4zu\n", INTPTR_LEN);
 #endif
 #if defined(INTPTR_WIDTH)
     printf("\tINTPTR_WIDTH\t%4zu\n", INTPTR_WIDTH);

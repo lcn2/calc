@@ -390,7 +390,7 @@ copymat2blk(MATRIX *smat, LEN ssi, LEN num, BLOCK *dblk, LEN dsi, bool noreloc)
     LEN i;
     LEN newlen;
     LEN newsize;
-    USB8 *newdata;
+    uint8_t *newdata;
     VALUE *vp;
     OCTET *op;
 
@@ -418,7 +418,7 @@ copymat2blk(MATRIX *smat, LEN ssi, LEN num, BLOCK *dblk, LEN dsi, bool noreloc)
             return E_COPY_17;
         }
         newsize = (1 + newlen / dblk->blkchunk) * dblk->blkchunk;
-        newdata = (USB8 *)realloc(dblk->data, newsize);
+        newdata = (uint8_t *)realloc(dblk->data, newsize);
         if (newdata == NULL) {
             math_error("Out of memory for matrix-to-block copy");
             not_reached();
@@ -694,7 +694,7 @@ copyfile2blk(FILEID id, LEN ssi, LEN num, BLOCK *dblk, LEN dsi, bool noreloc)
     if (ssi + num > filelen) {
         return E_COPY_05;
     }
-    if (fseek(fp, ssi, 0)) { /* using system fseek  XXX */
+    if (fseek(fp, ssi, 0)) {
         return E_COPYF_2;
     }
     if (dsi < 0) {
@@ -709,7 +709,7 @@ copyfile2blk(FILEID id, LEN ssi, LEN num, BLOCK *dblk, LEN dsi, bool noreloc)
             return E_COPY_17;
         }
         newsize = (1 + newlen / dblk->blkchunk) * dblk->blkchunk;
-        newdata = (USB8 *)realloc(dblk->data, newsize);
+        newdata = (uint8_t *)realloc(dblk->data, newsize);
         if (newdata == NULL) {
             math_error("Out of memory for block-to-block copy");
             not_reached();
@@ -782,7 +782,7 @@ copyblk2blk(BLOCK *sblk, LEN ssi, LEN num, BLOCK *dblk, LEN dsi, bool noreloc)
 {
     LEN newlen;
     LEN newsize;
-    USB8 *newdata;
+    uint8_t *newdata;
 
     if (ssi > sblk->datalen) {
         return E_COPY_02;
@@ -808,7 +808,7 @@ copyblk2blk(BLOCK *sblk, LEN ssi, LEN num, BLOCK *dblk, LEN dsi, bool noreloc)
             return E_COPY_17;
         }
         newsize = (1 + newlen / dblk->blkchunk) * dblk->blkchunk;
-        newdata = (USB8 *)realloc(dblk->data, newsize);
+        newdata = (uint8_t *)realloc(dblk->data, newsize);
         if (newdata == NULL) {
             math_error("Out of memory for block-to-block copy");
             not_reached();
@@ -832,7 +832,7 @@ copystr2blk(STRING *str, LEN ssi, LEN num, BLOCK *dblk, LEN dsi, bool noreloc)
     LEN len;
     LEN newlen;
     LEN newsize;
-    USB8 *newdata;
+    uint8_t *newdata;
 
     len = str->s_len;
 
@@ -857,7 +857,7 @@ copystr2blk(STRING *str, LEN ssi, LEN num, BLOCK *dblk, LEN dsi, bool noreloc)
             return E_COPY_17;
         }
         newsize = (1 + newlen / dblk->blkchunk) * dblk->blkchunk;
-        newdata = (USB8 *)realloc(dblk->data, newsize);
+        newdata = (uint8_t *)realloc(dblk->data, newsize);
         if (newdata == NULL) {
             math_error("Out of memory for string-to-block copy");
             not_reached();
@@ -911,7 +911,7 @@ copystr2str(STRING *sstr, LEN ssi, LEN num, STRING *dstr, LEN dsi)
 int
 copyblk2str(BLOCK *sblk, LEN ssi, LEN num, STRING *dstr, LEN dsi)
 {
-    USB8 *c, *c1;
+    uint8_t *c, *c1;
 
     if (num < 0 || ssi + num > sblk->datalen) {
         num = sblk->datalen - ssi;
@@ -926,7 +926,7 @@ copyblk2str(BLOCK *sblk, LEN ssi, LEN num, STRING *dstr, LEN dsi)
         num = dstr->s_len - dsi;
     }
     c1 = sblk->data + ssi;
-    c = (USB8 *)dstr->s_str + dsi;
+    c = (uint8_t *)dstr->s_str + dsi;
     while (num-- > 0) {
         *c++ = *c1++;
     }
@@ -972,7 +972,7 @@ copyostr2blk(char *str, LEN ssi, LEN num, BLOCK *dblk, LEN dsi, bool noreloc)
     size_t len;
     size_t newlen;
     size_t newsize;
-    USB8 *newdata;
+    uint8_t *newdata;
 
     len = strlen(str) + 1;
 
@@ -997,7 +997,7 @@ copyostr2blk(char *str, LEN ssi, LEN num, BLOCK *dblk, LEN dsi, bool noreloc)
             return E_COPY_17;
         }
         newsize = (1 + newlen / dblk->blkchunk) * dblk->blkchunk;
-        newdata = (USB8 *)realloc(dblk->data, newsize);
+        newdata = (uint8_t *)realloc(dblk->data, newsize);
         if (newdata == NULL) {
             math_error("Out of memory for string-to-block copy");
             not_reached();
@@ -1020,7 +1020,7 @@ copynum2blk(NUMBER *snum, LEN ssi, LEN num, BLOCK *dblk, LEN dsi, bool noreloc)
 {
     size_t newlen;
     size_t newsize;
-    USB8 *newdata;
+    uint8_t *newdata;
 #if CALC_BYTE_ORDER == BIG_ENDIAN
     ZVALUE *swnum; /* byte swapped numerator */
 #endif
@@ -1049,7 +1049,7 @@ copynum2blk(NUMBER *snum, LEN ssi, LEN num, BLOCK *dblk, LEN dsi, bool noreloc)
             return E_COPY_17;
         }
         newsize = (1 + newlen / dblk->blkchunk) * dblk->blkchunk;
-        newdata = (USB8 *)realloc(dblk->data, newsize);
+        newdata = (uint8_t *)realloc(dblk->data, newsize);
         if (newdata == NULL) {
             math_error("Out of memory for num-to-block copy");
             not_reached();

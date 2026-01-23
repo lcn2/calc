@@ -137,7 +137,7 @@ struct block {
     LEN blkchunk; /* allocation chunk size */
     LEN maxsize;  /* octets actually malloced for this block */
     LEN datalen;  /* octets of data held this block */
-    USB8 *data;   /* pointer to the 1st octet of the allocated data */
+    uint8_t *data;   /* pointer to the 1st octet of the allocated data */
 };
 typedef struct block BLOCK;
 
@@ -187,7 +187,7 @@ extern int blk_debug; /* 0 => debug off */
 /*
  * OCTET - what the INDEXADDR produces from a blk[offset]
  */
-typedef USB8 OCTET;
+typedef uint8_t OCTET;
 
 /*
  * external functions

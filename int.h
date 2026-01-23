@@ -39,10 +39,8 @@
 
 #  if defined(CALC_SRC) /* if we are building from the calc source tree */
 #    include "status.chk_c.h"
-#    include "charbit.h"
 #  else
 #    include <calc/status.chk_c.h>
-#    include <calc/charbit.h>
 #  endif
 
 /*
@@ -57,27 +55,27 @@
  * Compute them for earlier compiler standards.
  */
 #    if !defined(INT8_WIDTH)
-#      define INT8_WIDTH (sizeof(int8_t) * CALC_CHARBIT)
+#      define INT8_WIDTH (sizeof(int8_t) * CHAR_BIT)
 #    endif
 
 #    if !defined(INT16_WIDTH)
-#      define INT16_WIDTH (sizeof(int16_t) * CALC_CHARBIT)
+#      define INT16_WIDTH (sizeof(int16_t) * CHAR_BIT)
 #    endif
 
 #    if !defined(INT32_WIDTH)
-#      define INT32_WIDTH (sizeof(int32_t) * CALC_CHARBIT)
+#      define INT32_WIDTH (sizeof(int32_t) * CHAR_BIT)
 #    endif
 
 #    if !defined(INT64_WIDTH)
-#      define INT64_WIDTH (sizeof(int64_t) * CALC_CHARBIT)
+#      define INT64_WIDTH (sizeof(int64_t) * CHAR_BIT)
 #    endif
 
 #    if !defined(INTPTR_WIDTH)
-#      define INTPTR_WIDTH (sizeof(intptr_t) * CALC_CHARBIT)
+#      define INTPTR_WIDTH (sizeof(intptr_t) * CHAR_BIT)
 #    endif
 
 #    if !defined(INTMAX_WIDTH)
-#      define INTMAX_WIDTH (sizeof(intmax_t) * CALC_CHARBIT)
+#      define INTMAX_WIDTH (sizeof(intmax_t) * CHAR_BIT)
 #    endif
 
 /*
@@ -87,27 +85,27 @@
  * Compute them for earlier compiler standards.
  */
 #    if !defined(UINT8_WIDTH)
-#      define UINT8_WIDTH (sizeof(uint8_t) * CALC_CHARBIT)
+#      define UINT8_WIDTH (sizeof(uint8_t) * CHAR_BIT)
 #    endif
 
 #    if !defined(UINT16_WIDTH)
-#      define UINT16_WIDTH (sizeof(uint16_t) * CALC_CHARBIT)
+#      define UINT16_WIDTH (sizeof(uint16_t) * CHAR_BIT)
 #    endif
 
 #    if !defined(UINT32_WIDTH)
-#      define UINT32_WIDTH (sizeof(uint32_t) * CALC_CHARBIT)
+#      define UINT32_WIDTH (sizeof(uint32_t) * CHAR_BIT)
 #    endif
 
 #    if !defined(UINT64_WIDTH)
-#      define UINT64_WIDTH (sizeof(uint64_t) * CALC_CHARBIT)
+#      define UINT64_WIDTH (sizeof(uint64_t) * CHAR_BIT)
 #    endif
 
 #    if !defined(UINTPTR_WIDTH)
-#      define UINTPTR_WIDTH (sizeof(uintptr_t) * CALC_CHARBIT)
+#      define UINTPTR_WIDTH (sizeof(uintptr_t) * CHAR_BIT)
 #    endif
 
 #    if !defined(UINTMAX_WIDTH)
-#      define UINTMAX_WIDTH (sizeof(uintmax_t) * CALC_CHARBIT)
+#      define UINTMAX_WIDTH (sizeof(uintmax_t) * CHAR_BIT)
 #    endif
 
 /*

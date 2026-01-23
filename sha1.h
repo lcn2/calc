@@ -41,11 +41,11 @@
 
 /* SHA1_CHUNKSIZE must be a power of 2 - fixed value defined by the algorithm */
 #  define SHA1_CHUNKSIZE (1 << 6)
-#  define SHA1_CHUNKWORDS (SHA1_CHUNKSIZE / sizeof(USB32))
+#  define SHA1_CHUNKWORDS (SHA1_CHUNKSIZE / sizeof(uint32_t))
 
 /* SHA1_DIGESTSIZE is a the length of the digest as defined by the algorithm */
 #  define SHA1_DIGESTSIZE (20)
-#  define SHA1_DIGESTWORDS (SHA1_DIGESTSIZE / sizeof(USB32))
+#  define SHA1_DIGESTWORDS (SHA1_DIGESTSIZE / sizeof(uint32_t))
 
 /* SHA1_LOW - where low 32 bits of 64 bit count is stored during final */
 #  define SHA1_LOW 15
@@ -59,22 +59,22 @@
  * We will assume that bit count is a multiple of 8.
  */
 typedef struct {
-    USB32 digest[SHA1_DIGESTWORDS]; /* message digest */
-    USB32 countLo;                  /* 64 bit count: bits 3-34 */
-    USB32 countHi;                  /* 64 bit count: bits 35-63 */
-    USB32 datalen;                  /* length of data in data */
-    USB32 data[SHA1_CHUNKWORDS];    /* SHA1 chunk buffer */
+    uint32_t digest[SHA1_DIGESTWORDS]; /* message digest */
+    uint32_t countLo;                  /* 64 bit count: bits 3-34 */
+    uint32_t countHi;                  /* 64 bit count: bits 35-63 */
+    uint32_t datalen;                  /* length of data in data */
+    uint32_t data[SHA1_CHUNKWORDS];    /* SHA1 chunk buffer */
 } SHA1_INFO;
 
 /*
- * SHA1COUNT(SHA1_INFO*, USB32) - update the 64 bit count in an SHA1_INFO
+ * SHA1COUNT(SHA1_INFO*, uint32_t) - update the 64 bit count in an SHA1_INFO
  *
  * We will count bytes and convert to bit count during the final
  * transform.
  */
 #  define SHA1COUNT(sha1info, count)                            \
       {                                                         \
-          USB32 tmp_countLo;                                    \
+          uint32_t tmp_countLo;                                    \
           tmp_countLo = (sha1info)->countLo;                    \
           if (((sha1info)->countLo += (count)) < tmp_countLo) { \
               (sha1info)->countHi++;                            \

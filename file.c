@@ -51,7 +51,6 @@
  */
 #include "value.h"
 #include "calc.h"
-#include "longbits.h"
 #include "have_fpos_pos.h"
 #include "fposval.h"
 #include "file.h"

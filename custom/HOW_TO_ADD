@@ -572,7 +572,6 @@ Step 9: Add the Make dependency tools
         u_curds.o: ../errsym.h
         u_curds.o: ../hash.h
         u_curds.o: ../have_malloc.h
-        u_curds.o: ../longbits.h
         u_curds.o: ../nametype.h
         u_curds.o: ../qmath.h
         u_curds.o: ../shs.h

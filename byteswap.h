@@ -1,7 +1,7 @@
 /*
  * byteswap - byte swapping macros
  *
- * Copyright (C) 1999,2014,2021  Landon Curt Noll
+ * Copyright (C) 1999,2014,2021,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -36,7 +36,7 @@
  * This macro will either switch to the opposite byte sex (Big Endian vs.
  * Little Endian) a 16 bit value.
  */
-#  define SWAP_B8_IN_B16(dest, src) (*((USB16 *)(dest)) = (((*((USB16 *)(src))) << 8) | ((*((USB16 *)(src))) >> 8)))
+#  define SWAP_B8_IN_B16(dest, src) (*((uint16_t *)(dest)) = (((*((uint16_t *)(src))) << 8) | ((*((uint16_t *)(src))) >> 8)))
 
 /*
  * SWAP_B16_IN_B32 - swap 16 bits in 32 bits
@@ -44,7 +44,7 @@
  *      dest    - pointer to where the swapped src will be put
  *      src     - pointer to a 32 bit value to swap
  */
-#  define SWAP_B16_IN_B32(dest, src) (*((USB32 *)(dest)) = (((*((USB32 *)(src))) << 16) | ((*((USB32 *)(src))) >> 16)))
+#  define SWAP_B16_IN_B32(dest, src) (*((uint32_t *)(dest)) = (((*((uint32_t *)(src))) << 16) | ((*((uint32_t *)(src))) >> 16)))
 
 /*
  * SWAP_B8_IN_B32 - swap 8 & 16 bits in 32 bits
@@ -56,10 +56,8 @@
  * Little Endian) a 32 bit value.
  */
 #  define SWAP_B8_IN_B32(dest, src)                                                                            \
-      (SWAP_B16_IN_B32(dest, src), (*((USB32 *)(dest)) = ((((*((USB32 *)(dest))) & (USB32)0xff00ff00) >> 8) |  \
-                                                          (((*((USB32 *)(dest))) & (USB32)0x00ff00ff) << 8))))
-
-#  if defined(HAVE_B64)
+      (SWAP_B16_IN_B32(dest, src), (*((uint32_t *)(dest)) = ((((*((uint32_t *)(dest))) & (uint32_t)0xff00ff00) >> 8) |  \
+                                                             (((*((uint32_t *)(dest))) & (uint32_t)0x00ff00ff) << 8))))
 
 /*
  * SWAP_B32_IN_B64 - swap 32 bits in 64 bits
@@ -67,7 +65,7 @@
  *      dest    - pointer to where the swapped src will be put
  *      src     - pointer to a 64 bit value to swap
  */
-#    define SWAP_B32_IN_B64(dest, src) (*((USB64 *)(dest)) = (((*((USB64 *)(src))) << 32) | ((*((USB64 *)(src))) >> 32)))
+#  define SWAP_B32_IN_B64(dest, src) (*((uint64_t *)(dest)) = (((*((uint64_t *)(src))) << 32) | ((*((uint64_t *)(src))) >> 32)))
 
 /*
  * SWAP_B16_IN_B64 - swap 16 & 32 bits in 64 bits
@@ -75,9 +73,9 @@
  *      dest    - pointer to where the swapped src will be put
  *      src     - pointer to a 64 bit value to swap
  */
-#    define SWAP_B16_IN_B64(dest, src)                                                                                    \
-        (SWAP_B32_IN_B64(dest, src), (*((USB64 *)(dest)) = ((((*((USB64 *)(dest))) & (USB64)0xffff0000ffff0000) >> 16) |  \
-                                                            (((*((USB64 *)(dest))) & (USB64)0x0000ffff0000ffff) << 16))))
+#  define SWAP_B16_IN_B64(dest, src)                                                                                    \
+        (SWAP_B32_IN_B64(dest, src), (*((uint64_t *)(dest)) = ((((*((uint64_t *)(dest))) & (uint64_t)0xffff0000ffff0000) >> 16) |  \
+                                                               (((*((uint64_t *)(dest))) & (uint64_t)0x0000ffff0000ffff) << 16))))
 
 /*
  * SWAP_B8_IN_B64 - swap 16 & 32 bits in 64 bits
@@ -88,42 +86,9 @@
  * This macro will either switch to the opposite byte sex (Big Endian vs.
  * Little Endian) a 64 bit value.
  */
-#    define SWAP_B8_IN_B64(dest, src)                                                                                    \
-        (SWAP_B16_IN_B64(dest, src), (*((USB64 *)(dest)) = ((((*((USB64 *)(dest))) & (USB64)0xff00ff00ff00ff00) >> 8) |  \
-                                                            (((*((USB64 *)(dest))) & (USB64)0x00ff00ff00ff00ff) << 8))))
-
-#  else
-
-/*
- * SWAP_B32_IN_B64 - swap 32 bits in 64 bits (simulated by 2 32 bit values)
- *
- *      dest    - pointer to where the swapped src will be put
- *      src     - pointer to a 64 bit value to swap
- */
-#    define SWAP_B32_IN_B64(dest, src) (((USB32 *)(dest))[1] = ((USB32 *)(dest))[0], ((USB32 *)(dest))[0] = ((USB32 *)(dest))[1])
-
-/*
- * SWAP_B16_IN_B64 - swap 16 & 32 bits in 64 bits (simulated by 2 32 bit vals)
- *
- *      dest    - pointer to where the swapped src will be put
- *      src     - pointer to a 64 bit value to swap
- */
-#    define SWAP_B16_IN_B64(dest, src)                                                                               \
-        (SWAP_B16_IN_B32(((USB32 *)dest) + 1, ((USB32 *)src)), SWAP_B16_IN_B32(((USB32 *)dest), ((USB32 *)src) + 1))
-
-/*
- * SWAP_B8_IN_B64 - swap 16 & 32 bits in 64 bits (simulated by 2 32 bit vals)
- *
- *      dest    - pointer to where the swapped src will be put
- *      src     - pointer to a 64 bit value to swap
- *
- * This macro will either switch to the opposite byte sex (Big Endian vs.
- * Little Endian) a 64 bit value.
- */
-#    define SWAP_B8_IN_B64(dest, src)                                                                              \
-        (SWAP_B8_IN_B32(((USB32 *)dest) + 1, ((USB32 *)src)), SWAP_B8_IN_B32(((USB32 *)dest), ((USB32 *)src) + 1))
-
-#  endif
+#  define SWAP_B8_IN_B64(dest, src)                                                                                    \
+        (SWAP_B16_IN_B64(dest, src), (*((uint64_t *)(dest)) = ((((*((uint64_t *)(dest))) & (uint64_t)0xff00ff00ff00ff00) >> 8) |  \
+                                                               (((*((uint64_t *)(dest))) & (uint64_t)0x00ff00ff00ff00ff) << 8))))
 
 #  if LONG_BITS == 64
 

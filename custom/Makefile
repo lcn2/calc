@@ -718,7 +718,6 @@ c_argv.o: ../banned.h
 c_argv.o: ../block.h
 c_argv.o: ../byteswap.h
 c_argv.o: ../calc.h
-c_argv.o: ../charbit.h
 c_argv.o: ../cmath.h
 c_argv.o: ../config.h
 c_argv.o: ../custom.h
@@ -742,7 +741,6 @@ c_argv.o: c_argv.c
 c_devnull.o: ../banned.h
 c_devnull.o: ../block.h
 c_devnull.o: ../byteswap.h
-c_devnull.o: ../charbit.h
 c_devnull.o: ../cmath.h
 c_devnull.o: ../config.h
 c_devnull.o: ../custom.h
@@ -767,7 +765,6 @@ c_help.o: ../attribute.h
 c_help.o: ../banned.h
 c_help.o: ../block.h
 c_help.o: ../byteswap.h
-c_help.o: ../charbit.h
 c_help.o: ../cmath.h
 c_help.o: ../config.h
 c_help.o: ../custom.h
@@ -794,7 +791,6 @@ c_pmodm127.o: ../attribute.h
 c_pmodm127.o: ../banned.h
 c_pmodm127.o: ../block.h
 c_pmodm127.o: ../byteswap.h
-c_pmodm127.o: ../charbit.h
 c_pmodm127.o: ../cmath.h
 c_pmodm127.o: ../config.h
 c_pmodm127.o: ../custom.h
@@ -821,7 +817,6 @@ c_pzasusb8.o: ../attribute.h
 c_pzasusb8.o: ../banned.h
 c_pzasusb8.o: ../block.h
 c_pzasusb8.o: ../byteswap.h
-c_pzasusb8.o: ../charbit.h
 c_pzasusb8.o: ../cmath.h
 c_pzasusb8.o: ../config.h
 c_pzasusb8.o: ../custom.h
@@ -849,7 +844,6 @@ c_register.o: ../banned.h
 c_register.o: ../block.h
 c_register.o: ../byteswap.h
 c_register.o: ../calc.h
-c_register.o: ../charbit.h
 c_register.o: ../cmath.h
 c_register.o: ../config.h
 c_register.o: ../custom.h
@@ -877,7 +871,6 @@ c_sysinfo.o: ../banned.h
 c_sysinfo.o: ../block.h
 c_sysinfo.o: ../byteswap.h
 c_sysinfo.o: ../calc.h
-c_sysinfo.o: ../charbit.h
 c_sysinfo.o: ../cmath.h
 c_sysinfo.o: ../conf.h
 c_sysinfo.o: ../config.h
@@ -910,7 +903,6 @@ c_sysinfo.o: c_sysinfo.c
 custtbl.o: ../banned.h
 custtbl.o: ../block.h
 custtbl.o: ../byteswap.h
-custtbl.o: ../charbit.h
 custtbl.o: ../cmath.h
 custtbl.o: ../config.h
 custtbl.o: ../custom.h
@@ -935,7 +927,6 @@ u_pfe.o: ../banned.h
 u_pfe.o: ../block.h
 u_pfe.o: ../byteswap.h
 u_pfe.o: ../calc.h
-u_pfe.o: ../charbit.h
 u_pfe.o: ../cmath.h
 u_pfe.o: ../config.h
 u_pfe.o: ../custom.h

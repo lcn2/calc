@@ -266,7 +266,7 @@ copyvalue(VALUE *oldvp, VALUE *newvp)
 void
 copy2octet(VALUE *vp, OCTET *op)
 {
-    USB8 oval; /* low order 8 bits to store into OCTET */
+    uint8_t oval; /* low order 8 bits to store into OCTET */
     NUMBER *q;
     HALF h;
 
@@ -287,7 +287,7 @@ copy2octet(VALUE *vp, OCTET *op)
         /* nothing to store ... so do nothing */
         return;
     case V_INT:
-        oval = (USB8)(vp->v_int & 0xff);
+        oval = (uint8_t)(vp->v_int & 0xff);
         break;
     case V_NUM:
         if (qisint(vp->v_num)) {
@@ -302,7 +302,7 @@ copy2octet(VALUE *vp, OCTET *op)
         if (qisneg(vp->v_num)) {
             h = -h;
         }
-        oval = (USB8)h;
+        oval = (uint8_t)h;
         break;
     case V_COM:
         if (cisint(vp->v_com)) {
@@ -317,13 +317,13 @@ copy2octet(VALUE *vp, OCTET *op)
         if (qisneg(vp->v_com->real)) {
             h = -h;
         }
-        oval = (USB8)h;
+        oval = (uint8_t)h;
         break;
     case V_STR:
-        oval = (USB8)vp->v_str->s_str[0];
+        oval = (uint8_t)vp->v_str->s_str[0];
         break;
     case V_BLOCK:
-        oval = (USB8)vp->v_block->data[0];
+        oval = (uint8_t)vp->v_block->data[0];
         break;
     case V_OCTET:
         oval = *vp->v_octet;
@@ -332,7 +332,7 @@ copy2octet(VALUE *vp, OCTET *op)
         if (vp->v_nblock->blk->data == NULL) {
             return;
         }
-        oval = (USB8)vp->v_nblock->blk->data[0];
+        oval = (uint8_t)vp->v_nblock->blk->data[0];
         break;
     default:
         math_error("invalid assignment into an OCTET");
@@ -3000,7 +3000,7 @@ printestr(VALUE *vp)
     BLOCK *bp;
     int mode;
     long i, min, max;
-    USB8 *cp;
+    uint8_t *cp;
 
     if (vp->v_type < 0) {
         math_fmt("error(%d)", -vp->v_type);

@@ -309,7 +309,7 @@ hash_long(int type, long longval, HASH *state)
      */
     memset((char *)lval, 0, sizeof(lval));
     lval[0] = longval;
-    (state->update)(state, (USB8 *)lval, sizeof(lval));
+    (state->update)(state, (uint8_t *)lval, sizeof(lval));
 
     /*
      * all done
@@ -391,7 +391,7 @@ hash_zvalue(int type, ZVALUE zval, HASH *state)
             half[j] = zval.v[i + j + 1];
             half[j + 1] = zval.v[i + j];
         }
-        (state->update)(state, (USB8 *)half, state->chunksize);
+        (state->update)(state, (uint8_t *)half, state->chunksize);
     }
 
     /*
@@ -412,7 +412,7 @@ hash_zvalue(int type, ZVALUE zval, HASH *state)
             half[j + 1] = zval.v[zval.len - 1];
             --full_lim;
         }
-        (state->update)(state, (USB8 *)half, (zval.len - full_lim) * sizeof(HALF));
+        (state->update)(state, (uint8_t *)half, (zval.len - full_lim) * sizeof(HALF));
     }
 
 #else
@@ -426,12 +426,12 @@ hash_zvalue(int type, ZVALUE zval, HASH *state)
      * Endian order (which happens to be laid out in the same order as
      * 32 bit values).
      */
-    (state->update)(state, (USB8 *)zval.v, zval.len * sizeof(HALF));
+    (state->update)(state, (uint8_t *)zval.v, zval.len * sizeof(HALF));
 
 #  if BASEB == 16
     if (zval.len & 1) { /* padding to complete word */
         half[0] = 0;
-        (state->update)(state, (USB8 *)half, 2);
+        (state->update)(state, (uint8_t *)half, 2);
     }
 #  endif
 
@@ -606,7 +606,7 @@ hash_str(int type, char *str, HASH *state)
     /*
      * hash the string
      */
-    (state->update)(state, (USB8 *)str, len);
+    (state->update)(state, (uint8_t *)str, len);
 
     /*
      * all done
@@ -646,7 +646,7 @@ hash_STR(int type, STRING *str, HASH *state)
     /*
      * hash the string
      */
-    (state->update)(state, (USB8 *)str->s_str, (USB32)str->s_len);
+    (state->update)(state, (uint8_t *)str->s_str, (uint32_t)str->s_len);
 
     /*
      * all done
@@ -655,19 +655,19 @@ hash_STR(int type, STRING *str, HASH *state)
 }
 
 /*
- * hash_usb8 - hash an array of USB8s
+ * hash_usb8 - hash an array of uint8_ts
  *
  * given:
  *      type    - hash type (see hash.h)
- *      byte    - pointer to an array of USB8s
- *      len     - number of USB8s to hash
+ *      byte    - pointer to an array of uint8_ts
+ *      len     - number of uint8_ts to hash
  *      state   - the state to hash or NULL
  *
  * returns:
  *      the new state
  */
 HASH *
-hash_usb8(int type, USB8 *byte, int len, HASH *state)
+hash_usb8(int type, uint8_t *byte, int len, HASH *state)
 {
     /*
      * initialize if state is NULL
@@ -687,7 +687,7 @@ hash_usb8(int type, USB8 *byte, int len, HASH *state)
     /*
      * hash the array of octets
      */
-    (state->update)(state, byte, (USB32)len);
+    (state->update)(state, byte, (uint32_t)len);
 
     /*
      * all done
@@ -886,12 +886,12 @@ hash_value(int type, void *v, HASH *state)
         /* hash the RAND state */
         state = hash_int(type, value->v_rand->seeded, state);
         state = hash_int(type, value->v_rand->bits, state);
-        (state->update)(state, (USB8 *)value->v_rand->buffer, SLEN * FULL_BITS / 8);
+        (state->update)(state, (uint8_t *)value->v_rand->buffer, SLEN * FULL_BITS / 8);
         state = hash_int(type, value->v_rand->j, state);
         state = hash_int(type, value->v_rand->k, state);
         state = hash_int(type, value->v_rand->need_to_skip, state);
-        (state->update)(state, (USB8 *)value->v_rand->slot, SCNT * FULL_BITS / 8);
-        (state->update)(state, (USB8 *)value->v_rand->shuf, SHUFLEN * FULL_BITS / 8);
+        (state->update)(state, (uint8_t *)value->v_rand->slot, SCNT * FULL_BITS / 8);
+        (state->update)(state, (uint8_t *)value->v_rand->shuf, SHUFLEN * FULL_BITS / 8);
         state->bytes = false; /* as if reading words */
         break;
 
@@ -903,7 +903,7 @@ hash_value(int type, void *v, HASH *state)
         /* hash the RANDOM state */
         state = hash_int(type, value->v_random->seeded, state);
         state = hash_int(type, value->v_random->bits, state);
-        (state->update)(state, (USB8 *)&(value->v_random->buffer), BASEB / 8);
+        (state->update)(state, (uint8_t *)&(value->v_random->buffer), BASEB / 8);
         state = hash_zvalue(type, value->v_random->r, state);
         state = hash_zvalue(type, value->v_random->n, state);
         state->bytes = false; /* as if reading words */

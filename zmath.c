@@ -33,6 +33,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <limits.h>
 
 /*
  * calc local src includes

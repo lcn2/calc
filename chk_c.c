@@ -58,6 +58,7 @@
 #include <inttypes.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <limits.h>
 
 /*
  * calc local src includes
@@ -68,7 +69,7 @@
 /*
  * our version
  */
-#define CHK_C_VERSION "2.0 2026-01-04"
+#define CHK_C_VERSION "2.1 2026-01-22"
 
 /*
  * usage:
@@ -108,10 +109,14 @@ main(int argc, char *argv[])
     uint32_t ui32 = UINT32_C(32);     /* unsigned 32-bit test value */
     int64_t i64 = INT64_C(-64);       /* signed 64-bit test value */
     uint64_t ui64 = UINT64_C(64);     /* unsigned 64-bit test value */
-    intptr_t iptr = -128;             /* integer type capable of holding a pointer */
-    intptr_t uiptr = 128;             /* unsigned integer type capable of holding a pointer */
-    intmax_t imax = INTMAX_C(-256);   /* maximum sized signed int test value */
-    uintmax_t uimax = UINTMAX_C(256); /* maximum sized unsigned int test value */
+    long lv = -128L;                  /* signed long value */
+    unsigned long ulv = 128UL;        /* unsigned signed long value */
+    long long llv = -256LL;           /* signed long value */
+    unsigned long long ullv = 256ULL; /* unsigned signed long value */
+    intptr_t iptr = -512;             /* integer type capable of holding a pointer */
+    intptr_t uiptr = 512;             /* unsigned integer type capable of holding a pointer */
+    intmax_t imax = INTMAX_C(-1024);  /* maximum sized signed int test value */
+    uintmax_t uimax = UINTMAX_C(1024);/* maximum sized unsigned int test value */
     uintmax_t isum = 0;               /* sum of all test values as signed value */
     uintmax_t uisum = 0;              /* sum of all test values as unsigned value */
 
@@ -184,7 +189,8 @@ main(int argc, char *argv[])
     /*
      * calculate sum of all test values as signed value
      */
-    isum = i + ui + l + ul + ll + ull + i8 + ui8 + i16 + ui16 + i32 + ui32 + i64 + ui64 + iptr + uiptr + imax + uimax;
+    isum = i + ui + l + ul + ll + ull + i8 + ui8 + i16 + ui16 + i32 + ui32 + i64 + ui64 +
+           lv + ulv + llv + ullv + iptr + uiptr + imax + uimax;
     if (c_flag == true) {
         printf("\nzero valued isum: %jd\n", isum);
     }
@@ -196,7 +202,8 @@ main(int argc, char *argv[])
     /*
      * calculate sum of all test values as unsigned value
      */
-    uisum = i + ui + l + ul + ll + ull + i8 + ui8 + i16 + ui16 + i32 + ui32 + i64 + ui64 + iptr + uiptr + imax + uimax;
+    uisum = i + ui + l + ul + ll + ull + i8 + ui8 + i16 + ui16 + i32 + ui32 + i64 + ui64 +
+           lv + ulv + llv + ullv + iptr + uiptr + imax + uimax;
     if (c_flag == true) {
         printf("zero valued uisum: %ju\n", uisum);
     }
@@ -218,6 +225,10 @@ main(int argc, char *argv[])
         printf("INT32_MAX: %+" PRId32 "\n", INT32_MAX);
         printf("INT64_MIN: %+" PRId64 "\n", INT64_MIN);
         printf("INT64_MAX: %+" PRId64 "\n", INT64_MAX);
+        printf("LONG_MIN: %ld\n", LONG_MIN);
+        printf("LONG_MAX: %ld\n", LONG_MAX);
+        printf("LLONG_MIN: %lld\n", LLONG_MIN);
+        printf("LLONG_MAX: %lld\n", LLONG_MAX);
         printf("INTPTR_MIN: %+" PRIdMAX "\n", INTPTR_MIN);
         printf("INTPTR_MAX: %+" PRIdMAX "\n", INTPTR_MAX);
         printf("INTMAX_MIN: %+" PRIdMAX "\n", INTMAX_MIN);
@@ -228,6 +239,8 @@ main(int argc, char *argv[])
         printf("UINT16_MAX: %" PRIu16 "\n", INT16_MAX);
         printf("UINT32_MAX: %" PRIu32 "\n", INT32_MAX);
         printf("UINT64_MAX: %" PRIu64 "\n", INT64_MAX);
+        printf("ULONG_MAX: %lu\n", ULONG_MAX);
+        printf("ULLONG_MAX: %llu\n", ULLONG_MAX);
         printf("UINTPTR_MAX: %" PRIuMAX "\n", INTPTR_MAX);
         printf("UINTMAX_MAX: %" PRIuMAX "\n", INTMAX_MAX);
 
@@ -254,6 +267,10 @@ main(int argc, char *argv[])
         printf("INT32_MAX: %" PRIo32 "\n", INT32_MAX);
         printf("INT64_MIN: %" PRIo64 "\n", INT64_MIN);
         printf("INT64_MAX: %" PRIo64 "\n", INT64_MAX);
+        printf("LONG_MIN: %lo\n", LONG_MIN);
+        printf("LONG_MAX: %lo\n", LONG_MAX);
+        printf("LLONG_MIN: %llo\n", LLONG_MIN);
+        printf("LLONG_MAX: %llo\n", LLONG_MAX);
         printf("INTPTR_MIN: %" PRIoMAX "\n", INTPTR_MIN);
         printf("INTPTR_MAX: %" PRIoMAX "\n", INTPTR_MAX);
         printf("INTMAX_MIN: %" PRIoMAX "\n", INTMAX_MIN);
@@ -268,6 +285,10 @@ main(int argc, char *argv[])
         printf("INT32_MAX: %" PRIx32 "\n", INT32_MAX);
         printf("INT64_MIN: %" PRIx64 "\n", INT64_MIN);
         printf("INT64_MAX: %" PRIx64 "\n", INT64_MAX);
+        printf("LONG_MIN: %lx\n", LONG_MIN);
+        printf("LONG_MAX: %lx\n", LONG_MAX);
+        printf("LLONG_MIN: %llx\n", LLONG_MIN);
+        printf("LLONG_MAX: %llx\n", LLONG_MAX);
         printf("INTPTR_MIN: %" PRIxMAX "\n", INTPTR_MIN);
         printf("INTPTR_MAX: %" PRIxMAX "\n", INTPTR_MAX);
         printf("INTMAX_MIN: %" PRIxMAX "\n", INTMAX_MIN);
@@ -282,6 +303,10 @@ main(int argc, char *argv[])
         printf("INT32_MAX: %" PRIX32 "\n", INT32_MAX);
         printf("INT64_MIN: %" PRIX64 "\n", INT64_MIN);
         printf("INT64_MAX: %" PRIX64 "\n", INT64_MAX);
+        printf("LONG_MIN: %lX\n", LONG_MIN);
+        printf("LONG_MAX: %lX\n", LONG_MAX);
+        printf("LLONG_MIN: %llX\n", LLONG_MIN);
+        printf("LLONG_MAX: %llX\n", LLONG_MAX);
         printf("INTPTR_MIN: %" PRIXMAX "\n", INTPTR_MIN);
         printf("INTPTR_MAX: %" PRIXMAX "\n", INTPTR_MAX);
         printf("INTMAX_MIN: %" PRIXMAX "\n", INTMAX_MIN);
@@ -296,6 +321,10 @@ main(int argc, char *argv[])
         printf("sizeof(uint32_t): %zu\n", sizeof(uint32_t));
         printf("sizeof(int64_t): %zu\n", sizeof(int64_t));
         printf("sizeof(uint64_t): %zu\n", sizeof(uint64_t));
+        printf("sizeof(long): %zu\n", sizeof(long));
+        printf("sizeof(unsigned long): %zu\n", sizeof(unsigned long));
+        printf("sizeof(long long): %zu\n", sizeof(long long));
+        printf("sizeof(unsigned long long): %zu\n", sizeof(unsigned long long));
         printf("sizeof(intptr_t): %zu\n", sizeof(intptr_t));
         printf("sizeof(uintptr_t): %zu\n", sizeof(uintptr_t));
         printf("sizeof(intmax_t): %zu\n", sizeof(intmax_t));

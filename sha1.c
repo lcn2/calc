@@ -49,7 +49,6 @@
  * calc local src includes
  */
 #include "value.h"
-#include "longbits.h"
 #include "endian_calc.h"
 #include "attribute.h"
 #include "errtbl.h"
@@ -117,8 +116,8 @@
 
 /* forward declarations */
 static void sha1Init(HASH *);
-static void sha1Transform(USB32 *, USB32 *);
-static void sha1Update(HASH *, USB8 *, USB32);
+static void sha1Transform(uint32_t *, uint32_t *);
+static void sha1Update(HASH *, uint8_t *, uint32_t);
 static void sha1Final(HASH *);
 static void sha1_chkpt(HASH *);
 static void sha1_note(int, HASH *);
@@ -157,10 +156,10 @@ sha1Init(HASH *state)
  * sub-rounds.  One may also want to roll each sub-round into a loop.
  */
 static void
-sha1Transform(USB32 *digest, USB32 *W)
+sha1Transform(uint32_t *digest, uint32_t *W)
 {
-    USB32 A, B, C, D, E; /* Local vars */
-    USB32 t;             /* temp storage for exor() */
+    uint32_t A, B, C, D, E; /* Local vars */
+    uint32_t t;             /* temp storage for exor() */
 
     /* Set up first buffer and local data buffer */
     A = digest[0];
@@ -266,11 +265,11 @@ sha1Transform(USB32 *digest, USB32 *W)
  * sha1Update - update SHA1 with arbitrary length data
  */
 void
-sha1Update(HASH *state, USB8 *buffer, USB32 count)
+sha1Update(HASH *state, uint8_t *buffer, uint32_t count)
 {
     SHA1_INFO *dig = &state->h_union.h_sha1; /* digest state */
-    USB32 datalen = dig->datalen;
-    USB32 cpylen;
+    uint32_t datalen = dig->datalen;
+    uint32_t cpylen;
 #if CALC_BYTE_ORDER == LITTLE_ENDIAN
     unsigned int i;
 #endif
@@ -346,9 +345,9 @@ sha1Final(HASH *state)
 {
     SHA1_INFO *dig = &state->h_union.h_sha1; /* digest state */
     long count = (long)(dig->datalen);
-    USB32 lowBitcount;
-    USB32 highBitcount;
-    USB8 *data = (USB8 *)dig->data;
+    uint32_t lowBitcount;
+    uint32_t highBitcount;
+    uint8_t *data = (uint8_t *)dig->data;
 #if CALC_BYTE_ORDER == LITTLE_ENDIAN
     unsigned int i;
 #endif
@@ -428,7 +427,7 @@ sha1_chkpt(HASH *state)
     if (dig->datalen > 0) {
 
         /* pad to the end of the chunk */
-        memset((USB8 *)dig->data + dig->datalen, 0, SHA1_CHUNKSIZE - dig->datalen);
+        memset((uint8_t *)dig->data + dig->datalen, 0, SHA1_CHUNKSIZE - dig->datalen);
 #if CALC_BYTE_ORDER == LITTLE_ENDIAN
         if (state->bytes) {
             for (i = 0; i < SHA1_CHUNKWORDS; ++i) {
@@ -652,7 +651,7 @@ sha1_cmp(HASH *a, HASH *b)
         /* buffer lengths differ */
         return true;
     }
-    if (memcmp((USB8 *)a->h_union.h_sha1.data, (USB8 *)b->h_union.h_sha1.data, a->h_union.h_sha1.datalen) != 0) {
+    if (memcmp((uint8_t *)a->h_union.h_sha1.data, (uint8_t *)b->h_union.h_sha1.data, a->h_union.h_sha1.datalen) != 0) {
         /* buffer contents differ */
         return true;
     }
@@ -660,7 +659,7 @@ sha1_cmp(HASH *a, HASH *b)
     /*
      * compare digest
      */
-    return (memcmp((USB8 *)(a->h_union.h_sha1.digest), (USB8 *)(b->h_union.h_sha1.digest), SHA1_DIGESTSIZE) != 0);
+    return (memcmp((uint8_t *)(a->h_union.h_sha1.digest), (uint8_t *)(b->h_union.h_sha1.digest), SHA1_DIGESTSIZE) != 0);
 }
 
 /*

@@ -1,5 +1,5 @@
 /*
- * c_pzasusb8 - print numerator as a string of USB8s
+ * c_pzasusb8 - print numerator as a string of uint8_ts
  *
  * Copyright (C) 1999-2004,2021-2023,2026  Ernest Bowen
  *
@@ -54,7 +54,7 @@ int c_pzasusb8_allowed = 0; /* CUSTOM undefined */
 #  include "../banned.h" /* include after all other includes */
 
 /*
- * c_pzasusb8 - print numerator as a string of USB8s
+ * c_pzasusb8 - print numerator as a string of uint8_ts
  *
  * given:
  *    count = 1;
@@ -70,7 +70,7 @@ c_pzasusb8(char *UNUSED(name), int UNUSED(count), VALUE **vals)
     VALUE result;  /* what we will return */
     ZVALUE z;      /* numerator of the value */
     long half_cnt; /* number of HALFs in the numerator */
-    USB8 *h;       /* octet pointer */
+    uint8_t *h;       /* octet pointer */
     long half_len; /* length of a half in octets */
     long i;
     long j;
@@ -94,7 +94,7 @@ c_pzasusb8(char *UNUSED(name), int UNUSED(count), VALUE **vals)
     /*
      * print the octets
      */
-    h = (USB8 *)z.v;
+    h = (uint8_t *)z.v;
     for (i = 0; i < half_cnt; ++i) {
         printf("%ld:\t", i);
         for (j = 0; j < half_len; ++j) {
