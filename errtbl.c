@@ -41,6 +41,7 @@
 /*
  * important <system> header includes
  */
+#include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -2148,8 +2149,6 @@ print_errsym(void)
 int
 main(int argc, char *argv[])
 {
-    extern char *optarg; /* argv index of the next arg */
-    extern int optind;   /* argv index of the next arg */
     int e_flag = 0;      /* 1 ==> -e flag was used */
     int d_flag = 0;      /* 1 ==> -s flag was used */
     int i;
