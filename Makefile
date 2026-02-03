@@ -183,12 +183,13 @@ BUILD_C_SRC=
 #
 # There MUST be a .c for every .o in UTIL_OBJS.
 #
+# The ver_calc.c is special so we do not include it in UTIL_C_SRC.
+#
 UTIL_C_SRC= chk_c.c endian.c have_arc4random.c \
 	have_ban_pragma.c have_environ.c \
 	have_getpgid.c have_getsid.c \
 	have_rusage.c have_strlcat.c \
-	have_strlcpy.c have_unused.c len_bits.c \
-	ver_calc.c
+	have_strlcpy.c have_unused.c len_bits.c
 
 # these awk and sed tools are used in the process of building BUILD_H_SRC
 # and BUILD_C_SRC
@@ -199,12 +200,13 @@ UTIL_MISC_SRC=
 #
 # There MUST be a .o for every .c in UTIL_C_SRC.
 #
-UTIL_C_SRC= chk_c.o endian.o have_arc4random.o \
+# The ver_calc.o is special so we do not include it in UTIL_OBJS.
+#
+UTIL_OBJS= chk_c.o endian.o have_arc4random.o \
 	have_ban_pragma.o have_environ.o \
 	have_getpgid.o have_getsid.o \
 	have_rusage.o have_strlcat.o \
-	have_strlcpy.o have_unused.o len_bits.o \
-	ver_calc.o
+	have_strlcpy.o have_unused.o len_bits.o
 
 # these temp files may be created (and removed) during the build of BUILD_C_SRC
 #
@@ -216,13 +218,14 @@ UTIL_TMP= ll_tmp const_tmp uid_tmp newstr_tmp vs_tmp \
 #
 # There MUST be a ${EXT} for every .c in UTIL_C_SRC.
 #
+# The ver_calc${EXT} is special so we do not include it in UTIL_PROGS.
+#
 UTIL_PROGS= chk_c${EXT} endian${EXT} have_arc4random${EXT} \
 	have_ban_pragma${EXT} have_environ{EXT} \
 	have_getpgid${EXT} have_environ{EXT} \
 	have_getpgid${EXT} have_getsid${EXT} \
 	have_rusage${EXT} have_strlcat${EXT} \
-	have_strlcpy${EXT} have_unused${EXT} len_bits{ENT} \
-	ver_calc${EXT}
+	have_strlcpy${EXT} have_unused${EXT} len_bits{ENT}
 
 # these utility files and scripts may be created in the process of building
 # the BUILD_H_SRC file set
@@ -2178,7 +2181,7 @@ clean:
 	${RM} -f ${CALCOBJS}
 	${RM} -f ${UTIL_OBJS}
 	${RM} -f ${UTIL_TMP}
-	${RM} -f ${UTIL_PROGS}
+	${RM} -f ${UTIL_PROGS} ver_calc${EXT}
 	${RM} -f ${UTIL_FILES}
 	${RM} -f ${SAMPLE_OBJ}
 	${RM} -f .libcustcalc_error
