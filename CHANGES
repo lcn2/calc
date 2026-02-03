@@ -1,4 +1,4 @@
-The following are the changes from calc version 3.0.0.2 to date:
+The following are the changes from calc version 3.0.0.2 to 3.0.0.3:
 
     Add Makefile.target to build for NetBSD per GitHub PR #184.
 
