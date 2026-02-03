@@ -1,3 +1,6 @@
+The following are the changes from calc version 3.0.0.3 to date:
+
+
 The following are the changes from calc version 3.0.0.2 to 3.0.0.3:
 
     Add Makefile.target to build for NetBSD per GitHub PR #184.
@@ -123,7 +126,7 @@ The following are the changes from calc version 3.0.0.2 to 3.0.0.3:
     Fixed GitHub PR #190.
 
 
-The following are the changes from calc version 3.0.0.1 to 3.0.0.1:
+The following are the changes from calc version 3.0.0.1 to 3.0.0.2:
 
     Removed `terminal.h` rule: system include `<termios.h>` must exist
     Removed `have_gettime.h` and `have_gettime.c`: if CLOCK_REALTIME in defined in system include `<time.h>`,
@@ -169,7 +172,7 @@ The following are the changes from calc version 3.0.0.1 to 3.0.0.1:
     Improved `endian.c` debugging.
 
 
-The following are the changes from calc version 3.0.0.0 to 3.0.0.0:
+The following are the changes from calc version 3.0.0.0 to 3.0.0.1:
 
     Change `MAJOR_VER` from 2 to 3, the first change to the major version
     number since 1989!
