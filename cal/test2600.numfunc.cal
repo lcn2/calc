@@ -68,7 +68,6 @@
 
 
 global defaultverbose = 1;      /* default verbose value */
-global err;
 
 define testismult(str, n, verbose)
 {

@@ -726,7 +726,7 @@ c_argv.o: ../hash.h
 c_argv.o: ../have_ban_pragma.h
 c_argv.o: ../have_unused.h
 c_argv.o: ../int.h
-c_argv.o: ../longbits.h
+c_argv.o: ../len_bits.h
 c_argv.o: ../nametype.h
 c_argv.o: ../qmath.h
 c_argv.o: ../sha1.h
@@ -749,7 +749,7 @@ c_devnull.o: ../hash.h
 c_devnull.o: ../have_ban_pragma.h
 c_devnull.o: ../have_unused.h
 c_devnull.o: ../int.h
-c_devnull.o: ../longbits.h
+c_devnull.o: ../len_bits.h
 c_devnull.o: ../nametype.h
 c_devnull.o: ../qmath.h
 c_devnull.o: ../sha1.h
@@ -775,7 +775,7 @@ c_help.o: ../hash.h
 c_help.o: ../have_ban_pragma.h
 c_help.o: ../have_unused.h
 c_help.o: ../int.h
-c_help.o: ../longbits.h
+c_help.o: ../len_bits.h
 c_help.o: ../nametype.h
 c_help.o: ../qmath.h
 c_help.o: ../sha1.h
@@ -801,7 +801,7 @@ c_pmodm127.o: ../hash.h
 c_pmodm127.o: ../have_ban_pragma.h
 c_pmodm127.o: ../have_unused.h
 c_pmodm127.o: ../int.h
-c_pmodm127.o: ../longbits.h
+c_pmodm127.o: ../len_bits.h
 c_pmodm127.o: ../nametype.h
 c_pmodm127.o: ../qmath.h
 c_pmodm127.o: ../sha1.h
@@ -827,7 +827,7 @@ c_pzasusb8.o: ../hash.h
 c_pzasusb8.o: ../have_ban_pragma.h
 c_pzasusb8.o: ../have_unused.h
 c_pzasusb8.o: ../int.h
-c_pzasusb8.o: ../longbits.h
+c_pzasusb8.o: ../len_bits.h
 c_pzasusb8.o: ../nametype.h
 c_pzasusb8.o: ../qmath.h
 c_pzasusb8.o: ../sha1.h
@@ -854,7 +854,7 @@ c_register.o: ../hash.h
 c_register.o: ../have_ban_pragma.h
 c_register.o: ../have_unused.h
 c_register.o: ../int.h
-c_register.o: ../longbits.h
+c_register.o: ../len_bits.h
 c_register.o: ../nametype.h
 c_register.o: ../qmath.h
 c_register.o: ../sha1.h
@@ -879,15 +879,13 @@ c_sysinfo.o: ../endian_calc.h
 c_sysinfo.o: ../errsym.h
 c_sysinfo.o: ../errtbl.h
 c_sysinfo.o: ../file.h
-c_sysinfo.o: ../fposval.h
 c_sysinfo.o: ../hash.h
 c_sysinfo.o: ../have_ban_pragma.h
-c_sysinfo.o: ../have_fpos_pos.h
 c_sysinfo.o: ../have_unused.h
 c_sysinfo.o: ../hist.h
 c_sysinfo.o: ../int.h
+c_sysinfo.o: ../len_bits.h
 c_sysinfo.o: ../lib_calc.h
-c_sysinfo.o: ../longbits.h
 c_sysinfo.o: ../nametype.h
 c_sysinfo.o: ../prime.h
 c_sysinfo.o: ../qmath.h
@@ -910,7 +908,7 @@ custtbl.o: ../endian_calc.h
 custtbl.o: ../hash.h
 custtbl.o: ../have_ban_pragma.h
 custtbl.o: ../int.h
-custtbl.o: ../longbits.h
+custtbl.o: ../len_bits.h
 custtbl.o: ../nametype.h
 custtbl.o: ../qmath.h
 custtbl.o: ../sha1.h
@@ -937,7 +935,7 @@ u_pfe.o: ../hash.h
 u_pfe.o: ../have_ban_pragma.h
 u_pfe.o: ../have_unused.h
 u_pfe.o: ../int.h
-u_pfe.o: ../longbits.h
+u_pfe.o: ../len_bits.h
 u_pfe.o: ../nametype.h
 u_pfe.o: ../qmath.h
 u_pfe.o: ../sha1.h

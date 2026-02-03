@@ -51,10 +51,10 @@ typedef struct {
  * external functions
  */
 extern FILEIO *findid(FILEID id, int writable);
-extern int fgetposid(FILEID id, fpos_t *ptr);
-extern int fsetposid(FILEID id, fpos_t *ptr);
 extern int get_open_siz(FILE *fp, ZVALUE *res);
 extern char *findfname(FILEID);
+
+/* from input.c */
 extern FILE *f_pathopen(char *name, char *mode, char *pathlist, char **openpath);
 
 #endif

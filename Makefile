@@ -169,12 +169,11 @@ LIB_H_SRC= attribute.h banned.h blkcpy.h block.h byteswap.h \
 
 # we build these .h files during the make
 #
-BUILD_H_SRC= conf.h endian_calc.h errsym.h fposval.h \
+BUILD_H_SRC= conf.h endian_calc.h errsym.h \
 	have_arc4random.h have_ban_pragma.h have_environ.h \
-	have_fpos_pos.h have_getpgid.h have_getsid.h \
-	have_offscl.h have_posscl.h have_rusage.h \
+	have_getpgid.h have_getsid.h have_rusage.h \
 	have_strlcat.h have_strlcpy.h \
-	have_unused.h have_urandom.h longbits.h status.chk_c.h
+	have_unused.h have_urandom.h len_bits.h status.chk_c.h
 
 # we build these .c files during the make
 #
@@ -184,46 +183,46 @@ BUILD_C_SRC=
 #
 # There MUST be a .c for every .o in UTIL_OBJS.
 #
-UTIL_C_SRC= chk_c.c endian.c fposval.c have_arc4random.c \
+UTIL_C_SRC= chk_c.c endian.c have_arc4random.c \
 	have_ban_pragma.c have_environ.c \
-	have_fpos_pos.c have_getpgid.c have_getsid.c \
-	have_offscl.c have_posscl.c \
+	have_getpgid.c have_getsid.c \
 	have_rusage.c have_strlcat.c \
-	have_strlcpy.c have_unused.c longbits.c
+	have_strlcpy.c have_unused.c len_bits.c \
+	ver_calc.c
 
 # these awk and sed tools are used in the process of building BUILD_H_SRC
 # and BUILD_C_SRC
 #
-UTIL_MISC_SRC= fposval.h.def
+UTIL_MISC_SRC=
 
 # these .o files may get built in the process of building BUILD_H_SRC
 #
 # There MUST be a .o for every .c in UTIL_C_SRC.
 #
-UTIL_OBJS= endian.o longbits.o \
-	fposval.o have_fpos_pos.o \
-	try_strarg.o have_posscl.o \
-	have_getsid.o have_getpgid.o have_environ.o \
-	ver_calc.o have_rusage.o \
-	have_unused.o have_ban_pragma.o have_strlcpy.o have_strlcat.o \
-	have_arc4random.o chk_c.o
+UTIL_C_SRC= chk_c.o endian.o have_arc4random.o \
+	have_ban_pragma.o have_environ.o \
+	have_getpgid.o have_getsid.o \
+	have_rusage.o have_strlcat.o \
+	have_strlcpy.o have_unused.o len_bits.o \
+	ver_calc.o
 
 # these temp files may be created (and removed) during the build of BUILD_C_SRC
 #
-UTIL_TMP= ll_tmp fpos_tmp fposval_tmp const_tmp uid_tmp newstr_tmp vs_tmp \
-	offscl_tmp posscl_tmp newstr_tmp \
-	getsid_tmp gettime_tmp getprid_tmp rusage_tmp strdup_tmp
+UTIL_TMP= ll_tmp const_tmp uid_tmp newstr_tmp vs_tmp \
+	newstr_tmp getsid_tmp gettime_tmp getprid_tmp rusage_tmp strdup_tmp
 
 # these utility executables may be created in the process of
 # building the BUILD_H_SRC file set
 #
-UTIL_PROGS= fposval${EXT} \
-	endian${EXT} longbits${EXT} have_getsid${EXT} \
-	have_getpgid${EXT} ver_calc${EXT} have_environ{EXT} \
-	have_unused${EXT} have_fpos_pos${EXT} \
-	have_offscl${EXT} have_rusage${EXT} have_ban_pragma${EXT} \
-	have_strlcpy${EXT} have_strlcat${EXT} have_arc4random${EXT} \
-	chk_c${EXT}
+# There MUST be a ${EXT} for every .c in UTIL_C_SRC.
+#
+UTIL_PROGS= chk_c${EXT} endian${EXT} have_arc4random${EXT} \
+	have_ban_pragma${EXT} have_environ{EXT} \
+	have_getpgid${EXT} have_environ{EXT} \
+	have_getpgid${EXT} have_getsid${EXT} \
+	have_rusage${EXT} have_strlcat${EXT} \
+	have_strlcpy${EXT} have_unused${EXT} len_bits{ENT} \
+	ver_calc${EXT}
 
 # these utility files and scripts may be created in the process of building
 # the BUILD_H_SRC file set
@@ -656,6 +655,22 @@ endif	# RPM_TOP
 	    ${TRUE}; \
 	fi
 
+# If you get syntax errors when you compile `endian.c`, then
+# try this to see what might be happening, and fix accordingly:
+#
+# 	rm -f endian_calc.h && make endian_calc.h CALC_BYTE_ORDER=-DCALC_ENDIAN_DEBUG Q= S=
+#
+# Or try:
+#
+#     try using the -DCALC_BYTE_ORDER=CALC_LITTLE_ENDIAN line, or
+#     try using the -DCALC_BYTE_ORDER=CALC_BIG_ENDIAN line
+#
+# Then try running the calc regression tests:
+#
+#     make clobber all chk
+#
+# See README.FIRST file for more help on running the calc regression tests.
+#
 endian_calc.h: endian.c \
 	banned.h have_ban_pragma.h ${MK_SET}
 	${Q} ${RM} -f endian.o endian${EXT} $@
@@ -669,31 +684,10 @@ endian_calc.h: endian.c \
 	${Q} echo '#define ENDIAN_CALC_H' >> $@
 	${Q} echo '' >> $@
 	${Q} echo '' >> $@
-	${Q} echo '/* what byte order are we? */' >> $@
-	-${Q} if [ X"${CALC_BYTE_ORDER}" = X ]; then \
-	    if echo '#include <endian.h>' | ${CC} -E - ${S}; then \
-		echo '#include <endian.h>' >> $@; \
-		echo '#define CALC_BYTE_ORDER BYTE_ORDER' >> $@; \
-	    elif echo '#include <machine/endian.h>' | \
-		 ${CC} -E - ${S}; then \
-		echo '#include <machine/endian.h>' >> $@; \
-		echo '#define CALC_BYTE_ORDER BYTE_ORDER' >> $@; \
-	    elif echo '#include <sys/endian.h>' | \
-		 ${CC} -E- ${S}; then \
-		echo '#include <sys/endian.h>' >> $@; \
-		echo '#define CALC_BYTE_ORDER BYTE_ORDER' >> $@; \
-	    else \
-		${LCC} ${ICFLAGS} ${CALC_BYTE_ORDER} endian.c -c ${S}; \
-		${LCC} ${ILDFLAGS} endian.o -o endian${EXT} ${S}; \
-		./endian${EXT} >> $@; \
-		${RM} -f endian.o endian${EXT}; \
-	    fi; \
-	else \
-	    ${LCC} ${ICFLAGS} ${CALC_BYTE_ORDER} endian.c -c ${S}; \
-	    ${LCC} ${ILDFLAGS} endian.o -o endian${EXT} ${S}; \
-	    ./endian${EXT} >> $@; \
-	    ${RM} -f endian.o endian${EXT}; \
-	fi
+	${LCC} ${ICFLAGS} ${CALC_BYTE_ORDER} endian.c -c ${S}
+	${LCC} ${ILDFLAGS} endian.o -o endian${EXT} ${S}
+	./endian${EXT} >> $@
+	${RM} -f endian.o endian${EXT}
 	${Q} echo '' >> $@
 	${Q} echo '' >> $@
 	${Q} echo '#endif /* !ENDIAN_CALC_H */' >> $@
@@ -708,198 +702,27 @@ endian_calc.h: endian.c \
 	    ${TRUE}; \
 	fi
 
-longbits.h: longbits.c \
+len_bits.h: len_bits.c endian_calc.h \
 	banned.h have_ban_pragma.h ${MK_SET}
-	${Q} ${RM} -f longbits.o longbits${EXT} $@
+	${Q} ${RM} -f len_bits.o len_bits${EXT} $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile rule $@' >> $@
 	${Q} echo ' */' >> $@
 	${Q} echo '' >> $@
 	${Q} echo '' >> $@
-	${Q} echo '#if !defined(CALC_LONGBITS_H)' >> $@
-	${Q} echo '#define CALC_LONGBITS_H' >> $@
+	${Q} echo '#if !defined(CALC_LEN_BITS_H)' >> $@
+	${Q} echo '#define CALC_LEN_BITS_H' >> $@
 	${Q} echo '' >> $@
 	${Q} echo '' >> $@
-	${Q} ${LCC} ${ICFLAGS} longbits.c -c ${S}
-	${Q} ${LCC} ${ILDFLAGS} longbits.o -o longbits${EXT} ${S}
-	${Q} ./longbits${EXT} ${LONG_BITS} >> $@ ${E}
+	${Q} ${LCC} ${ICFLAGS} len_bits.c -c ${S}
+	${Q} ${LCC} ${ILDFLAGS} len_bits.o -o len_bits${EXT} ${S}
+	${Q} ./len_bits${EXT} ${LONG_BITS} >> $@ ${E}
 	${Q} echo '' >> $@
 	${Q} echo '' >> $@
-	${Q} echo '#endif /* !CALC_LONGBITS_H */' >> $@
+	${Q} echo '#endif /* !CALC_LEN_BITS_H */' >> $@
 	${H} echo '$@ formed'
-	${Q} ${RM} -f longbits.o longbits${EXT}
-	-${Q}if [ -z "${Q}" ]; then \
-	    echo ''; \
-	    echo '=-=-= start of $@ =-=-='; \
-	    ${CAT} $@; \
-	    echo '=-=-= end of $@ =-=-='; \
-	    echo ''; \
-	else \
-	    ${TRUE}; \
-	fi
-
-have_fpos_pos.h: have_fpos_pos.c have_posscl.h \
-		 banned.h have_ban_pragma.h ${MK_SET}
-	${Q} ${RM} -f fpos_tmp $@
-	${H} echo 'forming $@'
-	${Q} echo '/*' > $@
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile rule $@' >> $@
-	${Q} echo ' */' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#if !defined(CALC_HAVE_FPOS_POS_H)' >> $@
-	${Q} echo '#define CALC_HAVE_FPOS_POS_H' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '/* do we have an __pos element in fpos_t? */' >> $@
-	${Q} ${RM} -f have_fpos_pos.o have_fpos_pos${EXT}
-	-${Q} ${LCC} ${HAVE_FPOS_POS} ${ICFLAGS} have_fpos_pos.c -c ${S} \
-		|| ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_fpos_pos.o -o have_fpos_pos${EXT} ${S} \
-		|| ${TRUE}
-	-${Q} ./have_fpos_pos${EXT} > fpos_tmp ${E} \
-		|| ${TRUE}
-	-${Q} if [ -s fpos_tmp ]; then \
-	    ${CAT} fpos_tmp >> $@; \
-	else \
-	    echo '#undef HAVE_FPOS_POS  /* no */' >> $@; \
-	    echo '' >> $@; \
-	    echo '#undef FPOS_POS_BITS' >> $@; \
-	fi
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#endif /* !CALC_HAVE_FPOS_POS_H */' >> $@
-	${Q} ${RM} -f have_fpos_pos${EXT} have_fpos_pos.o fpos_tmp
-	${H} echo '$@ formed'
-	-${Q}if [ -z "${Q}" ]; then \
-	    echo ''; \
-	    echo '=-=-= start of $@ =-=-='; \
-	    ${CAT} $@; \
-	    echo '=-=-= end of $@ =-=-='; \
-	    echo ''; \
-	else \
-	    ${TRUE}; \
-	fi
-
-fposval.h: fposval.c have_fpos_pos.h have_offscl.h have_posscl.h \
-	   endian_calc.h banned.h have_ban_pragma.h fposval.h.def \
-	   have_unused.h ${MK_SET}
-	${Q} ${RM} -f fposval_tmp $@
-	${H} echo 'forming $@'
-	${Q} echo '/*' > $@
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile rule $@' >> $@
-	${Q} echo ' */' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#if !defined(CALC_FPOSVAL_H)' >> $@
-	${Q} echo '#define CALC_FPOSVAL_H' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '/* what are our file position & size types? */' >> $@
-	${Q} ${RM} -f fposval.o fposval${EXT}
-	-${Q} ${LCC} ${ICFLAGS} ${FPOS_BITS} ${OFF_T_BITS} \
-		${DEV_BITS} ${INODE_BITS} fposval.c -c ${S} \
-			|| ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} fposval.o -o fposval${EXT} ${S} \
-		|| ${TRUE}
-	-${Q} ./fposval${EXT} > fposval_tmp ${E} \
-		|| ${TRUE}
-	-${Q} if [ -s fposval_tmp ]; then \
-	    ${CAT} fposval_tmp >> $@; \
-	else \
-	    echo 'WARNING!! ./fposval${EXT} failed, using fposval.h.def' 1>&2; \
-	    ${CAT} fposval.h.def >> $@; \
-	    echo 'WARNING!! While this might be OK, it might be a sign something is wrong' 1>&2; \
-	    echo 'WARNING!! For more on what went wrong try: rm -f $@ ; ${MAKE} $@ S= Q=' 1>&2; \
-	fi
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#endif /* !CALC_FPOSVAL_H */' >> $@
-	${Q} ${RM} -f fposval${EXT} fposval.o fposval_tmp
-	${H} echo '$@ formed'
-	-${Q}if [ -z "${Q}" ]; then \
-	    echo ''; \
-	    echo '=-=-= start of $@ =-=-='; \
-	    ${CAT} $@; \
-	    echo '=-=-= end of $@ =-=-='; \
-	    echo ''; \
-	else \
-	    ${TRUE}; \
-	fi
-
-have_offscl.h: have_offscl.c \
-	banned.h have_ban_pragma.h ${MK_SET}
-	${Q} ${RM} -f offscl_tmp $@
-	${H} echo 'forming $@'
-	${Q} echo '/*' > $@
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile rule $@' >> $@
-	${Q} echo ' */' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#if !defined(CALC_HAVE_OFFSCL_H)' >> $@
-	${Q} echo '#define CALC_HAVE_OFFSCL_H' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} ${RM} -f have_offscl.o have_offscl${EXT}
-	-${Q} ${LCC} ${ICFLAGS} ${HAVE_OFFSCL} have_offscl.c -c ${S} \
-		|| ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_offscl.o -o have_offscl${EXT} ${S} \
-		|| ${TRUE}
-	-${Q} ./have_offscl${EXT} > offscl_tmp ${E} \
-		|| ${TRUE}
-	-${Q} if [ -s offscl_tmp ]; then \
-	    ${CAT} offscl_tmp >> $@; \
-	else \
-	    echo '#undef HAVE_OFF_T_SCALAR /* off_t is not a simple value */' \
-		>> $@; \
-	fi
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#endif /* !CALC_HAVE_OFFSCL_H */' >> $@
-	${Q} ${RM} -f have_offscl${EXT} have_offscl.o offscl_tmp
-	${H} echo '$@ formed'
-	-${Q}if [ -z "${Q}" ]; then \
-	    echo ''; \
-	    echo '=-=-= start of $@ =-=-='; \
-	    ${CAT} $@; \
-	    echo '=-=-= end of $@ =-=-='; \
-	    echo ''; \
-	else \
-	    ${TRUE}; \
-	fi
-
-have_posscl.h: have_posscl.c \
-	banned.h have_ban_pragma.h ${MK_SET}
-	${Q} ${RM} -f have_posscl have_posscl.o posscl_tmp $@
-	${H} echo 'forming $@'
-	${Q} echo '/*' > $@
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile rule $@' >> $@
-	${Q} echo ' */' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#if !defined(CALC_HAVE_POSSCL_H)' >> $@
-	${Q} echo '#define CALC_HAVE_POSSCL_H' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} ${RM} -f have_posscl.o have_posscl
-	-${Q} ${LCC} ${ICFLAGS} ${HAVE_POSSCL} have_posscl.c -c ${S} \
-		|| ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_posscl.o -o have_posscl${EXT} ${S} \
-		|| ${TRUE}
-	-${Q} ./have_posscl${EXT} > posscl_tmp ${E} \
-		|| ${TRUE}
-	-${Q} if [ -s posscl_tmp ]; then \
-	    ${CAT} posscl_tmp >> $@; \
-	else \
-	    echo '/* fpos_t is not a simple value */' >> $@; \
-	    echo '#undef HAVE_FPOS_T_SCALAR' >> $@; \
-	fi
-	${Q} echo '' >> $@
-	${Q} echo '' >> $@
-	${Q} echo '#endif /* !CALC_HAVE_POSSCL_H */' >> $@
-	${Q} ${RM} -f have_posscl have_posscl.o posscl_tmp
-	${H} echo '$@ formed'
+	${Q} ${RM} -f len_bits.o len_bits${EXT}
 	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -1167,7 +990,7 @@ errsym.h: status.chk_c.h errcode${EXT}
 	fi
 
 errcode${EXT}: status.chk_c.h errtbl.c attribute.h errtbl.h \
-	       endian_calc.h longbits.h ${MK_SET}
+	       endian_calc.h len_bits.h ${MK_SET}
 	${RM} -f $@
 	${LCC} ${ICFLAGS} ${ILDFLAGS} -DERRCODE_SRC errtbl.c -o $@
 
@@ -1609,7 +1432,7 @@ calc_version: ver_calc${EXT}
 version:
 	@echo ${VERSION}
 
-ver_calc${EXT}: version.c strl.c have_strlcpy.h have_strlcat.h endian_calc.h longbits.h have_unused.h
+ver_calc${EXT}: version.c strl.c have_strlcpy.h have_strlcat.h endian_calc.h len_bits.h have_unused.h
 	${RM} -f $@
 	${LCC} ${ICFLAGS} -DCALC_VER ${ILDFLAGS} version.c strl.c -o $@
 
@@ -1851,7 +1674,6 @@ env:
 	@echo 'DATE=${DATE}'; echo ''
 	@echo 'DEBUG=${DEBUG}'; echo ''
 	@echo 'DEFAULT_LIB_INSTALL_PATH=${DEFAULT_LIB_INSTALL_PATH}'; echo ''
-	@echo 'DEV_BITS=${DEV_BITS}'; echo ''
 	@echo 'DIFF=${DIFF}'; echo ''
 	@echo 'DISTLIST=${DISTLIST}'; echo ''
 	@echo 'DYNAMIC_FIRST_TARGETS=${DYNAMIC_FIRST_TARGETS}'; echo ''
@@ -1862,19 +1684,14 @@ env:
 	@echo 'EXTRA_CFLAGS=${EXTRA_CFLAGS}'; echo ''
 	@echo 'EXTRA_LDFLAGS=${EXTRA_LDFLAGS}'; echo ''
 	@echo 'FMT=${FMT}'; echo ''
-	@echo 'FPOS_BITS=${FPOS_BITS}'; echo ''
-	@echo 'FPOS_POS_BITS=${FPOS_POS_BITS}'; echo ''
 	@echo 'FSANITIZE=${FSANITIZE}'; echo ''
 	@echo 'GREP=${GREP}'; echo ''
 	@echo 'GZIP=${GZIP}'; echo ''
 	@echo 'HAVE_ARC4RANDOM=${HAVE_ARC4RANDOM}'; echo ''
 	@echo 'HAVE_ENVIRON=${HAVE_ENVIRON}'; echo ''
-	@echo 'HAVE_FPOS_POS=${HAVE_FPOS_POS}'; echo ''
 	@echo 'HAVE_GETPGID=${HAVE_GETPGID}'; echo ''
 	@echo 'HAVE_GETRUSAGE=${HAVE_GETRUSAGE}'; echo ''
 	@echo 'HAVE_GETSID=${HAVE_GETSID}'; echo ''
-	@echo 'HAVE_OFFSCL=${HAVE_OFFSCL}'; echo ''
-	@echo 'HAVE_POSSCL=${HAVE_POSSCL}'; echo ''
 	@echo 'HAVE_PRAGMA_GCC_POSION=${HAVE_PRAGMA_GCC_POSION}'; echo ''
 	@echo 'HAVE_STRLCAT=${HAVE_STRLCAT}'; echo ''
 	@echo 'HAVE_STRLCPY=${HAVE_STRLCPY}'; echo ''
@@ -1887,7 +1704,6 @@ env:
 	@echo 'ICFLAGS=${ICFLAGS}'; echo ''
 	@echo 'ILDFLAGS=${ILDFLAGS}'; echo ''
 	@echo 'INCDIR=${INCDIR}'; echo ''
-	@echo 'INODE_BITS=${INODE_BITS}'; echo ''
 	@echo 'LANG=${LANG}'; echo ''
 	@echo 'LATE_TARGETS=${LATE_TARGETS}'; echo ''
 	@echo 'LCC=${LCC}'; echo ''
@@ -2188,6 +2004,38 @@ prep:
 run:
 	${CALC_ENV} ./calc${EXT} -q
 
+# IMPORTANT DEBUGGING SUGGESTION:
+#
+# 	Debugging is likely to be more productive if you compile calc as a static binary, and
+# 	compile without any optimization.  I.e., set:
+#
+# 	    BLD_TYPE= calc-static-only
+# 	    DEBUG:= -O0 -ggdb3
+#
+# 	 When switching to building static only, do a "make clobber" first to remove any
+# 	 dynamic calc related compile files.
+#
+# Consider un-commenting the appropriate "Address Sanitizer (ASAN)" section in Makefile.local.
+#
+lldb:
+	${CALC_ENV} ${LLDB} -- ./calc${EXT} -q
+
+# IMPORTANT DEBUGGING SUGGESTION:
+#
+# 	Debugging is likely to be more productive if you compile calc as a static binary, and
+# 	compile without any optimization.  I.e., set:
+#
+# 	    BLD_TYPE= calc-static-only
+# 	    DEBUG:= -O0 -ggdb3
+#
+# 	 When switching to building static only, do a "make clobber" first to remove any
+# 	 dynamic calc related compile files.
+#
+# Consider un-commenting the appropriate "Address Sanitizer (ASAN)" section in Makefile.local.
+#
+gdb:
+	${CALC_ENV} ${GDB} --args ./calc${EXT} -q
+
 ###
 #
 # rpm rules
@@ -2358,7 +2206,8 @@ clean:
 	${RM} -f have_stdint.h have_stdlib.h have_strdup.h have_string.h have_times.h
 	${RM} -f have_uid_t.h have_unistd.h have_const.h bool.h decl.h have_fpos.h
 	${RM} -f have_gettime.h have_ustat.h have_statfs.h have_sys_param.h have_sys_mount.h
-	${RM} -f terminal.h have_sys_vfs.h charbit.h
+	${RM} -f terminal.h have_sys_vfs.h charbit.h have_posscl.h have_fpos_pos.h have_offscl.h
+	${RM} -f fposval.h fposval.h.def fpos_tmp fposval_tmp offscl_tmp posscl_tmp longbits.h
 	${RM} -f have_const.c have_const.o have_const${EXT}
 	${RM} -f have_fgetsetpos.c have_fgetsetpos.o have_fgetsetpos${EXT}
 	${RM} -f have_getprid.c have_getprid.o have_getprid${EXT}
@@ -2373,6 +2222,11 @@ clean:
 	${RM} -f have_ustat.c have_ustat.o have_ustat${EXT}
 	${RM} -f have_statfs.c have_statfs.o have_statfs${EXT}
 	${RM} -f charbit.c charbit.o charbit${EXT}
+	${RM} -f have_posscl.c have_posscl.o have_posscl${EXT}
+	${RM} -f have_fpos_pos.c have_fpos_pos.o have_fpos_pos${EXT}
+	${RM} -f have_offscl.c have_offscl.o have_offscl${EXT}
+	${RM} -f fposval.c fposval.o fposval${EXT}
+	${RM} -f longbits.c longbits.o longbits${EXT}
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 clobber: clean
@@ -3033,7 +2887,7 @@ addop.o: hash.h
 addop.o: have_ban_pragma.h
 addop.o: int.h
 addop.o: label.h
-addop.o: longbits.h
+addop.o: len_bits.h
 addop.o: nametype.h
 addop.o: opcodes.h
 addop.o: qmath.h
@@ -3060,7 +2914,7 @@ assocfunc.o: errtbl.h
 assocfunc.o: hash.h
 assocfunc.o: have_ban_pragma.h
 assocfunc.o: int.h
-assocfunc.o: longbits.h
+assocfunc.o: len_bits.h
 assocfunc.o: nametype.h
 assocfunc.o: qmath.h
 assocfunc.o: sha1.h
@@ -3087,7 +2941,7 @@ blkcpy.o: file.h
 blkcpy.o: hash.h
 blkcpy.o: have_ban_pragma.h
 blkcpy.o: int.h
-blkcpy.o: longbits.h
+blkcpy.o: len_bits.h
 blkcpy.o: nametype.h
 blkcpy.o: qmath.h
 blkcpy.o: sha1.h
@@ -3111,7 +2965,7 @@ block.o: errtbl.h
 block.o: hash.h
 block.o: have_ban_pragma.h
 block.o: int.h
-block.o: longbits.h
+block.o: len_bits.h
 block.o: nametype.h
 block.o: qmath.h
 block.o: sha1.h
@@ -3132,7 +2986,7 @@ byteswap.o: errsym.h
 byteswap.o: errtbl.h
 byteswap.o: have_ban_pragma.h
 byteswap.o: int.h
-byteswap.o: longbits.h
+byteswap.o: len_bits.h
 byteswap.o: qmath.h
 byteswap.o: status.chk_c.h
 byteswap.o: version.h
@@ -3159,8 +3013,8 @@ calc.o: have_unused.h
 calc.o: hist.h
 calc.o: int.h
 calc.o: label.h
+calc.o: len_bits.h
 calc.o: lib_calc.h
-calc.o: longbits.h
 calc.o: nametype.h
 calc.o: opcodes.h
 calc.o: qmath.h
@@ -3197,8 +3051,8 @@ codegen.o: have_strlcat.h
 codegen.o: have_strlcpy.h
 codegen.o: int.h
 codegen.o: label.h
+codegen.o: len_bits.h
 codegen.o: lib_calc.h
-codegen.o: longbits.h
 codegen.o: nametype.h
 codegen.o: opcodes.h
 codegen.o: qmath.h
@@ -3224,7 +3078,7 @@ comfunc.o: errsym.h
 comfunc.o: errtbl.h
 comfunc.o: have_ban_pragma.h
 comfunc.o: int.h
-comfunc.o: longbits.h
+comfunc.o: len_bits.h
 comfunc.o: qmath.h
 comfunc.o: status.chk_c.h
 comfunc.o: version.h
@@ -3239,7 +3093,7 @@ commath.o: errsym.h
 commath.o: errtbl.h
 commath.o: have_ban_pragma.h
 commath.o: int.h
-commath.o: longbits.h
+commath.o: len_bits.h
 commath.o: qmath.h
 commath.o: status.chk_c.h
 commath.o: version.h
@@ -3261,7 +3115,7 @@ config.o: have_ban_pragma.h
 config.o: have_strlcat.h
 config.o: have_strlcpy.h
 config.o: int.h
-config.o: longbits.h
+config.o: len_bits.h
 config.o: nametype.h
 config.o: qmath.h
 config.o: sha1.h
@@ -3288,7 +3142,7 @@ const.o: errtbl.h
 const.o: hash.h
 const.o: have_ban_pragma.h
 const.o: int.h
-const.o: longbits.h
+const.o: len_bits.h
 const.o: nametype.h
 const.o: qmath.h
 const.o: sha1.h
@@ -3314,7 +3168,7 @@ custom.o: errtbl.h
 custom.o: hash.h
 custom.o: have_ban_pragma.h
 custom.o: int.h
-custom.o: longbits.h
+custom.o: len_bits.h
 custom.o: nametype.h
 custom.o: qmath.h
 custom.o: sha1.h
@@ -3343,7 +3197,7 @@ errtbl.o: hash.h
 errtbl.o: have_ban_pragma.h
 errtbl.o: int.h
 errtbl.o: label.h
-errtbl.o: longbits.h
+errtbl.o: len_bits.h
 errtbl.o: nametype.h
 errtbl.o: qmath.h
 errtbl.o: sha1.h
@@ -3366,14 +3220,12 @@ file.o: errsym.h
 file.o: errtbl.h
 file.o: file.c
 file.o: file.h
-file.o: fposval.h
 file.o: hash.h
 file.o: have_ban_pragma.h
-file.o: have_fpos_pos.h
 file.o: have_strlcat.h
 file.o: have_strlcpy.h
 file.o: int.h
-file.o: longbits.h
+file.o: len_bits.h
 file.o: nametype.h
 file.o: qmath.h
 file.o: sha1.h
@@ -3385,20 +3237,6 @@ file.o: version.h
 file.o: zmath.h
 file.o: zrand.h
 file.o: zrandom.h
-fposval.o: banned.h
-fposval.o: byteswap.h
-fposval.o: endian_calc.h
-fposval.o: fposval.c
-fposval.o: have_ban_pragma.h
-fposval.o: have_fpos_pos.h
-fposval.o: have_offscl.h
-fposval.o: have_posscl.h
-fposval.o: have_unused.h
-fposval.o: int.h
-fposval.o: longbits.h
-fposval.o: status.chk_c.h
-fposval.o: version.h
-fposval.o: zmath.h
 func.o: attribute.h
 func.o: banned.h
 func.o: blkcpy.h
@@ -3422,7 +3260,7 @@ func.o: have_strlcpy.h
 func.o: have_unused.h
 func.o: int.h
 func.o: label.h
-func.o: longbits.h
+func.o: len_bits.h
 func.o: nametype.h
 func.o: opcodes.h
 func.o: prime.h
@@ -3452,7 +3290,7 @@ hash.o: hash.c
 hash.o: hash.h
 hash.o: have_ban_pragma.h
 hash.o: int.h
-hash.o: longbits.h
+hash.o: len_bits.h
 hash.o: nametype.h
 hash.o: qmath.h
 hash.o: sha1.h
@@ -3472,22 +3310,12 @@ have_ban_pragma.o: have_ban_pragma.h
 have_environ.o: banned.h
 have_environ.o: have_ban_pragma.h
 have_environ.o: have_environ.c
-have_fpos_pos.o: banned.h
-have_fpos_pos.o: have_ban_pragma.h
-have_fpos_pos.o: have_fpos_pos.c
-have_fpos_pos.o: have_posscl.h
 have_getpgid.o: banned.h
 have_getpgid.o: have_ban_pragma.h
 have_getpgid.o: have_getpgid.c
 have_getsid.o: banned.h
 have_getsid.o: have_ban_pragma.h
 have_getsid.o: have_getsid.c
-have_offscl.o: banned.h
-have_offscl.o: have_ban_pragma.h
-have_offscl.o: have_offscl.c
-have_posscl.o: banned.h
-have_posscl.o: have_ban_pragma.h
-have_posscl.o: have_posscl.c
 have_rusage.o: banned.h
 have_rusage.o: have_ban_pragma.h
 have_rusage.o: have_rusage.c
@@ -3512,8 +3340,8 @@ help.o: hash.h
 help.o: have_ban_pragma.h
 help.o: help.c
 help.o: int.h
+help.o: len_bits.h
 help.o: lib_calc.h
-help.o: longbits.h
 help.o: nametype.h
 help.o: qmath.h
 help.o: sha1.h
@@ -3542,8 +3370,8 @@ hist.o: have_unused.h
 hist.o: hist.c
 hist.o: hist.h
 hist.o: int.h
+hist.o: len_bits.h
 hist.o: lib_calc.h
-hist.o: longbits.h
 hist.o: nametype.h
 hist.o: qmath.h
 hist.o: sha1.h
@@ -3573,7 +3401,7 @@ input.o: have_strlcpy.h
 input.o: hist.h
 input.o: input.c
 input.o: int.h
-input.o: longbits.h
+input.o: len_bits.h
 input.o: nametype.h
 input.o: qmath.h
 input.o: sha1.h
@@ -3602,7 +3430,7 @@ label.o: have_ban_pragma.h
 label.o: int.h
 label.o: label.c
 label.o: label.h
-label.o: longbits.h
+label.o: len_bits.h
 label.o: nametype.h
 label.o: opcodes.h
 label.o: qmath.h
@@ -3615,6 +3443,10 @@ label.o: version.h
 label.o: zmath.h
 label.o: zrand.h
 label.o: zrandom.h
+len_bits.o: banned.h
+len_bits.o: endian_calc.h
+len_bits.o: have_ban_pragma.h
+len_bits.o: len_bits.c
 lib_calc.o: attribute.h
 lib_calc.o: banned.h
 lib_calc.o: block.h
@@ -3634,9 +3466,9 @@ lib_calc.o: have_strlcat.h
 lib_calc.o: have_strlcpy.h
 lib_calc.o: int.h
 lib_calc.o: label.h
+lib_calc.o: len_bits.h
 lib_calc.o: lib_calc.c
 lib_calc.o: lib_calc.h
-lib_calc.o: longbits.h
 lib_calc.o: nametype.h
 lib_calc.o: qmath.h
 lib_calc.o: sha1.h
@@ -3658,9 +3490,9 @@ lib_util.o: errsym.h
 lib_util.o: errtbl.h
 lib_util.o: have_ban_pragma.h
 lib_util.o: int.h
+lib_util.o: len_bits.h
 lib_util.o: lib_util.c
 lib_util.o: lib_util.h
-lib_util.o: longbits.h
 lib_util.o: status.chk_c.h
 lib_util.o: version.h
 lib_util.o: zmath.h
@@ -3676,8 +3508,8 @@ listfunc.o: errtbl.h
 listfunc.o: hash.h
 listfunc.o: have_ban_pragma.h
 listfunc.o: int.h
+listfunc.o: len_bits.h
 listfunc.o: listfunc.c
-listfunc.o: longbits.h
 listfunc.o: nametype.h
 listfunc.o: qmath.h
 listfunc.o: sha1.h
@@ -3688,9 +3520,6 @@ listfunc.o: version.h
 listfunc.o: zmath.h
 listfunc.o: zrand.h
 listfunc.o: zrandom.h
-longbits.o: banned.h
-longbits.o: have_ban_pragma.h
-longbits.o: longbits.c
 matfunc.o: attribute.h
 matfunc.o: banned.h
 matfunc.o: block.h
@@ -3704,7 +3533,7 @@ matfunc.o: hash.h
 matfunc.o: have_ban_pragma.h
 matfunc.o: have_unused.h
 matfunc.o: int.h
-matfunc.o: longbits.h
+matfunc.o: len_bits.h
 matfunc.o: matfunc.c
 matfunc.o: nametype.h
 matfunc.o: qmath.h
@@ -3726,8 +3555,8 @@ math_error.o: endian_calc.h
 math_error.o: hash.h
 math_error.o: have_ban_pragma.h
 math_error.o: int.h
+math_error.o: len_bits.h
 math_error.o: lib_calc.h
-math_error.o: longbits.h
 math_error.o: math_error.c
 math_error.o: nametype.h
 math_error.o: qmath.h
@@ -3756,7 +3585,7 @@ obj.o: have_strlcat.h
 obj.o: have_strlcpy.h
 obj.o: int.h
 obj.o: label.h
-obj.o: longbits.h
+obj.o: len_bits.h
 obj.o: nametype.h
 obj.o: obj.c
 obj.o: opcodes.h
@@ -3783,17 +3612,15 @@ opcodes.o: endian_calc.h
 opcodes.o: errsym.h
 opcodes.o: errtbl.h
 opcodes.o: file.h
-opcodes.o: fposval.h
 opcodes.o: func.h
 opcodes.o: hash.h
 opcodes.o: have_ban_pragma.h
-opcodes.o: have_fpos_pos.h
 opcodes.o: have_unused.h
 opcodes.o: hist.h
 opcodes.o: int.h
 opcodes.o: label.h
+opcodes.o: len_bits.h
 opcodes.o: lib_calc.h
-opcodes.o: longbits.h
 opcodes.o: nametype.h
 opcodes.o: opcodes.c
 opcodes.o: opcodes.h
@@ -3812,7 +3639,7 @@ pix.o: byteswap.h
 pix.o: endian_calc.h
 pix.o: have_ban_pragma.h
 pix.o: int.h
-pix.o: longbits.h
+pix.o: len_bits.h
 pix.o: pix.c
 pix.o: prime.h
 pix.o: qmath.h
@@ -3828,7 +3655,7 @@ poly.o: endian_calc.h
 poly.o: hash.h
 poly.o: have_ban_pragma.h
 poly.o: int.h
-poly.o: longbits.h
+poly.o: len_bits.h
 poly.o: nametype.h
 poly.o: poly.c
 poly.o: qmath.h
@@ -3846,7 +3673,7 @@ prime.o: endian_calc.h
 prime.o: have_ban_pragma.h
 prime.o: int.h
 prime.o: jump.h
-prime.o: longbits.h
+prime.o: len_bits.h
 prime.o: prime.c
 prime.o: prime.h
 prime.o: qmath.h
@@ -3862,7 +3689,7 @@ qfunc.o: errsym.h
 qfunc.o: errtbl.h
 qfunc.o: have_ban_pragma.h
 qfunc.o: int.h
-qfunc.o: longbits.h
+qfunc.o: len_bits.h
 qfunc.o: prime.h
 qfunc.o: qfunc.c
 qfunc.o: qmath.h
@@ -3879,7 +3706,7 @@ qio.o: errtbl.h
 qio.o: have_ban_pragma.h
 qio.o: have_unused.h
 qio.o: int.h
-qio.o: longbits.h
+qio.o: len_bits.h
 qio.o: qio.c
 qio.o: qmath.h
 qio.o: status.chk_c.h
@@ -3894,7 +3721,7 @@ qmath.o: errsym.h
 qmath.o: errtbl.h
 qmath.o: have_ban_pragma.h
 qmath.o: int.h
-qmath.o: longbits.h
+qmath.o: len_bits.h
 qmath.o: qmath.c
 qmath.o: qmath.h
 qmath.o: status.chk_c.h
@@ -3909,7 +3736,7 @@ qmod.o: errsym.h
 qmod.o: errtbl.h
 qmod.o: have_ban_pragma.h
 qmod.o: int.h
-qmod.o: longbits.h
+qmod.o: len_bits.h
 qmod.o: qmath.h
 qmod.o: qmod.c
 qmod.o: status.chk_c.h
@@ -3924,7 +3751,7 @@ qtrans.o: errsym.h
 qtrans.o: errtbl.h
 qtrans.o: have_ban_pragma.h
 qtrans.o: int.h
-qtrans.o: longbits.h
+qtrans.o: len_bits.h
 qtrans.o: qmath.h
 qtrans.o: qtrans.c
 qtrans.o: status.chk_c.h
@@ -3942,7 +3769,7 @@ quickhash.o: errtbl.h
 quickhash.o: hash.h
 quickhash.o: have_ban_pragma.h
 quickhash.o: int.h
-quickhash.o: longbits.h
+quickhash.o: len_bits.h
 quickhash.o: nametype.h
 quickhash.o: qmath.h
 quickhash.o: quickhash.c
@@ -3967,8 +3794,8 @@ sample_many.o: errtbl.h
 sample_many.o: hash.h
 sample_many.o: have_ban_pragma.h
 sample_many.o: int.h
+sample_many.o: len_bits.h
 sample_many.o: lib_util.h
-sample_many.o: longbits.h
 sample_many.o: nametype.h
 sample_many.o: qmath.h
 sample_many.o: sample_many.c
@@ -3993,8 +3820,8 @@ sample_rand.o: errtbl.h
 sample_rand.o: hash.h
 sample_rand.o: have_ban_pragma.h
 sample_rand.o: int.h
+sample_rand.o: len_bits.h
 sample_rand.o: lib_util.h
-sample_rand.o: longbits.h
 sample_rand.o: nametype.h
 sample_rand.o: qmath.h
 sample_rand.o: sample_rand.c
@@ -4018,7 +3845,7 @@ seed.o: have_getpgid.h
 seed.o: have_rusage.h
 seed.o: have_urandom.h
 seed.o: int.h
-seed.o: longbits.h
+seed.o: len_bits.h
 seed.o: qmath.h
 seed.o: seed.c
 seed.o: status.chk_c.h
@@ -4036,7 +3863,7 @@ sha1.o: errtbl.h
 sha1.o: hash.h
 sha1.o: have_ban_pragma.h
 sha1.o: int.h
-sha1.o: longbits.h
+sha1.o: len_bits.h
 sha1.o: nametype.h
 sha1.o: qmath.h
 sha1.o: sha1.c
@@ -4060,7 +3887,7 @@ size.o: errtbl.h
 size.o: hash.h
 size.o: have_ban_pragma.h
 size.o: int.h
-size.o: longbits.h
+size.o: len_bits.h
 size.o: nametype.h
 size.o: qmath.h
 size.o: sha1.h
@@ -4087,7 +3914,7 @@ str.o: have_ban_pragma.h
 str.o: have_strlcat.h
 str.o: have_strlcpy.h
 str.o: int.h
-str.o: longbits.h
+str.o: len_bits.h
 str.o: nametype.h
 str.o: qmath.h
 str.o: sha1.h
@@ -4121,7 +3948,7 @@ symbol.o: hash.h
 symbol.o: have_ban_pragma.h
 symbol.o: int.h
 symbol.o: label.h
-symbol.o: longbits.h
+symbol.o: len_bits.h
 symbol.o: nametype.h
 symbol.o: opcodes.h
 symbol.o: qmath.h
@@ -4149,8 +3976,8 @@ token.o: errtbl.h
 token.o: hash.h
 token.o: have_ban_pragma.h
 token.o: int.h
+token.o: len_bits.h
 token.o: lib_calc.h
-token.o: longbits.h
 token.o: nametype.h
 token.o: qmath.h
 token.o: sha1.h
@@ -4179,7 +4006,7 @@ value.o: hash.h
 value.o: have_ban_pragma.h
 value.o: int.h
 value.o: label.h
-value.o: longbits.h
+value.o: len_bits.h
 value.o: nametype.h
 value.o: opcodes.h
 value.o: qmath.h
@@ -4205,7 +4032,7 @@ version.o: have_ban_pragma.h
 version.o: have_strlcat.h
 version.o: have_strlcpy.h
 version.o: int.h
-version.o: longbits.h
+version.o: len_bits.h
 version.o: nametype.h
 version.o: qmath.h
 version.o: sha1.h
@@ -4226,7 +4053,7 @@ zfunc.o: errsym.h
 zfunc.o: errtbl.h
 zfunc.o: have_ban_pragma.h
 zfunc.o: int.h
-zfunc.o: longbits.h
+zfunc.o: len_bits.h
 zfunc.o: status.chk_c.h
 zfunc.o: version.h
 zfunc.o: zfunc.c
@@ -4240,7 +4067,7 @@ zio.o: errsym.h
 zio.o: errtbl.h
 zio.o: have_ban_pragma.h
 zio.o: int.h
-zio.o: longbits.h
+zio.o: len_bits.h
 zio.o: qmath.h
 zio.o: status.chk_c.h
 zio.o: version.h
@@ -4254,7 +4081,7 @@ zmath.o: errsym.h
 zmath.o: errtbl.h
 zmath.o: have_ban_pragma.h
 zmath.o: int.h
-zmath.o: longbits.h
+zmath.o: len_bits.h
 zmath.o: status.chk_c.h
 zmath.o: version.h
 zmath.o: zmath.c
@@ -4268,7 +4095,7 @@ zmod.o: errsym.h
 zmod.o: errtbl.h
 zmod.o: have_ban_pragma.h
 zmod.o: int.h
-zmod.o: longbits.h
+zmod.o: len_bits.h
 zmod.o: qmath.h
 zmod.o: status.chk_c.h
 zmod.o: version.h
@@ -4283,7 +4110,7 @@ zmul.o: errsym.h
 zmul.o: errtbl.h
 zmul.o: have_ban_pragma.h
 zmul.o: int.h
-zmul.o: longbits.h
+zmul.o: len_bits.h
 zmul.o: qmath.h
 zmul.o: status.chk_c.h
 zmul.o: version.h
@@ -4302,7 +4129,7 @@ zprime.o: hash.h
 zprime.o: have_ban_pragma.h
 zprime.o: int.h
 zprime.o: jump.h
-zprime.o: longbits.h
+zprime.o: len_bits.h
 zprime.o: nametype.h
 zprime.o: prime.h
 zprime.o: qmath.h
@@ -4328,7 +4155,7 @@ zrand.o: hash.h
 zrand.o: have_ban_pragma.h
 zrand.o: have_unused.h
 zrand.o: int.h
-zrand.o: longbits.h
+zrand.o: len_bits.h
 zrand.o: nametype.h
 zrand.o: qmath.h
 zrand.o: sha1.h
@@ -4353,7 +4180,7 @@ zrandom.o: hash.h
 zrandom.o: have_ban_pragma.h
 zrandom.o: have_unused.h
 zrandom.o: int.h
-zrandom.o: longbits.h
+zrandom.o: len_bits.h
 zrandom.o: nametype.h
 zrandom.o: qmath.h
 zrandom.o: sha1.h

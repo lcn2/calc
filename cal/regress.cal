@@ -59,6 +59,7 @@ prob = 0;                               /* clear problem counter */
 errcount(0),;                           /* clear error count */
 errmax(-1),;                            /* prevent errcount from aborting */
 global ecnt;                            /* expected value of errcount() */
+global err;                             /* error counter used by some cal scripts */
 ecnt = 0;                               /* clear expected errcount() value */
 initcfg = config("all", "newstd");      /* set config to startup default */
 defcfg = config("all");                 /* capture the default config */

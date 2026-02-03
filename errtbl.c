@@ -49,6 +49,7 @@
 #include <errno.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <getopt.h>
 
 /*
  * calc local src includes
@@ -281,13 +282,13 @@ const struct errtbl error_table[] = {
     {10122, "E_SEARCH_2", "Bad second argument for search"},
     {10123, "E_SEARCH_3", "Bad third argument for search"},
     {10124, "E_SEARCH_4", "Bad fourth argument for search"},
-    {10125, "E_SEARCH_5", "Cannot find fsize or fpos for search"},
+    {10125, "E_SEARCH_5", "Cannot find off_t for search"},
     {10126, "E_SEARCH_6", "File not readable for search"},
     {10127, "E_RSEARCH_1", "Bad first argument for rsearch"},
     {10128, "E_RSEARCH_2", "Bad second argument for rsearch"},
     {10129, "E_RSEARCH_3", "Bad third argument for rsearch"},
     {10130, "E_RSEARCH_4", "Bad fourth argument for rsearch"},
-    {10131, "E_RSEARCH_5", "Cannot find fsize or fpos for rsearch"},
+    {10131, "E_RSEARCH_5", "Cannot find off_t for rsearch"},
     {10132, "E_RSEARCH_6", "File not readable for rsearch"},
     {10133, "E_MANYOPEN", "Too many open files"},
     {10134, "E_REWIND_2", "Attempt to rewind a file that is not open"},
@@ -2148,8 +2149,6 @@ print_errsym(void)
 int
 main(int argc, char *argv[])
 {
-    extern char *optarg; /* argv index of the next arg */
-    extern int optind;   /* argv index of the next arg */
     int e_flag = 0;      /* 1 ==> -e flag was used */
     int d_flag = 0;      /* 1 ==> -s flag was used */
     int i;

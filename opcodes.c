@@ -50,8 +50,6 @@
 #include "file.h"
 #include "custom.h"
 #include "lib_calc.h"
-#include "have_fpos_pos.h"
-#include "fposval.h"
 #include "have_unused.h"
 #include "attribute.h"
 #include "errtbl.h"
@@ -3623,7 +3621,6 @@ showsizes(void)
     printf("\tlong long\t%4zu\n", sizeof(long long));
     printf("\tunsigned long long%2zu\n", sizeof(unsigned long long));
     printf("\tpointer\t\t%4zu\n", sizeof(void *));
-    printf("\tfpos_t\t\t%4zu\n", sizeof(fpos_t));
     printf("\toff_t\t\t%4zu\n", sizeof(off_t));
     printf("\tHALF\t\t%4zu\n", sizeof(HALF));
     printf("\tFULL\t\t%4zu\n", sizeof(FULL));
@@ -3651,23 +3648,17 @@ showsizes(void)
 #if defined(CHAR_BIT)
     printf("\tCHAR_BIT\t%4d\n", CHAR_BIT);
 #endif
-#if defined(FPOS_POS_BITS)
-    printf("\tFPOS_POS_BITS\t%4d\n", FPOS_POS_BITS);
-#endif
-#if defined(FPOS_POS_LEN)
-    printf("\tFPOS_POS_LEN\t%4d\n", FPOS_POS_LEN);
-#endif
-#if defined(FPOS_T_BITS)
-    printf("\tFPOS_T_BITS\t%4d\n", FPOS_T_BITS);
-#endif
-#if defined(FPOS_T_LEN)
-    printf("\tFPOS_T_LEN\t%4d\n", FPOS_T_LEN);
-#endif
 #if defined(OFF_T_BITS)
     printf("\tOFF_T_BITS\t%4d\n", OFF_T_BITS);
 #endif
 #if defined(OFF_T_LEN)
     printf("\tOFF_T_LEN\t%4d\n", OFF_T_LEN);
+#endif
+#if defined(OFF_T_MIN)
+    printf("\tOFF_T_MIN\t%4lld\n", OFF_T_MIN);
+#endif
+#if defined(OFF_T_MAX)
+    printf("\tOFF_T_MAX\t%4lld\n", OFF_T_MAX);
 #endif
 #if defined(DEV_BITS)
     printf("\tDEV_BITS\t%4d\n", DEV_BITS);
@@ -3675,11 +3666,11 @@ showsizes(void)
 #if defined(DEV_LEN)
     printf("\tDEV_LEN\t\t%4d\n", DEV_LEN);
 #endif
-#if defined(INODE_BITS)
-    printf("\tINODE_BITS\t%4d\n", INODE_BITS);
+#if defined(INO_BITS)
+    printf("\tINODE_BITS\t%4d\n", INO_BITS);
 #endif
-#if defined(INODE_LEN)
-    printf("\tINODE_LEN\t%4d\n", INODE_LEN);
+#if defined(INO_LEN)
+    printf("\tINODE_LEN\t%4d\n", INO_LEN);
 #endif
 #if defined(BASEB_LOG2)
     printf("\tBASEB_LOG2\t%4d\n", BASEB_LOG2);

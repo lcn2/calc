@@ -1443,8 +1443,16 @@ qcmp(NUMBER *q1, NUMBER *q2)
     if (q1 == q2) {
         return false;
     }
-    if ((q1->num.sign != q2->num.sign) || (q1->num.len != q2->num.len) || (q1->den.len != q2->den.len) ||
-        (*q1->num.v != *q2->num.v) || (*q1->den.v != *q2->den.v)) {
+    if (q1->num.sign != q2->num.sign) {
+        return true;
+    }
+    if (q1->num.len != q2->num.len) {
+        return true;
+    }
+    if (q1->num.v[0] != q2->num.v[0]) {
+        return true;
+    }
+    if (q1->den.v[0] != q2->den.v[0]) {
         return true;
     }
     if (zcmp(q1->num, q2->num)) {
@@ -1453,7 +1461,10 @@ qcmp(NUMBER *q1, NUMBER *q2)
     if (qisint(q1)) {
         return false;
     }
-    return zcmp(q1->den, q2->den);
+    if (zcmp(q1->den, q2->den)) {
+        return true;
+    }
+    return false;
 }
 
 /*

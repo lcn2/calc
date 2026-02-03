@@ -7143,24 +7143,30 @@ f_search(int count, VALUE **vals)
         i = fsearch(v1->v_file, v2->v_str->s_str, start->num, tmp, &indx);
         zfree(tmp);
         if (i == 2) {
+            /* report empty string found :-) */
             result.v_type = V_NUM;
             result.v_num = start;
             qfree(end);
             return result;
         }
-        qfree(start);
-        qfree(end);
         if (i == EOF) {
+            qfree(start);
+            qfree(end);
             return error_value(errno);
         }
         if (i < 0) {
+            qfree(start);
+            qfree(end);
             return error_value(E_SEARCH_6);
         }
         if (i == 0) {
             result.v_type = V_NUM;
             result.v_num = qalloc();
             result.v_num->num = indx;
+            qlink(result.v_num);
         }
+        qfree(start);
+        qfree(end);
         return result;
     }
     if (start == NULL) {
@@ -7334,19 +7340,24 @@ f_rsearch(int count, VALUE **vals)
             return result;
         }
         i = frsearch(v1->v_file, v2->v_str->s_str, end->num, start->num, &indx);
-        qfree(start);
-        qfree(end);
         if (i == EOF) {
+            qfree(start);
+            qfree(end);
             return error_value(errno);
         }
         if (i < 0) {
+            qfree(start);
+            qfree(end);
             return error_value(E_RSEARCH_6);
         }
         if (i == 0) {
             result.v_type = V_NUM;
             result.v_num = qalloc();
             result.v_num->num = indx;
+            qlink(result.v_num);
         }
+        qfree(start);
+        qfree(end);
         return result;
     }
     if (count < 4) {

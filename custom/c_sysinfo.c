@@ -60,8 +60,6 @@ int c_sysinfo_allowed = 0; /* CUSTOM undefined */
 #  include "../conf.h"
 #  include "../endian_calc.h"
 #  include "../file.h"
-#  include "../have_fpos_pos.h"
-#  include "../fposval.h"
 #  include "../hist.h"
 #  include "../prime.h"
 #  include "../attribute.h"
@@ -100,28 +98,16 @@ static struct infoname sys_info[] = {
     {"DEFAULTCALCPATH", "default :-separated search path", DEFAULTCALCPATH, (FULL)0},
     {"DEFAULTCALCRC", "default :-separated startup file list", DEFAULTCALCRC, (FULL)0},
     {"DEFAULTSHELL", "default shell to use", DEFAULTSHELL, (FULL)0},
-#if defined(DEV_BITS)
-    {"DEV_BITS", "length in bits of the st_dev stat element, or device number", NULL, (FULL)DEV_BITS},
+#if defined(DEV_T_BITS)
+    {"DEV_T_BITS", "length in bits of the st_dev stat element, or device number", NULL, (FULL)DEV_T_BITS},
 #endif
-#if defined(DEV_LEN)
-    {"DEV_LEN", "length in bytes of the st_dev stat element, or device number", NULL, (FULL)DEV_LEN},
+#if defined(DEV_T_LEN)
+    {"DEV_T_LEN", "length in bytes of the st_dev stat element, or device number", NULL, (FULL)DEV_T_LEN},
 #endif
     {"DISPLAY_DEFAULT", "default digits for float display", NULL, (FULL)DISPLAY_DEFAULT},
     {"EPSILON_DEFAULT", "allowed error for float calculations", EPSILON_DEFAULT, (FULL)0},
     {"EPSILONPREC_DEFAULT", "2^-EPSILON_DEFAULT <= EPSILON_DEFAULT", NULL, (FULL)EPSILONPREC_DEFAULT},
     {"ERRMAX", "default errmax value", NULL, (FULL)ERRMAX},
-#if defined(FPOS_POS_BITS)
-    {"FPOS_POS_BITS", "length in bits of a file position value", NULL, (FULL)FPOS_POS_BITS},
-#endif
-#if defined(FPOS_POS_LEN)
-    {"FPOS_POS_LEN", "length in bytes of a file position value", NULL, (FULL)FPOS_POS_LEN},
-#endif
-#if defined(FPOS_T_BITS)
-    {"FPOS_T_BITS", "length in bits of the type fpos_t, or file position bit length", NULL, (FULL)FPOS_T_BITS},
-#endif
-#if defined(FPOS_T_LEN)
-    {"FPOS_T_LEN", "length in bytes of the type fpos_t, or file position byte length", NULL, (FULL)FPOS_T_LEN},
-#endif
     {"FULL_BITS", "bits in a FULL", NULL, (FULL)FULL_BITS},
     {"FULL_LEN", "length in bytes of a FULL", NULL, (FULL)FULL_LEN},
     {"HALF_BITS", "bits in a HALF, or alias for BASEB", NULL, (FULL)HALF_BITS},
@@ -131,11 +117,11 @@ static struct infoname sys_info[] = {
     {"HIST_SIZE", "Default history size", NULL, (FULL)HIST_SIZE},
     {"INIT_J", "initial 1st walking subtractive 100 shuffle table index", NULL, (FULL)INIT_J},
     {"INIT_K", "initial 2nd walking subtractive 100 shuffle table index", NULL, (FULL)INIT_K},
-#if defined(INODE_BITS)
-    {"INODE_BITS", "length in bits of the type st_ino, or inode number bit length", NULL, (FULL)INODE_BITS},
+#if defined(INO_T_BITS)
+    {"INO_T_BITS", "length in bits of the type st_ino, or inode number bit length", NULL, (FULL)INO_T_BITS},
 #endif
-#if defined(INODE_LEN)
-    {"INODE_LEN", "length in bits of the type st_ino, or inode number byte length", NULL, (FULL)INODE_LEN},
+#if defined(INO_T_LEN)
+    {"INO_T_LEN", "length in bits of the type st_ino, or inode number byte length", NULL, (FULL)INO_T_LEN},
 #endif
 #if defined(INTPTR_LEN)
     {"INTPTR_LEN", "length in bytes of a memory pointer", NULL, (FULL)INTPTR_LEN},
@@ -157,7 +143,6 @@ static struct infoname sys_info[] = {
     {"MAXHALF", "largest SHALF value", NULL, (FULL)MAXHALF},
     {"MAXLABELS", "max number of user labels in function", NULL, (FULL)MAXLABELS},
     {"MAXLEN_LOG2", "log base 2 of MAXLEN+1", NULL, (FULL)MAXLEN_LOG2},
-    {"MAXLEN", "longest storage size allowed", NULL, (FULL)MAXLEN},
     {"MAXLEN", "maximum length of internal integer values in in units of HALF", NULL, (FULL)MAXLEN},
     {"MAXLONG", "largest long val", NULL, (FULL)MAXLONG},
     {"MAX_MAP_PRIME", "largest prime in pr_map", NULL, (FULL)MAX_MAP_PRIME},
@@ -176,10 +161,10 @@ static struct infoname sys_info[] = {
     {"NXT_MAP_PRIME", "smallest odd prime not in pr_map", NULL, (FULL)NXT_MAP_PRIME},
     {"NXT_PFACT_VAL", "next prime for higher pfact values", NULL, (FULL)NXT_PFACT_VAL},
 #if defined(OFF_T_BITS)
-    {"OFF_T_BITS", "length in bits of the st_size stat element, or file offset bit length", NULL, (FULL)OFF_T_BITS},
+    {"OFF_T_BITS", "length in bits of a file offset, or off_t", NULL, (FULL)OFF_T_BITS},
 #endif
 #if defined(OFF_T_LEN)
-    {"OFF_T_LEN", "length in bytes of the st_size stat element, or file offset byte length", NULL, (FULL)OFF_T_LEN},
+    {"OFF_T_LEN", "length in bytes of a file offset, or off_t", NULL, (FULL)OFF_T_LEN},
 #endif
     {"PIX_32B", "max pix() value", NULL, (FULL)PIX_32B},
     {"POW_ALG2", "default size for using REDC for powers", NULL, (FULL)POW_ALG2},

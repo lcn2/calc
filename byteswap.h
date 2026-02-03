@@ -96,11 +96,15 @@
 #    define SWAP_B16_IN_LONG(dest, src) SWAP_B16_IN_B64(dest, src)
 #    define SWAP_B8_IN_LONG(dest, src) SWAP_B8_IN_B64(dest, src)
 
-#  else
+#  elif LONG_BITS == 32
 
 #    define SWAP_B32_IN_LONG(dest, src) SWAP_B32_IN_B32(dest, src)
 #    define SWAP_B16_IN_LONG(dest, src) SWAP_B16_IN_B32(dest, src)
 #    define SWAP_B8_IN_LONG(dest, src) SWAP_B8_IN_B32(dest, src)
+
+#  else
+
+#     error "LONG_BITS is not 64 nor 32, do not yet know how to form swap macros"
 
 #  endif
 

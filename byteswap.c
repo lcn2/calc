@@ -605,7 +605,7 @@ swap_HALF_in_ZVALUE(ZVALUE *dest, ZVALUE *src, bool all)
      */
     if (all) {
         SWAP_HALF_IN_LEN(&dest->len, &src->len);
-        SWAP_HALF_IN_bool(&dest->sign, &src->sign);
+        SWAP_HALF_IN_BOOL(&dest->sign, &src->sign);
     } else {
         dest->len = src->len;
         dest->sign = src->sign;

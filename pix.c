@@ -27,6 +27,7 @@
 /*
  * important <system> header includes
  */
+#include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 

@@ -35,13 +35,13 @@
 #  if defined(CALC_SRC) /* if we are building from the calc source tree */
 #    include "version.h"
 #    include "int.h"
-#    include "longbits.h"
+#    include "len_bits.h"
 #    include "endian_calc.h"
 #    include "byteswap.h"
 #  else
 #    include <calc/version.h>
 #    include <calc/int.h>
-#    include <calc/longbits.h>
+#    include <calc/len_bits.h>
 #    include <calc/endian_calc.h>
 #    include <calc/byteswap.h>
 #  endif
@@ -83,7 +83,7 @@ typedef int64_t SFULL;  /* signed FULL */
 #  define SWAP_HALF_IN_FULL(dest, src) SWAP_B32_IN_B64(dest, src)
 #  define SWAP_HALF_IN_HASH(dest, src) SWAP_B16_IN_HASH(dest, src)
 #  define SWAP_HALF_IN_FLAG(dest, src) SWAP_B16_IN_FLAG(dest, src)
-#  define SWAP_HALF_IN_bool(dest, src) SWAP_B16_IN_bool(dest, src)
+#  define SWAP_HALF_IN_BOOL(dest, src) SWAP_B16_IN_bool(dest, src)
 #  define SWAP_HALF_IN_LEN(dest, src) SWAP_B16_IN_LEN(dest, src)
 #  define SWAP_B32_IN_FULL(dest, src) SWAP_B32_IN_B64(dest, src)
 #  define SWAP_B16_IN_FULL(dest, src) SWAP_B16_IN_B64(dest, src)
@@ -111,6 +111,9 @@ typedef int64_t SFULL;  /* signed FULL */
  */
 #  define ROUNDUP(value, mult) ((((value) + (mult) - 1) / (mult)) * (mult))
 
+/*
+ * minimum and maximum HALF and FULL values
+ */
 #  define TOPHALF ((FULL)1 << (BASEB - 1)) /* highest bit in a HALF */
 #  define MAXHALF (TOPHALF - (FULL)1)      /* largest SHALF value */
 
@@ -119,6 +122,9 @@ typedef int64_t SFULL;  /* signed FULL */
 #  define MINSFULL ((SFULL)(TOPFULL))          /* most negative SFULL value */
 #  define MAXUFULL (MAXFULL | TOPFULL)         /* largest FULL value */
 
+/*
+ * minimum and maximum long values
+ */
 #  define TOPLONG ((unsigned long)1 << (LONG_BITS - 1)) /* top long bit */
 #  define MAXLONG ((long)(TOPLONG - (unsigned long)1))  /* largest long val */
 #  define MAXULONG (MAXLONG | TOPLONG)                  /* largest unsigned long val */
@@ -141,7 +147,7 @@ typedef int64_t SFULL;  /* signed FULL */
      *
      *   %lx  is OK
      *   %llx causes warnings
-     *     format ‘%llx’ expects argument of type ‘long long unsigned int’, but ... has type ‘long unsigned int’
+     *     format '%llx' expects argument of type 'long long unsigned int', but ... has type 'long unsigned int'
      */
 #    if BASEB == 32
       typedef FULL PRINT; /* cast for zio.c printing in zprintx() and zprinto() */
@@ -166,7 +172,7 @@ typedef int64_t SFULL;  /* signed FULL */
      *   Variables cast as (PRINT) are effectively unsigned int
      *
      *   %lx causes warnings
-     *     format ‘%lx’ expects argument of type ‘long unsigned int’, but ... has type ‘unsigned int’
+     *     format '%lx' expects argument of type 'long unsigned int', but ... has type 'unsigned int'
      *   %llx  is OK
      */
 #    if BASEB == 32
@@ -370,24 +376,16 @@ typedef union {
     } sis;
 } SIUNION;
 
-#  if !defined(LITTLE_ENDIAN)
-#    define LITTLE_ENDIAN 1234 /* Least Significant Byte first */
-#  endif
-#  if !defined(BIG_ENDIAN)
-#    define BIG_ENDIAN 4321 /* Most Significant Byte first */
-#  endif
-/* PDP_ENDIAN - LSB in word, MSW in long is not supported */
-
-#  if CALC_BYTE_ORDER == LITTLE_ENDIAN
+#  if CALC_BYTE_ORDER == CALC_LITTLE_ENDIAN
 #    define silow sis.Svalue1  /* low order half of full value */
 #    define sihigh sis.Svalue2 /* high order half of full value */
+#  elif CALC_BYTE_ORDER == CALC_BIG_ENDIAN
+#    define silow sis.Svalue2  /* low order half of full value */
+#    define sihigh sis.Svalue1 /* high order half of full value */
+#  elif CALC_BYTE_ORDER == CALC_PDP_ENDIAN
+#    error "calc does NOT (yet?) support pdp Endian"
 #  else
-#    if CALC_BYTE_ORDER == BIG_ENDIAN
-#      define silow sis.Svalue2  /* low order half of full value */
-#      define sihigh sis.Svalue1 /* high order half of full value */
-#    else
-/\oo /\ CALC_BYTE_ORDER must be BIG_ENDIAN or LITTLE_ENDIAN /\oo /\ !!!
-#    endif
+#    error "CALC_BYTE_ORDER was defined but was not CALC_LITTLE_ENDIAN, nor CALC_BIG_ENDIAN, nor CALC_PDP_ENDIAN"
 #  endif
 
 #  if MAJOR_VER >= 3
@@ -402,7 +400,7 @@ typedef int32_t SIGN; /* sign of a multi-precision integer */
 typedef struct {
     HALF *v;   /* pointer to array of values */
     LEN len;   /* number of values in array */
-    SIGN sign; /* sign, nonzero is negative */
+    SIGN sign; /* sign, zero/true ==> positive, nonzero/false ==> negative */
 } ZVALUE;
 
 /*
