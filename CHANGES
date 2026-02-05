@@ -5,6 +5,9 @@ The following are the changes from calc version 3.0.0.3 to date:
 
     Added `chk_tree -m` for use with commands such as `make full_debug`, and `make debug`.
 
+    Fixed places where the code still used `BIG_ENDIAN` when it needs `CALC_BIG_ENDIAN`.
+    Fixed places where the code still used `LITTLE_ENDIAN` when it needs `CALC_LITTLE_ENDIAN`.
+
 
 The following are the changes from calc version 3.0.0.2 to 3.0.0.3:
 

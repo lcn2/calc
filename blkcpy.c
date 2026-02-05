@@ -1021,7 +1021,7 @@ copynum2blk(NUMBER *snum, LEN ssi, LEN num, BLOCK *dblk, LEN dsi, bool noreloc)
     size_t newlen;
     size_t newsize;
     uint8_t *newdata;
-#if CALC_BYTE_ORDER == BIG_ENDIAN
+#if CALC_BYTE_ORDER == CALC_BIG_ENDIAN
     ZVALUE *swnum; /* byte swapped numerator */
 #endif
 
@@ -1057,7 +1057,7 @@ copynum2blk(NUMBER *snum, LEN ssi, LEN num, BLOCK *dblk, LEN dsi, bool noreloc)
         dblk->data = newdata;
         dblk->maxsize = newsize;
     }
-#if CALC_BYTE_ORDER == LITTLE_ENDIAN
+#if CALC_BYTE_ORDER == CALC_LITTLE_ENDIAN
     memmove(dblk->data + dsi, (char *)(snum->num.v + ssi), num * sizeof(HALF));
 #else
     swnum = swap_b8_in_ZVALUE(NULL, &(snum->num), false);
@@ -1078,7 +1078,7 @@ copyblk2num(BLOCK *sblk, LEN ssi, LEN num, NUMBER *dnum, LEN dsi, NUMBER **res)
 {
     size_t newlen;
     NUMBER *ret; /* cloned and modified numerator */
-#if CALC_BYTE_ORDER == BIG_ENDIAN
+#if CALC_BYTE_ORDER == CALC_BIG_ENDIAN
     HALF *swapped; /* byte swapped input data */
     LEN halflen;   /* length of the input rounded up to HALFs */
     HALF *h;       /* copy byteswap pointer */
@@ -1120,7 +1120,7 @@ copyblk2num(BLOCK *sblk, LEN ssi, LEN num, NUMBER *dnum, LEN dsi, NUMBER **res)
     }
 
     /* move the data */
-#if CALC_BYTE_ORDER == LITTLE_ENDIAN
+#if CALC_BYTE_ORDER == CALC_LITTLE_ENDIAN
     memmove((char *)(ret->num.v + dsi), sblk->data + ssi, num);
 #else
     /* form a HALF aligned copy of the input */

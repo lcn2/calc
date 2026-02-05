@@ -270,7 +270,7 @@ sha1Update(HASH *state, uint8_t *buffer, uint32_t count)
     SHA1_INFO *dig = &state->h_union.h_sha1; /* digest state */
     uint32_t datalen = dig->datalen;
     uint32_t cpylen;
-#if CALC_BYTE_ORDER == LITTLE_ENDIAN
+#if CALC_BYTE_ORDER == CALC_LITTLE_ENDIAN
     unsigned int i;
 #endif
 
@@ -296,7 +296,7 @@ sha1Update(HASH *state, uint8_t *buffer, uint32_t count)
      * Process data in SHA1_CHUNKSIZE chunks
      */
     for (;;) {
-#if CALC_BYTE_ORDER == LITTLE_ENDIAN
+#if CALC_BYTE_ORDER == CALC_LITTLE_ENDIAN
         if (state->bytes) {
             for (i = 0; i < SHA1_CHUNKWORDS; ++i) {
                 SWAP_B8_IN_B32(dig->data + i, dig->data + i);
@@ -348,7 +348,7 @@ sha1Final(HASH *state)
     uint32_t lowBitcount;
     uint32_t highBitcount;
     uint8_t *data = (uint8_t *)dig->data;
-#if CALC_BYTE_ORDER == LITTLE_ENDIAN
+#if CALC_BYTE_ORDER == CALC_LITTLE_ENDIAN
     unsigned int i;
 #endif
 
@@ -366,7 +366,7 @@ sha1Final(HASH *state)
 
     memset(data + count, 0, SHA1_CHUNKSIZE - count);
 
-#if CALC_BYTE_ORDER == LITTLE_ENDIAN
+#if CALC_BYTE_ORDER == CALC_LITTLE_ENDIAN
     if (state->bytes) {
         data[count] = 0x80;
         for (i = 0; i < SHA1_CHUNKWORDS; ++i) {
@@ -417,7 +417,7 @@ static void
 sha1_chkpt(HASH *state)
 {
     SHA1_INFO *dig = &state->h_union.h_sha1; /* digest state */
-#if CALC_BYTE_ORDER == LITTLE_ENDIAN
+#if CALC_BYTE_ORDER == CALC_LITTLE_ENDIAN
     unsigned int i;
 #endif
 
@@ -428,7 +428,7 @@ sha1_chkpt(HASH *state)
 
         /* pad to the end of the chunk */
         memset((uint8_t *)dig->data + dig->datalen, 0, SHA1_CHUNKSIZE - dig->datalen);
-#if CALC_BYTE_ORDER == LITTLE_ENDIAN
+#if CALC_BYTE_ORDER == CALC_LITTLE_ENDIAN
         if (state->bytes) {
             for (i = 0; i < SHA1_CHUNKWORDS; ++i) {
                 SWAP_B8_IN_B32(dig->data + i, dig->data + i);
@@ -585,7 +585,7 @@ sha1_final_state(HASH *state)
     /*
      * load ZVALUE
      */
-#if BASEB == 16 && CALC_BYTE_ORDER == LITTLE_ENDIAN
+#if BASEB == 16 && CALC_BYTE_ORDER == CALC_LITTLE_ENDIAN
     for (i = 0; i < ret.len; i += 2) {
         ret.v[ret.len - i - 1] = ((HALF *)dig->digest)[i + 1];
         ret.v[ret.len - i - 2] = ((HALF *)dig->digest)[i];

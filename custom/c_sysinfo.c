@@ -84,11 +84,12 @@ static struct infoname sys_info[] = {
     {"BASEB", "bits in the calculation base", NULL, (FULL)BASEB},
     {"BASEB_LOG2", "log base 2 of bits in the calculation base", NULL, (FULL)BASEB_LOG2},
     {"BASEDIG", "number of digits in base", NULL, (FULL)BASEDIG},
-    {"BIG_ENDIAN", "Most Significant Byte first symbol", NULL, (FULL)BIG_ENDIAN},
     {"BLK_CHUNKSIZE", "default allocation chunk size for blocks", NULL, (FULL)BLK_CHUNKSIZE},
     {"BLK_DEF_MAXPRINT", "default block octets to print", NULL, (FULL)BLK_DEF_MAXPRINT},
     {"BLUM_PREGEN", "non-default predefined Blum generators", NULL, (FULL)BLUM_PREGEN},
-    {"CALC_BYTE_ORDER", "Byte order (LITTLE_ENDIAN or BIG_ENDIAN)", NULL, (FULL)CALC_BYTE_ORDER},
+    {"CALC_LITTLE_ENDIAN", "Least Significant Byte first symbol", NULL, (FULL)CALC_LITTLE_ENDIAN},
+    {"CALC_BIG_ENDIAN", "Most Significant Byte first symbol", NULL, (FULL)CALC_BIG_ENDIAN},
+    {"CALC_BYTE_ORDER", "Byte order (CALC_LITTLE_ENDIAN or CALC_BIG_ENDIAN)", NULL, (FULL)CALC_BYTE_ORDER},
     {"CALCEXT", "extension for files read in", CALCEXT, (FULL)0},
     {"CHAR_BIT", "length in bits of a character, or byte", NULL, (FULL)CHAR_BIT},
     {"CUSTOMHELPDIR", "location of the custom help directory", CUSTOMHELPDIR, (FULL)0},
@@ -129,7 +130,6 @@ static struct infoname sys_info[] = {
 #if defined(INTPTR_WIDTH)
     {"INTPTR_WIDTH", "bits in a intptr_t", NULL, (FULL)INTPTR_WIDTH},
 #endif
-    {"LITTLE_ENDIAN", "Least Significant Byte first symbol", NULL, (FULL)LITTLE_ENDIAN},
     {"LONG_BITS", "bit length of a long", NULL, (FULL)LONG_BITS},
     {"MAP_POPCNT", "number of odd primes in pr_map", NULL, (FULL)MAP_POPCNT},
     {"MAX_CALCRC", "maximum allowed length of $CALCRC", NULL, (FULL)MAX_CALCRC},
