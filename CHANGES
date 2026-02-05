@@ -1,5 +1,10 @@
 The following are the changes from calc version 3.0.0.3 to date:
 
+    Fixed and improved `chk_tree`.
+    Updated `chk_tree` VERSION to "1.1 2026-02-04".
+
+    Added `chk_tree -m` for use with commands such as `make full_debug`, and `make debug`.
+
 
 The following are the changes from calc version 3.0.0.2 to 3.0.0.3:
 

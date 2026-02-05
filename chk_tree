@@ -2,7 +2,7 @@
 #
 # chk_tree - verify that the source tree and git and Makefiles are in sync
 #
-# This tools is used by "make prep".
+# This tools is used by "make prep", "make full_debug", and "make debug".
 #
 # Copyright (C) 2023 Landon Curt Noll
 #
@@ -26,9 +26,141 @@
 # chongo <was here> /\oo/\      http://www.isthe.com/chongo/
 # Share and enjoy!  :-)         http://www.isthe.com/chongo/tech/comp/calc/
 
+
 # setup
 #
+export VERSION="1.1 2026-02-04"
+NAME=$(basename "$0")
+export NAME
+#
+export V_FLAG=0
+export M_FLAG=
+#
+GIT_TOOL=$(type -P git)
+export GIT_TOOL
+if [[ -z $GIT_TOOL ]]; then
+    echo "$0: FATAL: git tool is not installed or not in \$PATH" 1>&2
+    exit 5
+fi
+"$GIT_TOOL" rev-parse --is-inside-work-tree >/dev/null 2>&1
+status="$?"
+if [[ $status -eq 0 ]]; then
+    TOPDIR=$("$GIT_TOOL" rev-parse --show-toplevel)
+fi
+export TOPDIR
+#
 EXIT_CODE=0
+
+
+# usage
+#
+export USAGE="usage: $0 [-h] [-v level] [-V] [-d topdir] [-m]
+
+    -h          print help message and exit
+    -v level    set verbosity level (def level: $V_FLAG)
+    -V          print version string and exit
+
+    -m		used by make full_debug or make debug (def: run by hand)
+
+    -d topdir	set topdir (def: $TOPDIR)
+
+Exit codes:
+     0         all OK
+     2         -h and help string printed or -V and version string printed
+     3         command line error
+     5	       some internal tool is not found or not an executable file
+     6         problems found with or in the topdir
+ >= 10         internal error
+
+$NAME version: $VERSION"
+
+
+# parse command line
+#
+while getopts :hv:Vd:m flag; do
+  case "$flag" in
+    h) echo "$USAGE"
+	exit 2
+	;;
+    v) V_FLAG="$OPTARG"
+	;;
+    V) echo "$VERSION"
+	exit 2
+	;;
+    d) TOPDIR="$OPTARG"
+        ;;
+    m) M_FLAG="true"
+	;;
+    \?) echo "$0: ERROR: invalid option: -$OPTARG" 1>&2
+	echo 1>&2
+	echo "$USAGE" 1>&2
+	exit 3
+	;;
+    :) echo "$0: ERROR: option -$OPTARG requires an argument" 1>&2
+	echo 1>&2
+	echo "$USAGE" 1>&2
+	exit 3
+	;;
+    *) echo "$0: ERROR: unexpected value from getopts: $flag" 1>&2
+	echo 1>&2
+	echo "$USAGE" 1>&2
+	exit 3
+	;;
+  esac
+done
+if [[ $V_FLAG -ge 1 ]]; then
+    echo "$0: debug[1]: debug level: $V_FLAG" 1>&2
+fi
+#
+# remove the options
+#
+shift $(( OPTIND - 1 ));
+#
+# verify arg count
+#
+if [[ $# -ne 0 ]]; then
+    echo "$0: ERROR: expected 0 args, found: $#" 1>&2
+    echo "$USAGE" 1>&2
+    exit 3
+fi
+
+
+# cd to topdir
+#
+if [[ ! -e $TOPDIR ]]; then
+    echo "$0: ERROR: cannot cd to non-existent path: $TOPDIR" 1>&2
+    exit 6
+fi
+if [[ ! -d $TOPDIR ]]; then
+    echo "$0: ERROR: cannot cd to a non-directory: $TOPDIR" 1>&2
+    exit 6
+fi
+export CD_FAILED
+if [[ $V_FLAG -ge 5 ]]; then
+    echo "$0: debug[5]: about to: cd $TOPDIR" 1>&2
+fi
+cd "$TOPDIR" || CD_FAILED="true"
+if [[ -n $CD_FAILED ]]; then
+    echo "$0: ERROR: cd $TOPDIR failed" 1>&2
+    exit 6
+fi
+if [[ $V_FLAG -ge 3 ]]; then
+    echo "$0: debug[3]: now in directory: $(/bin/pwd)" 1>&2
+fi
+
+
+# print running info if verbose
+#
+# If -v 3 or higher, print exported variables in order that they were exported.
+#
+if [[ $V_FLAG -ge 3 ]]; then
+    echo "$0: debug[3]: VERSION=$VERSION" 1>&2
+    echo "$0: debug[3]: NAME=$NAME" 1>&2
+    echo "$0: debug[3]: V_FLAG=$V_FLAG" 1>&2
+    echo "$0: debug[3]: GIT_TOOL=$GIT_TOOL" 1>&2
+    echo "$0: debug[3]: TOPDIR=$TOPDIR" 1>&2
+fi
+
 
 # firewall - verify that the "make distdir" directories exist
 #
@@ -128,11 +260,11 @@ if [[ -d .git ]]; then
     # We ignore .git and GitHub related files because they are not part of the calc source tarball.
     #
     declare -a GITLS
-    mapfile -t GITLS < <(git ls |
+    mapfile -t GITLS < <(git ls-tree -r --name-only HEAD |
         grep -v -E '^\.github/|^\.gitignore$|^CODE_OF_CONDUCT\.md$|^CONTRIBUTING\.md$|^SECURITY\.md$' |
         sort -u)
     if [[ ${#GITLS[@]} -le 0 ]]; then
-        echo "$0: ERROR: git ls is empty" 1>&2
+        echo "$0: ERROR: ls-tree -r --name-only HEAD is empty" 1>&2
         EXIT_CODE=16
         echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
     fi
@@ -165,10 +297,10 @@ if [[ -d .git ]]; then
 
     # verify that there are no staged uncommitted changes under git
     #
-    GIT_STATUS=$(git status --untracked-files=no --porcelain 2>&1)
-    if [[ -n $GIT_STATUS ]] || ! git diff --cached --quiet --exit-code; then
+    GIT_STATUS=$(git --no-pager status --untracked-files=no --porcelain 2>&1)
+    if [[ -n $GIT_STATUS ]] || ! git --no-pager diff --cached --quiet --exit-code; then
         echo "$0: ERROR: there are staged uncommitted changes" 1>&2
-        git status --short
+        git --no-pager status --short
         EXIT_CODE=18
         echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
     fi
@@ -177,41 +309,58 @@ if [[ -d .git ]]; then
     #
     if ! git diff --quiet --exit-code; then
         echo "$0: ERROR: there are unstaged changes" 1>&2
-        git status --untracked-files=no --porcelain --short
+        git --no-pager status --untracked-files=no --porcelain --short
         EXIT_CODE=19
         echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
     fi
 
-    # verify that master branch is not ahead of 'origin/master'
+    # show branch information
     #
-    GIT_MASTER=$(git rev-list --count master)
-    GIT_ORIGIN_MASTER=$(git rev-list --count origin/master)
-    if [[ $GIT_MASTER -gt $GIT_ORIGIN_MASTER ]]; then
-        echo "$0: ERROR: master branch is behind of origin/master" 1>&2
-        git status master
+    GIT_BRANCH=$(git branch --show-current 2<&1)
+    if [[ -z $GIT_BRANCH ]]; then
+	echo "$0: ERROR: cannot determine current branch" 1>&2
+	git --no-pager branch --list
         EXIT_CODE=20
         echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
-    elif [[ $GIT_MASTER -lt $GIT_ORIGIN_MASTER ]]; then
-        echo "$0: ERROR: master branch is ahead of origin/master" 1>&2
-        git status master
+    fi
+    GIT_BRANCH=${GIT_BRANCH:="master"}
+    if [[ -z $M_FLAG && $GIT_BRANCH != master ]]; then
+	echo "$0: ERROR: not on master branch and -m was not used" 1>&2
         EXIT_CODE=21
         echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
     fi
 
-    # verify that branch is not ahead of 'origin/HEAD'
+    # output branch info if -m
     #
-    GIT_HEAD=$(git rev-list --count HEAD)
-    GIT_ORIGIN_HEAD=$(git rev-list --count origin/HEAD)
-    if [[ $GIT_HEAD -gt $GIT_ORIGIN_HEAD ]]; then
-        echo "$0: ERROR: HEAD is behind of origin/HEAD" 1>&2
-        git status HEAD
-        EXIT_CODE=22
-        echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
-    elif [[ $GIT_HEAD -lt $GIT_ORIGIN_HEAD ]]; then
-        echo "$0: ERROR: HEAD is ahead of origin/HEAD" 1>&2
-        git status HEAD
+    if [[ -n $M_FLAG ]]; then
+	echo "$0: on branch: $GIT_BRANCH" 1>&2
+	echo "$0: git branch starts below" 1>&2
+	git --no-pager branch
+	echo "$0: git branch ends above" 1>&2
+    fi
+
+    # verify that current branch is not ahead of 'origin/branch'
+    #
+    GIT_MASTER=$(git rev-list --count "$GIT_BRANCH")
+    GIT_ORIGIN_MASTER=$(git rev-list --count origin/"$GIT_BRANCH")
+    if [[ $GIT_MASTER -gt $GIT_ORIGIN_MASTER ]]; then
+        echo "$0: ERROR: master branch is behind of origin/$GIT_BRANCH" 1>&2
+        git --no-pager status master
         EXIT_CODE=23
         echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
+    elif [[ $GIT_MASTER -lt $GIT_ORIGIN_MASTER ]]; then
+        echo "$0: ERROR: master branch is ahead of origin/$GIT_BRANCH" 1>&2
+        git --no-pager status master
+        EXIT_CODE=23
+        echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
+    fi
+
+    # output status if -m
+    #
+    if [[ -n $M_FLAG ]]; then
+	echo "$0: git status starts below" 1>&2
+	git --no-pager status
+	echo "$0: git status ends above" 1>&2
     fi
 fi
 

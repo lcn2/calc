@@ -1844,7 +1844,7 @@ full_debug: calcinfo env
 	-@${MAKE} -f Makefile Q= H=@ S= E= V=@ clobber
 	@echo '=-=-=-= Back to the main Makefile for $@ rule =-=-=-='
 	@echo '=-=-=-= start of chk_tree pass #0 =-=-=-=-=-='
-	-@./chk_tree
+	-@./chk_tree -m
 	@echo '=-=-=-=-=-= end of chk_tree pass #0 =-=-=-=-=-='
 	@echo '=-=-= Invoking ${MAKE} -f Makefile Q= V=@ all =-=-=-='
 	@echo '=-=-= this may take a bit of time =-=-='
@@ -1861,12 +1861,14 @@ full_debug: calcinfo env
 	-@${MAKE} -f Makefile Q= H=@ S= E= V=@ ver_calc${EXT}
 	-@./ver_calc${EXT}
 	@echo '=-=-=-= Back to the main Makefile for $@ rule =-=-=-='
-	-@${ECHON} '=-=-=-= Print #define values if custom functions '
-	@echo 'are allowed =-=-=-='
+	-@${ECHON} '=-=-=-= Print show sizes =-=-=-='
+	-@${CALC_ENV} ./calc${EXT} -q 'show sizes'
+	@echo '=-=-=-= Back to the main Makefile for $@ rule =-=-=-='
+	-@${ECHON} '=-=-=-= Print #define values if custom functions are allowed =-=-=-='
 	-@${CALC_ENV} ./calc${EXT} -e -q -C 'print custom("sysinfo", 2);'
 	@echo '=-=-=-= Back to the main Makefile for $@ rule =-=-=-='
 	@echo '=-=-=-= start of chk_tree pass #1 =-=-=-=-=-='
-	-@./chk_tree
+	-@./chk_tree -m
 	@echo '=-=-=-=-=-= end of chk_tree pass #1 =-=-=-=-=-='
 	@echo '=-=-= Invoking ${MAKE} -f Makefile Q= V=@ check =-=-=-='
 	@echo '=-=-= this may take a while =-=-='
