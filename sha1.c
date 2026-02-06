@@ -585,15 +585,32 @@ sha1_final_state(HASH *state)
     /*
      * load ZVALUE
      */
-#if BASEB == 16 && CALC_BYTE_ORDER == CALC_LITTLE_ENDIAN
+#if BASEB == 16
+#  if CALC_BYTE_ORDER == CALC_LITTLE_ENDIAN
+
     for (i = 0; i < ret.len; i += 2) {
         ret.v[ret.len - i - 1] = ((HALF *)dig->digest)[i + 1];
         ret.v[ret.len - i - 2] = ((HALF *)dig->digest)[i];
     }
-#else
+
+#  else
+
+    for (i = 0; i < ret.len; i += 2) {
+        ret.v[ret.len - i - 1] = ((HALF *)dig->digest)[i];
+        ret.v[ret.len - i - 2] = ((HALF *)dig->digest)[i + 1];
+    }
+
+#  endif
+#elif BASEB == 32
+
     for (i = 0; i < ret.len; ++i) {
         ret.v[ret.len - i - 1] = ((HALF *)dig->digest)[i];
     }
+
+#else
+
+#   error "BASEB is not 16, nor 32, do not know (yet) load a HASH into a ZVALUE"
+
 #endif
     ztrim(&ret);
 
