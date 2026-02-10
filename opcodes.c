@@ -4028,7 +4028,7 @@ calculate(FUNC *fp, int argcount)
     }
     locals = localtable;
     if (fp->f_localcount > QUICKLOCALS) {
-        locals = (VALUE *)calloc(sizeof(VALUE), fp->f_localcount);
+        locals = (VALUE *)calloc(fp->f_localcount, sizeof(VALUE));
         if (locals == NULL) {
             math_error("No memory for local variables");
             not_reached();

@@ -8,6 +8,8 @@ The following are the changes from calc version 3.0.0.3 to date:
     Fixed places where the code still used `BIG_ENDIAN` when it needs `CALC_BIG_ENDIAN`.
     Fixed places where the code still used `LITTLE_ENDIAN` when it needs `CALC_LITTLE_ENDIAN`.
 
+    Fixed a `calloc(3)` mistake where the args were reversed.
+
 
 The following are the changes from calc version 3.0.0.2 to 3.0.0.3:
 
