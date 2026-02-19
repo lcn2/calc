@@ -1255,6 +1255,32 @@ Default value: ${CUSTOMHELPDIR}
 
 .PP
 
+In versions prior to v3, you may adhere to the XDG Base Directory
+specification by setting up your environment variables as such:
+.sp
+.in +5n
+.nf
+export CALCRC="${XDG_CONFIG_HOME:\-$HOME/.config}/calc/calcrc"
+export CALCPATH=".:${XDG_DATA_HOME:\-$HOME/.local/share}/calc:${XDG_CONFIG_HOME:\-$HOME/.config}/calc:/usr/share/calc:/usr/share/calc/custom"
+export CALCHISTFILE="${XDG_STATE_HOME:\-$HOME/.local/state}/calc/history"
+.fi
+.in -5n
+.sp
+Note that
+.B calc
+won't create the directory tree to $CALCHISTFILE,
+you'll need to run:
+.sp
+.in +5n
+.nf
+mkdir \-p $(dirname $CALCHISTFILE)
+.fi
+.in -5n
+.sp
+in order to have the history mechanism if you choose a path to a file
+that doesn't exist.
+.sp
+
 .SH CREDIT
 
 .PP

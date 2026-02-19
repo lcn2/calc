@@ -116,6 +116,21 @@ Environment variables
         variable is an empty string, then ${CUSTOMHELPDIR}
         is used.
 
+In versions prior to v3, you may adhere to the XDG Base Directory
+specification by setting up your environment variables as such:
+
+        export CALCRC="${XDG_CONFIG_HOME:-$HOME/.config}/calc/calcrc"
+        export CALCPATH=".:${XDG_DATA_HOME:-$HOME/.local/share}/calc:${XDG_CONFIG_HOME:-$HOME/.config}/calc:/usr/share/calc:/usr/share/calc/custom"
+        export CALCHISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/calc/history"
+
+Note that calc won't create the directory tree to $CALCHISTFILE,
+you'll need to run:
+
+        mkdir -p $(dirname $CALCHISTFILE)
+
+in order to have the history mechanism if you choose a path to a file
+that doesn't exist.
+
 ## Copyright (C) 1999,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
