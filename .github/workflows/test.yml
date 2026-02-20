@@ -16,7 +16,7 @@ jobs:
     - name: install ctags
       run: sudo apt-get install -y universal-ctags
     - name: install readline
-      run: sudo apt-get install -y libreadline libreadline-dev
+      run: sudo apt-get install -y readline-common libreadline-dev
     - name: clone picky
       run: git clone https://github.com/lcn2/picky
     - name: install picky
