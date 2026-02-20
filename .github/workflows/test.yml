@@ -18,7 +18,7 @@ jobs:
     - name: install readline
       run: sudo apt-get install -y readline-common libreadline-dev
     - name: install makedepend
-      run: sudo apt-get install -y x11-utils
+      run: sudo apt-get install -y xutils-dev
     - name: clone picky
       run: git clone https://github.com/lcn2/picky
     - name: install picky
