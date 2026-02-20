@@ -33,7 +33,7 @@
 #
 export EXIT_CODE=0
 
-# Look for leading whiitespace before a tab
+# Look for leading whitespace before a tab
 #
 # We exclude binary files, RCS source code history, intermediate
 # compiled files, patch droppings and compiled binary libraries.
@@ -63,6 +63,7 @@ LEADING_SPACES_BEFORE_TAB=$(
               -name 'sample_many-static' -o -name 'sample_rand-static' -o \
               -name 'codeql.yml' -o -name 'test.yml' -o -name tags -o -name '*.out' -o \
               -name '?' -o -iname '*foo*' -o -iname '*bar*' -o -iname '*baz*' -o \
+              -name 'picky' -o -path './picky/*' -o \
               -iname '*curds*' -o -iname '*whey*' -o -iname '*rmme*' \
            \) -prune -o -type f -print0 | \
     xargs -0 egrep -l '^        *  *    '
@@ -103,6 +104,7 @@ TRAILING_WHITESPACE=$(
               -name '.git' -o -path './custom/libcustcalc*' -o -path './libcustcalc*' -o \
               -name 'sample_many-static' -o -name 'sample_rand-static' -o \
               -name '?' -o -iname '*foo*' -o -iname '*bar*' -o -iname '*baz*' -o \
+              -name 'picky' -o -path './picky/*' -o \
               -iname '*curds*' -o -iname '*whey*' -o -iname '*rmme*' \
            \) -prune -o -type f -print0 | \
     xargs -0 egrep -l '[         ]$'
@@ -183,6 +185,7 @@ PICKY_PHASE_1=$(
               -name 'sample_many-static' -o -name 'sample_rand-static' -o \
               -name 'codeql.yml' -o -name 'test.yml' -o -name tags -o -name '*.out' -o \
               -iname '*foo*' -o -iname '*bar*' -o -iname '*baz*' -o \
+              -name 'picky' -o -path './picky/*' -o \
               -name '.lldbinit' -o -iname '*curds*' -o -iname '*whey*' -o -iname '*rmme*' \
            \) -prune -o -type f -print0 | \
     if [[ -x /usr/local/bin/picky ]]; then
@@ -235,6 +238,7 @@ TABS_FOUND=$(
               -name 'sample_many-static' -o -name 'sample_rand-static' -o \
               -name 'codeql-analysis.yml' -o -name tags -o -name '*.out' -o \
               -iname '*foo*' -o -iname '*bar*' -o -iname '*baz*' -o \
+              -name 'picky' -o -path './picky/*' -o \
               -name '.lldbinit' -o -iname '*curds*' -o -iname '*whey*' -o -iname '*rmme*' -o \
               -iname 'Makefile*' -o -name rpm.mk -o -name 'trailblank' \
            \) -prune -o -type f -print0 | \
