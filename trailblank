@@ -236,7 +236,7 @@ TABS_FOUND=$(
               -path './longbits' -o -name '.*.swp' -o -name 'conf.h' -o \
               -name '.git' -o -path './custom/libcustcalc*' -o -path './libcustcalc*' -o \
               -name 'sample_many-static' -o -name 'sample_rand-static' -o \
-              -name 'codeql-analysis.yml' -o -name tags -o -name '*.out' -o \
+              -name 'codeql.yml' -o -name tags -o -name '*.out' -o \
               -iname '*foo*' -o -iname '*bar*' -o -iname '*baz*' -o \
               -name 'picky' -o -path './picky/*' -o \
               -name '.lldbinit' -o -iname '*curds*' -o -iname '*whey*' -o -iname '*rmme*' -o \
