@@ -10,6 +10,16 @@ The following are the changes from calc version 3.0.0.3 to date:
 
     Fixed a `calloc(3)` mistake where the args were reversed.
 
+    Import documentation changes from the calcv2 branch in regards to
+    the "XDG base dir. spec. adoption", update to the `trailblank` tool
+    to ignore in `calc.man`, `help/environment`, and `README.md`.
+
+    Added `${EXPAND}` to the list of utilities in `Makefile.config`.
+    Echo `${EXPAND}` in the `make env` rule of `Makefile`.
+
+    Use `${EXPAND}` to replace ASCII tabs with ASCII spaces in the
+    `make len_bits.h` rule, and the `make errsym.h` rule of `Makefile`.
+
 
 The following are the changes from calc version 3.0.0.2 to 3.0.0.3:
 

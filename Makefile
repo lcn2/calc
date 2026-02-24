@@ -720,7 +720,7 @@ len_bits.h: len_bits.c endian_calc.h \
 	${Q} echo '' >> $@
 	${Q} ${LCC} ${ICFLAGS} len_bits.c -c ${S}
 	${Q} ${LCC} ${ILDFLAGS} len_bits.o -o len_bits${EXT} ${S}
-	${Q} ./len_bits${EXT} ${LONG_BITS} >> $@ ${E}
+	${Q} ./len_bits${EXT} ${LONG_BITS} | ${EXPAND} >> $@ ${E}
 	${Q} echo '' >> $@
 	${Q} echo '' >> $@
 	${Q} echo '#endif /* !CALC_LEN_BITS_H */' >> $@
@@ -980,7 +980,7 @@ have_rusage.h: have_rusage.c banned.h have_ban_pragma.h ${MK_SET}
 errsym.h: status.chk_c.h errcode${EXT}
 	${Q} ${RM} -f $@
 	${H} echo 'forming $@'
-	./errcode${EXT} -d > $@
+	./errcode${EXT} -d | ${EXPAND} > $@
 	${H} echo '$@ formed'
 	-${Q}if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -1683,6 +1683,7 @@ env:
 	@echo 'EARLY_TARGETS=${EARLY_TARGETS}'; echo ''
 	@echo 'ECHON=${ECHON}'; echo ''
 	@echo 'E=${E}'; echo ''
+	@echo 'EXPAND=${EXPAND}'; echo ''
 	@echo 'EXT=${EXT}'; echo ''
 	@echo 'EXTRA_CFLAGS=${EXTRA_CFLAGS}'; echo ''
 	@echo 'EXTRA_LDFLAGS=${EXTRA_LDFLAGS}'; echo ''

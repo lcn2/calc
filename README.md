@@ -282,8 +282,33 @@ help unexpected
 ```
 
 It contains information about differences between C and calc
-that may surprise C programmers.
+that may surprise C programmers.  The command:
 
+```sh
+help environment
+```
+
+contains information regarding how environment variables
+can be used to configure some aspects of calc.  In versions
+prior to v3, you may adhere to the [XDG Base Directory
+specification](https://specifications.freedesktop.org/basedir/latest/)
+by setting up your environment variables as such:
+
+```sh
+export CALCRC="${XDG_CONFIG_HOME:-$HOME/.config}/calc/calcrc"
+export CALCPATH=".:${XDG_DATA_HOME:-$HOME/.local/share}/calc:${XDG_CONFIG_HOME:-$HOME/.config}/calc:/usr/share/calc:/usr/share/calc/custom"
+export CALCHISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/calc/history"
+```
+
+Note that calc won't create the directory tree to `$CALCHISTFILE`,
+you'll need to run:
+
+```sh
+mkdir -p $(dirname $CALCHISTFILE)
+```
+
+in order to have the history mechanism if you choose a path to a file
+that doesn't exist.
 
 # Reporting Security Issues
 

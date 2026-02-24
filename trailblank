@@ -33,7 +33,7 @@
 #
 export EXIT_CODE=0
 
-# Look for leading whiitespace before a tab
+# Look for leading whitespace before a tab
 #
 # We exclude binary files, RCS source code history, intermediate
 # compiled files, patch droppings and compiled binary libraries.
@@ -56,13 +56,14 @@ LEADING_SPACES_BEFORE_TAB=$(
               -name '*.ptch' -o -name 'core.*' -o \
               -name '*.so*' -o -name 'calc-static' -o -name 'libcalc.*' -o \
               -name 'sample_many' -o -name 'sample_rand' -o -name 'errcode' -o \
-              -path './help/funclist' -o \
+              -path './help/funclist' -o -path './have_stdvs' -o \
               -path './endian' -o -path './no_implicit' -o -name 'chk_c' -o \
               -path './longbits' -o -name '.*.swp' -o -name 'conf.h' -o \
               -name '.git' -o -path './custom/libcustcalc*' -o -path './libcustcalc*' -o \
               -name 'sample_many-static' -o -name 'sample_rand-static' -o \
-              -name 'codeql-analysis.yml' -o -name tags -o -name '*.out' -o \
+              -name 'codeql.yml' -o -name 'test.yml' -o -name tags -o -name '*.out' -o \
               -name '?' -o -iname '*foo*' -o -iname '*bar*' -o -iname '*baz*' -o \
+              -name 'picky' -o -path './picky/*' -o \
               -iname '*curds*' -o -iname '*whey*' -o -iname '*rmme*' \
            \) -prune -o -type f -print0 | \
     xargs -0 egrep -l '^        *  *    '
@@ -97,12 +98,13 @@ TRAILING_WHITESPACE=$(
               -name '*.ptch' -o -name 'core.*' -o \
               -name '*.so*' -o -name 'calc-static' -o -name 'libcalc.*' -o \
               -name 'sample_many' -o -name 'sample_rand' -o -name 'errcode' -o \
-              -path './help/funclist' -o \
+              -path './help/funclist' -o -path './have_stdvs' -o \
               -path './endian' -o -path './no_implicit' -o -name 'chk_c' -o \
               -path './longbits' -o -name '.*.swp' -o -name 'conf.h' -o \
               -name '.git' -o -path './custom/libcustcalc*' -o -path './libcustcalc*' -o \
               -name 'sample_many-static' -o -name 'sample_rand-static' -o \
               -name '?' -o -iname '*foo*' -o -iname '*bar*' -o -iname '*baz*' -o \
+              -name 'picky' -o -path './picky/*' -o \
               -iname '*curds*' -o -iname '*whey*' -o -iname '*rmme*' \
            \) -prune -o -type f -print0 | \
     xargs -0 egrep -l '[         ]$'
@@ -166,6 +168,12 @@ fi
 #
 # Such files are temporary/test files and are not part of calc.
 #
+# We also ignore in phase 1:
+#
+#       calc.man help/environment README.md
+#
+# Those files will be processed in phase 2 because they contain long lines.
+#
 # Last, we have files that have long lines that, for now,
 # we cannot be as picky about without significant work.
 #
@@ -176,14 +184,16 @@ PICKY_PHASE_1=$(
               -name '*.ptch' -o -name 'core.*' -o \
               -name '*.so*' -o -name 'calc-static' -o -name 'libcalc.*' -o \
               -name 'sample_many' -o -name 'sample_rand' -o -name 'errcode' -o \
-              -path './help/funclist' -o \
+              -path './help/funclist' -o -path './have_stdvs' -o \
               -path './endian' -o -path './no_implicit' -o -name 'chk_c' -o \
               -path './longbits' -o -name '.*.swp' -o -name 'conf.h' -o \
               -name '.git' -o -path './custom/libcustcalc*' -o -path './libcustcalc*' -o \
               -name 'sample_many-static' -o -name 'sample_rand-static' -o \
-              -name 'codeql-analysis.yml' -o -name tags -o -name '*.out' -o \
+              -name 'codeql.yml' -o -name 'test.yml' -o -name tags -o -name '*.out' -o \
               -iname '*foo*' -o -iname '*bar*' -o -iname '*baz*' -o \
-              -name '.lldbinit' -o -iname '*curds*' -o -iname '*whey*' -o -iname '*rmme*' \
+              -name 'picky' -o -path './picky/*' -o \
+              -name '.lldbinit' -o -iname '*curds*' -o -iname '*whey*' -o -iname '*rmme*' -o \
+              -name 'calc.man' -o -path './help/environment' -o -name 'README.md' \
            \) -prune -o -type f -print0 | \
     if [[ -x /usr/local/bin/picky ]]; then
         xargs -0 /usr/local/bin/picky -s -v -w132
@@ -198,9 +208,36 @@ PICKY_PHASE_1=$(
 )
 if [[ -n $PICKY_PHASE_1 ]]; then
     echo
-    echo '# files flagged by picky'
+    echo '# files flagged by picky phase 1'
     echo "$PICKY_PHASE_1" | sed -e 's/^picky: \.\///' -e 's/ / - /'
     EXIT_CODE=6
+fi
+
+# Picky tool processing phase 2
+#
+# We process:
+#
+#       calc.man help/environment README.md
+#
+# except we use -w0 to ignore line lengths.
+#
+PICKY_PHASE_2=$(
+    if [[ -x /usr/local/bin/picky ]]; then
+        /usr/local/bin/picky -s -v -w0 calc.man help/environment README.md
+    else
+        echo "# $0: WARNING: /usr/local/bin/picky not found: skipping picky phase 2 check!" 1>&2
+        echo "#" 1>&2
+        echo "# $0: NOTICE: The picky tool used is from the following GitHub repo:" 1>&2
+        echo "#" 1>&2
+        echo "#         https://github.com/lcn2/picky for the picky tool GitHub repo." 1>&2
+        echo "#" 1>&2
+    fi
+)
+if [[ -n $PICKY_PHASE_2 ]]; then
+    echo
+    echo '# files flagged by picky phase 2'
+    echo "$PICKY_PHASE_2" | sed -e 's/^picky: \.\///' -e 's/ / - /'
+    EXIT_CODE=7
 fi
 
 # look for backup Makefiles
@@ -215,7 +252,7 @@ if [[ -n $BACKUP_MAKEILES ]]; then
     echo "$BACKUP_MAKEILES" | while read -r file; do
         echo "rm -f $file"
     done
-    EXIT_CODE=7
+    EXIT_CODE=8
 fi
 
 
@@ -228,13 +265,14 @@ TABS_FOUND=$(
               -name '*.ptch' -o -name 'core.*' -o \
               -name '*.so*' -o -name 'calc-static' -o -name 'libcalc.*' -o \
               -name 'sample_many' -o -name 'sample_rand' -o -name 'errcode' -o \
-              -path './help/funclist' -o \
+              -path './help/funclist' -o -path './have_stdvs' -o \
               -path './endian' -o -path './no_implicit' -o -name 'chk_c' -o \
               -path './longbits' -o -name '.*.swp' -o -name 'conf.h' -o \
               -name '.git' -o -path './custom/libcustcalc*' -o -path './libcustcalc*' -o \
               -name 'sample_many-static' -o -name 'sample_rand-static' -o \
-              -name 'codeql-analysis.yml' -o -name tags -o -name '*.out' -o \
+              -name 'codeql.yml' -o -name tags -o -name '*.out' -o \
               -iname '*foo*' -o -iname '*bar*' -o -iname '*baz*' -o \
+              -name 'picky' -o -path './picky/*' -o \
               -name '.lldbinit' -o -iname '*curds*' -o -iname '*whey*' -o -iname '*rmme*' -o \
               -iname 'Makefile*' -o -name rpm.mk -o -name 'trailblank' \
            \) -prune -o -type f -print0 | \
@@ -244,7 +282,7 @@ if [[ -n $TABS_FOUND ]]; then
     echo
     echo '# ASCII TABs found in non-Makefiles:'
     echo "$TABS_FOUND"
-    EXIT_CODE=8
+    EXIT_CODE=9
 fi
 
 # All Done!!! -- Jessica Noll, Age 2

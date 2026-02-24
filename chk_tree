@@ -60,15 +60,15 @@ export USAGE="usage: $0 [-h] [-v level] [-V] [-d topdir] [-m]
     -v level    set verbosity level (def level: $V_FLAG)
     -V          print version string and exit
 
-    -m		used by make full_debug or make debug (def: run by hand)
+    -m          used by make full_debug or make debug (def: run by hand)
 
-    -d topdir	set topdir (def: $TOPDIR)
+    -d topdir   set topdir (def: $TOPDIR)
 
 Exit codes:
      0         all OK
      2         -h and help string printed or -V and version string printed
      3         command line error
-     5	       some internal tool is not found or not an executable file
+     5         some internal tool is not found or not an executable file
      6         problems found with or in the topdir
  >= 10         internal error
 
@@ -80,32 +80,32 @@ $NAME version: $VERSION"
 while getopts :hv:Vd:m flag; do
   case "$flag" in
     h) echo "$USAGE"
-	exit 2
-	;;
+        exit 2
+        ;;
     v) V_FLAG="$OPTARG"
-	;;
+        ;;
     V) echo "$VERSION"
-	exit 2
-	;;
+        exit 2
+        ;;
     d) TOPDIR="$OPTARG"
         ;;
     m) M_FLAG="true"
-	;;
+        ;;
     \?) echo "$0: ERROR: invalid option: -$OPTARG" 1>&2
-	echo 1>&2
-	echo "$USAGE" 1>&2
-	exit 3
-	;;
+        echo 1>&2
+        echo "$USAGE" 1>&2
+        exit 3
+        ;;
     :) echo "$0: ERROR: option -$OPTARG requires an argument" 1>&2
-	echo 1>&2
-	echo "$USAGE" 1>&2
-	exit 3
-	;;
+        echo 1>&2
+        echo "$USAGE" 1>&2
+        exit 3
+        ;;
     *) echo "$0: ERROR: unexpected value from getopts: $flag" 1>&2
-	echo 1>&2
-	echo "$USAGE" 1>&2
-	exit 3
-	;;
+        echo 1>&2
+        echo "$USAGE" 1>&2
+        exit 3
+        ;;
   esac
 done
 if [[ $V_FLAG -ge 1 ]]; then
@@ -318,14 +318,14 @@ if [[ -d .git ]]; then
     #
     GIT_BRANCH=$(git branch --show-current 2<&1)
     if [[ -z $GIT_BRANCH ]]; then
-	echo "$0: ERROR: cannot determine current branch" 1>&2
-	git --no-pager branch --list
+        echo "$0: ERROR: cannot determine current branch" 1>&2
+        git --no-pager branch --list
         EXIT_CODE=20
         echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
     fi
     GIT_BRANCH=${GIT_BRANCH:="master"}
     if [[ -z $M_FLAG && $GIT_BRANCH != master ]]; then
-	echo "$0: ERROR: not on master branch and -m was not used" 1>&2
+        echo "$0: ERROR: not on master branch and -m was not used" 1>&2
         EXIT_CODE=21
         echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
     fi
@@ -333,10 +333,10 @@ if [[ -d .git ]]; then
     # output branch info if -m
     #
     if [[ -n $M_FLAG ]]; then
-	echo "$0: on branch: $GIT_BRANCH" 1>&2
-	echo "$0: git branch starts below" 1>&2
-	git --no-pager branch
-	echo "$0: git branch ends above" 1>&2
+        echo "$0: on branch: $GIT_BRANCH" 1>&2
+        echo "$0: git branch starts below" 1>&2
+        git --no-pager branch
+        echo "$0: git branch ends above" 1>&2
     fi
 
     # verify that current branch is not ahead of 'origin/branch'
@@ -358,9 +358,9 @@ if [[ -d .git ]]; then
     # output status if -m
     #
     if [[ -n $M_FLAG ]]; then
-	echo "$0: git status starts below" 1>&2
-	git --no-pager status
-	echo "$0: git status ends above" 1>&2
+        echo "$0: git status starts below" 1>&2
+        git --no-pager status
+        echo "$0: git status ends above" 1>&2
     fi
 fi
 
