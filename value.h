@@ -83,7 +83,9 @@ typedef struct value VALUE;
  */
 struct value {
     int16_t v_type;           /* type of value - IMPORTANT: v_type < 0 is an error code */
+#  if MAJOR_VER >= 3
     uint16_t unused;          /* reserved for future use, calloc-ed to 0 */
+#  endif
     uint32_t v_subtype;       /* other data related to some types */
     union {                   /* types of values (see V_XYZ below) */
         long vv_int;          /* 1: small integer value */
