@@ -28,7 +28,7 @@
 #include <ctype.h>
 #include <sys/types.h>
 #include <signal.h>
-#include <sys/errno.h>
+#include <errno.h>
 
 #include "calc.h"
 #include "conf.h"

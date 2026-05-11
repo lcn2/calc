@@ -1,3 +1,8 @@
+The following are the changes from calc version 2.16.1.2 to date:
+
+    Include `<errno.h>`, not '<sys/errno.h>`.
+
+
 The following are the changes from calc version 2.16.1.1 to 2.16.1.2:
 
     Fixed a bug where the calc command history was not being properly
