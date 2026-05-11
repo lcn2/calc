@@ -10,13 +10,23 @@ Environment variables
         If this variable does not exist, or if this
         variable is an empty string, calc first checks
         $XDG_DATA_HOME and $XDG_CONFIG_HOME.  When both
-        name usable absolute directories, calc uses:
+        name usable absolute directories, calc searches in
+        succession:
 
-                    .:./cal:${XDG_DATA_HOME}/calc:${XDG_CONFIG_HOME}/calc:${CALC_SHAREDIR}:${CUSTOMCALDIR}
+                    .
+                    ./cal
+                    ${XDG_DATA_HOME}/calc
+                    ${XDG_CONFIG_HOME}/calc
+                    ${CALC_SHAREDIR}
+                    ${CUSTOMCALDIR}
 
         Otherwise a compiled value is used, which is usually:
 
-                    .:./cal:~/cal:/usr/share/calc:/usr/share/calc/custom
+                    .
+                    ./cal
+                    ~/.cal
+                    /usr/share/calc
+                    /usr/share/calc/custom
 
         This value is used by the READ command.  It is an error
         if no such readable file is found.
@@ -32,13 +42,17 @@ Environment variables
         If this variable does not exist, or if this
         variable is an empty string, calc first checks
         $XDG_CONFIG_HOME.  When it names a usable absolute
-        directory, calc uses:
+        directory, calc searches in succession:
 
-                    ./.calcinit:${XDG_CONFIG_HOME}/calc/calcrc:${CALC_SHAREDIR}/startup
+                    ./.calcinit
+                    ${XDG_CONFIG_HOME}/calc/calcrc
+                    ${CALC_SHAREDIR}/startup
 
         Otherwise a compiled value is used, which is usually:
 
-                    /usr/share/calc/startup:~/.calcrc:./.calcinit
+                    ./.calcinit
+                    ~/.calcrc
+                    /usr/share/calc/startup
 
         Missing files along the $CALCRC path are silently ignored.
 
@@ -102,7 +116,7 @@ Environment variables
         If this variable does not exist, or if this
         variable is an empty string, calc first checks
         $XDG_STATE_HOME and uses ${XDG_STATE_HOME}/calc/history
-        when that names a usable absolute directory.
+        when that names a usable absolute writable directory.
         Otherwise ~/.calc_history is used.
 
      CALCHELP
@@ -120,20 +134,24 @@ Environment variables
         variable is an empty string, then ${CUSTOMHELPDIR}
         is used.
 
-You may still force explicit locations by setting the calc
-environment variables as such:
+When CALCPATH, CALCRC and CALCHISTFILE are unset or empty,
+calc follows the XDG Base Directory Specification as described above.
 
-        export CALCRC="${XDG_CONFIG_HOME:-$HOME/.config}/calc/calcrc"
-        export CALCPATH=".:${XDG_DATA_HOME:-$HOME/.local/share}/calc:${XDG_CONFIG_HOME:-$HOME/.config}/calc:/usr/share/calc:/usr/share/calc/custom"
-        export CALCHISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/calc/history"
+You may override those locations by setting the calc
+environment variables explicitly.  For example, to restore
+the usual legacy defaults on a typical Unix install:
 
-Note that calc won't create the directory tree to $CALCHISTFILE,
-you'll need to run:
+        export CALCRC="./.calcinit:$HOME/.calcrc:/usr/share/calc/startup"
+        export CALCPATH=".:./cal:$HOME/.cal:/usr/share/calc:/usr/share/calc/custom"
+        export CALCHISTFILE="$HOME/.calc_history"
+
+Note that calc will attempt to create the parent directory of
+$CALCHISTFILE.  If that is not sufficient, you may need to run:
 
         mkdir -p $(dirname $CALCHISTFILE)
 
-in order to have the history mechanism if you choose a path to a file
-that doesn't exist.
+for the history mechanism if you choose a path to a file that
+does not yet exist.
 
 ## Copyright (C) 1999,2021,2026  Landon Curt Noll
 ##
