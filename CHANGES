@@ -1,5 +1,8 @@
 The following are the changes from calc version 3.0.0.3 to date:
 
+    Fixed three memcpy calls in `matsort()` in `matfunc.c`.
+    Thanks go to the GitHub user @orbisai0security for this fix.
+
     Fixed and improved `chk_tree`.
     Updated `chk_tree` VERSION to "1.1 2026-02-04".
 
