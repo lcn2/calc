@@ -1607,7 +1607,11 @@ matsort(MATRIX *m)
     long len[LONG_BITS];
     long i, j, k;
 
-    buf = (VALUE *)malloc(m->m_size * sizeof(VALUE));
+    if (m->m_size <= 0) {
+        math_error("Invalid matrix size for matsort");
+        not_reached();
+    }
+    buf = (VALUE *)calloc((size_t)m->m_size, sizeof(VALUE));
     if (buf == NULL) {
         math_error("Not enough memory for matsort");
         not_reached();
@@ -1633,6 +1637,11 @@ matsort(MATRIX *m)
                     j--;
                 } while (j > 0 && precvalue(b, a));
                 if (j == 0) {
+                    if ((p - buf) + i > (long)m->m_size ||
+                        S[k] + len[k] > m->m_table + m->m_size) {
+                        math_error("Buffer overflow detected in matsort");
+                        not_reached();
+                    }
                     memcpy(p, a, i * sizeof(VALUE));
                     memcpy(S[k], buf, len[k] * sizeof(VALUE));
                     continue;
@@ -1654,8 +1663,17 @@ matsort(MATRIX *m)
             } while (j != 0);
 
             if (i == 0) {
+                if (S[k] + (p - buf) > m->m_table + m->m_size) {
+                    math_error("Buffer overflow detected in matsort");
+                    not_reached();
+                }
                 memcpy(S[k], buf, (p - buf) * sizeof(VALUE));
             } else if (j == 0) {
+                if ((p - buf) + i > (long)m->m_size ||
+                    S[k] + len[k] > m->m_table + m->m_size) {
+                    math_error("Buffer overflow detected in matsort");
+                    not_reached();
+                }
                 memcpy(p, a, i * sizeof(VALUE));
                 memcpy(S[k], buf, len[k] * sizeof(VALUE));
             }

@@ -1,6 +1,9 @@
-The following are the changes from calc version 2.16.1.2 to date:
+The following are the changes from calc version 2.16.1.2 to 2.16.1.3:
 
     Include `<errno.h>`, not '<sys/errno.h>`.
+
+    Fixed three memcpy calls in `matfunc()` in `matfunc.c`.
+    Thanks go to the GitHub user @orbisai0security for this fix.
 
 
 The following are the changes from calc version 2.16.1.1 to 2.16.1.2:
