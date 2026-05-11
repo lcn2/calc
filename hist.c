@@ -132,6 +132,7 @@ static void lowercase_word(int key);
 static void ignore_char(int key);
 static void arrow_key(int key);
 static void quit_calc(int key) __attribute__((noreturn));
+static void hist_mkdir_parent(void);
 
 static FUNC funcs[] = {{"ignore-char", ignore_char},
                        {"flush-input", flush_input},

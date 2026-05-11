@@ -289,7 +289,7 @@ help environment
 ```
 
 contains information regarding how environment variables can be
-used to configure some aspects of calc.  In calc v3, if `CALCRC`,
+used to configure some aspects of calc.  If `CALCRC`,
 `CALCPATH`, and `CALCHISTFILE` are unset, calc first checks the
 relevant XDG base directory environment variables and uses them when
 they name usable absolute directories.
