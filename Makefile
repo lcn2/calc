@@ -3482,6 +3482,7 @@ lib_calc.o: hash.h
 lib_calc.o: have_ban_pragma.h
 lib_calc.o: have_strlcat.h
 lib_calc.o: have_strlcpy.h
+lib_calc.o: have_unused.h
 lib_calc.o: int.h
 lib_calc.o: label.h
 lib_calc.o: len_bits.h
