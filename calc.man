@@ -1287,7 +1287,12 @@ Location of the calc history file.
 .sp
 If this variable is unset or empty,
 .B calc
-first checks $XDG_STATE_HOME.
+first uses an existing
+.B ~/.calc_history
+file.
+Otherwise,
+.B calc
+checks $XDG_STATE_HOME.
 When it names a usable absolute writable directory,
 the effective value is:
 .sp 1
@@ -1297,7 +1302,7 @@ ${XDG_STATE_HOME}/calc/history
 .fi
 .in -5n
 .sp 1
-If $XDG_STATE_HOME is not usable, the fallback value is:
+If neither applies, the fallback value is:
 .sp 1
 .in +5n
 .nf

@@ -289,10 +289,13 @@ help environment
 ```
 
 contains information regarding how environment variables can be
-used to configure some aspects of calc.  If `CALCRC`,
-`CALCPATH`, and `CALCHISTFILE` are unset, calc first checks the
-relevant XDG base directory environment variables and uses them when
-they name usable absolute directories.
+used to configure some aspects of calc.  If `CALCRC` and
+`CALCPATH` are unset, calc first checks the relevant XDG base
+directory environment variables and uses them when they name
+usable absolute directories.  If `CALCHISTFILE` is unset,
+calc preserves an existing `~/.calc_history`; otherwise it uses
+`${XDG_STATE_HOME}/calc/history` when `XDG_STATE_HOME` names a
+usable absolute writable directory.
 
 # Reporting Security Issues
 

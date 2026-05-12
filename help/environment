@@ -114,10 +114,11 @@ Environment variables
         This value is taken to be the calc history file.
 
         If this variable does not exist, or if this
-        variable is an empty string, calc first checks
+        variable is an empty string, calc first uses an
+        existing ~/.calc_history file.  Otherwise calc checks
         $XDG_STATE_HOME and uses ${XDG_STATE_HOME}/calc/history
         when that names a usable absolute writable directory.
-        Otherwise ~/.calc_history is used.
+        If neither applies, ~/.calc_history is used.
 
      CALCHELP
 

@@ -437,7 +437,8 @@ cvmalloc_error(char *message)
  *
  * If these environment variables do not exist, or if they are an empty string,
  * use XDG defaults when the relevant XDG directory is usable, otherwise use
- * the compiled default values as found in calc.h:
+ * the compiled default values as found in calc.h.  For calc_history, favour
+ * preserving an existing ~/.calc_history over using the XDG state directory:
  *
  *      $CALCPATH               set calcpath
  *      $CALCRC                 set calcrc
@@ -471,6 +472,7 @@ initenv(void)
     struct passwd *ent; /* our password entry */
 #endif
     char *c;
+    char *legacy_history;
     char *xdg_config;
     char *xdg_data;
     size_t len;
@@ -597,7 +599,21 @@ initenv(void)
     c = (no_env ? NULL : getenv(CALCHISTFILE));
     if (c != NULL && *c != '\0') {
         calc_history = strdup(c);
-    } else if ((c = xdg_base("XDG_STATE_HOME", X_OK | W_OK)) != NULL) {
+    } else if (home != NULL) {
+        len = strlen(home) + sizeof("/.calc_history");
+        legacy_history = malloc(len);
+        if (legacy_history == NULL) {
+            math_error("Unable to allocate string for legacy_history");
+            not_reached();
+        }
+        snprintf(legacy_history, len, "%s/.calc_history", home);
+        if (access(legacy_history, F_OK) == 0) {
+            calc_history = legacy_history;
+        } else {
+            free(legacy_history);
+        }
+    }
+    if (calc_history == NULL && (c = xdg_base("XDG_STATE_HOME", X_OK | W_OK)) != NULL) {
         len = strlen(c) + sizeof("/calc/history");
         calc_history = malloc(len);
         if (calc_history == NULL) {
