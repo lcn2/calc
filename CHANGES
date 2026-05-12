@@ -1,4 +1,10 @@
-The following are the changes from calc version 3.0.0.3 to date:
+The following are the changes from calc version 3.0.0.4 to date:
+
+    Sync calc version 3.0.0.4 changes with calc version 2.16.1.3 to
+    form a new 2.17.0.0.
+
+
+The following are the changes from calc version 3.0.0.3 to 3.0.0.4:
 
     Fixed three memcpy calls in `matsort()` in `matfunc.c`.
     Thanks go to the GitHub user @orbisai0security for this fix.
