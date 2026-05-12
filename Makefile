@@ -1804,6 +1804,8 @@ env:
 	@echo 'WNO_IMPLICT=${WNO_IMPLICT};' echo ''
 	@echo 'WNO_LONG_LONG=${WNO_LONG_LONG}'; echo ''
 	@echo 'XARGS=${XARGS}'; echo ''
+	@echo 'XDG_CONFIG_HOME=${XDG_CONFIG_HOME}'; echo ''
+	@echo 'XDG_DATA_HOME=${XDG_DATA_HOME}'; echo ''
 	@echo 'arch=${arch}'; echo ''
 	@echo 'hardware=${hardware}'; echo ''
 	@echo 'target=${target}'; echo ''
