@@ -23,6 +23,12 @@ The following are the changes from calc version 3.0.0.3 to date:
     Use `${EXPAND}` to replace ASCII tabs with ASCII spaces in the
     `make len_bits.h` rule, and the `make errsym.h` rule of `Makefile`.
 
+    Add support for the XDG Base Directory specification:
+
+        https://specifications.freedesktop.org/basedir/latest/
+
+    Thanks to GitHub user @ccjmne for helping add this support.
+
 
 The following are the changes from calc version 3.0.0.2 to 3.0.0.3:
 

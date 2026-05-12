@@ -44,6 +44,7 @@
 #include <setjmp.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <sys/stat.h>
 
 /*
  * conditional <system> head includes
@@ -131,6 +132,7 @@ static void lowercase_word(int key);
 static void ignore_char(int key);
 static void arrow_key(int key);
 static void quit_calc(int key) __attribute__((noreturn));
+static void hist_mkdir_parent(void);
 
 static FUNC funcs[] = {{"ignore-char", ignore_char},
                        {"flush-input", flush_input},
@@ -1486,6 +1488,34 @@ quit_calc(int UNUSED(ch))
 #  include <readline/readline.h>
 #  include <readline/history.h>
 
+static void
+hist_mkdir_parent(void)
+{
+    char *dir;
+    char *slash;
+
+    if (calc_history == NULL) {
+        return;
+    }
+
+    slash = strrchr(calc_history, PATHCHAR);
+    if (slash == NULL || slash == calc_history) {
+        return;
+    }
+
+    dir = strdup(calc_history);
+    if (dir == NULL) {
+        return;
+    }
+    dir[slash - calc_history] = '\0';
+
+    if (access(dir, F_OK) != 0) {
+        (void)mkdir(dir, 0700);
+    }
+
+    free(dir);
+}
+
 /*
  * The readline/history libs do most of the dirty work for us, so we can
  * replace hist_init() and hist_term() with dummies when using readline.
@@ -1611,6 +1641,9 @@ hist_init(char *UNUSED(filename))
     if (calc_history == NULL) {
         return HIST_NULL_HIST;
     }
+
+    /* create parent directory if necessary */
+    hist_mkdir_parent();
 
     /* read previous history */
     read_history(calc_history);

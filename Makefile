@@ -617,10 +617,20 @@ conf.h: ${MK_SET}
 	${Q} echo '#define DEFAULTCALCPATH "${CALCPATH}"' >> $@
 	${Q} echo '#endif /* DEFAULTCALCPATH */' >> $@
 	${Q} echo '' >> $@
+	${Q} echo '/* the default system search path */' >> $@
+	${Q} echo '#if !defined(DEFAULTCALCPATH_SYS)' >> $@
+	${Q} echo '#define DEFAULTCALCPATH_SYS "${T}${CALC_SHAREDIR}:${T}${CUSTOMCALDIR}"' >> $@
+	${Q} echo '#endif /* DEFAULTCALCPATH_SYS */' >> $@
+	${Q} echo '' >> $@
 	${Q} echo '/* the default :-separated startup file list */' >> $@
 	${Q} echo '#if !defined(DEFAULTCALCRC)' >> $@
 	${Q} echo '#define DEFAULTCALCRC "${CALCRC}"' >> $@
 	${Q} echo '#endif /* DEFAULTCALCRC */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '/* the default system startup file */' >> $@
+	${Q} echo '#if !defined(DEFAULTCALCRC_SYS)' >> $@
+	${Q} echo '#define DEFAULTCALCRC_SYS "${T}${CALC_SHAREDIR}/startup"' >> $@
+	${Q} echo '#endif /* DEFAULTCALCRC_SYS */' >> $@
 	${Q} echo '' >> $@
 	${Q} echo '/* the location of the help directory */' >> $@
 	${Q} echo '#if !defined(HELPDIR)' >> $@
@@ -1794,6 +1804,8 @@ env:
 	@echo 'WNO_IMPLICT=${WNO_IMPLICT};' echo ''
 	@echo 'WNO_LONG_LONG=${WNO_LONG_LONG}'; echo ''
 	@echo 'XARGS=${XARGS}'; echo ''
+	@echo 'XDG_CONFIG_HOME=${XDG_CONFIG_HOME}'; echo ''
+	@echo 'XDG_DATA_HOME=${XDG_DATA_HOME}'; echo ''
 	@echo 'arch=${arch}'; echo ''
 	@echo 'hardware=${hardware}'; echo ''
 	@echo 'target=${target}'; echo ''
@@ -3470,6 +3482,7 @@ lib_calc.o: hash.h
 lib_calc.o: have_ban_pragma.h
 lib_calc.o: have_strlcat.h
 lib_calc.o: have_strlcpy.h
+lib_calc.o: have_unused.h
 lib_calc.o: int.h
 lib_calc.o: label.h
 lib_calc.o: len_bits.h

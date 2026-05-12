@@ -59,6 +59,7 @@ typedef struct termios ttystruct;
 #include "label.h"
 #include "func.h"
 #include "strl.h"
+#include "have_unused.h"
 #if defined(CUSTOM)
 #  include "custom.h"
 #endif
@@ -171,6 +172,7 @@ static ttystruct *fd_cur = NULL;   /* fd current state */
 static void initenv(void);         /* setup calc environment */
 static int find_tty_state(int fd); /* find slot for saved tty state */
 static bool initialized = false;   /* true => initialize() has been run */
+static char *xdg_base(char *env, int mode);
 
 /*
  * libcalc_call_me_first - users of libcalc.a must call this function first!
@@ -433,8 +435,10 @@ cvmalloc_error(char *message)
 /*
  * initenv - obtain various environment variable values.
  *
- * If these environment variables do not exist, or is an empty string,
- * use the default values as found in calc.h:
+ * If these environment variables do not exist, or if they are an empty string,
+ * use XDG defaults when the relevant XDG directory is usable, otherwise use
+ * the compiled default values as found in calc.h.  For calc_history, favour
+ * preserving an existing ~/.calc_history over using the XDG state directory:
  *
  *      $CALCPATH               set calcpath
  *      $CALCRC                 set calcrc
@@ -468,11 +472,25 @@ initenv(void)
     struct passwd *ent; /* our password entry */
 #endif
     char *c;
+    char *legacy_history;
+    char *xdg_config;
+    char *xdg_data;
+    size_t len;
 
     /* determine the $CALCPATH value */
     c = (no_env ? NULL : getenv(CALCPATH));
-    calcpath = (c ? strdup(c) : NULL);
-    if (calcpath == NULL || *calcpath == '\0') {
+    if (c != NULL && *c != '\0') {
+        calcpath = strdup(c);
+    } else if ((xdg_data = xdg_base("XDG_DATA_HOME", X_OK)) != NULL &&
+               (xdg_config = xdg_base("XDG_CONFIG_HOME", X_OK)) != NULL) {
+        len = strlen(xdg_data) + strlen(xdg_config) + sizeof(".:./cal:/calc:/calc:") + strlen(DEFAULTCALCPATH_SYS);
+        calcpath = malloc(len);
+        if (calcpath == NULL) {
+            math_error("Unable to allocate string for calcpath");
+            not_reached();
+        }
+        snprintf(calcpath, len, ".:./cal:%s/calc:%s/calc:%s", xdg_data, xdg_config, DEFAULTCALCPATH_SYS);
+    } else {
         calcpath = strdup(DEFAULTCALCPATH);
     }
     if (calcpath == NULL) {
@@ -482,8 +500,17 @@ initenv(void)
 
     /* determine the $CALCRC value */
     c = (no_env ? NULL : getenv(CALCRC));
-    calcrc = (c ? strdup(c) : NULL);
-    if (calcrc == NULL || *calcrc == '\0') {
+    if (c != NULL && *c != '\0') {
+        calcrc = strdup(c);
+    } else if ((xdg_config = xdg_base("XDG_CONFIG_HOME", X_OK)) != NULL) {
+        len = strlen(xdg_config) + sizeof("./.calcinit:/calc/calcrc:") + strlen(DEFAULTCALCRC_SYS);
+        calcrc = malloc(len);
+        if (calcrc == NULL) {
+            math_error("Unable to allocate string for calcrc");
+            not_reached();
+        }
+        snprintf(calcrc, len, "./.calcinit:%s/calc/calcrc:%s", xdg_config, DEFAULTCALCRC_SYS);
+    } else {
         calcrc = strdup(DEFAULTCALCRC);
     }
     if (calcrc == NULL) {
@@ -570,9 +597,30 @@ initenv(void)
 
     /* determine the $CALCHISTFILE value */
     c = (no_env ? NULL : getenv(CALCHISTFILE));
-    calc_history = (c ? strdup(c) : NULL);
-    if (calc_history == NULL || *calc_history == '\0') {
-        calc_history = NULL; /* will use ~/.calc_history */
+    if (c != NULL && *c != '\0') {
+        calc_history = strdup(c);
+    } else if (home != NULL) {
+        len = strlen(home) + sizeof("/.calc_history");
+        legacy_history = malloc(len);
+        if (legacy_history == NULL) {
+            math_error("Unable to allocate string for legacy_history");
+            not_reached();
+        }
+        snprintf(legacy_history, len, "%s/.calc_history", home);
+        if (access(legacy_history, F_OK) == 0) {
+            calc_history = legacy_history;
+        } else {
+            free(legacy_history);
+        }
+    }
+    if (calc_history == NULL && (c = xdg_base("XDG_STATE_HOME", X_OK | W_OK)) != NULL) {
+        len = strlen(c) + sizeof("/calc/history");
+        calc_history = malloc(len);
+        if (calc_history == NULL) {
+            math_error("Unable to allocate string for calc_history");
+            not_reached();
+        }
+        snprintf(calc_history, len, "%s/calc/history", c);
     }
     /* NOTE: calc_history may be set to NULL in which case hist_init() may set it later on */
 
@@ -1023,3 +1071,31 @@ orig_tty(int fd)
     fd_setup[slot] = -1;
     return true;
 }
+
+/*
+ * xdg_base - return an XDG base directory if it names a usable absolute path.
+ */
+#if defined(_WIN32) || defined(_WIN64)
+
+static char *
+xdg_base(char *UNUSED(env), int UNUSED(mode))
+{
+    return NULL;
+
+}
+
+#else
+
+static char *
+xdg_base(char *env, int mode)
+{
+    char *base;
+
+    base = (no_env ? NULL : getenv(env));
+    if (base == NULL || *base == '\0' || base[0] != PATHCHAR || access(base, mode) != 0) {
+        return NULL;
+    }
+    return base;
+}
+
+#endif

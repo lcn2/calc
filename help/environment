@@ -8,14 +8,25 @@ Environment variables
                 /       ./      ../     ~
 
         If this variable does not exist, or if this
-        variable is an empty string, a compiled value
-        is used.  Typically compiled in value is:
+        variable is an empty string, calc first checks
+        $XDG_DATA_HOME and $XDG_CONFIG_HOME.  When both
+        name usable absolute directories, calc searches in
+        succession:
 
-                    .:./cal:~/cal:${CALC_SHAREDIR}:${CUSTOMCALDIR}
+                    .
+                    ./cal
+                    ${XDG_DATA_HOME}/calc
+                    ${XDG_CONFIG_HOME}/calc
+                    ${CALC_SHAREDIR}
+                    ${CUSTOMCALDIR}
 
-        which is usually:
+        Otherwise a compiled value is used, which is usually:
 
-                    .:./cal:~/cal:/usr/share/calc:/usr/share/calc/custom
+                    .
+                    ./cal
+                    ~/.cal
+                    /usr/share/calc
+                    /usr/share/calc/custom
 
         This value is used by the READ command.  It is an error
         if no such readable file is found.
@@ -29,14 +40,19 @@ Environment variables
         $CALCRC environment variable.
 
         If this variable does not exist, or if this
-        variable is an empty string, a compiled value
-        is used.  Typically compiled in value is:
+        variable is an empty string, calc first checks
+        $XDG_CONFIG_HOME.  When it names a usable absolute
+        directory, calc searches in succession:
 
-                    ${CALC_SHAREDIR}/startup:~/.calcrc:./.calcinit
+                    ./.calcinit
+                    ${XDG_CONFIG_HOME}/calc/calcrc
+                    ${CALC_SHAREDIR}/startup
 
-        which is usually:
+        Otherwise a compiled value is used, which is usually:
 
-                    /usr/share/calc/startup:~/.calcrc:./.calcinit
+                    ./.calcinit
+                    ~/.calcrc
+                    /usr/share/calc/startup
 
         Missing files along the $CALCRC path are silently ignored.
 
@@ -98,8 +114,11 @@ Environment variables
         This value is taken to be the calc history file.
 
         If this variable does not exist, or if this
-        variable is an empty string, then ~/.calc_history
-        is used.
+        variable is an empty string, calc first uses an
+        existing ~/.calc_history file.  Otherwise calc checks
+        $XDG_STATE_HOME and uses ${XDG_STATE_HOME}/calc/history
+        when that names a usable absolute writable directory.
+        If neither applies, ~/.calc_history is used.
 
      CALCHELP
 
@@ -116,22 +135,26 @@ Environment variables
         variable is an empty string, then ${CUSTOMHELPDIR}
         is used.
 
-In versions prior to v3, you may adhere to the XDG Base Directory
-specification by setting up your environment variables as such:
+When CALCPATH, CALCRC and CALCHISTFILE are unset or empty,
+calc follows the XDG Base Directory Specification as described above.
 
-        export CALCRC="${XDG_CONFIG_HOME:-$HOME/.config}/calc/calcrc"
-        export CALCPATH=".:${XDG_DATA_HOME:-$HOME/.local/share}/calc:${XDG_CONFIG_HOME:-$HOME/.config}/calc:/usr/share/calc:/usr/share/calc/custom"
-        export CALCHISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/calc/history"
+You may override those locations by setting the calc
+environment variables explicitly.  For example, to restore
+the usual legacy defaults on a typical Unix install:
 
-Note that calc won't create the directory tree to $CALCHISTFILE,
-you'll need to run:
+        export CALCRC="./.calcinit:$HOME/.calcrc:/usr/share/calc/startup"
+        export CALCPATH=".:./cal:$HOME/.cal:/usr/share/calc:/usr/share/calc/custom"
+        export CALCHISTFILE="$HOME/.calc_history"
+
+Note that calc will attempt to create the parent directory of
+$CALCHISTFILE.  If that is not sufficient, you may need to run:
 
         mkdir -p $(dirname $CALCHISTFILE)
 
-in order to have the history mechanism if you choose a path to a file
-that doesn't exist.
+for the history mechanism if you choose a path to a file that
+does not yet exist.
 
-## Copyright (C) 1999,2021  Landon Curt Noll
+## Copyright (C) 1999,2021,2026  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
