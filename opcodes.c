@@ -3706,13 +3706,13 @@ showsizes(void)
     printf("\tMAXDATA_LOG2\t%4d\n", MAXDATA_LOG2);
 #endif
 #if defined(MAXDATA)
-    printf("\tMAXDATA\t\t%4zu\n", MAXDATA);
+    printf("\tMAXDATA\t\t%4ju\n", (intmax_t)MAXDATA);
 #endif
 #if defined(MAXLEN_LOG2)
     printf("\tMAXLEN_LOG2\t%4d\n", MAXLEN_LOG2);
 #endif
 #if defined(MAXLEN)
-    printf("\tMAXLEN\t\t%4zu\n", MAXLEN);
+    printf("\tMAXLEN\t\t%4ju\n", (intmax_t)MAXLEN);
 #endif
 #if defined(TEN_MAX)
     printf("\tTEN_MAX\t\t%4d\n", TEN_MAX);
