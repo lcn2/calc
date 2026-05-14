@@ -4,6 +4,7 @@
 
 ```
 misc linux: sudo yum install calc
+on Arch:    sudo pacman -S calc
 on Debian:  sudo apt install calc
 on RHEL:    sudo dnf install calc
 on Ubuntu:  sudo apt install calc
