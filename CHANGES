@@ -45,6 +45,10 @@ The following are the changes from calc version 2.16.1.3 to 2.17.0.0:
 
     Performed a `make clang-format` source format to update the code base as per `.clang-format`.
 
+    Fixed rpm spec file.
+
+    Fixed how `conf.h` is formed when building an rpm.
+
     From: calc version 3.0.0.3 to 3.0.0.4 changes
     ---------------------------------------------
 

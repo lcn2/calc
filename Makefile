@@ -747,7 +747,11 @@ conf.h: ${MK_SET}
 	${Q} echo '' >> $@
 	${Q} echo '/* the default system search path */' >> $@
 	${Q} echo '#if !defined(DEFAULTCALCPATH_SYS)' >> $@
+ifdef RPM_TOP
+	${Q} echo '#define DEFAULTCALCPATH_SYS "${CALC_SHAREDIR}:${CUSTOMCALDIR}"' >> $@
+ifdef RPM_TOP
 	${Q} echo '#define DEFAULTCALCPATH_SYS "${T}${CALC_SHAREDIR}:${T}${CUSTOMCALDIR}"' >> $@
+endif	# RPM_TOP
 	${Q} echo '#endif /* DEFAULTCALCPATH_SYS */' >> $@
 	${Q} echo '' >> $@
 	${Q} echo '/* the default :-separated startup file list */' >> $@
@@ -757,7 +761,11 @@ conf.h: ${MK_SET}
 	${Q} echo '' >> $@
 	${Q} echo '/* the default system startup file */' >> $@
 	${Q} echo '#if !defined(DEFAULTCALCRC_SYS)' >> $@
+ifdef RPM_TOP
+	${Q} echo '#define DEFAULTCALCRC_SYS "${CALC_SHAREDIR}/startup"' >> $@
+else	# RPM_TOP
 	${Q} echo '#define DEFAULTCALCRC_SYS "${T}${CALC_SHAREDIR}/startup"' >> $@
+endif	# RPM_TOP
 	${Q} echo '#endif /* DEFAULTCALCRC_SYS */' >> $@
 	${Q} echo '' >> $@
 	${Q} echo '/* the location of the help directory */' >> $@
