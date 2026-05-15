@@ -126,7 +126,7 @@ DESCRIPTION
     Standard input, standard output and standard error are always opened
     and cannot be closed.
 
-    The truth value of an opened file is TRUE.
+    The truth value of an opened file is true.
 
     If the open is unsuccessful, the numeric value of errno is returned.
     You can the errno() builtin to determine what the errno number means.
@@ -180,7 +180,7 @@ SEE ALSO
     fprintf, fputc, fputs, fseek, fsize, ftell, isfile, printf, prompt,
     environment, calcpath
 
-## Copyright (C) 2006,2021  Landon Curt Noll
+## Copyright (C) 2006,2021,2026  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

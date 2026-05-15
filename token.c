@@ -1,7 +1,7 @@
 /*
  * token - read input file characters into tokens
  *
- * Copyright (C) 1999-2007,2017,2021-2023  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2017,2021-2023,2026  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -25,18 +25,28 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <setjmp.h>
+#include <stdarg.h>
+#include <stdint.h>
+#include <stdbool.h>
 
+/*
+ * calc local src includes
+ */
+#include "value.h"
 #include "calc.h"
-#include "alloc.h"
 #include "token.h"
-#include "str.h"
-#include "args.h"
 #include "lib_calc.h"
-
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 #define isletter(ch) ((((ch) >= 'a') && ((ch) <= 'z')) || (((ch) >= 'A') && ((ch) <= 'Z')))
 #define isdigit(ch) (((ch) >= '0') && ((ch) <= '9'))
@@ -48,19 +58,19 @@
 /*
  * Current token.
  */
-STATIC struct {
+static struct {
     short t_type;    /* type of token */
     char *t_sym;     /* symbol name */
     long t_strindex; /* index of string value */
     long t_numindex; /* index of numeric value */
 } curtoken;
 
-STATIC bool rescan;        /* true to reread current token */
-STATIC bool newlines;      /* true to return newlines as tokens */
-STATIC bool allsyms;       /* true if always want a symbol token */
-STATIC STRINGHEAD strings; /* list of constant strings */
-STATIC char *numbuf;       /* buffer for numeric tokens */
-STATIC long numbufsize;    /* current size of numeric buffer */
+static bool rescan;        /* true to reread current token */
+static bool newlines;      /* true to return newlines as tokens */
+static bool allsyms;       /* true if always want a symbol token */
+static STRINGHEAD strings; /* list of constant strings */
+static char *numbuf;       /* buffer for numeric tokens */
+static long numbufsize;    /* current size of numeric buffer */
 
 long errorcount = 0; /* number of compilation errors */
 
@@ -72,7 +82,7 @@ struct keyword {
     int k_token;  /* token number */
 };
 
-STATIC struct keyword keywords[] = {{"if", T_IF},           {"else", T_ELSE},
+static struct keyword keywords[] = {{"if", T_IF},           {"else", T_ELSE},
                                     {"for", T_FOR},         {"while", T_WHILE},
                                     {"do", T_DO},           {"continue", T_CONTINUE},
                                     {"break", T_BREAK},     {"goto", T_GOTO},
@@ -88,11 +98,11 @@ STATIC struct keyword keywords[] = {{"if", T_IF},           {"else", T_ELSE},
                                     {"cd", T_CD},           {"undefine", T_UNDEFINE},
                                     {"abort", T_ABORT},     {NULL, 0}};
 
-S_FUNC void eatcomment(void);
-S_FUNC void eatstring(int quotechar);
-S_FUNC void eatline(void);
-S_FUNC int eatsymbol(void);
-S_FUNC int eatnumber(void);
+static void eatcomment(void);
+static void eatstring(int quotechar);
+static void eatline(void);
+static int eatsymbol(void);
+static int eatnumber(void);
 
 /*
  * Initialize all token information.
@@ -469,7 +479,7 @@ gettoken(void)
  * Continue to eat up a comment string.
  * The leading slash-asterisk has just been scanned at this point.
  */
-S_FUNC void
+static void
 eatcomment(void)
 {
     int ch;
@@ -497,7 +507,7 @@ eatcomment(void)
  * Typically a #! will require the rest of the line to be eaten as if
  * it were a comment.
  */
-S_FUNC void
+static void
 eatline(void)
 {
     int ch; /* chars being eaten */
@@ -512,7 +522,7 @@ eatline(void)
  * Read in a string and add it to the literal string pool.
  * The leading single or double quote has been read in at this point.
  */
-S_FUNC void
+static void
 eatstring(int quotechar)
 {
     register char *cp;    /* current character address */
@@ -640,7 +650,7 @@ eatstring(int quotechar)
             if (totlen) {
                 str = (char *)realloc(str, totlen + len);
             } else {
-                str = (char *)malloc(len);
+                str = (char *)calloc(len, 1);
             }
             if (str == NULL) {
                 math_error("Out of memory for reading tokens");
@@ -662,14 +672,14 @@ eatstring(int quotechar)
  * If allsyms is set, keywords are not looked up and almost all chars
  * will be accepted for the symbol.  Returns the type of symbol found.
  */
-S_FUNC int
+static int
 eatsymbol(void)
 {
     register struct keyword *kp;     /* pointer to current keyword */
     register char *cp;               /* current character pointer */
     int ch;                          /* current character */
     int cc;                          /* character count */
-    STATIC char buf[SYMBOLSIZE + 1]; /* temporary buffer */
+    static char buf[SYMBOLSIZE + 1]; /* temporary buffer */
 
     cp = buf;
     cc = SYMBOLSIZE;
@@ -721,7 +731,7 @@ eatsymbol(void)
  * return just a period, which is used for element accesses and for
  * the old numeric value.
  */
-S_FUNC int
+static int
 eatnumber(void)
 {
     register char *cp; /* current character pointer */
@@ -729,7 +739,7 @@ eatnumber(void)
     long res;          /* result of parsing number */
 
     if (numbufsize == 0) {
-        numbuf = (char *)malloc(128 + 1);
+        numbuf = (char *)calloc(128 + 1, 1);
         if (numbuf == NULL) {
             math_error("Cannot allocate number buffer");
         }

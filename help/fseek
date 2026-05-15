@@ -7,7 +7,7 @@ SYNOPSIS
 TYPES
     fd          open file stream
     pos         integer
-    whence      0, 1 or 2, defaulting to 0
+    whence      0 (beginning), 1 (current), or 2 (end): defaulting to 0
 
     return      null or error value
 
@@ -15,15 +15,20 @@ DESCRIPTION
     This function sets the file position indicator for the stream by
     adding offset to zero, the current value, or the size of the
     file, according as whence is 0, 1 or 2.  The effect is equivalent to
-    moving the signed distance offset from the beginning, the current
-    position, or the end of the file.
+    moving the signed distance offset from the beginning (0), the current
+    position (1), or the end of the file (2).
 
     The function also clears the end-of-file flag and flushes any
     buffered data waiting to be output to the stream.
 
-    An implementation-defined error occurs if the effect would be to
-    give a negative value to the position indicator; on some systems, the
-    file position will be set to end-of-file.
+    An implementation-defined error is likely to occur if the effect
+    would be to seek to a negative file position.  On some some systems,
+    the file position will be set to end-of-file.
+
+    The range of allowed pos values depends on the system minimum and
+    maximum values for an off_t.  For calc, due to the need to negate
+    a numeric value in some cases, the minimum off_t is one more than
+    the system minimum.
 
     The file position indicator may have a value greater than the file
     size.  If characters are then written to the file, the gap is
@@ -57,8 +62,10 @@ EXAMPLE
     The results for the last four lines may be different for different systems.
 
 LIMITS
-    Some details of the operation of this function may be implementation-
-    dependent, particularly for older systems.
+    OFF_T_MIN+1 <= pos <= OFF_T_MAX
+
+    OFF_T_MIN is system's minimum value for an off_t value.
+    OFF_T_MAX is system's maximum value for an off_t value.
 
 LINK LIBRARY
     none
@@ -66,7 +73,7 @@ LINK LIBRARY
 SEE ALSO
     ftell, fgetpos, fsetpos, rewind, strerror
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2026  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

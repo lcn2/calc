@@ -69,20 +69,20 @@ Medium priority items:
 
 Low priority items:
 
-    * Complete the use of CONST where appropriate:
+    * Complete the use of const where appropriate:
 
-        CONST is beginning to be used with read-only tables and some
+        const is beginning to be used with read-only tables and some
         function arguments.  This allows certain compilers to better
         optimize the code as well as alerts one to when some value
-        is being changed inappropriately.  Use of CONST as in:
+        is being changed inappropriately.  Use of const as in:
 
-            int foo(CONST int curds, char *CONST whey)
+            int foo(const int curds, char *const whey)
 
         while legal C is not as useful because the caller is protected
         by the fact that args are passed by value.  However, the
         in the following:
 
-            int bar(CONST char *fizbin, CONST HALF *data)
+            int bar(const char *fizbin, const HALF *data)
 
         is useful because it calls the compiler that the string pointed
         at by 'fizbin' and the HALF array pointer at by 'data' should be
@@ -129,7 +129,7 @@ The calc web site is located at:
 
     NOTE: The Email address uses 'asthe', while the web site uses 'isthe'.
 
-## Copyright (C) 1999-2007,2014,2021  Landon Curt Noll
+## Copyright (C) 1999-2007,2014,2021,2026  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

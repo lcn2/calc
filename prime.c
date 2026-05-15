@@ -1,7 +1,7 @@
 /*
  * prime - quickly determine if a small number is prime
  *
- * Copyright (C) 1999-2007,2021  Landon Curt Noll
+ * Copyright (C) 1999-2007,2021,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -24,12 +24,22 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
+#include <stdio.h>
+#include <stdint.h>
+#include <stdbool.h>
+
+/*
+ * calc local src includes
+ */
+#include "zmath.h"
 #include "qmath.h"
 #include "prime.h"
 #include "jump.h"
-#include "have_const.h"
 
-#include "banned.h" /* include after system header <> includes */
+#include "banned.h" /* include after all other includes */
 
 /*
  * odd prime bitmap for odd values < 2^16
@@ -41,7 +51,7 @@
  * is prime.  Use the prime[] array to quickly walk thru the 16 bit
  * off primes.
  */
-CONST unsigned char pr_map[(MAX_MAP_VAL / 8) + 1] = {
+const unsigned char pr_map[(MAX_MAP_VAL / 8) + 1] = {
     110, 203, 180, 100, 154, 18,  109, 129, 50,  76,  74,  134, 13,  130, 150, 33,  201, 52,  4,   90,  32,  97,  137, 164, 68,
     17,  134, 41,  209, 130, 40,  74,  48,  64,  66,  50,  33,  153, 52,  8,   75,  6,   37,  66,  132, 72,  138, 20,  5,   66,
     48,  108, 8,   180, 64,  11,  160, 8,   81,  18,  40,  137, 4,   101, 152, 48,  76,  128, 150, 68,  18,  128, 33,  66,  18,
@@ -229,7 +239,7 @@ CONST unsigned char pr_map[(MAX_MAP_VAL / 8) + 1] = {
  *              *tp is a factor of n
  *      }
  */
-CONST unsigned short prime[MAP_POPCNT + 1] = {
+const unsigned short prime[MAP_POPCNT + 1] = {
     3,     5,     7,     11,    13,    17,    19,    23,    29,    31,    37,    41,    43,    47,    53,    59,    61,    67,
     71,    73,    79,    83,    89,    97,    101,   103,   107,   109,   113,   127,   131,   137,   139,   149,   151,   157,
     163,   167,   173,   179,   181,   191,   193,   197,   199,   211,   223,   227,   229,   233,   239,   241,   251,   257,
@@ -599,17 +609,17 @@ CONST unsigned short prime[MAP_POPCNT + 1] = {
  * smallest prime > MAX_SM_PRIME (2^32-5) == 2^32+15
  */
 #if BASEB == 32
-STATIC CONST HALF _nxt_prime_val_[] = {0xf, 0x1};
-ZVALUE CONST _nxt_prime_ = {(HALF *)_nxt_prime_val_, 2, 0};
+static const HALF _nxt_prime_val_[] = {0xf, 0x1};
+ZVALUE const _nxt_prime_ = {(HALF *)_nxt_prime_val_, 2, 0};
 NUMBER _nxtprime_ = {{(HALF *)_nxt_prime_val_, 2, 0}, {_oneval_, 1, 0}, 1, NULL};
 #else
-STATIC CONST HALF _nxt_prime_val_[] = {0xf, 0x0, 0x1};
-ZVALUE CONST _nxt_prime_ = {(HALF *)_nxt_prime_val_, 3, 0};
+static const HALF _nxt_prime_val_[] = {0xf, 0x0, 0x1};
+ZVALUE const _nxt_prime_ = {(HALF *)_nxt_prime_val_, 3, 0};
 NUMBER _nxtprime_ = {{(HALF *)_nxt_prime_val_, 3, 0}, {_oneval_, 1, 0}, 1, NULL};
 #endif
 
 /*
  * JMPMOD*2 as a ZVALUE
  */
-STATIC CONST HALF _jmpmod2_val_[] = {JMPMOD * 2};
-CONST ZVALUE _jmpmod2_ = {(HALF *)_jmpmod2_val_, 1, 0};
+static const HALF _jmpmod2_val_[] = {JMPMOD * 2};
+const ZVALUE _jmpmod2_ = {(HALF *)_jmpmod2_val_, 1, 0};

@@ -1,7 +1,7 @@
 /*
  * zrandom - Blum-Blum-Shub pseudo-random generator
  *
- * Copyright (C) 1999-2007,2014  Landon Curt Noll
+ * Copyright (C) 1999-2007,2014,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -27,14 +27,6 @@
 #if !defined(INCLUDE_ZRANDOM_H)
 #  define INCLUDE_ZRANDOM_H
 
-#  if defined(CALC_SRC) /* if we are building from the calc source tree */
-#    include "value.h"
-#    include "have_const.h"
-#  else
-#    include <calc/value.h>
-#    include <calc/have_const.h>
-#  endif
-
 /*
  * Blum generator state
  *
@@ -56,6 +48,7 @@ struct random {
     ZVALUE n;    /* Blum modulus */
     ZVALUE r;    /* Blum quadratic residue */
 };
+typedef struct random RANDOM;
 
 /*
  * Blum constants
@@ -65,19 +58,19 @@ struct random {
 /*
  * Blum generator function declarations
  */
-E_FUNC RANDOM *zsrandom1(CONST ZVALUE seed, bool need_ret);
-E_FUNC RANDOM *zsrandom2(CONST ZVALUE seed, CONST ZVALUE newn);
-E_FUNC RANDOM *zsrandom4(CONST ZVALUE seed, CONST ZVALUE ip, CONST ZVALUE iq, long trials);
-E_FUNC RANDOM *zsetrandom(CONST RANDOM *state);
-E_FUNC void zrandomskip(long count);
-E_FUNC void zrandom(long count, ZVALUE *res);
-E_FUNC void zrandom(long count, ZVALUE *res);
-E_FUNC void zrandomrange(CONST ZVALUE low, CONST ZVALUE beyond, ZVALUE *res);
-E_FUNC long irandom(long s);
-E_FUNC RANDOM *randomcopy(CONST RANDOM *random);
-E_FUNC void randomfree(RANDOM *random);
-E_FUNC bool randomcmp(CONST RANDOM *s1, CONST RANDOM *s2);
-E_FUNC void randomprint(CONST RANDOM *state, int flags);
-E_FUNC void random_libcalc_cleanup(void);
+extern RANDOM *zsrandom1(const ZVALUE seed, bool need_ret);
+extern RANDOM *zsrandom2(const ZVALUE seed, const ZVALUE newn);
+extern RANDOM *zsrandom4(const ZVALUE seed, const ZVALUE ip, const ZVALUE iq, long trials);
+extern RANDOM *zsetrandom(const RANDOM *state);
+extern void zrandomskip(long count);
+extern void zrandom(long count, ZVALUE *res);
+extern void zrandom(long count, ZVALUE *res);
+extern void zrandomrange(const ZVALUE low, const ZVALUE beyond, ZVALUE *res);
+extern long irandom(long s);
+extern RANDOM *randomcopy(const RANDOM *random);
+extern void randomfree(RANDOM *random);
+extern bool randomcmp(const RANDOM *s1, const RANDOM *s2);
+extern void randomprint(const RANDOM *state, int flags);
+extern void random_libcalc_cleanup(void);
 
-#endif /* !INCLUDE_ZRANDOM_H */
+#endif

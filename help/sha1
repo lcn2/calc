@@ -93,13 +93,13 @@ LINK LIBRARY
     HASH* hash_number(int, void*, HASH*);
     HASH* hash_complex(int, void*, HASH*);
     HASH* hash_str(int, char*, HASH*);
-    HASH* hash_usb8(int, USB8*, int, HASH*);
+    HASH* hash_usb8(int, uint8_t*, int, HASH*);
     HASH* hash_value(int, void*, HASH*);
 
 SEE ALSO
     ishash, hash
 
-## Copyright (C) 1999-2007,2021  Landon Curt Noll
+## Copyright (C) 1999-2007,2021,2026  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

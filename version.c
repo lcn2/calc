@@ -1,7 +1,7 @@
 /*
  * version - determine the version of calc
  *
- * Copyright (C) 1999-2023  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2023,2026  David I. Bell and Landon Curt Noll
  *
  * See "version.h" for the actual calc version constants.
  *
@@ -26,28 +26,30 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <errno.h>
-#include "have_string.h"
-#ifdef HAVE_STRING_H
-#  include <string.h>
-#endif
+#include <stdint.h>
+#include <stdbool.h>
 
+/*
+ * calc local src includes
+ */
 #include "version.h"
 #if defined(CALC_VER)
-#  include <stdlib.h>
 #  include <unistd.h>
-#  define STATIC static
 static char *program;
 #else
+#  include "value.h"
 #  include "calc.h"
 #endif
-#include "str.h"
 #include "strl.h"
 
-#include "have_unused.h"
-
-#include "banned.h" /* include after system header <> includes */
+#include "banned.h" /* include after all other includes */
 
 /*
  * calc version constants
@@ -60,7 +62,7 @@ int calc_minor_patch = MINOR_PATCH;
 /*
  * stored version
  */
-STATIC char *stored_version = NULL; /* version formed if != NULL */
+static char *stored_version = NULL; /* version formed if != NULL */
 
 /*
  * stored license info - has a side effect of copyrighting the binary
@@ -68,7 +70,7 @@ STATIC char *stored_version = NULL; /* version formed if != NULL */
 char *Copyright = "\n"
                   "calc - arbitrary precision calculator\n"
                   "\n"
-                  "Copyright (C) 1999-2023  David I. Bell, Landon Curt Noll "
+                  "Copyright (C) 1999-2026  David I. Bell, Landon Curt Noll "
                   "and Ernest Bowen\n"
                   "\n"
                   "Initial author:  David I. Bell\n"
@@ -195,4 +197,4 @@ main(int argc, char *argv[])
     return 0;
 }
 
-#endif /* CALC_VER */
+#endif

@@ -289,27 +289,52 @@ that may surprise C programmers.  The command:
 help environment
 ```
 
-contains information regarding how environment variables
-can be used to configure some aspects of calc.  In versions
-prior to v3, you may adhere to the [XDG Base Directory
-specification](https://specifications.freedesktop.org/basedir/latest/)
-by setting up your environment variables as such:
+contains information regarding how environment variables can be
+used to configure some aspects of calc.  If `CALCRC` and
+`CALCPATH` are unset, calc first checks the relevant XDG base
+directory environment variables and uses them when they name
+usable absolute directories.  If `CALCHISTFILE` is unset,
+calc preserves an existing `~/.calc_history`; otherwise it uses
+`${XDG_STATE_HOME}/calc/history` when `XDG_STATE_HOME` names a
+usable absolute writable directory.
 
-```sh
-export CALCRC="${XDG_CONFIG_HOME:-$HOME/.config}/calc/calcrc"
-export CALCPATH=".:${XDG_DATA_HOME:-$HOME/.local/share}/calc:${XDG_CONFIG_HOME:-$HOME/.config}/calc:/usr/share/calc:/usr/share/calc/custom"
-export CALCHISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/calc/history"
-```
+# On calc repo branches
 
-Note that calc won't create the directory tree to `$CALCHISTFILE`,
-you'll need to run:
+The [calc repo](https://github.com/lcn2/calc) has 3 important branches:
 
-```sh
-mkdir -p $(dirname $CALCHISTFILE)
-```
+- [master branch](https://github.com/lcn2/calc/tree/master)
 
-in order to have the history mechanism if you choose a path to a file
-that doesn't exist.
+This branch is where latest **stable releases** of calc are made.
+
+When if doubt, use the [master branch](https://github.com/lcn2/calc/tree/master).
+
+- [calcv3 branch](https://github.com/lcn2/calc/tree/calcv3)
+
+The "**calc v3**" branch is where the [new calc v3 direction](https://github.com/lcn2/calc/issues/103)
+work is being performed.
+
+Among the goals of "**calc v3**" is to support 64-bit and larger CPUs, plus
+very large values: up to 2^(2^51-1) (assuming you have the RAM/swap space),
+which requires calc to support numbers up to 256 TBytes in size.
+
+When calc version 2.17.0.0 was formed (see the [master
+branch](https://github.com/lcn2/calc/tree/master)), this branch "forked"
+off of that code base to create calc version 3.0.1.0.
+
+While you are welcome to try this "**experimental**" "**calc v3**" branch.
+
+- [legacy-calc branch](https://github.com/lcn2/calc/tree/legacy-calc)
+
+Some very old systems might have trouble with the set of changes between
+calc version 2.16.1.3 to calc version 2.17.0.0. For example, systems
+that don't a c17 C compiler, or that lack some standard include files,
+don't have 64-bit `int64_t` and `uint64_t` types, boolean type, etc.: such systems
+may need to use the [legacy-calc branch](https://github.com/lcn2/calc/tree/legacy-calc).
+
+Very old systems should use the
+[legacy-calc branch](https://github.com/lcn2/calc/tree/legacy-calc)
+which will be "frozen" at calc version 2.16.1.x (such as version 2.16.1.3).
+
 
 # Reporting Security Issues
 

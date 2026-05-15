@@ -1,7 +1,7 @@
 /*
  * calc - arbitrary precision calculator
  *
- * Copyright (C) 1999-2013,2021-2023  David I. Bell, Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2013,2021-2023,2026  David I. Bell, Landon Curt Noll and Ernest Bowen
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -23,15 +23,27 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 #include <signal.h>
+#include <ctype.h>
+#include <stdarg.h>
+#include <setjmp.h>
+#include <sys/types.h>
+#include <stdint.h>
+#include <stdbool.h>
 
+/*
+ * conditional <system> head includes
+ */
 #if !defined(_WIN32) && !defined(_WIN64)
 #  include <pwd.h>
 #endif
-
-#include <sys/types.h>
-#include <ctype.h>
 
 #if defined(_WIN32) || defined(_WIN64)
 #  include <io.h>
@@ -46,51 +58,37 @@
 #  endif
 #  define strdup _strdup
 #  define isatty _isatty
-#endif /* Windows */
+#endif
 
+/*
+ * calc local src includes
+ */
 #define CALC_C
+#include "value.h"
 #include "calc.h"
 #include "hist.h"
+#include "label.h"
 #include "func.h"
 #include "opcodes.h"
 #include "conf.h"
 #include "token.h"
 #include "symbol.h"
-#include "have_uid_t.h"
-#include "have_const.h"
 #include "custom.h"
 #include "lib_calc.h"
-#include "args.h"
-#include "zmath.h"
 #include "strl.h"
-
-#include "have_unistd.h"
-#if defined(HAVE_UNISTD_H)
-#  include <unistd.h>
-#endif
-
-#include "have_stdlib.h"
-#if defined(HAVE_STDLIB_H)
-#  include <stdlib.h>
-#endif
-
-#include "have_strdup.h"
-#if !defined(HAVE_STRDUP)
-#  define strdup(x) calc_strdup((CONST char *)(x))
-#endif /* HAVE_STRDUP */
-
 #include "have_unused.h"
-
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 /*
- * S_FUNC definitions and functions
+ * static definitions and functions
  */
-S_FUNC void intint(int arg); /* interrupt routine */
-S_FUNC void calc_interrupt(char *fmt, ...);
-S_FUNC int nextcp(char **cpp, int *ip, int argc, char **argv, bool haveendstr);
-S_FUNC void set_run_state(run state);
+static void intint(int arg); /* interrupt routine */
+static void calc_interrupt(char *fmt, ...);
+static int nextcp(char **cpp, int *ip, int argc, char **argv, bool haveendstr);
+static void set_run_state(run state);
 
 /*
  * Top level calculator routine.
@@ -178,7 +176,7 @@ main(int argc, char **argv)
                      */
                     allow_custom = true;
                     break;
-#else  /* CUSTOM */
+#else
 
                     /*
                      * error if libcustcalc was compiled with CUSTOM defined
@@ -200,7 +198,8 @@ main(int argc, char **argv)
                             " disallowed\n",
                             program);
                     exit(1);
-#endif /* CUSTOM */
+
+#endif
                 case 'e':
                     no_env = true;
                     break;
@@ -277,10 +276,13 @@ main(int argc, char **argv)
                      */
                     fputs(CALC_TITLE, stdout);
 #if defined(CUSTOM)
+
                     fputs(" w/custom functions", stdout);
 #else
+
                     fputs(" w/o custom functions", stdout);
-#endif /* CUSTOM */
+
+#endif
                     printf(" (version %s)\n", version());
                     exit(0);
                 case 'D':
@@ -702,15 +704,19 @@ main(int argc, char **argv)
                 closeinput();
                 if (!freopen("/dev/tty", "r", stdin)) {
 #if defined(_WIN32) || defined(_WIN64)
+
                     fprintf(stderr, "/dev/tty does not exist on "
                                     "this operating system.  "
                                     "Change operating systems\n"
                                     "or don't use this calc mode "
                                     "in the future, sorry!\n");
-#else  /* Windows free systems */
+
+#else
+
                     fprintf(stderr, "Unable to associate stdin"
                                     " with /dev/tty");
-#endif /* Windows free systems */
+
+#endif
                     set_run_state(RUN_EXIT_WITH_ERROR);
                     break;
                 }
@@ -729,15 +735,19 @@ main(int argc, char **argv)
                 closeinput();
                 if (!freopen("/dev/tty", "r", stdin)) {
 #if defined(_WIN32) || defined(_WIN64)
+
                     fprintf(stderr, "/dev/tty does not exist on "
                                     "this operating system.  "
                                     "Change operating systems\n"
                                     "or don't use this calc mode "
                                     "in the future, sorry!\n");
-#else  /* Windows free systems */
+
+#else
+
                     fprintf(stderr, "Unable to associate stdin"
                                     " with /dev/tty");
-#endif /* Windows free systems */
+
+#endif
                     set_run_state(RUN_EXIT_WITH_ERROR);
                     break;
                 }
@@ -769,7 +779,7 @@ main(int argc, char **argv)
  *      arg             to keep ANSI C happy
  */
 /*ARGSUSED*/
-S_FUNC void
+static void
 intint(int UNUSED(arg))
 {
     (void)signal(SIGINT, intint);
@@ -816,7 +826,7 @@ calc_interrupt(char *fmt, ...)
     }
 }
 
-S_FUNC int
+static int
 nextcp(char **cpp, int *ip, int argc, char **argv, bool haveendstr)
 {
     char *cp;
@@ -858,7 +868,7 @@ nextcp(char **cpp, int *ip, int argc, char **argv, bool haveendstr)
     return 0;
 }
 
-S_FUNC void
+static void
 set_run_state(run state)
 {
     if (conf->calc_debug & CALCDBG_RUNSTATE) {

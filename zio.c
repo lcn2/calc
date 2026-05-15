@@ -1,7 +1,7 @@
 /*
  * zio - scanf and printf routines for arbitrary precision integers
  *
- * Copyright (C) 1999-2007,2021-2023  David I. Bell
+ * Copyright (C) 1999-2007,2021-2023,2026  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -23,14 +23,27 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
-#include "alloc.h"
-#include "config.h"
-#include "zmath.h"
-#include "args.h"
+#include <stdlib.h>
+#include <string.h>
+#include <stdarg.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <inttypes.h>
 
+/*
+ * calc local src includes
+ */
+#include "zmath.h"
+#include "qmath.h"
+#include "config.h"
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 #define OUTBUFSIZE 200 /* realloc size for output buffers */
 
@@ -57,12 +70,12 @@ struct iostate {
     bool outputisstring;  /* true if output is to string buffer */
 };
 
-STATIC IOSTATE *oldiostates = NULL; /* list of saved output states */
-STATIC FILE *outfp = NULL;          /* file unit for output */
-STATIC char *outbuf = NULL;         /* current diverted buffer */
-STATIC bool outputisstring = false;
-STATIC size_t outbufsize;
-STATIC size_t outbufused;
+static IOSTATE *oldiostates = NULL; /* list of saved output states */
+static FILE *outfp = NULL;          /* file unit for output */
+static char *outbuf = NULL;         /* current diverted buffer */
+static bool outputisstring = false;
+static size_t outbufsize;
+static size_t outbufused;
 
 /*
  * zio_init - perform needed initialization work
@@ -74,7 +87,7 @@ STATIC size_t outbufused;
 void
 zio_init(void)
 {
-    STATIC int done = 0; /* 1 => routine already called */
+    static int done = 0; /* 1 => routine already called */
 
     if (!done) {
         outfp = stdout;
@@ -218,7 +231,7 @@ math_divertio(void)
 {
     register IOSTATE *sp;
 
-    sp = (IOSTATE *)malloc(sizeof(IOSTATE));
+    sp = (IOSTATE *)calloc(1, sizeof(IOSTATE));
     if (sp == NULL) {
         math_error("No memory for diverting output");
         not_reached();
@@ -235,7 +248,7 @@ math_divertio(void)
 
     outbufused = 0;
     outbufsize = 0;
-    outbuf = (char *)malloc(OUTBUFSIZE + 1);
+    outbuf = (char *)calloc(OUTBUFSIZE + 1, 1);
     if (outbuf == NULL) {
         math_error("Cannot allocate divert string");
         not_reached();
@@ -400,17 +413,12 @@ zprintx(ZVALUE z, long width)
         return;
     }
     hp = z.v + len;
-#if BASEB == 32
-    PRINTF1("0x%lx", (PRINT)*hp--);
+    //  PRINTF1("0x%lx", (PRINT)*hp--);
+    PRINTF1("0x%" PRI_HEX, (PRINT)*hp--);
     while (--len >= 0) {
-        PRINTF1("%08lx", (PRINT)*hp--);
+        //      PRINTF1("%08" PRI_HEX, (PRINT)*hp--);
+        PRINTF1("%0" PRI_HEX_LEN PRI_HEX, (PRINT)*hp--);
     }
-#else  /* BASEB == 32 */
-    PRINTF1("0x%lx", (FULL)*hp--);
-    while (--len >= 0) {
-        PRINTF1("%04lx", (FULL)*hp--);
-    }
-#endif /* BASEB == 32 */
 }
 
 /*
@@ -478,9 +486,10 @@ zprinto(ZVALUE z, long width)
     HALF num2 = (HALF)0; /* numbers to type */
     HALF num3;           /* numbers to type */
     HALF num4;           /* numbers to type */
-#else
+#elif BASEB == 16
     FULL num1 = '0';     /* numbers to type */
     FULL num2 = (FULL)0; /* numbers to type */
+#  error "BASEB is not 32 nor 16, do not yet know what variables needed by the zprinto function"
 #endif
     int rem; /* remainder number of halfwords */
     char *str;
@@ -512,23 +521,29 @@ zprinto(ZVALUE z, long width)
         num3 = (((hp[-1] & 0xffff) << 8) + (hp[-2] >> 24));
         num4 = (hp[-2] & 0xffffff);
         if (num1) {
-            PRINTF4("0%lo%08lo%08lo%08lo", (PRINT)num1, (PRINT)num2, (PRINT)num3, (PRINT)num4);
+            //          PRINTF4("0%lo%08lo%08lo%08lo", (PRINT)num1, (PRINT)num2, (PRINT)num3, (PRINT)num4);
+            PRINTF4("0%" PRI_OCT "%0" PRI_OCT_LEN PRI_OCT "%0" PRI_OCT_LEN PRI_OCT "%0" PRI_OCT_LEN PRI_OCT, (PRINT)num1,
+                    (PRINT)num2, (PRINT)num3, (PRINT)num4);
         } else {
-            PRINTF3("0%lo%08lo%08lo", (PRINT)num2, (PRINT)num3, (PRINT)num4);
+            //          PRINTF3("0%lo%08lo%08lo", (PRINT)num2, (PRINT)num3, (PRINT)num4);
+            PRINTF3("0%" PRI_OCT "%0" PRI_OCT_LEN PRI_OCT "%0" PRI_OCT_LEN PRI_OCT, (PRINT)num2, (PRINT)num3, (PRINT)num4);
         }
         rem = 3;
         break;
     case 1:
-        PRINTF1("0%lo", (PRINT)hp[0]);
+        //      PRINTF1("0%lo", (PRINT)hp[0]);
+        PRINTF1("0%" PRI_OCT, (PRINT)hp[0]);
         break;
     case 2:
         num1 = ((hp[0]) >> 16);
         num2 = (((hp[0] & 0xffff) << 8) + (hp[-1] >> 24));
         num3 = (hp[-1] & 0xffffff);
         if (num1) {
-            PRINTF3("0%lo%08lo%08lo", (PRINT)num1, (PRINT)num2, (PRINT)num3);
+            //          PRINTF3("0%lo%08lo%08lo", (PRINT)num1, (PRINT)num2, (PRINT)num3);
+            PRINTF3("0%" PRI_OCT "%0" PRI_OCT_LEN PRI_OCT "%0" PRI_OCT_LEN PRI_OCT, (PRINT)num1, (PRINT)num2, (PRINT)num3);
         } else {
-            PRINTF2("0%lo%08lo", (PRINT)num2, (PRINT)num3);
+            //          PRINTF2("0%lo%08lo", (PRINT)num2, (PRINT)num3);
+            PRINTF2("0%" PRI_OCT "%0" PRI_OCT_LEN PRI_OCT, (PRINT)num2, (PRINT)num3);
         }
         break;
     }
@@ -536,13 +551,19 @@ zprinto(ZVALUE z, long width)
     if (len > 0) {
         hp -= rem;
         while (len > 0) { /* finish in groups of 3 words */
-            PRINTF4("%08lo%08lo%08lo%08lo", (PRINT)((hp[0]) >> 8), (PRINT)(((hp[0] & 0xff) << 16) + (hp[-1] >> 16)),
-                    (PRINT)(((hp[-1] & 0xffff) << 8) + (hp[-2] >> 24)), (PRINT)(hp[-2] & 0xffffff));
+                          //          PRINTF4("%08lo%08lo%08lo%08lo",
+                          //                  (PRINT)((hp[0]) >> 8), (PRINT)(((hp[0] & 0xff) << 16) + (hp[-1] >> 16)),
+                          //                  (PRINT)(((hp[-1] & 0xffff) << 8) + (hp[-2] >> 24)), (PRINT)(hp[-2] & 0xffffff));
+            PRINTF4("0%" PRI_OCT "%0" PRI_OCT_LEN PRI_OCT "%0" PRI_OCT_LEN PRI_OCT "%0" PRI_OCT_LEN PRI_OCT, (PRINT)((hp[0]) >> 8),
+                    (PRINT)(((hp[0] & 0xff) << 16) + (hp[-1] >> 16)), (PRINT)(((hp[-1] & 0xffff) << 8) + (hp[-2] >> 24)),
+                    (PRINT)(hp[-2] & 0xffffff));
             hp -= 3;
             len -= 3;
         }
     }
-#else
+
+#elif BASEB == 16
+
     switch (rem) { /* handle odd amounts first */
     case 0:
         num1 = ((((FULL)hp[0]) << 8) + (((FULL)hp[-1]) >> 8));
@@ -559,20 +580,30 @@ zprinto(ZVALUE z, long width)
         break;
     }
     if (num1) {
-        PRINTF2("0%lo%08lo", num1, num2);
+        //      PRINTF2("0%lo%08lo", num1, num2);
+        PRINTF2("0%" PRI_OCT "%0" PRI_OCT_LEN PRI_OCT, num1, num2);
     } else {
-        PRINTF1("0%lo", num2);
+        //      PRINTF1("0%lo", num2);
+        PRINTF1("0%" PRI_OCT, , num2);
     }
     len -= rem;
     if (len > 0) {
         hp -= rem;
         while (len > 0) { /* finish in groups of 3 halfwords */
-            PRINTF2("%08lo%08lo", ((((FULL)hp[0]) << 8) + (((FULL)hp[-1]) >> 8)),
-                    ((((FULL)(hp[-1] & 0xff)) << 16) + ((FULL)hp[-2])));
+                          //          PRINTF2("%08lo%08lo",
+                          //                  ((((FULL)hp[0]) << 8) + (((FULL)hp[-1]) >> 8)),
+                          //                  ((((FULL)(hp[-1] & 0xff)) << 16) + ((FULL)hp[-2])));
+            PRINTF2("%0" PRI_OCT_LEN PRI_OCT "%0" PRI_OCT_LEN PRI_OCT, ((((PRINT)hp[0]) << 8) + (((PRINT)hp[-1]) >> 8)),
+                    ((((PRINT)(hp[-1] & 0xff)) << 16) + ((PRINT)hp[-2])));
             hp -= 3;
             len -= 3;
         }
     }
+
+#else
+
+#  error "BASEB is not 32 nor 16, do not yet know how print in the zprinto function"
+
 #endif
 }
 

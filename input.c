@@ -1,7 +1,7 @@
 /*
  * input - nested input source file reader
  *
- * Copyright (C) 1999-2007,2014,2018,2021-2023  David I. Bell
+ * Copyright (C) 1999-2007,2014,2018,2021-2023,2026  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -28,19 +28,24 @@
  * For terminal input, this also provides a simple command stack.
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 #include <ctype.h>
-#if !defined(_WIN32) && !defined(_WIN64)
-#  include <pwd.h>
-#else
-#  include <stdlib.h>
-#endif
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <stdint.h>
+#include <stdbool.h>
 
-#include "have_unistd.h"
-#if defined(HAVE_UNISTD_H)
-#  include <unistd.h>
+/*
+ * conditional <system> head includes
+ */
+#if !defined(_WIN32) && !defined(_WIN64)
+#  include <pwd.h>
 #endif
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -48,17 +53,22 @@
 #  define _fullpath(f, n, s) (_fixpath(n, f), f)
 #endif
 
+/*
+ * calc local src includes
+ */
+#include "value.h"
 #include "calc.h"
 #include "conf.h"
 #include "hist.h"
 #include "strl.h"
-
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
 
-EXTERN int stdin_tty; /* TRUE if stdin is a tty */
-E_FUNC FILE *f_open(char *name, char *mode);
-E_FUNC FILE *curstream(void);
+#include "banned.h" /* include after all other includes */
+
+extern int stdin_tty; /* true if stdin is a tty */
+extern FILE *f_open(char *name, char *mode);
+extern FILE *curstream(void);
 
 #define TTYSIZE 8191                /* reallocation size for terminal buffers */
 #define MAXDEPTH 255                /* maximum depth of input */
@@ -87,24 +97,24 @@ typedef struct {
     struct stat inode; /* inode information for file */
 } READSET;
 
-STATIC READSET *readset = NULL; /* array of files read */
-STATIC int maxreadset = 0;      /* length of readset */
+static READSET *readset = NULL; /* array of files read */
+static int maxreadset = 0;      /* length of readset */
 
-STATIC int linesize;  /* current max size of input line */
-STATIC char *linebuf; /* current input line buffer */
-STATIC char *prompt;  /* current prompt for terminal */
-STATIC BOOL noprompt; /* TRUE if should not print prompt */
+static int linesize;  /* current max size of input line */
+static char *linebuf; /* current input line buffer */
+static char *prompt;  /* current prompt for terminal */
+static bool noprompt; /* true if should not print prompt */
 
-STATIC int depth;              /* current input depth */
-STATIC INPUT *cip;             /* current input source */
-STATIC INPUT inputs[MAXDEPTH]; /* input sources */
+static int depth;              /* current input depth */
+static INPUT *cip;             /* current input source */
+static INPUT inputs[MAXDEPTH]; /* input sources */
 
-S_FUNC int openfile(char *name);
-S_FUNC int ttychar(void);
-S_FUNC int isinoderead(struct stat *sbuf);
-S_FUNC int findfreeread(void);
-S_FUNC int addreadset(char *name, char *path, struct stat *sbuf);
-S_FUNC char *homeexpand(char *name);
+static int openfile(char *name);
+static int ttychar(void);
+static int isinoderead(struct stat *sbuf);
+static int findfreeread(void);
+static int addreadset(char *name, char *path, struct stat *sbuf);
+static char *homeexpand(char *name);
 
 /*
  * Open an input file by possibly searching through a path list
@@ -124,7 +134,7 @@ S_FUNC char *homeexpand(char *name);
  *      name            file name to be read
  *      pathlist        list of colon separated paths (or NULL)
  *      extension       extra extension to try (or NULL)
- *      rd_once         TRUE => do not reread a file
+ *      rd_once         true => do not reread a file
  */
 int
 opensearchfile(char *name, char *pathlist, char *extension, int rd_once)
@@ -176,7 +186,7 @@ opensearchfile(char *name, char *pathlist, char *extension, int rd_once)
     }
     pathlen = strlen(pathlist);
     path_alloc = pathlen + 1 + 1 + namelen + 1 + extlen + 1 + 1 + 1;
-    path = malloc(path_alloc + 1);
+    path = calloc(path_alloc + 1, 1);
     if (path == NULL) {
         math_error("Cannot allocate filename path buffer");
         not_reached();
@@ -229,7 +239,7 @@ opensearchfile(char *name, char *pathlist, char *extension, int rd_once)
     }
 
     /* note if we will reopen a file and if that is allowed */
-    if (rd_once == TRUE && isinoderead(&statbuf) >= 0) {
+    if (rd_once == true && isinoderead(&statbuf) >= 0) {
         /* file is in readset and reopen is false */
         closeinput();
         free(path);
@@ -323,7 +333,7 @@ f_pathopen(char *name, char *mode, char *pathlist, char **openpath)
      */
     namelen = strlen(name);
     pathlen = strlen(pathlist);
-    path = malloc(pathlen + 1 + 1 + namelen + 1 + 1 + 1);
+    path = calloc(pathlen + 1 + 1 + namelen + 1 + 1 + 1, 1);
     if (path == NULL) {
         math_error("Cannot allocate f_pathopen buffer");
         not_reached();
@@ -388,14 +398,14 @@ f_pathopen(char *name, char *mode, char *pathlist, char **openpath)
  * given:
  *      name            a filename with a leading ~
  */
-S_FUNC char *
+static char *
 homeexpand(char *name)
 {
 #if defined(_WIN32) || defined(_WIN64)
 
     return NULL;
 
-#else  /* Windows free systems */
+#else
 
     struct passwd *ent;  /* password entry */
     char *home2;         /* fullpath of the home directory */
@@ -432,14 +442,14 @@ homeexpand(char *name)
             }
             /* just malloc the home directory and return it */
             fullpath_len = strlen(ent->pw_dir);
-            fullpath = (char *)malloc(fullpath_len + 1);
+            fullpath = (char *)calloc(fullpath_len + 1, 1);
             if (fullpath == NULL) {
                 return NULL;
             }
             strlcpy(fullpath, ent->pw_dir, fullpath_len + 1);
             return fullpath;
         }
-        username = (char *)malloc(after - name + 1 + 1);
+        username = (char *)calloc(after - name + 1 + 1, 1);
         if (username == NULL) {
             /* failed to malloc username */
             return NULL;
@@ -461,14 +471,15 @@ homeexpand(char *name)
      * build the fullpath given the home directory
      */
     snprintf_len = strlen(home2) + strlen(after) + 1;
-    fullpath = (char *)malloc(snprintf_len + 1);
+    fullpath = (char *)calloc(snprintf_len + 1, 1);
     if (fullpath == NULL) {
         return NULL;
     }
     snprintf(fullpath, snprintf_len, "%s%s", home2, after);
     fullpath[snprintf_len] = '\0'; /* paranoia */
     return fullpath;
-#endif /* Windows free systems */
+
+#endif
 }
 
 /*
@@ -531,7 +542,7 @@ f_open(char *name, char *mode)
  * given:
  *      name            file name to be read
  */
-S_FUNC int
+static int
 openfile(char *name)
 {
     FILE *fp; /* open file descriptor */
@@ -552,7 +563,7 @@ openfile(char *name)
     cip->i_fp = fp;
     cip->i_line = 1;
     namelen = strlen(name);
-    cip->i_name = (char *)malloc(namelen + 1);
+    cip->i_name = (char *)calloc(namelen + 1, 1);
     if (cip->i_name == NULL) {
         return -1;
     }
@@ -589,7 +600,7 @@ openstring(char *str, size_t num)
     if ((depth >= MAXDEPTH) || (str == NULL)) {
         return -2;
     }
-    cp = (char *)malloc(num + 1);
+    cp = (char *)calloc(num + 1, 1);
     if (cp == NULL) {
         return -1;
     }
@@ -664,7 +675,7 @@ resetinput(void)
     while (depth > 0) {
         closeinput();
     }
-    noprompt = FALSE;
+    noprompt = false;
 }
 
 /*
@@ -674,7 +685,7 @@ void
 setprompt(char *str)
 {
     prompt = str;
-    noprompt = FALSE;
+    noprompt = false;
 }
 
 /*
@@ -736,7 +747,7 @@ nextline(void)
 
     cp = linebuf;
     if (linesize == 0) {
-        cp = (char *)malloc(TTYSIZE + 1);
+        cp = (char *)calloc(TTYSIZE + 1, 1);
         if (cp == NULL) {
             math_error("Cannot allocate line buffer");
             not_reached();
@@ -746,9 +757,9 @@ nextline(void)
     }
     len = 0;
     for (;;) {
-        noprompt = TRUE;
+        noprompt = true;
         ch = nextchar();
-        noprompt = FALSE;
+        noprompt = false;
         if (ch == EOF) {
             return NULL;
         }
@@ -778,12 +789,12 @@ nextline(void)
  * The routines in the history module are called so that the user
  * can use a command history and emacs-like editing of the line.
  */
-S_FUNC int
+static int
 ttychar(void)
 {
     int ch;  /* current char */
     int len; /* length of current command */
-    STATIC char charbuf[256 * 1024];
+    static char charbuf[256 * 1024];
 
     /*
      * If we have more to read from the saved command line, then do that.
@@ -802,13 +813,13 @@ ttychar(void)
      * We need another complete line.
      */
     abortlevel = 0;
-    inputwait = TRUE;
+    inputwait = true;
     len = hist_getline(noprompt ? "" : prompt, charbuf, sizeof(charbuf));
     if (len == 0) {
-        inputwait = FALSE;
+        inputwait = false;
         return EOF;
     }
-    inputwait = FALSE;
+    inputwait = false;
 
     /*
      * Handle shell escape if present
@@ -850,7 +861,7 @@ ttychar(void)
 /*
  * Return whether or not the input source is the terminal.
  */
-BOOL
+bool
 inputisterminal(void)
 {
     return ((depth <= 0) || ((cip->i_str == NULL) && (cip->i_fp == NULL)));
@@ -941,7 +952,7 @@ runrcfiles(void)
             }
             continue;
         }
-        getcommands(FALSE);
+        getcommands(false);
         closeinput();
     }
 }
@@ -966,7 +977,7 @@ runrcfiles(void)
  *      sbuf            stat of the inode in question
  */
 
-S_FUNC int
+static int
 isinoderead(struct stat *sbuf)
 {
     int i;
@@ -980,18 +991,21 @@ isinoderead(struct stat *sbuf)
     /* scan the entire readset */
     for (i = 0; i < maxreadset; ++i) {
 #if defined(_WIN32) || defined(_WIN64)
+
         char tmp[MAX_PATH + 1];
         tmp[MAX_PATH] = '\0';
         if (_fullpath(tmp, cip->i_name, MAX_PATH) && readset[i].active && strcasecmp(readset[i].path, tmp) == 0) {
             /* found a match */
             return i;
         }
-#else  /* Windows free systems */
+#else
+
         if (readset[i].active && sbuf->st_dev == readset[i].inode.st_dev && sbuf->st_ino == readset[i].inode.st_ino) {
             /* found a match */
             return i;
         }
-#endif /* Windows free systems */
+
+#endif
     }
 
     /* no match found */
@@ -1006,7 +1020,7 @@ isinoderead(struct stat *sbuf)
  *
  * This function returns the index of the next free element, or -1.
  */
-S_FUNC int
+static int
 findfreeread(void)
 {
     int i;
@@ -1015,7 +1029,7 @@ findfreeread(void)
     if (readset == NULL || maxreadset <= 0) {
 
         /* malloc a new readset */
-        readset = (READSET *)malloc((READSET_ALLOC + 1) * sizeof(READSET));
+        readset = (READSET *)calloc(READSET_ALLOC + 1, sizeof(READSET));
         if (readset == NULL) {
             return -1;
         }
@@ -1065,7 +1079,7 @@ findfreeread(void)
  *      path            full pathname of file
  *      sbuf            stat of the path
  */
-S_FUNC int
+static int
 addreadset(char *name, char *path, struct stat *sbuf)
 {
     int ret;         /* index to return */
@@ -1093,12 +1107,13 @@ addreadset(char *name, char *path, struct stat *sbuf)
 
     /* load our information into the readset entry */
     name_len = strlen(name);
-    readset[ret].name = (char *)malloc(name_len + 1);
+    readset[ret].name = (char *)calloc(name_len + 1, 1);
     if (readset[ret].name == NULL) {
         return -1;
     }
     strlcpy(readset[ret].name, name, name_len + 1);
 #if defined(_WIN32) || defined(_WIN64)
+
     /*
      * For _WIN32 or _WIN64, _fullpath expands the path to a fully qualified
      * path name, which under _WIN32 or _WIN64 FAT and NTFS is unique, just
@@ -1111,14 +1126,17 @@ addreadset(char *name, char *path, struct stat *sbuf)
             return -1;
         }
     }
-#else  /* Windows free systems */
+
+#else
+
     path_len = strlen(path);
-    readset[ret].path = (char *)malloc(path_len + 1);
+    readset[ret].path = (char *)calloc(path_len + 1, 1);
     if (readset[ret].path == NULL) {
         return -1;
     }
     strlcpy(readset[ret].path, path, path_len + 1);
-#endif /* Windows free systems */
+
+#endif
     readset[ret].inode = *sbuf;
     readset[ret].active = 1;
 

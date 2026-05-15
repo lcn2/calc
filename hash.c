@@ -1,7 +1,7 @@
 /*
  * hash - one-way hash routines
  *
- * Copyright (C) 1999-2007,2021-2023  Landon Curt Noll
+ * Copyright (C) 1999-2007,2021-2023,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -24,29 +24,33 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
-#include "have_string.h"
-#ifdef HAVE_STRING_H
-#  include <string.h>
-#endif
+#include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include "calc.h"
-#include "alloc.h"
-#include "value.h"
-#include "zrand.h"
-#include "zrandom.h"
-#include "hash.h"
+#include <stdint.h>
+#include <stdbool.h>
 
+/*
+ * calc local src includes
+ */
+#include "value.h"
+#include "calc.h"
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 /*
  * external hash_setup functions
  */
-E_FUNC void shs_init_state(HASH *);
-E_FUNC void sha1_init_state(HASH *);
-E_FUNC void MD5_init_state(HASH *);
+extern void shs_init_state(HASH *);
+extern void sha1_init_state(HASH *);
+extern void MD5_init_state(HASH *);
 
 /*
  * hash_long can deal with bool's, int's, FLAGS's and LEN's
@@ -59,7 +63,7 @@ E_FUNC void MD5_init_state(HASH *);
 /*
  * hash_setup - setup the hash state for a given hash
  */
-STATIC struct hash_setup {
+static struct hash_setup {
     int type;                   /* hash type (see XYZ_HASH_TYPE below) */
     void (*init_state)(HASH *); /* initialize a hash state */
 } htbl[] = {
@@ -86,7 +90,7 @@ hash_init(int type, HASH *state)
      * malloc if needed
      */
     if (state == NULL) {
-        state = (HASH *)malloc(sizeof(HASH));
+        state = (HASH *)calloc(1, sizeof(HASH));
         if (state == NULL) {
             math_error("hash_init: cannot malloc HASH");
             not_reached();
@@ -163,7 +167,7 @@ hash_copy(HASH *state)
     /*
      * malloc new state
      */
-    hnew = (HASH *)malloc(sizeof(HASH));
+    hnew = (HASH *)calloc(1, sizeof(HASH));
     if (hnew == NULL) {
         math_error("hash_init: cannot malloc HASH");
         not_reached();
@@ -305,7 +309,7 @@ hash_long(int type, long longval, HASH *state)
      */
     memset((char *)lval, 0, sizeof(lval));
     lval[0] = longval;
-    (state->update)(state, (USB8 *)lval, sizeof(lval));
+    (state->update)(state, (uint8_t *)lval, sizeof(lval));
 
     /*
      * all done
@@ -387,7 +391,7 @@ hash_zvalue(int type, ZVALUE zval, HASH *state)
             half[j] = zval.v[i + j + 1];
             half[j + 1] = zval.v[i + j];
         }
-        (state->update)(state, (USB8 *)half, state->chunksize);
+        (state->update)(state, (uint8_t *)half, state->chunksize);
     }
 
     /*
@@ -408,7 +412,7 @@ hash_zvalue(int type, ZVALUE zval, HASH *state)
             half[j + 1] = zval.v[zval.len - 1];
             --full_lim;
         }
-        (state->update)(state, (USB8 *)half, (zval.len - full_lim) * sizeof(HALF));
+        (state->update)(state, (uint8_t *)half, (zval.len - full_lim) * sizeof(HALF));
     }
 
 #else
@@ -422,12 +426,12 @@ hash_zvalue(int type, ZVALUE zval, HASH *state)
      * Endian order (which happens to be laid out in the same order as
      * 32 bit values).
      */
-    (state->update)(state, (USB8 *)zval.v, zval.len * sizeof(HALF));
+    (state->update)(state, (uint8_t *)zval.v, zval.len * sizeof(HALF));
 
 #  if BASEB == 16
     if (zval.len & 1) { /* padding to complete word */
         half[0] = 0;
-        (state->update)(state, (USB8 *)half, 2);
+        (state->update)(state, (uint8_t *)half, 2);
     }
 #  endif
 
@@ -602,7 +606,7 @@ hash_str(int type, char *str, HASH *state)
     /*
      * hash the string
      */
-    (state->update)(state, (USB8 *)str, len);
+    (state->update)(state, (uint8_t *)str, len);
 
     /*
      * all done
@@ -642,7 +646,7 @@ hash_STR(int type, STRING *str, HASH *state)
     /*
      * hash the string
      */
-    (state->update)(state, (USB8 *)str->s_str, (USB32)str->s_len);
+    (state->update)(state, (uint8_t *)str->s_str, (uint32_t)str->s_len);
 
     /*
      * all done
@@ -651,19 +655,19 @@ hash_STR(int type, STRING *str, HASH *state)
 }
 
 /*
- * hash_usb8 - hash an array of USB8s
+ * hash_usb8 - hash an array of uint8_ts
  *
  * given:
  *      type    - hash type (see hash.h)
- *      byte    - pointer to an array of USB8s
- *      len     - number of USB8s to hash
+ *      byte    - pointer to an array of uint8_ts
+ *      len     - number of uint8_ts to hash
  *      state   - the state to hash or NULL
  *
  * returns:
  *      the new state
  */
 HASH *
-hash_usb8(int type, USB8 *byte, int len, HASH *state)
+hash_usb8(int type, uint8_t *byte, int len, HASH *state)
 {
     /*
      * initialize if state is NULL
@@ -683,7 +687,7 @@ hash_usb8(int type, USB8 *byte, int len, HASH *state)
     /*
      * hash the array of octets
      */
-    (state->update)(state, byte, (USB32)len);
+    (state->update)(state, byte, (uint32_t)len);
 
     /*
      * all done
@@ -882,12 +886,12 @@ hash_value(int type, void *v, HASH *state)
         /* hash the RAND state */
         state = hash_int(type, value->v_rand->seeded, state);
         state = hash_int(type, value->v_rand->bits, state);
-        (state->update)(state, (USB8 *)value->v_rand->buffer, SLEN * FULL_BITS / 8);
+        (state->update)(state, (uint8_t *)value->v_rand->buffer, SLEN * FULL_BITS / 8);
         state = hash_int(type, value->v_rand->j, state);
         state = hash_int(type, value->v_rand->k, state);
         state = hash_int(type, value->v_rand->need_to_skip, state);
-        (state->update)(state, (USB8 *)value->v_rand->slot, SCNT * FULL_BITS / 8);
-        (state->update)(state, (USB8 *)value->v_rand->shuf, SHUFLEN * FULL_BITS / 8);
+        (state->update)(state, (uint8_t *)value->v_rand->slot, SCNT * FULL_BITS / 8);
+        (state->update)(state, (uint8_t *)value->v_rand->shuf, SHUFLEN * FULL_BITS / 8);
         state->bytes = false; /* as if reading words */
         break;
 
@@ -899,7 +903,7 @@ hash_value(int type, void *v, HASH *state)
         /* hash the RANDOM state */
         state = hash_int(type, value->v_random->seeded, state);
         state = hash_int(type, value->v_random->bits, state);
-        (state->update)(state, (USB8 *)&(value->v_random->buffer), BASEB / 8);
+        (state->update)(state, (uint8_t *)&(value->v_random->buffer), BASEB / 8);
         state = hash_zvalue(type, value->v_random->r, state);
         state = hash_zvalue(type, value->v_random->n, state);
         state->bytes = false; /* as if reading words */

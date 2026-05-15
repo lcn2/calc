@@ -24,89 +24,48 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 #include <setjmp.h>
 #include <signal.h>
+#include <sys/types.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <termios.h>
+typedef struct termios ttystruct;
 
+/*
+ * conditional <system> head includes
+ */
 #if !defined(_WIN32) && !defined(_WIN64)
 #  include <pwd.h>
 #endif
 
-#include "lib_calc.h"
+/*
+ * calc local src includes
+ */
+#include "value.h"
 #include "calc.h"
-#include "zmath.h"
-#include "zrandom.h"
+#include "lib_calc.h"
 #include "conf.h"
 #include "token.h"
 #include "symbol.h"
+#include "label.h"
 #include "func.h"
 #include "strl.h"
-
+#include "have_unused.h"
 #if defined(CUSTOM)
 #  include "custom.h"
-#endif /* CUSTOM */
-
-#include "have_strdup.h"
-#if !defined(HAVE_STRDUP)
-#  define strdup(x) calc_strdup((CONST char *)(x))
-#endif /* HAVE_STRDUP */
-
-#include "have_unistd.h"
-#if defined(HAVE_UNISTD_H)
-#  include <unistd.h>
 #endif
-
-#include "have_stdlib.h"
-#if defined(HAVE_STDLIB_H)
-#  include <stdlib.h>
-#endif
-
-#include "terminal.h"
-#if defined(USE_TERMIOS)
-
-#  include <termios.h>
-typedef struct termios ttystruct;
-
-#elif defined(USE_TERMIO)
-
-#  include <termio.h>
-typedef struct termio ttystruct;
-
-#elif defined(USE_SGTTY)
-
-#  include <sys/ioctl.h>
-typedef struct sgttyb ttystruct;
-
-#else
-
-typedef struct {
-    int fd;
-} ttystruct;
-
-#endif
-
-#if !defined(_WIN32) && !defined(_WIN64)
-#  if !defined(USE_SGTTY) && !defined(USE_TERMIOS) && !defined(USE_TERMIO)
-
--=*#*=- A Windows free system without termio, termios or sgtty!!! -=*#*=-
--=*#*=- We do not know how to compile for such a host, sorry!!!! -=*#*=-
-
-#  endif
-#endif /* Windows */
-
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
 
-/*
- * in case we do not have certain .h files
- */
-#if !defined(HAVE_STDLIB_H) && !defined(HAVE_UNISTD_H)
-#  if !defined(HAVE_UID_T) && !defined(_UID_T)
-typedef unsigned short uid_t;
-#  endif
-E_FUNC char *getenv();
-E_FUNC uid_t geteuid();
-#endif
+#include "banned.h" /* include after all other includes */
 
 /*
  * Common definitions
@@ -152,7 +111,7 @@ char *calc_helpdir = NULL; /* $CALCHELP or /usr/local/share/calc/help */
 /* $CALCCUSTOMHELP or /usr/local/share/calc/custhelp */
 #if defined(CUSTOM)
 char *calc_customhelpdir = NULL;
-#endif                    /* CUSTOM */
+#endif
 int stdin_tty = false;    /* true if stdin is a tty */
 int havecommands = false; /* true if have one or more cmd args */
 long stoponerror = 0;     /* >0 => stop, <0 => continue, ==0 => use -c */
@@ -195,23 +154,24 @@ char *user_debug = NULL;     /* !=NULL => value of config("user_debug") */
 /*
  * initialization functions
  */
-E_FUNC void math_setfp(FILE *fp);
-E_FUNC void file_init(void);
-E_FUNC void zio_init(void);
-E_FUNC void initialize(void);
-E_FUNC void reinitialize(void);
+extern void math_setfp(FILE *fp);
+extern void file_init(void);
+extern void zio_init(void);
+extern void initialize(void);
+extern void reinitialize(void);
 
 /*
  * static declarations
  */
-STATIC int init_done = 0;          /* 1 => we already initialized */
-STATIC int *fd_setup = NULL;       /* fd's setup for interaction or -1 */
-STATIC int fd_setup_len = 0;       /* number of fd's in fd_setup */
-STATIC ttystruct *fd_orig = NULL;  /* fd original state */
-STATIC ttystruct *fd_cur = NULL;   /* fd current state */
-S_FUNC void initenv(void);         /* setup calc environment */
-S_FUNC int find_tty_state(int fd); /* find slot for saved tty state */
-STATIC bool initialized = false;   /* true => initialize() has been run */
+static bool init_done = false;     /* true => we already initialized */
+static int *fd_setup = NULL;       /* fd's setup for interaction or -1 */
+static int fd_setup_len = 0;       /* number of fd's in fd_setup */
+static ttystruct *fd_orig = NULL;  /* fd original state */
+static ttystruct *fd_cur = NULL;   /* fd current state */
+static void initenv(void);         /* setup calc environment */
+static int find_tty_state(int fd); /* find slot for saved tty state */
+static bool initialized = false;   /* true => initialize() has been run */
+static char *xdg_base(char *env, int mode);
 
 /*
  * libcalc_call_me_first - users of libcalc.a must call this function first!
@@ -355,7 +315,7 @@ libcalc_call_me_first(void)
         printf("libcalc_call_me_first: run_state from %s to %s\n", run_state_name(run_state), run_state_name(RUN_BEGIN));
     }
     run_state = RUN_BEGIN;
-    init_done = 1;
+    init_done = true;
     return;
 }
 
@@ -410,13 +370,20 @@ initialize(void)
     conf->maxprint = MAXPRINT_DEFAULT;
 
 #if defined(CUSTOM)
+
     /*
      * initialize custom registers
      */
     if (allow_custom) {
         init_custreg();
     }
-#endif /* CUSTOM */
+
+#endif
+
+    /*
+     * on exit, call libcalc_call_me_last()
+     */
+    atexit(libcalc_call_me_last);
 
     /*
      * note that we are done
@@ -467,8 +434,10 @@ cvmalloc_error(char *message)
 /*
  * initenv - obtain various environment variable values.
  *
- * If these environment variables do not exist, or is an empty string,
- * use the default values as found in calc.h:
+ * If these environment variables do not exist, or if they are an empty string,
+ * use XDG defaults when the relevant XDG directory is usable, otherwise use
+ * the compiled default values as found in calc.h.  For calc_history, favour
+ * preserving an existing ~/.calc_history over using the XDG state directory:
  *
  *      $CALCPATH               set calcpath
  *      $CALCRC                 set calcrc
@@ -495,18 +464,31 @@ cvmalloc_error(char *message)
  * In all cases, the obtained value is a strdup-ed value so that the
  * final call to libcalc_call_me_last() can free the non-NULL string.
  */
-S_FUNC void
+static void
 initenv(void)
 {
 #if !defined(_WIN32) && !defined(_WIN64)
     struct passwd *ent; /* our password entry */
 #endif
     char *c;
+    char *legacy_history;
+    char *xdg_config;
+    char *xdg_data;
+    size_t len;
 
     /* determine the $CALCPATH value */
     c = (no_env ? NULL : getenv(CALCPATH));
-    calcpath = (c ? strdup(c) : NULL);
-    if (calcpath == NULL || *calcpath == '\0') {
+    if (c != NULL && *c != '\0') {
+        calcpath = strdup(c);
+    } else if ((xdg_data = xdg_base("XDG_DATA_HOME", X_OK)) != NULL && (xdg_config = xdg_base("XDG_CONFIG_HOME", X_OK)) != NULL) {
+        len = strlen(xdg_data) + strlen(xdg_config) + sizeof(".:./cal:/calc:/calc:") + strlen(DEFAULTCALCPATH_SYS);
+        calcpath = malloc(len);
+        if (calcpath == NULL) {
+            math_error("Unable to allocate string for calcpath");
+            not_reached();
+        }
+        snprintf(calcpath, len, ".:./cal:%s/calc:%s/calc:%s", xdg_data, xdg_config, DEFAULTCALCPATH_SYS);
+    } else {
         calcpath = strdup(DEFAULTCALCPATH);
     }
     if (calcpath == NULL) {
@@ -516,8 +498,17 @@ initenv(void)
 
     /* determine the $CALCRC value */
     c = (no_env ? NULL : getenv(CALCRC));
-    calcrc = (c ? strdup(c) : NULL);
-    if (calcrc == NULL || *calcrc == '\0') {
+    if (c != NULL && *c != '\0') {
+        calcrc = strdup(c);
+    } else if ((xdg_config = xdg_base("XDG_CONFIG_HOME", X_OK)) != NULL) {
+        len = strlen(xdg_config) + sizeof("./.calcinit:/calc/calcrc:") + strlen(DEFAULTCALCRC_SYS);
+        calcrc = malloc(len);
+        if (calcrc == NULL) {
+            math_error("Unable to allocate string for calcrc");
+            not_reached();
+        }
+        snprintf(calcrc, len, "./.calcinit:%s/calc/calcrc:%s", xdg_config, DEFAULTCALCRC_SYS);
+    } else {
         calcrc = strdup(DEFAULTCALCRC);
     }
     if (calcrc == NULL) {
@@ -544,6 +535,7 @@ initenv(void)
     c = (no_env ? NULL : getenv(HOME));
     home = (c ? strdup(c) : NULL);
 #if defined(_WIN32) || defined(_WIN64)
+
     if (home == NULL || home[0] == '\0') {
         /* free home if it was previously allocated, but empty */
         if (home != NULL) {
@@ -553,7 +545,9 @@ initenv(void)
         /* just assume . is home if all else fails */
         home = strdup(".");
     }
-#else  /* Windows free systems */
+
+#else
+
     if (home == NULL || home[0] == '\0') {
         /* free home if it was previously allocated, but empty */
         if (home != NULL) {
@@ -570,7 +564,8 @@ initenv(void)
             home = strdup(ent->pw_dir);
         }
     }
-#endif /* Windows free systems */
+
+#endif
     if (home == NULL) {
         math_error("Unable to allocate string for home");
         not_reached();
@@ -600,9 +595,30 @@ initenv(void)
 
     /* determine the $CALCHISTFILE value */
     c = (no_env ? NULL : getenv(CALCHISTFILE));
-    calc_history = (c ? strdup(c) : NULL);
-    if (calc_history == NULL || *calc_history == '\0') {
-        calc_history = NULL; /* will use ~/.calc_history */
+    if (c != NULL && *c != '\0') {
+        calc_history = strdup(c);
+    } else if (home != NULL) {
+        len = strlen(home) + sizeof("/.calc_history");
+        legacy_history = malloc(len);
+        if (legacy_history == NULL) {
+            math_error("Unable to allocate string for legacy_history");
+            not_reached();
+        }
+        snprintf(legacy_history, len, "%s/.calc_history", home);
+        if (access(legacy_history, F_OK) == 0) {
+            calc_history = legacy_history;
+        } else {
+            free(legacy_history);
+        }
+    }
+    if (calc_history == NULL && (c = xdg_base("XDG_STATE_HOME", X_OK | W_OK)) != NULL) {
+        len = strlen(c) + sizeof("/calc/history");
+        calc_history = malloc(len);
+        if (calc_history == NULL) {
+            math_error("Unable to allocate string for calc_history");
+            not_reached();
+        }
+        snprintf(calc_history, len, "%s/calc/history", c);
     }
     /* NOTE: calc_history may be set to NULL in which case hist_init() may set it later on */
 
@@ -619,6 +635,7 @@ initenv(void)
     }
 
 #if defined(CUSTOM)
+
     /* determine the $CALCCUSTOMHELP value */
     c = (no_env ? NULL : getenv(CALCCUSTOMHELP));
     calc_customhelpdir = (c ? strdup(c) : NULL);
@@ -630,7 +647,8 @@ initenv(void)
         math_error("Unable to allocate string for calc_customhelpdir");
         not_reached();
     }
-#endif /* CUSTOM */
+
+#endif
 }
 
 /*
@@ -653,7 +671,7 @@ libcalc_call_me_last(void)
     /*
      * firewall
      */
-    if (init_done == 0) {
+    if (init_done == false) {
         return;
     }
 
@@ -738,16 +756,18 @@ libcalc_call_me_last(void)
         calc_helpdir = NULL;
     }
 #if defined(CUSTOM)
+
     if (calc_customhelpdir != NULL) {
         free(calc_customhelpdir);
         calc_customhelpdir = NULL;
     }
-#endif /* CUSTOM */
+
+#endif
 
     /*
      * all done
      */
-    init_done = 0;
+    init_done = false;
     return;
 }
 
@@ -784,13 +804,13 @@ run_state_name(run state)
  * calc_strdup - calc interface to provide or simulate strdup()
  */
 char *
-calc_strdup(CONST char *s1)
+calc_strdup(const char *s1)
 {
 #if defined(HAVE_STRDUP)
 
     return strdup(s1);
 
-#else /* HAVE_STRDUP */
+#else
 
     char *ret;     /* return string */
     size_t s1_len; /* length of string to duplicate */
@@ -806,7 +826,7 @@ calc_strdup(CONST char *s1)
      * allocate duplicate storage
      */
     s1_len = strlen(s1);
-    ret = (char *)malloc(s1_len + 1);
+    ret = (char *)calloc(s1_len + 1, 1);
 
     /*
      * if we have storage, duplicate the string
@@ -820,7 +840,7 @@ calc_strdup(CONST char *s1)
      */
     return ret;
 
-#endif /* HAVE_STRDUP */
+#endif
 }
 
 /*
@@ -832,7 +852,7 @@ calc_strdup(CONST char *s1)
  * Returns:
  *      indx    The index into fd_setup[], fd_orig[] and fd_cur[] to use or -1
  */
-S_FUNC int
+static int
 find_tty_state(int fd)
 {
     int *new_fd_setup;      /* new fd_setup array */
@@ -854,16 +874,16 @@ find_tty_state(int fd)
     if (fd_setup_len <= 0 || fd_setup == NULL || fd_orig == NULL) {
 
         /* setup for a single descriptor */
-        fd_setup = (int *)malloc(sizeof(fd_setup[0]));
+        fd_setup = (int *)calloc(1, sizeof(fd_setup[0]));
         if (fd_setup == NULL) {
             return -1;
         }
         fd_setup[0] = -1;
-        fd_orig = (ttystruct *)malloc(sizeof(fd_orig[0]));
+        fd_orig = (ttystruct *)calloc(1, sizeof(fd_orig[0]));
         if (fd_orig == NULL) {
             return -1;
         }
-        fd_cur = (ttystruct *)malloc(sizeof(fd_cur[0]));
+        fd_cur = (ttystruct *)calloc(1, sizeof(fd_cur[0]));
         if (fd_cur == NULL) {
             return -1;
         }
@@ -953,68 +973,8 @@ calc_tty(int fd)
         return false;
     }
 
-#if defined(USE_SGTTY)
-
     /*
-     * USE_SGTTY tty state method
-     */
-    /* save original state if needed */
-    if (fd_setup[slot] < 0 && ioctl(fd, TIOCGETP, fd_orig + slot) < 0) {
-        if (conf->calc_debug & CALCDBG_TTY) {
-            printf("calc_tty: Cannot TIOCGETP fd %d\n", fd);
-        }
-        return false;
-    }
-    /* setup for new state */
-    fd_cur[slot] = fd_orig[slot];
-    fd_cur[slot].sg_flags &= ~ECHO;
-    fd_cur[slot].sg_flags |= CBREAK;
-    /* enable new state */
-    if (ioctl(fd, TIOCSETP, fd_cur + slot) < 0) {
-        if (conf->calc_debug & CALCDBG_TTY) {
-            printf("calc_tty: Cannot TIOCSETP fd %d\n", fd);
-        }
-        return false;
-    }
-    if (conf->calc_debug & CALCDBG_TTY) {
-        printf("calc_tty: stty -ECHO +CBREAK: fd %d\n", fd);
-    }
-
-#elif defined(USE_TERMIO)
-
-    /*
-     * USE_TERMIO tty state method
-     */
-    if (fd_setup[slot] < 0 && ioctl(fd, TCGETA, fd_orig + slot) < 0) {
-        if (conf->calc_debug & CALCDBG_TTY) {
-            printf("calc_tty: Cannot TCGETA fd %d\n", fd);
-        }
-        return false;
-    }
-    /* setup for new state */
-    fd_cur[slot] = fd_orig[slot];
-    fd_cur[slot].c_lflag &= ~(ECHO | ECHOE | ECHOK);
-    fd_cur[slot].c_iflag |= ISTRIP;
-    fd_cur[slot].c_lflag &= ~ICANON;
-    fd_cur[slot].c_cc[VMIN] = 1;
-    fd_cur[slot].c_cc[VTIME] = 0;
-    /* enable new state */
-    if (ioctl(fd, TCSETAW, fd_cur + slot) < 0) {
-        if (conf->calc_debug & CALCDBG_TTY) {
-            printf("calc_tty: Cannot TCSETAW fd %d\n", fd);
-        }
-        return false;
-    }
-    if (conf->calc_debug & CALCDBG_TTY) {
-        printf("calc_tty: stty -ECHO -ECHOE -ECHOK -ICANON +ISTRIP "
-               "VMIN=1 VTIME=0: fd %d\n",
-               fd);
-    }
-
-#elif defined(USE_TERMIOS)
-
-    /*
-     * USE_TERMIOS tty state method
+     * use termios tty state method
      */
     if (fd_setup[slot] < 0 && tcgetattr(fd, fd_orig + slot) < 0) {
         if (conf->calc_debug & CALCDBG_TTY) {
@@ -1041,11 +1001,6 @@ calc_tty(int fd)
                "VMIN=1 VTIME=0: fd %d\n",
                fd);
     }
-
-#else /* Using none of the above */
-    fd_cur[slot] = fd_orig[slot];
-
-#endif
 
     /*
      * note that the tty slot is on use
@@ -1093,43 +1048,13 @@ orig_tty(int fd)
         return false;
     }
 
-#if defined(USE_SGTTY)
-
     /*
-     * USE_SGTTY tty state method
-     */
-    (void)ioctl(fd, TIOCSETP, fd_orig + slot);
-    if (conf->calc_debug & CALCDBG_TTY) {
-        printf("orig_tty: TIOCSETP restored fd %d\n", fd);
-    }
-
-#elif defined(USE_TERMIO)
-
-    /*
-     * USE_TERMIO tty state method
-     */
-    (void)ioctl(fd, TCSETAW, fd_orig + slot);
-    if (conf->calc_debug & CALCDBG_TTY) {
-        printf("orig_tty: TCSETAW restored fd %d\n", fd);
-    }
-
-#elif defined(USE_TERMIOS)
-
-    /*
-     * assume USE_SGTTY tty state method
+     * assume termios tty state method
      */
     (void)tcsetattr(fd, TCSANOW, fd_orig + slot);
     if (conf->calc_debug & CALCDBG_TTY) {
         printf("orig_tty: TCSANOW restored fd %d\n", fd);
     }
-
-#else /* nothing assigned */
-
-    if (conf->calc_debug & CALCDBG_TTY) {
-        printf("orig_tty: nothing restored to fd %d\n", fd);
-    }
-
-#endif
 
     /*
      * note new current state
@@ -1144,3 +1069,30 @@ orig_tty(int fd)
     fd_setup[slot] = -1;
     return true;
 }
+
+/*
+ * xdg_base - return an XDG base directory if it names a usable absolute path.
+ */
+#if defined(_WIN32) || defined(_WIN64)
+
+static char *
+xdg_base(char *UNUSED(env), int UNUSED(mode))
+{
+    return NULL;
+}
+
+#else
+
+static char *
+xdg_base(char *env, int mode)
+{
+    char *base;
+
+    base = (no_env ? NULL : getenv(env));
+    if (base == NULL || *base == '\0' || base[0] != PATHCHAR || access(base, mode) != 0) {
+        return NULL;
+    }
+    return base;
+}
+
+#endif

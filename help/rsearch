@@ -22,7 +22,8 @@ DESCRIPTION
     The nature of the search depends on whether the rsearch() is called
     with or without the fourth argument d.
 
-Four argument case:
+    Four argument case:
+    -------------------
 
     The search interval is as for search(a,b,c,d), i.e. the indices i
     to be examined are to satisfy c <= i < d and 0 <= i < size(a)
@@ -51,12 +52,16 @@ Four argument case:
     reading of characters is required (e.g. if start > end), the original
     file-position is not changed.
 
-
     Two- or Three-argument case:
+    ----------------------------
 
-    If a is not a file, the default value for c is size(a).  If a is a
-    file, rsearch(a,b) = rsearch(a, b, ftell(a)), and
-    rsearch(a,b,) = rsearch(a, b, size(a)).
+    If a is not a file, the default value for c is size(a).  If a is a file:
+
+        rsearch(a,b) = rsearch(a, b, ftell(a))
+
+    and:
+
+        rsearch(a,b,) = rsearch(a, b, size(a))
 
     If a is not a file, the search starts, if at all, at the largest
     non-negative index i for which i <= c and i < size(a), and continues
@@ -80,22 +85,86 @@ EXAMPLE
     ; rsearch(L, 4i, 1)
             2
 
+    ; x = rm("-f", "foo")
     ; f = fopen("foo", "w+")
     ; fputs(f, "This file has 28 characters.")
+    ; /*        0         1         2        */
+    ; /*         123456789 123456789 1234567 */
     ; fflush(f)
+
     ; rsearch(f, "ha")
         18
     ; ftell(f)
         19
+
     ; rsearch(f, "ha", 17)
         10
+    ; ftell(f)
+        11
+
     ; rsearch(f, "ha", 9)
     ; ftell(f)
         0
-    ; rsearch(f, "ha")
-        18
+
     ; rsearch(f, "ha", 5, 500)
         18
+    ; ftell(f)
+        19
+
+    ; rewind(f)
+    ; rsearch(f, "")
+        0
+    ; ftell(f)
+        0
+
+    ; rsearch(f, "ha",)
+        18
+    ; ftell(f)
+        19
+
+    ; rsearch(f, "hara", 12)
+    ; ftell(f)
+        0
+
+    ; rsearch(f, "ha", -10)
+        18
+    ; ftell(f)
+        19
+
+    ; rsearch(f, "ha", -9)
+        18
+    ; ftell(f)
+        19
+
+    ; rsearch(f, "has", ,)
+        10
+    ; ftell(f)
+        12
+
+    ; rsearch(f, "char", 11, 22)
+        17
+    ; ftell(f)
+        20
+
+    ; rsearch(f, "ha", 11, 20)
+        18
+    ; ftell(f)
+        19
+
+    ; rsearch(f, "ha", 500, 1000)
+    ; ftell(f)
+        19
+
+    ; rewind(f)
+    ; rsearch(f, "This file has 28 characters.")
+        0
+    ; ftell(f)
+        27
+
+    ; rsearch(f, "his file has 28 characters.")
+        1
+    ; ftell(f)
+        27
 
 LIMITS
     none
@@ -109,7 +178,7 @@ SEE ALSO
 
      assoc, list, mat
 
-## Copyright (C) 1999-2006,2021  Landon Curt Noll
+## Copyright (C) 1999-2006,2021,2026  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

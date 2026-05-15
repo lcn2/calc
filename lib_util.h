@@ -1,7 +1,7 @@
 /*
  * lib_util - calc link library utility routines
  *
- * Copyright (C) 1999-2007,2014  Landon Curt Noll
+ * Copyright (C) 1999-2007,2014,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -33,10 +33,10 @@
 #  define INCLUDE_LIB_UTIL_H
 
 /* external functions in lib_util.c */
-EXTERN int lowhex2bin[256];
-EXTERN char lowbin2hex[256];
-E_FUNC ZVALUE convstr2z(char *);
-E_FUNC ZVALUE convhex2z(char *hex);
-E_FUNC char *convz2hex(ZVALUE z);
+extern int lowhex2bin[256];
+extern char lowbin2hex[256];
+extern ZVALUE convstr2z(char *);
+extern ZVALUE convhex2z(char *hex);
+extern char *convz2hex(ZVALUE z);
 
-#endif /* INCLUDE_LIB_UTIL_H */
+#endif

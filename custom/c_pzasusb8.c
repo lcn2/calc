@@ -1,7 +1,7 @@
 /*
- * c_pzasusb8 - print numerator as a string of USB8s
+ * c_pzasusb8 - print numerator as a string of uint8_ts
  *
- * Copyright (C) 1999-2004,2021-2023  Ernest Bowen
+ * Copyright (C) 1999-2004,2021-2023,2026  Ernest Bowen
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -29,26 +29,32 @@
  */
 #if defined(CUSTOM)
 int c_pzasusb8_allowed = 1; /* CUSTOM defined */
-#else                       /* CUSTOM */
+#else
 int c_pzasusb8_allowed = 0; /* CUSTOM undefined */
-#endif                      /* CUSTOM */
+#endif
 
 #if defined(CUSTOM)
 
+/*
+ * important <system> header includes
+ */
 #  include <stdio.h>
-
-#  include "../have_const.h"
-#  include "../value.h"
-#  include "../custom.h"
-#  include "../zmath.h"
-
-#  include "../have_unused.h"
-
-#  include "../errtbl.h"
-#  include "../banned.h" /* include after system header <> includes */
+#  include <stdint.h>
+#  include <stdbool.h>
 
 /*
- * c_pzasusb8 - print numerator as a string of USB8s
+ * calc local src includes
+ */
+#  include "../value.h"
+#  include "../custom.h"
+#  include "../have_unused.h"
+#  include "../attribute.h"
+#  include "../errtbl.h"
+
+#  include "../banned.h" /* include after all other includes */
+
+/*
+ * c_pzasusb8 - print numerator as a string of uint8_ts
  *
  * given:
  *    count = 1;
@@ -64,7 +70,7 @@ c_pzasusb8(char *UNUSED(name), int UNUSED(count), VALUE **vals)
     VALUE result;  /* what we will return */
     ZVALUE z;      /* numerator of the value */
     long half_cnt; /* number of HALFs in the numerator */
-    USB8 *h;       /* octet pointer */
+    uint8_t *h;    /* octet pointer */
     long half_len; /* length of a half in octets */
     long i;
     long j;
@@ -88,7 +94,7 @@ c_pzasusb8(char *UNUSED(name), int UNUSED(count), VALUE **vals)
     /*
      * print the octets
      */
-    h = (USB8 *)z.v;
+    h = (uint8_t *)z.v;
     for (i = 0; i < half_cnt; ++i) {
         printf("%ld:\t", i);
         for (j = 0; j < half_len; ++j) {
@@ -99,4 +105,4 @@ c_pzasusb8(char *UNUSED(name), int UNUSED(count), VALUE **vals)
     return result;
 }
 
-#endif /* CUSTOM */
+#endif

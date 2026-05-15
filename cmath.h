@@ -1,7 +1,7 @@
 /*
  * cmath - data structures for extended precision complex arithmetic
  *
- * Copyright (C) 1999-2007,2014,2023  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2007,2014,2023,2026  David I. Bell and Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -26,12 +26,6 @@
 #if !defined(INCLUDE_CMATH_H)
 #  define INCLUDE_CMATH_H
 
-#  if defined(CALC_SRC) /* if we are building from the calc source tree */
-#    include "qmath.h"
-#  else
-#    include <calc/qmath.h>
-#  endif
-
 /*
  * Complex arithmetic definitions.
  */
@@ -44,115 +38,115 @@ typedef struct {
 /*
  * Input, output, and conversion routines.
  */
-E_FUNC COMPLEX *cmappr(COMPLEX *c, NUMBER *e, long rnd, bool cfree);
-E_FUNC COMPLEX *comalloc(void);
-E_FUNC COMPLEX *qqtoc(NUMBER *q1, NUMBER *q2);
-E_FUNC void comfree(COMPLEX *c);
-E_FUNC void comprint(COMPLEX *c);
-E_FUNC void cprintfr(COMPLEX *c);
+extern COMPLEX *cmappr(COMPLEX *c, NUMBER *e, long rnd, bool cfree);
+extern COMPLEX *comalloc(void);
+extern COMPLEX *qqtoc(NUMBER *q1, NUMBER *q2);
+extern void comfree(COMPLEX *c);
+extern void comprint(COMPLEX *c);
+extern void cprintfr(COMPLEX *c);
 
 /*
  * Basic numeric routines.
  */
 
-E_FUNC COMPLEX *c_add(COMPLEX *c1, COMPLEX *c2);
-E_FUNC COMPLEX *c_sub(COMPLEX *c1, COMPLEX *c2);
-E_FUNC COMPLEX *c_mul(COMPLEX *c1, COMPLEX *c2);
-E_FUNC COMPLEX *c_div(COMPLEX *c1, COMPLEX *c2);
-E_FUNC COMPLEX *c_addq(COMPLEX *c, NUMBER *q);
-E_FUNC COMPLEX *c_subq(COMPLEX *c, NUMBER *q);
-E_FUNC COMPLEX *c_mulq(COMPLEX *c, NUMBER *q);
-E_FUNC COMPLEX *c_divq(COMPLEX *c, NUMBER *q);
-E_FUNC COMPLEX *c_scale(COMPLEX *c, long i);
-E_FUNC COMPLEX *c_shift(COMPLEX *c, long i);
-E_FUNC COMPLEX *c_square(COMPLEX *c);
-E_FUNC COMPLEX *c_conj(COMPLEX *c);
-E_FUNC COMPLEX *c_real(COMPLEX *c);
-E_FUNC NUMBER *c_to_q(COMPLEX *c, bool cfree);
-E_FUNC COMPLEX *q_to_c(NUMBER *q);
-E_FUNC COMPLEX *c_imag(COMPLEX *c);
-E_FUNC COMPLEX *c_neg(COMPLEX *c);
-E_FUNC COMPLEX *c_inv(COMPLEX *c);
-E_FUNC COMPLEX *c_int(COMPLEX *c);
-E_FUNC COMPLEX *c_frac(COMPLEX *c);
-E_FUNC bool c_cmp(COMPLEX *c1, COMPLEX *c2);
+extern COMPLEX *c_add(COMPLEX *c1, COMPLEX *c2);
+extern COMPLEX *c_sub(COMPLEX *c1, COMPLEX *c2);
+extern COMPLEX *c_mul(COMPLEX *c1, COMPLEX *c2);
+extern COMPLEX *c_div(COMPLEX *c1, COMPLEX *c2);
+extern COMPLEX *c_addq(COMPLEX *c, NUMBER *q);
+extern COMPLEX *c_subq(COMPLEX *c, NUMBER *q);
+extern COMPLEX *c_mulq(COMPLEX *c, NUMBER *q);
+extern COMPLEX *c_divq(COMPLEX *c, NUMBER *q);
+extern COMPLEX *c_scale(COMPLEX *c, long i);
+extern COMPLEX *c_shift(COMPLEX *c, long i);
+extern COMPLEX *c_square(COMPLEX *c);
+extern COMPLEX *c_conj(COMPLEX *c);
+extern COMPLEX *c_real(COMPLEX *c);
+extern NUMBER *c_to_q(COMPLEX *c, bool cfree);
+extern COMPLEX *q_to_c(NUMBER *q);
+extern COMPLEX *c_imag(COMPLEX *c);
+extern COMPLEX *c_neg(COMPLEX *c);
+extern COMPLEX *c_inv(COMPLEX *c);
+extern COMPLEX *c_int(COMPLEX *c);
+extern COMPLEX *c_frac(COMPLEX *c);
+extern bool c_cmp(COMPLEX *c1, COMPLEX *c2);
 
 /*
  * More complicated functions.
  */
-E_FUNC COMPLEX *c_powi(COMPLEX *c, NUMBER *q);
-E_FUNC NUMBER *c_ilog(COMPLEX *c, ZVALUE base);
+extern COMPLEX *c_powi(COMPLEX *c, NUMBER *q);
+extern NUMBER *c_ilog(COMPLEX *c, ZVALUE base);
 
 /*
  * Transcendental routines.  These all take an epsilon argument to
  * specify how accurately these are to be calculated.
  */
-E_FUNC COMPLEX *c_power(COMPLEX *c1, COMPLEX *c2, NUMBER *epsilon);
-E_FUNC COMPLEX *c_sqrt(COMPLEX *c, NUMBER *epsilon, long R);
-E_FUNC COMPLEX *c_root(COMPLEX *c, NUMBER *q, NUMBER *epsilon);
-E_FUNC COMPLEX *c_exp(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_ln(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_log(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_log2(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_cos(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_sin(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_cosh(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_sinh(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_polar(NUMBER *q1, NUMBER *q2, NUMBER *epsilon);
-E_FUNC COMPLEX *c_rel(COMPLEX *c1, COMPLEX *c2);
-E_FUNC COMPLEX *c_asin(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_acos(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_tan(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_atan(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_cot(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_acot(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_sec(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_asec(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_csc(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_acsc(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_asinh(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_acosh(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_atanh(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_acoth(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_asech(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_acsch(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_gd(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_agd(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_power(COMPLEX *c1, COMPLEX *c2, NUMBER *epsilon);
+extern COMPLEX *c_sqrt(COMPLEX *c, NUMBER *epsilon, long R);
+extern COMPLEX *c_root(COMPLEX *c, NUMBER *q, NUMBER *epsilon);
+extern COMPLEX *c_exp(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_ln(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_log(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_log2(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_cos(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_sin(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_cosh(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_sinh(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_polar(NUMBER *q1, NUMBER *q2, NUMBER *epsilon);
+extern COMPLEX *c_rel(COMPLEX *c1, COMPLEX *c2);
+extern COMPLEX *c_asin(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_acos(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_tan(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_atan(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_cot(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_acot(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_sec(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_asec(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_csc(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_acsc(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_asinh(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_acosh(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_atanh(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_acoth(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_asech(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_acsch(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_gd(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_agd(COMPLEX *c, NUMBER *epsilon);
 
 /*
  * historical trig functions
  */
-E_FUNC COMPLEX *c_versin(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_aversin(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_coversin(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_acoversin(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_vercos(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_avercos(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_covercos(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_acovercos(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_haversin(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_ahaversin(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_hacoversin(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_ahacoversin(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_havercos(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_ahavercos(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_hacovercos(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_ahacovercos(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_exsec(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_aexsec(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_excsc(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_aexcsc(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_crd(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_acrd(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_cas(COMPLEX *c, NUMBER *epsilon);
-E_FUNC COMPLEX *c_cis(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_versin(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_aversin(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_coversin(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_acoversin(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_vercos(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_avercos(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_covercos(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_acovercos(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_haversin(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_ahaversin(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_hacoversin(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_ahacoversin(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_havercos(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_ahavercos(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_hacovercos(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_ahacovercos(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_exsec(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_aexsec(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_excsc(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_aexcsc(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_crd(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_acrd(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_cas(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_cis(COMPLEX *c, NUMBER *epsilon);
 
 /*
  * external functions
  */
-E_FUNC COMPLEX *swap_b8_in_COMPLEX(COMPLEX *dest, COMPLEX *src, bool all);
-E_FUNC COMPLEX *swap_b16_in_COMPLEX(COMPLEX *dest, COMPLEX *src, bool all);
-E_FUNC COMPLEX *swap_HALF_in_COMPLEX(COMPLEX *dest, COMPLEX *src, bool all);
+extern COMPLEX *swap_b8_in_COMPLEX(COMPLEX *dest, COMPLEX *src, bool all);
+extern COMPLEX *swap_b16_in_COMPLEX(COMPLEX *dest, COMPLEX *src, bool all);
+extern COMPLEX *swap_HALF_in_COMPLEX(COMPLEX *dest, COMPLEX *src, bool all);
 
 /*
  * macro expansions to speed this thing up
@@ -174,6 +168,6 @@ E_FUNC COMPLEX *swap_HALF_in_COMPLEX(COMPLEX *dest, COMPLEX *src, bool all);
 /*
  * Pre-defined values.
  */
-EXTERN COMPLEX _czero_, _cone_, _conei_;
+extern COMPLEX _czero_, _cone_, _conei_;
 
-#endif /* !INCLUDE_CMATH_H */
+#endif

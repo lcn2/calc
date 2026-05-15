@@ -1,7 +1,7 @@
 /*
  * config - configuration routines
  *
- * Copyright (C) 1999-2007,2014,2021,2023  Landon Curt Noll and David I. Bell
+ * Copyright (C) 1999-2007,2014,2021,2023,2026  Landon Curt Noll and David I. Bell
  *
  * Primary author:  Landon Curt Noll
  *
@@ -28,16 +28,6 @@
 
 #if !defined(INCLUDE_CONFIG_H)
 #  define INCLUDE_CONFIG_H
-
-#  if defined(CALC_SRC) /* if we are building from the calc source tree */
-#    include "decl.h"
-#    include "nametype.h"
-#    include "qmath.h"
-#  else
-#    include <calc/decl.h>
-#    include <calc/nametype.h>
-#    include <calc/qmath.h>
-#  endif
 
 /*
  * configuration element types
@@ -204,21 +194,21 @@ typedef struct config CONFIG;
 /*
  * global configuration states and aliases
  */
-EXTERN CONFIG *conf;         /* current configuration */
-EXTERN CONFIG oldstd;        /* old classic standard configuration */
-EXTERN CONFIG newstd;        /* default compatible configuration */
-E_FUNC char *calc_debug;     /* !=NULL => value of config("calc_debug") */
-E_FUNC char *resource_debug; /* !=NULL => config("resource_debug") value */
-E_FUNC char *user_debug;     /* !=NULL => value of config("user_debug") */
+extern CONFIG *conf;         /* current configuration */
+extern CONFIG oldstd;        /* old classic standard configuration */
+extern CONFIG newstd;        /* default compatible configuration */
+extern char *calc_debug;     /* !=NULL => value of config("calc_debug") */
+extern char *resource_debug; /* !=NULL => config("resource_debug") value */
+extern char *user_debug;     /* !=NULL => value of config("user_debug") */
 
 /*
  * configuration externals
  */
-E_FUNC CONFIG *config_copy(CONFIG *src);
-E_FUNC void config_free(CONFIG *cfg);
-E_FUNC void config_print(CONFIG *cfg);
-E_FUNC int configtype(char *);
-E_FUNC void config_print(CONFIG *);
-E_FUNC bool config_cmp(CONFIG *, CONFIG *);
+extern CONFIG *config_copy(CONFIG *src);
+extern void config_free(CONFIG *cfg);
+extern void config_print(CONFIG *cfg);
+extern int configtype(char *);
+extern void config_print(CONFIG *);
+extern bool config_cmp(CONFIG *, CONFIG *);
 
-#endif /* !INCLUDE_CONFIG_H */
+#endif

@@ -1,7 +1,7 @@
 /*
  * file - file I/O routines callable by users
  *
- * Copyright (C) 1999-2007,2018,2021-2023  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2007,2018,2021-2023,2026  David I. Bell and Landon Curt Noll
  *
  * Primary author:  David I. Bell
  *
@@ -26,30 +26,39 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <ctype.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <stdlib.h>
-#include "have_unistd.h"
-#if defined(HAVE_UNISTD_H)
-#  include <unistd.h>
-#endif /* HAVE_UNISTD_H */
-#include <ctype.h>
-#include "calc.h"
-#include "alloc.h"
-#include "longbits.h"
-#include "have_fgetsetpos.h"
-#include "have_fpos_pos.h"
-#include "fposval.h"
-#include "file.h"
-#include "strl.h"
+#include <stdint.h>
+#include <stdbool.h>
+#include <errno.h>
+#include <limits.h>
 
+/*
+ * conditional <system> head includes
+ */
 #if defined(_WIN32) || defined(_WIN64)
 #  include <io.h>
 #endif
 
+/*
+ * calc local src includes
+ */
+#include "value.h"
+#include "calc.h"
+#include "file.h"
+#include "strl.h"
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 #define READSIZE 1024 /* buffer size for reading */
 
@@ -58,37 +67,46 @@
 /*
  * external STDIO functions
  */
-E_FUNC void math_setfp(FILE *fp);
-E_FUNC FILE *f_open(char *name, char *mode);
+extern void math_setfp(FILE *fp);
+extern FILE *f_open(char *name, char *mode);
 
 /*
  * Table of opened files.
  * The first three entries always correspond to stdin, stdout, and stderr,
  * and cannot be closed.  Their file ids are always 0, 1, and 2.
  */
-STATIC FILEIO files[MAXFILES] = {{FILEID_STDIN, NULL, (dev_t)0, (ino_t)0, "(stdin)", true, false, false, false, 'r', "r"},
+static FILEIO files[MAXFILES] = {{FILEID_STDIN, NULL, (dev_t)0, (ino_t)0, "(stdin)", true, false, false, false, 'r', "r"},
                                  {FILEID_STDOUT, NULL, (dev_t)0, (ino_t)0, "(stdout)", false, true, false, false, 'w', "w"},
                                  {FILEID_STDERR, NULL, (dev_t)0, (ino_t)0, "(stderr)", false, true, false, false, 'w', "w"}};
 
-STATIC int ioindex[MAXFILES] = {0, 1, 2}; /* Indices for FILEIO table */
-STATIC FILEID lastid = FILEID_STDERR;     /* Last allocated file id */
-STATIC int idnum = 3;                     /* Number of allocated file ids */
+static int ioindex[MAXFILES] = {0, 1, 2}; /* Indices for FILEIO table */
+static FILEID lastid = FILEID_STDERR;     /* Last allocated file id */
+static int idnum = 3;                     /* Number of allocated file ids */
+
+/*
+ * off_t range limits - used by in_range_off_t()
+ */
+static bool range_set = false; /* true ==> zoff_t_min and zoff_t_max setup */
+static ZVALUE zoff_t_min;      /* range_set ==> zoff_t_min is OFF_T_MIN */
+static ZVALUE zoff_t_max;      /* range_set ==> zoff_t_nax is OFF_T_MAX */
 
 /* forward static declarations */
-S_FUNC ZVALUE filepos2z(FILEPOS pos);
-S_FUNC FILEPOS z2filepos(ZVALUE pos);
-S_FUNC int set_open_pos(FILE *fp, ZVALUE zpos);
-S_FUNC int get_open_pos(FILE *fp, ZVALUE *res);
-S_FUNC ZVALUE off_t2z(off_t siz);
-S_FUNC ZVALUE dev2z(dev_t dev);
-S_FUNC ZVALUE inode2z(ino_t inode);
-S_FUNC void getscanfield(FILE *fp, bool skip, unsigned int width, int scannum, char *scanptr, char **strptr);
-S_FUNC void getscanwhite(FILE *fp, bool skip, unsigned int width, int scannum, char **strptr);
-S_FUNC int fscanfile(FILE *fp, char *fmt, int count, VALUE **vals);
-S_FUNC void freadnum(FILE *fp, VALUE *valptr);
-S_FUNC void freadsum(FILE *fp, VALUE *valptr);
-S_FUNC void freadprod(FILE *fp, VALUE *valptr);
-S_FUNC void fskipnum(FILE *fp);
+static void free_range_off_t(void);
+static bool in_range_off_t(ZVALUE zpos);
+static int set_open_pos(FILE *fp, ZVALUE zpos);
+static int get_open_pos(FILE *fp, ZVALUE *res);
+static int ftello_stream(FILE *fp, off_t *fposp);
+static off_t z2off_t(ZVALUE zpos);
+static ZVALUE off_t2z(off_t siz);
+static ZVALUE dev2z(dev_t dev);
+static ZVALUE inode2z(ino_t inode);
+static void getscanfield(FILE *fp, bool skip, unsigned int width, int scannum, char *scanptr, char **strptr);
+static void getscanwhite(FILE *fp, bool skip, unsigned int width, int scannum, char **strptr);
+static int fscanfile(FILE *fp, char *fmt, int count, VALUE **vals);
+static void freadnum(FILE *fp, VALUE *valptr);
+static void freadsum(FILE *fp, VALUE *valptr);
+static void freadprod(FILE *fp, VALUE *valptr);
+static void fskipnum(FILE *fp);
 
 /*
  * file_init - perform needed initialization work
@@ -102,7 +120,7 @@ S_FUNC void fskipnum(FILE *fp);
 void
 file_init(void)
 {
-    STATIC int done = 0; /* 1 => routine already called */
+    static int done = 0; /* 1 => routine already called */
     struct stat sbuf;    /* file status */
     FILEIO *fiop;
     FILE *fp;
@@ -158,7 +176,7 @@ file_init(void)
                     }
                 }
                 snprintf_len = sizeof("descriptor[12345678901234567890]") + 1;
-                tname = (char *)malloc(snprintf_len + 1);
+                tname = (char *)calloc(snprintf_len + 1, 1);
                 if (tname == NULL) {
                     math_error("Out of memory for init_file");
                     not_reached();
@@ -195,7 +213,7 @@ file_init(void)
  *      id      calc file ID
  *      fp      open file stream
  */
-S_FUNC void
+static void
 init_fileio(FILEIO *fiop, char *name, char *mode, struct stat *sbufp, FILEID id, FILE *fp)
 {
     char modestr[MODE_LEN + 1]; /* mode [rwa]b?\+? */
@@ -208,7 +226,7 @@ init_fileio(FILEIO *fiop, char *name, char *mode, struct stat *sbufp, FILEID id,
     namelen = 0;
     if (name != NULL) {
         namelen = strlen(name);
-        fiop->name = (char *)malloc(namelen + 1);
+        fiop->name = (char *)calloc(namelen + 1, 1);
         if (fiop->name == NULL) {
             math_error("No memory for filename");
             not_reached();
@@ -501,7 +519,7 @@ reopenid(FILEID id, char *mode, char *name)
         ioindex[idnum++] = i;
         fiop->id = id;
     } else {
-        (void) fclose(fiop->fp);
+        (void)fclose(fiop->fp);
         if (name == NULL) {
             fp = f_open(fiop->name, mode);
         } else {
@@ -716,6 +734,7 @@ flushid(FILEID id)
 }
 
 #if !defined(_WIN32) && !defined(_WIN64)
+
 int
 flushall(void)
 {
@@ -732,7 +751,8 @@ flushall(void)
     }
     return err;
 }
-#endif /* Windows free systems */
+
+#endif
 
 /*
  * Read the next line, string or word from an opened file.
@@ -764,7 +784,6 @@ readid(FILEID id, int flags, STRING **retstr)
     char *b;
     int c;
     bool nlstop, nullstop, wsstop, rmstop, done;
-    FILEPOS fpos;
     STRING *newstr;
 
     totlen = 0;
@@ -782,9 +801,14 @@ readid(FILEID id, int flags, STRING **retstr)
     fp = fiop->fp;
 
     if (fiop->action == 'w') {
-        f_tell(fp, &fpos);
+        fpos_t fpos; /* current location */
+
+        /*
+         * flush and attempt to restore the current location
+         */
+        fgetpos(fp, &fpos);
         fflush(fp);
-        if (f_seek_set(fp, &fpos) < 0) {
+        if (fsetpos(fp, &fpos) < 0) {
             return 3;
         }
     }
@@ -823,7 +847,7 @@ readid(FILEID id, int flags, STRING **retstr)
         if (totlen) {
             str = (char *)realloc(str, totlen + n + 1);
         } else {
-            str = (char *)malloc(n + 1);
+            str = (char *)calloc(n + 1, 1);
         }
         if (str == NULL) {
             math_error("Out of memory for readid");
@@ -863,16 +887,20 @@ int
 getcharid(FILEID id)
 {
     FILEIO *fiop;
-    FILEPOS fpos;
 
     fiop = findid(id, false);
     if (fiop == NULL) {
         return -2;
     }
     if (fiop->action == 'w') {
-        f_tell(fiop->fp, &fpos);
+        fpos_t fpos; /* current location */
+
+        /*
+         * flush and attempt to restore the current location
+         */
+        fgetpos(fiop->fp, &fpos);
         fflush(fiop->fp);
-        if (f_seek_set(fiop->fp, &fpos) < 0) {
+        if (fsetpos(fiop->fp, &fpos) < 0) {
             return -3;
         }
     }
@@ -975,7 +1003,6 @@ idprintf(FILEID id, char *fmt, int count, VALUE **vals)
     long olddigits, newdigits;
     long width, precision;
     bool didneg, didprecision;
-    FILEPOS fpos;
     bool printstring;
     bool printchar;
 
@@ -984,8 +1011,13 @@ idprintf(FILEID id, char *fmt, int count, VALUE **vals)
         return 1;
     }
     if (fiop->action == 'r') {
-        f_tell(fiop->fp, &fpos);
-        if (f_seek_set(fiop->fp, &fpos) < 0) {
+        fpos_t fpos; /* current location */
+
+        /*
+         * reset to current location w/o a flush
+         */
+        fgetpos(fiop->fp, &fpos);
+        if (fsetpos(fiop->fp, &fpos) < 0) {
             return 3;
         }
     }
@@ -1213,7 +1245,6 @@ int
 idfputc(FILEID id, int ch)
 {
     FILEIO *fiop;
-    FILEPOS fpos;
 
     /* get the file info pointer */
     fiop = findid(id, true);
@@ -1221,8 +1252,13 @@ idfputc(FILEID id, int ch)
         return 1;
     }
     if (fiop->action == 'r') {
-        f_tell(fiop->fp, &fpos);
-        if (f_seek_set(fiop->fp, &fpos) < 0) {
+        fpos_t fpos; /* current location */
+
+        /*
+         * reset to current location w/o a flush
+         */
+        fgetpos(fiop->fp, &fpos);
+        if (fsetpos(fiop->fp, &fpos) < 0) {
             return 2;
         }
     }
@@ -1273,7 +1309,6 @@ int
 idfputs(FILEID id, STRING *str)
 {
     FILEIO *fiop;
-    FILEPOS fpos;
     FILE *fp;
     char *c;
     long len;
@@ -1285,8 +1320,13 @@ idfputs(FILEID id, STRING *str)
     }
 
     if (fiop->action == 'r') {
-        f_tell(fiop->fp, &fpos);
-        if (f_seek_set(fiop->fp, &fpos) < 0) {
+        fpos_t fpos; /* current location */
+
+        /*
+         * reset to current location w/o a flush
+         */
+        fgetpos(fiop->fp, &fpos);
+        if (fsetpos(fiop->fp, &fpos) < 0) {
             return 2;
         }
     }
@@ -1315,7 +1355,6 @@ int
 idfputstr(FILEID id, char *str)
 {
     FILEIO *fiop;
-    FILEPOS fpos;
 
     /* get the file info pointer */
     fiop = findid(id, true);
@@ -1324,8 +1363,13 @@ idfputstr(FILEID id, char *str)
     }
 
     if (fiop->action == 'r') {
-        f_tell(fiop->fp, &fpos);
-        if (f_seek_set(fiop->fp, &fpos) < 0) {
+        fpos_t fpos; /* current location */
+
+        /*
+         * flush and attempt to restore the current location
+         */
+        fgetpos(fiop->fp, &fpos);
+        if (fsetpos(fiop->fp, &fpos) < 0) {
             return 2;
         }
     }
@@ -1374,114 +1418,6 @@ rewindall(void)
 }
 
 /*
- * filepos2z - convert a positive file position into a ZVALUE
- *
- * given:
- *      pos             file position
- *
- * returns:
- *      file position as a ZVALUE
- *
- * NOTE: Does not support negative file positions.
- */
-/*ARGSUSED*/
-S_FUNC ZVALUE
-filepos2z(FILEPOS pos)
-{
-    ZVALUE ret; /* ZVALUE file position to return */
-
-    /*
-     * store FILEPOS in a ZVALUE as a positive value
-     */
-    ret.len = FILEPOS_BITS / BASEB;
-    ret.v = alloc(ret.len);
-    zclearval(ret);
-    SWAP_HALF_IN_FILEPOS(ret.v, (HALF *)&pos);
-    ret.sign = 0;
-    ztrim(&ret);
-
-    /*
-     * return our result
-     */
-    return ret;
-}
-
-/*
- * z2filepos - convert a positive ZVALUE file position to a FILEPOS
- *
- * given:
- *      zpos            file position as a ZVALUE
- *
- * returns:
- *      file position as a FILEPOS
- *
- * NOTE: Does not support negative file positions.
- */
-S_FUNC FILEPOS
-z2filepos(ZVALUE zpos)
-{
-#if FILEPOS_BITS > FULL_BITS
-    FILEPOS tmp; /* temp file position as a FILEPOS */
-#endif
-    FILEPOS ret; /* file position as a FILEPOS */
-#if FILEPOS_BITS < FULL_BITS
-    long pos; /* zpos as a long */
-#else
-    FULL pos; /* zpos as a FULL */
-#endif
-
-    /*
-     * firewall
-     */
-    zpos.sign = 0; /* deal only with the absolute value */
-
-    /*
-     * quick return if the position can fit into a long
-     */
-#if FILEPOS_BITS == FULL_BITS
-    /* ztofull puts the value into native byte order */
-    pos = ztofull(zpos);
-    memset(&ret, 0, sizeof(ret)); /* FILEPOS could be non-scalar */
-    memcpy((void *)&ret, (void *)&pos, MIN(sizeof(ret), sizeof(pos)));
-    return ret;
-#elif FILEPOS_BITS < FULL_BITS
-    /* ztofull puts the value into native byte order */
-    pos = ztolong(zpos);
-    memset(&ret, 0, sizeof(ret)); /* FILEPOS could be non-scalar */
-    memcpy((void *)&ret, (void *)&pos, MIN(sizeof(ret), sizeof(pos)));
-    return ret;
-#else  /* FILEPOS_BITS > FULL_BITS */
-    if (!zgtmaxfull(zpos)) {
-        /* ztofull puts the value into native byte order */
-        pos = ztofull(zpos);
-        memset(&ret, 0, sizeof(ret)); /* FILEPOS could be non-scalar */
-        memcpy((void *)&ret, (void *)&pos, MIN(sizeof(ret), sizeof(pos)));
-        return ret;
-    }
-
-    /*
-     * copy (and swap if needed) lower part of the ZVALUE as needed
-     */
-    if (zpos.len >= FILEPOS_BITS / BASEB) {
-        /* copy the lower FILEPOS_BITS of the ZVALUE */
-        memset(&tmp, 0, sizeof(tmp)); /* FILEPOS could be non-scalar */
-        memcpy(&tmp, zpos.v, MIN(sizeof(tmp), FILEPOS_LEN));
-    } else {
-        /* copy what bits we can into the temp value */
-        memset(&tmp, 0, sizeof(tmp)); /* FILEPOS could be non-scalar */
-        memcpy(&tmp, zpos.v, MIN(sizeof(tmp), MIN(zpos.len * BASEB / 8, FILEPOS_LEN)));
-    }
-    /* swap into native byte order */
-    SWAP_HALF_IN_FILEPOS(&ret, &tmp);
-
-    /*
-     * return our result
-     */
-    return ret;
-#endif /* FILEPOS_BITS <= FULL_BITS */
-}
-
-/*
  * get_open_pos - get a an open file position
  *
  * given:
@@ -1492,15 +1428,17 @@ z2filepos(ZVALUE zpos)
  *      0               res points to the file position
  *      -1              error
  */
-S_FUNC int
+static int
 get_open_pos(FILE *fp, ZVALUE *res)
 {
-    FILEPOS pos; /* current file position */
+    off_t fpos; /* current file position */
 
     /*
      * get the file position
      */
-    if (f_tell(fp, &pos) < 0) {
+    errno = 0;
+    fpos = ftello(fp);
+    if (errno != 0 || fpos < 0) {
         /* cannot get file position, return -1 */
         return -1;
     }
@@ -1508,7 +1446,7 @@ get_open_pos(FILE *fp, ZVALUE *res)
     /*
      * update file position and return success
      */
-    *res = filepos2z(pos);
+    *res = off_t2z(fpos);
     return 0;
 }
 
@@ -1549,11 +1487,48 @@ getloc(FILEID id, ZVALUE *res)
     return get_open_pos(fp, res);
 }
 
+/*
+ * ftello_stream - determine the file position as an ZVALUE of an FILEID
+ *
+ * given:
+ *      id      calc FILEID
+ *      fposp   pointer to off_t where to store file position
+ *
+ * returns:
+ *      0 ==> all OK
+ *      <0 ==> error
+ */
+static int
+ftello_stream(FILE *fp, off_t *fposp)
+{
+    off_t fpos; /* current file position */
+
+    /* get the file position */
+    errno = 0;
+    fpos = ftello(fp);
+    if (errno != 0 || fpos < 0) {
+        return -3;
+    }
+    *fposp = fpos;
+    return 0;
+}
+
+/*
+ * ftellid - determine the file position as an ZVALUE of an FILEID
+ *
+ * given:
+ *      id      calc FILEID
+ *      res     pointer to ZVALUE where to store file position
+ *
+ * returns:
+ *      0 ==> all OK
+ *      <0 ==> error
+ */
 int
 ftellid(FILEID id, ZVALUE *res)
 {
     FILEIO *fiop;
-    FILEPOS fpos; /* current file position */
+    off_t fpos; /* current file position */
 
     /* get FILEIO */
     fiop = findid(id, -1);
@@ -1562,22 +1537,54 @@ ftellid(FILEID id, ZVALUE *res)
     }
 
     /* get the file position */
-    if (f_tell(fiop->fp, &fpos) < 0) {
-        return -3;
+    if (ftello_stream(fiop->fp, &fpos) < 0) {
+        return -2;
     }
 
     /* convert file position to ZVALUE */
-    *res = filepos2z(fpos);
+    *res = off_t2z(fpos);
     return 0;
 }
 
+/*
+ * fseekid - seek on a FILEID
+ *
+ * given:
+ *      id      calc FILEID
+ *      offset  file offset relative to whence
+ *      whence  0 ==> offset from the beginning of file
+ *              1 ==> offset from the current file position
+ *              2 ==> offset from the end of the file
+ *
+ * returns:
+ *      0 ==> seek successful
+ *      <= 0 ==> error
+ *          -1 ==> fseeko() failed
+ *          -2 ==> FILEID is invalid and/or was not found
+ *          -3 ==> invalid whence value
+ *          -4 ==> offset cannot be converted into an off_t
+ *
+ * NOTE: We let the system determine if the seek is valid.
+ *       For example, we do not attempt to calculate the effective
+ *       file position to be set is before the beginning of the file.
+ *       Instead, we let the system's implementation of the fseeko()
+ *       libc function, and it possible error return, determine what happens.
+ */
 int
 fseekid(FILEID id, ZVALUE offset, int whence)
 {
-    FILEIO *fiop;    /* FILEIO of file */
-    FILEPOS off;     /* offset as a FILEPOS */
-    ZVALUE cur, tmp; /* current or end of file location */
-    int ret = 0;     /* return code */
+    FILEIO *fiop; /* FILEIO of file */
+    off_t off;    /* file offset as a off_t */
+    int ret = 0;  /* return code */
+
+    /*
+     * verify that offset is in the range [OFF_T_MIN, OFF_T_MAX]
+     */
+    if (!in_range_off_t(offset)) {
+        /* offset cannot be converted into an off_t */
+        return -3;
+    }
+    off = z2off_t(offset);
 
     /* setup */
     fiop = findid(id, -1);
@@ -1587,56 +1594,89 @@ fseekid(FILEID id, ZVALUE offset, int whence)
 
     /* seek depending on whence */
     switch (whence) {
+
+    /*
+     * seek relative to the beginning of the file
+     */
     case 0:
-        /* construct seek position, off = offset */
-        if (zisneg(offset)) {
-            return -3;
-        }
-        off = z2filepos(offset);
-
         /* seek there */
-        ret = f_seek_set(fiop->fp, &off);
+        ret = fseeko(fiop->fp, off, SEEK_SET);
         break;
 
+    /*
+     * seek relative to the current file position
+     */
     case 1:
-        /* construct seek position, off = cur+offset */
-        f_tell(fiop->fp, &off);
-        cur = filepos2z(off);
-        zadd(cur, offset, &tmp);
-        zfree(cur);
-        if (zisneg(tmp)) {
-            zfree(tmp);
-            return -3;
-        }
-        off = z2filepos(tmp);
-        zfree(tmp);
-
         /* seek there */
-        ret = f_seek_set(fiop->fp, &off);
+        ret = fseeko(fiop->fp, off, SEEK_CUR);
         break;
 
+    /*
+     * seek relative to the end of the file
+     */
     case 2:
-        /* construct seek position, off = len+offset */
-        if (get_open_siz(fiop->fp, &cur) < 0) {
-            return -4;
-        }
-        zadd(cur, offset, &tmp);
-        zfree(cur);
-        if (zisneg(tmp)) {
-            zfree(tmp);
-            return -3;
-        }
-        off = z2filepos(tmp);
-        zfree(tmp);
-
         /* seek there */
-        ret = f_seek_set(fiop->fp, &off);
+        ret = fseeko(fiop->fp, off, SEEK_END);
         break;
 
+    /*
+     * unknown whence value
+     */
     default:
-        return -5;
+        return -3;
     }
     return ret;
+}
+
+/*
+ * free_range_off_t - free the [zoff_t_min, zoff_t_max] ZVALUE range set
+ *
+ * This function is called to free [zoff_t_min, zoff_t_max] ZVALUE storage, if set,
+ * when calc exits.
+ */
+static void
+free_range_off_t(void)
+{
+    if (range_set) {
+        zfree(zoff_t_min);
+        zfree(zoff_t_max);
+        range_set = false;
+    }
+}
+
+/*
+ * in_range_off_t - verify that ZVALUE is within off_t range
+ *
+ * given:
+ *      zpos        file position as a ZVALUE
+ *
+ * returns:
+ *      true ==> ZVALUE is within [zoff_t_min, zoff_t_max] off_t range
+ *      false ==> ZVALUE cannot be converted onto an off_t
+ */
+static bool
+in_range_off_t(ZVALUE zpos)
+{
+
+    /*
+     * initialize [zoff_t_min, zoff_t_max] ZVALUE range set if needed
+     */
+    if (!range_set) {
+        /* setup [zoff_t_min, zoff_t_max] ZVALUE range set */
+        zoff_t_min = off_t2z(OFF_T_MIN);
+        zoff_t_max = off_t2z(OFF_T_MAX);
+        range_set = true;
+        atexit(free_range_off_t);
+    }
+
+    /*
+     * verify that zpos is in the range [OFF_T_MIN, OFF_T_MAX]
+     */
+    if (zrel(zoff_t_min, zpos) > 0 && zrel(zoff_t_max, zpos) < 0) {
+        /* cannot set file position, return -1 */
+        return false;
+    }
+    return true;
 }
 
 /*
@@ -1653,20 +1693,28 @@ fseekid(FILEID id, ZVALUE offset, int whence)
  * NOTE: Due to fsetpos limitation, position is set relative to only
  *       the beginning of the file.
  */
-S_FUNC int
+static int
 set_open_pos(FILE *fp, ZVALUE zpos)
 {
-    FILEPOS pos; /* current file position */
+    off_t fpos; /* file position to set as an off_t */
+
+    /*
+     * verify that zpos is in the range [OFF_T_MIN, OFF_T_MAX]
+     */
+    if (!in_range_off_t(zpos)) {
+        /* cannot set file position, return -1 */
+        return -1;
+    }
 
     /*
      * convert ZVALUE to file position
      */
-    pos = z2filepos(zpos);
+    fpos = z2off_t(zpos);
 
     /*
      * set the file position
      */
-    if (f_seek_set(fp, &pos) < 0) {
+    if (fseeko(fp, fpos, SEEK_SET) < 0) {
         /* cannot set file position, return -1 */
         return -1;
     }
@@ -1728,31 +1776,117 @@ setloc(FILEID id, ZVALUE zpos)
  * off_t2z - convert an off_t into a ZVALUE
  *
  * given:
- *      siz             file size
+ *      siz             file offset as off_t
+ *      res             where to place the file offset (ZVALUE)
  *
  * returns:
- *      file size as a ZVALUE
+ *      file offset as a ZVALUE
  */
-/*ARGSUSED*/
-S_FUNC ZVALUE
+static ZVALUE
 off_t2z(off_t siz)
 {
     ZVALUE ret; /* ZVALUE file size to return */
 
     /*
-     * store off_t in a ZVALUE as a positive value
+     * store off_t in a ZVALUE
      */
     ret.len = OFF_T_BITS / BASEB;
     ret.v = alloc(ret.len);
     zclearval(ret);
-    SWAP_HALF_IN_OFF_T(ret.v, &siz);
-    ret.sign = 0;
+    if (siz >= 0) {
+        SWAP_HALF_IN_OFF_T(ret.v, &siz);
+        ret.sign = false;
+    } else {
+        off_t neg_siz = -siz;
+        SWAP_HALF_IN_OFF_T(ret.v, &neg_siz);
+        ret.sign = true;
+    }
     ztrim(&ret);
 
     /*
      * return our result
      */
     return ret;
+}
+
+/*
+ * z2off_t - convert a ZVALUE into an off_t
+ *
+ * given:
+ *      zpos            file position as a ZVALUE
+ *
+ * returns:
+ *      file position as a off_t
+ */
+static off_t
+z2off_t(ZVALUE zpos)
+{
+#if OFF_T_BITS > FULL_BITS
+    off_t tmp; /* temp file position as a off_t */
+#endif
+    off_t ret; /* file position as a off_t */
+#if OFF_T_BITS < FULL_BITS
+    long pos; /* zpos as a long */
+#else
+    FULL pos; /* zpos as a FULL */
+#endif
+
+    /*
+     * quick return if the position can fit into a long
+     */
+#if OFF_T_BITS == FULL_BITS
+    /* ztofull puts the value into native byte order */
+    pos = ztofull(zpos);
+    memset(&ret, 0, sizeof(ret));
+    memcpy((void *)&ret, (void *)&pos, MIN(sizeof(ret), sizeof(pos)));
+    if (zpos.sign) {
+        ret = -ret;
+    }
+    return ret;
+#elif OFF_T_BITS < FULL_BITS
+    /* ztofull puts the value into native byte order */
+    pos = ztolong(zpos);
+    memset(&ret, 0, sizeof(ret));
+    memcpy((void *)&ret, (void *)&pos, MIN(sizeof(ret), sizeof(pos)));
+    if (zpos.sign) {
+        ret = -ret;
+    }
+    return ret;
+#else
+    if (!zgtmaxfull(zpos)) {
+        /* ztofull puts the value into native byte order */
+        pos = ztofull(zpos);
+        memset(&ret, 0, sizeof(ret));
+        memcpy((void *)&ret, (void *)&pos, MIN(sizeof(ret), sizeof(pos)));
+        if (zpos.sign) {
+            ret = -ret;
+        }
+        return ret;
+    }
+
+    /*
+     * copy (and swap if needed) lower part of the ZVALUE as needed
+     */
+    if (zpos.len >= OFF_T_BITS / BASEB) {
+        /* copy the lower OFF_T_BITS of the ZVALUE */
+        memset(&tmp, 0, sizeof(tmp));
+        memcpy(&tmp, zpos.v, MIN(sizeof(tmp), OFF_T_LEN));
+    } else {
+        /* copy what bits we can into the temp value */
+        memset(&tmp, 0, sizeof(tmp));
+        memcpy(&tmp, zpos.v, MIN(sizeof(tmp), MIN(zpos.len * BASEB / 8, OFF_T_LEN)));
+    }
+    /* swap into native byte order */
+    SWAP_HALF_IN_OFF_T(&ret, &tmp);
+    if (zpos.sign) {
+        ret = -ret;
+    }
+
+    /*
+     * return our result
+     */
+    return ret;
+#endif
 }
 
 /*
@@ -1764,18 +1898,18 @@ off_t2z(off_t siz)
  * returns:
  *      file size as a ZVALUE
  */
-S_FUNC ZVALUE
+static ZVALUE
 dev2z(dev_t dev)
 {
     ZVALUE ret; /* ZVALUE file size to return */
 
     /*
-     * store off_t in a ZVALUE as a positive value
+     * store dev_t in a ZVALUE as a positive value
      */
-    ret.len = DEV_BITS / BASEB;
+    ret.len = DEV_T_BITS / BASEB;
     ret.v = alloc(ret.len);
     zclearval(ret);
-    SWAP_HALF_IN_DEV(ret.v, &dev);
+    SWAP_HALF_IN_DEV_T(ret.v, &dev);
     ret.sign = 0;
     ztrim(&ret);
 
@@ -1795,18 +1929,18 @@ dev2z(dev_t dev)
  *      file size as a ZVALUE
  */
 /*ARGSUSED*/
-S_FUNC ZVALUE
+static ZVALUE
 inode2z(ino_t inode)
 {
     ZVALUE ret; /* ZVALUE file size to return */
 
     /*
-     * store off_t in a ZVALUE as a positive value
+     * store ino_t in a ZVALUE as a positive value
      */
-    ret.len = INODE_BITS / BASEB;
+    ret.len = INO_T_BITS / BASEB;
     ret.v = alloc(ret.len);
     zclearval(ret);
-    SWAP_HALF_IN_INODE(ret.v, &inode);
+    SWAP_HALF_IN_INO_T(ret.v, &inode);
     ret.sign = 0;
     ztrim(&ret);
 
@@ -1948,7 +2082,7 @@ get_inode(FILEID id, ZVALUE *inode)
     return 0;
 }
 
-S_FUNC off_t
+static off_t
 filesize(FILEIO *fiop)
 {
     struct stat sbuf;
@@ -2045,20 +2179,17 @@ showfiles(void)
  *      scanptr         string of characters considered separators
  *      strptr          pointer to where the new field pointer may be found
  */
-S_FUNC void
+static void
 getscanfield(FILE *fp, bool skip, unsigned int width, int scannum, char *scanptr, char **strptr)
 {
-    char *str;            /* current string */
-    unsigned long len;    /* current length of string */
-    unsigned long totlen; /* total length of string */
-    char buf[READSIZE];   /* temporary buffer */
+    char *str = NULL;         /* current string */
+    unsigned long len;        /* current length of string */
+    unsigned long totlen = 0; /* total length of string */
+    char buf[READSIZE];       /* temporary buffer */
     int c;
     char *b;
     bool comp; /* Use complement of scanset */
     unsigned int chnum;
-
-    totlen = 0;
-    str = NULL;
 
     comp = (scannum < 0);
     if (comp) {
@@ -2092,12 +2223,18 @@ getscanfield(FILE *fp, bool skip, unsigned int width, int scannum, char *scanptr
         }
         if (!skip) {
             if (totlen) {
-                str = (char *)realloc(str, totlen + len + 1);
+                if (str == NULL) {
+                    /* paranoia */
+                    math_error("getscanfield: str was NULL while totlen != 0");
+                    not_reached();
+                } else {
+                    str = (char *)realloc(str, totlen + len + 1);
+                }
             } else {
-                str = (char *)malloc(len + 1);
+                str = (char *)calloc(len + 1, 1);
             }
             if (str == NULL) {
-                math_error("Out of memory for scanning");
+                math_error("getscanfield: Out of memory for scanning");
                 not_reached();
             }
             if (len) {
@@ -2130,7 +2267,7 @@ getscanfield(FILE *fp, bool skip, unsigned int width, int scannum, char *scanptr
  *      scannum         Number of characters in scanset
  *      strptr          pointer to where the new field pointer may be found
  */
-S_FUNC void
+static void
 getscanwhite(FILE *fp, bool skip, unsigned int width, int scannum, char **strptr)
 {
     char *str;            /* current string */
@@ -2179,7 +2316,7 @@ getscanwhite(FILE *fp, bool skip, unsigned int width, int scannum, char **strptr
             if (totlen) {
                 str = (char *)realloc(str, totlen + len + 1);
             } else {
-                str = (char *)malloc(len + 1);
+                str = (char *)calloc(len + 1, 1);
             }
             if (str == NULL) {
                 math_error("Out of memory for scanning");
@@ -2205,7 +2342,7 @@ getscanwhite(FILE *fp, bool skip, unsigned int width, int scannum, char **strptr
     }
 }
 
-S_FUNC int
+static int
 fscanfile(FILE *fp, char *fmt, int count, VALUE **vals)
 {
     int assnum;    /* Number of assignments made */
@@ -2213,13 +2350,13 @@ fscanfile(FILE *fp, char *fmt, int count, VALUE **vals)
     char f;        /* Character read from format string */
     int scannum;   /* Number of characters in scanlist */
     char *scanptr; /* Start of scanlist */
-    char *str;
-    bool comp; /* True scanset is complementary */
-    bool skip; /* True if string to be skipped rather than read */
+    char *str = NULL;
+    bool comp = false; /* True scanset is complementary */
+    bool skip = false; /* True if string to be skipped rather than read */
     int width;
     VALUE *var;             /* lvalue to be assigned to */
     unsigned short subtype; /* for var->v_subtype */
-    FILEPOS cur;            /* current location */
+    off_t cur;              /* current location */
 
     if (feof(fp)) {
         return EOF;
@@ -2314,7 +2451,8 @@ fscanfile(FILE *fp, char *fmt, int count, VALUE **vals)
             assnum++;
             var = *vals++;
             if (var->v_type != V_ADDR) {
-                math_error("This should not happen!!");
+                math_error("fscanfile: i case and var->v_type != V_ADDR");
+                not_reached();
             }
             var = var->v_addr;
             subtype = var->v_subtype;
@@ -2328,15 +2466,21 @@ fscanfile(FILE *fp, char *fmt, int count, VALUE **vals)
             var = *vals++;
             count--;
             if (var->v_type != V_ADDR) {
-                math_error("This should not happen!!");
+                math_error("fscanfile: n case and var->v_type != V_ADDR");
+                not_reached();
             }
             var = var->v_addr;
             subtype = var->v_subtype;
             freevalue(var);
             var->v_type = V_NUM;
             var->v_num = qalloc();
-            f_tell(fp, &cur);
-            var->v_num->num = filepos2z(cur);
+            errno = 0;
+            cur = ftello(fp);
+            if (errno != 0 || cur < 0) {
+                math_error("fscanfile: failed to ftello file");
+                not_reached();
+            }
+            var->v_num->num = off_t2z(cur);
             var->v_subtype = subtype;
             continue;
         default:
@@ -2348,12 +2492,18 @@ fscanfile(FILE *fp, char *fmt, int count, VALUE **vals)
             var = *vals++;
             count--;
             if (var->v_type != V_ADDR) {
-                math_error("Assigning to non-variable");
+                math_error("fscanfile: assigning to non-variable");
+                not_reached();
             }
             var = var->v_addr;
             subtype = var->v_subtype;
             freevalue(var);
             var->v_type = V_STR;
+            if (str == NULL) {
+                /* paranoia */
+                math_error("fscanfile: getscanfield not called and/or str is NULL");
+                not_reached();
+            }
             var->v_str = makestring(str);
         }
     }
@@ -2364,7 +2514,7 @@ fscanfid(FILEID id, char *fmt, int count, VALUE **vals)
 {
     FILEIO *fiop;
     FILE *fp;
-    FILEPOS fpos;
+    fpos_t fpos; /* current location */
 
     fiop = findid(id, false);
     if (fiop == NULL) {
@@ -2374,9 +2524,9 @@ fscanfid(FILEID id, char *fmt, int count, VALUE **vals)
     fp = fiop->fp;
 
     if (fiop->action == 'w') {
-        f_tell(fp, &fpos);
+        fgetpos(fp, &fpos);
         fflush(fp);
-        if (f_seek_set(fp, &fpos) < 0) {
+        if (fsetpos(fp, &fpos) < 0) {
             return -4;
         }
     }
@@ -2412,7 +2562,7 @@ scanfstr(char *str, char *fmt, int count, VALUE **vals)
  * a sign immediately following 'e' or 'E', or a dot is encountered.
  * Absence of digits is interpreted as zero.
  */
-S_FUNC void
+static void
 freadnum(FILE *fp, VALUE *valptr)
 {
     ZVALUE num, zden, newnum, newden, div, tmp;
@@ -2553,7 +2703,7 @@ freadnum(FILE *fp, VALUE *valptr)
     *valptr = val;
 }
 
-S_FUNC void
+static void
 freadsum(FILE *fp, VALUE *valptr)
 {
     VALUE v1, v2, v3;
@@ -2578,7 +2728,7 @@ freadsum(FILE *fp, VALUE *valptr)
     *valptr = v1;
 }
 
-S_FUNC void
+static void
 freadprod(FILE *fp, VALUE *valptr)
 {
     VALUE v1, v2, v3;
@@ -2602,7 +2752,7 @@ freadprod(FILE *fp, VALUE *valptr)
     *valptr = v1;
 }
 
-S_FUNC void
+static void
 fskipnum(FILE *fp)
 {
     char ch;
@@ -2650,13 +2800,24 @@ isattyid(FILEID id)
  * given:
  *      id      FILEID to search
  *      str     string to look for
- *      pos     file position to start at (NULL => current position)
+ *      start   starting file position to begin search (0 ==> beginning of file)
+ *      end     ending file position to end search (relative to beginning of file)
+ *      res     point to where to record where the string was found
  *
  * returns:
- *      EOF if system error
- *      other negative integer if file not open, etc.
- *      positive integer if string not found
- *      zero if string found, position stored at res
+ *      >0 ==> string not found
+ *      0 ==> string found
+ *      EOF ==> system error
+ *      <0 ==> other error (if file not open, etc.)
+ *          -1 ==> end of file (EOF) or file read error
+ *          -2 ==> FILEID is invalid and/or was not found
+ *          -3 ==> fgetpos() failed
+ *          -4 ==> fsetpos() failed
+ *          -5 ==> ftello_stream() failed
+ *          -6 ==> start cannot be converted into an off_t
+ *          -7 ==> end cannot be converted into an off_t
+ *
+ * NOTE: If end < start, 1 (string not found) is returned.
  *
  * XXX - This search is a translation of the original search that did not
  *       work with large files.  The search algorithm used is slow and
@@ -2665,13 +2826,37 @@ isattyid(FILEID id)
 int
 fsearch(FILEID id, char *str, ZVALUE start, ZVALUE end, ZVALUE *res)
 {
-    FILEIO *fiop;     /* FILEIO of file id */
-    FILEPOS cur;      /* current file position */
-    ZVALUE tmp, tmp2; /* temporary ZVALUEs */
-    char c;           /* str comparison character */
-    int r;            /* character read from file */
-    char *s;          /* str comparison pointer */
-    long k = 0;
+    FILEIO *fiop;        /* FILEIO of file id */
+    off_t fstart;        /* start as a file offset in the form of an off_t */
+    off_t fend;          /* end as a file offset in the form of an off_t */
+    fpos_t cur;          /* current file position in the form of an fpos_t */
+    off_t str_len;       /* length of string in of an off_t */
+    off_t found_pos;     /* file position where the string was found */
+    off_t file_zone_len; /* file search zone length taking length of string into account */
+    off_t zone_remain;   /* remaining file search zone length */
+
+    char c;      /* str comparison character */
+    int r;       /* character read from file */
+    char *s;     /* str comparison pointer */
+    int ret = 0; /* return code */
+
+    /*
+     * verify that start is in the range [OFF_T_MIN, OFF_T_MAX]
+     */
+    if (!in_range_off_t(start)) {
+        /* start cannot be converted into an off_t */
+        return -6;
+    }
+    fstart = z2off_t(start);
+
+    /*
+     * verify that end is in the range [OFF_T_MIN, OFF_T_MAX]
+     */
+    if (!in_range_off_t(end)) {
+        /* end cannot be converted into an off_t */
+        return -7;
+    }
+    fend = z2off_t(end);
 
     /* get FILEIO */
     fiop = findid(id, false);
@@ -2686,84 +2871,144 @@ fsearch(FILEID id, char *str, ZVALUE start, ZVALUE end, ZVALUE *res)
         fflush(fiop->fp);
     }
 
-    zsub(end, start, &tmp2);
-
-    if (zisneg(tmp2)) {
-        zfree(tmp2);
+    /*
+     * firewall - do nothing if end < start
+     */
+    if (fend < fstart) {
         return 1;
     }
 
-    tmp.sign = 0;
-    tmp.len = tmp2.len;
-    tmp.v = alloc(tmp.len);
-    zcopyval(tmp2, tmp);
-    zfree(tmp2);
-
-    cur = z2filepos(start);
-
-    if (f_seek_set(fiop->fp, &cur) < 0) {
-        zfree(tmp);
+    /*
+     * seek to the start position
+     */
+    ret = fseeko(fiop->fp, fstart, SEEK_SET);
+    if (ret < 0) {
         return EOF;
     }
 
     /*
      * search setup
      */
-    /* note the first str search character */
-    c = *str++;
-
+    c = *str; /* note the first str search match character */
     if (c == '\0') {
-        zfree(tmp);
+
+        /*
+         * report empty string found :-)
+         */
         return 2;
     }
+    ++str; /* advance to next position in the string */
+    str_len = strlen(str);
+    file_zone_len = fend - fstart;
+    zone_remain = file_zone_len;
+
+    /*
+     * search for string in file starting with the current position
+     */
     clearerr(fiop->fp);
     while ((r = fgetc(fiop->fp)) != EOF) {
+
+        /*
+         * look for the opening string match character
+         */
         if ((char)r == c) {
-            (void)f_tell(fiop->fp, &cur);
-            s = str;
-            while (*s) {
+
+            /*
+             * matched first string character, record current file position
+             *
+             * We will return to this position if the string match fails.
+             */
+            if (fgetpos(fiop->fp, &cur) < 0) {
+                return -3;
+            }
+
+            /*
+             * search the rest of the string in the file
+             */
+            for (s = str; *s; ++s) {
                 r = fgetc(fiop->fp);
                 if ((char)r != *s) {
+                    /* failed to match this string character */
                     break;
                 }
-                s++;
             }
             if (r == EOF) {
+                /*
+                 * We encountered end of file or an read error, not finding the string,
+                 * before the end of the search area was reached.
+                 */
                 break;
             }
             if (*s == '\0') {
-                zfree(tmp);
-                tmp = filepos2z(cur);
-                zsub(tmp, _one_, res);
-                zfree(tmp);
+
+                /*
+                 * string found - note the new file position beyond the found string
+                 */
+                if (ftello_stream(fiop->fp, &found_pos) < 0) {
+                    return -5;
+                }
+
+                /*
+                 * set res to start of the string
+                 */
+                --found_pos;
+                *res = off_t2z(found_pos - str_len);
+
+                /*
+                 * report string found
+                 */
                 return 0;
             }
-            (void)f_seek_set(fiop->fp, &cur);
-        }
-        if (*tmp.v) {
-            (*tmp.v)--;
-        } else {
-            if (tmp.len == 1) {
-                break;
-            }
-            k = 0;
-            do {
-                tmp.v[k++] = BASE1;
-            } while (k < tmp.len && tmp.v[k] == 0);
-            if (k == tmp.len) {
-                math_error("This should not happen");
-                not_reached();
-            }
-            tmp.v[k]--;
-            if (tmp.v[tmp.len - 1] == 0) {
-                tmp.len--;
+
+            /*
+             * string not found, restore file to the previously recoded "current file position"
+             */
+            if (fsetpos(fiop->fp, &cur) < 0) {
+                return -4;
             }
         }
+
+        /*
+         * did not find the string, so we will advance in the file search zone area and reduce zone_remain
+         */
+        if (zone_remain <= 0) {
+
+            /*
+             * end of search - we have exhausted the file search zone
+             *
+             * Move beyond the end of file search zone
+             */
+            ret = fseeko(fiop->fp, fend + 1, SEEK_SET);
+            if (ret < 0) {
+                return EOF;
+            }
+            if (ftello_stream(fiop->fp, &found_pos) < 0) {
+                return -5;
+            }
+            break;
+        }
+        --zone_remain;
+
+        /*
+         * keep searching until:
+         *
+         *      string is found
+         *      end of file
+         *      read error
+         *      end of search zone is reached
+         */
     }
-    zfree(tmp);
+
+    /*
+     * if needed, report on file read errors
+     */
     if (ferror(fiop->fp)) {
         return EOF;
     }
+
+    /*
+     * report string not found
+     */
     return 1;
 }
 
@@ -2773,14 +3018,22 @@ fsearch(FILEID id, char *str, ZVALUE start, ZVALUE end, ZVALUE *res)
  * given:
  *      id      FILEID to search
  *      str     string to look for
- *      search starts at pos = first and continues for decreasing
- *              pos >= last
+ *      first   initial file position to search from (decreasing while pos >= last)
+ *      last    final file position to search from
+ *      res     point to where to record where the string was found
  *
  * returns:
- *      EOF if system error
- *      other negative integer if file not open, etc.
- *      positive integer if string not found
- *      zero if string found, position stored at res
+ *      >0 ==> string not found
+ *      0 ==> string found
+ *      EOF ==> system error
+ *      <0 ==> other error (if file not open, etc.)
+ *          -1 ==> end of file (EOF) or file read error
+ *          -2 ==> FILEID is invalid and/or was not found
+ *          -3 ==> fgetpos() failed
+ *          -4 ==> fsetpos() failed
+ *          -5 ==> ftello_stream() failed
+ *          -6 ==> first cannot be converted into an off_t
+ *          -7 ==> last cannot be converted into an off_t
  *
  * XXX - This search is a translation of the original search that did not
  *       work with large files.  The search algorithm used is so slow
@@ -2790,12 +3043,32 @@ int
 frsearch(FILEID id, char *str, ZVALUE first, ZVALUE last, ZVALUE *res)
 {
     FILEIO *fiop; /* FILEIO of file id */
-    FILEPOS cur;  /* current file position */
-    ZVALUE pos;   /* current file position as ZVALUE */
-    ZVALUE tmp;   /* temporary ZVALUEs */
-    char c;       /* str comparison character */
-    int r;        /* character read from file */
-    char *s;      /* str comparison pointer */
+    off_t ffirst; /* first as a file offset in the form of a off_t */
+    off_t flast;  /* last as a file offset in the form of a off_t */
+    off_t cur;    /* current file position */
+
+    char c;      /* str comparison character */
+    int r;       /* character read from file */
+    char *s;     /* str comparison pointer */
+    int ret = 0; /* return code */
+
+    /*
+     * verify that first is in the range [OFF_T_MIN, OFF_T_MAX]
+     */
+    if (!in_range_off_t(first)) {
+        /* first cannot be converted into an off_t */
+        return -6;
+    }
+    ffirst = z2off_t(first);
+
+    /*
+     * verify that last is in the range [OFF_T_MIN, OFF_T_MAX]
+     */
+    if (!in_range_off_t(last)) {
+        /* last cannot be converted into an off_t */
+        return -7;
+    }
+    flast = z2off_t(last);
 
     /* get FILEIO */
     fiop = findid(id, false);
@@ -2810,38 +3083,63 @@ frsearch(FILEID id, char *str, ZVALUE first, ZVALUE last, ZVALUE *res)
         fflush(fiop->fp);
     }
 
-    zcopy(first, &pos);
-
     /*
      * search setup
      */
-    /* note the first str search character */
-    c = *str++;
-
+    c = *str; /* note the first str search match character */
     if (c == '\0') {
-        cur = z2filepos(pos);
-        if (f_seek_set(fiop->fp, &cur) < 0) {
-            zfree(pos);
+
+        /*
+         * seek to the start position
+         */
+        ret = fseeko(fiop->fp, ffirst, SEEK_SET);
+        if (ret < 0) {
             return EOF;
         }
-        *res = pos;
+
+        /*
+         * empty string always match the beginning of the search zone
+         */
+        *res = off_t2z(ffirst);
+
+        /*
+         * report empty string found :-)
+         */
         return 0;
     }
+    ++str; /* advance to next position in the string */
 
+    /*
+     * search file backward for string
+     */
     clearerr(fiop->fp);
+    for (cur = ffirst; cur >= flast; --cur) {
 
-    while (zrel(pos, last) >= 0) {
-        cur = z2filepos(pos);
-        if (f_seek_set(fiop->fp, &cur) < 0) {
-            zfree(pos);
+        /*
+         * set the file position to cur
+         */
+        if (fseeko(fiop->fp, cur, SEEK_SET) < 0) {
+            /* cannot set file position, return EOF */
             return EOF;
         }
+
+        /*
+         * read current file character
+         */
         r = fgetc(fiop->fp);
         if (r == EOF) {
-            zfree(pos);
+            /* end of file or file read error */
             return EOF;
         }
+
+        /*
+         * look for the opening string match character
+         */
         if ((char)r == c) {
+
+            /*
+             * matched first string character - search the rest of the string in the file
+             */
             s = str;
             while (*s) {
                 r = fgetc(fiop->fp);
@@ -2851,25 +3149,58 @@ frsearch(FILEID id, char *str, ZVALUE first, ZVALUE last, ZVALUE *res)
                 s++;
             }
             if (r == EOF) {
-                zfree(pos);
+                /*
+                 * We encountered end of file or an read error, not finding the string
+                 */
                 return EOF;
             }
             if (*s == '\0') {
-                *res = pos;
+
+                /*
+                 * set res to the current file position
+                 */
+                *res = off_t2z(cur);
+
+                /*
+                 * push back in the stream the last character we processed
+                 */
                 ungetc(r, fiop->fp);
+
+                /*
+                 * report string found
+                 */
                 return 0;
             }
         }
-        zsub(pos, _one_, &tmp);
-        zfree(pos);
-        pos = tmp;
+
+        /*
+         * keep searching backwards until:
+         *
+         *      string is found
+         *      end of file
+         *      read error
+         *      last of search the area is reached
+         */
     }
-    cur = z2filepos(last);
-    f_seek_set(fiop->fp, &cur);
-    zfree(pos);
+
+    /*
+     * set the file position to last
+     */
+    if (fseeko(fiop->fp, flast, SEEK_SET) < 0) {
+        /* cannot set file position, return EOF */
+        return EOF;
+    }
+
+    /*
+     * if needed, report on file read errors
+     */
     if (ferror(fiop->fp)) {
         return EOF;
     }
+
+    /*
+     * report string not found
+     */
     return 1;
 }
 

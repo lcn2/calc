@@ -20,7 +20,7 @@ DESCRIPTION
     Standard input, standard output and standard error are always opened
     and cannot be closed.
 
-    The truth value of a closed file is FALSE.
+    The truth value of a closed file is false.
 
     The fclose function returns the numeric value of errno if
     there had been an error using the file, or the null value if
@@ -51,7 +51,7 @@ SEE ALSO
     errno, fclose, feof, ferror, fflush, fgetc, fgetline, fgets, files, fopen,
     fprintf, fputc, fputs, fseek, fsize, ftell, isfile, printf, prompt
 
-## Copyright (C) 1999-2006  Landon Curt Noll
+## Copyright (C) 1999-2006,2026  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

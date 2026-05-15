@@ -1,7 +1,7 @@
 /*
  * version - determine the version of calc
  *
- * Copyright (C) 1989-2025  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1989-2026  David I. Bell and Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -30,7 +30,10 @@
 /*
  * MAJOR_VER
  *
- *      The MAJOR_VER is 2 is the classical version of calc.
+ *      The MAJOR_VER is 2 is the old classical version of calc.
+ *      The MAJOR_VER is 3 is the new calc going forward. See:
+ *
+ *          https://github.com/lcn2/calc/issues/103
  *
  *      One of the main reasons why MAJOR_VER might incremented is
  *      if fundamental calc data objects (such as when ZVALUE or NUMBER
@@ -78,4 +81,4 @@
 #    undef TEMP_MAJOR_VER
 #  endif
 
-#endif /* !INCLUDE_VERSION_H*/
+#endif

@@ -6,7 +6,7 @@
  *
  *      http://www.isthe.com/chongo/tech/comp/fnv/index.html
  *
- * Copyright (C) 1999-2007,2014,2021-2023  Landon Curt Noll
+ * Copyright (C) 1999-2007,2014,2021-2023,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -34,29 +34,39 @@
  *       associative arrays and other internal processes.
  */
 
-#include "value.h"
-#include "zrand.h"
-#include "zrandom.h"
+/*
+ * important <system> header includes
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdbool.h>
 
+/*
+ * calc local src includes
+ */
+#include "value.h"
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 /*
  * forward declarations
  */
-S_FUNC QCKHASH assochash(ASSOC *ap, QCKHASH val);
-S_FUNC QCKHASH listhash(LIST *lp, QCKHASH val);
-S_FUNC QCKHASH mathash(MATRIX *m, QCKHASH val);
-S_FUNC QCKHASH objhash(OBJECT *op, QCKHASH val);
-S_FUNC QCKHASH randhash(RAND *r, QCKHASH val);
-S_FUNC QCKHASH randomhash(RANDOM *state, QCKHASH val);
-S_FUNC QCKHASH config_hash(CONFIG *cfg, QCKHASH val);
-S_FUNC QCKHASH fnv_strhash(char *ch, QCKHASH val);
-S_FUNC QCKHASH fnv_STRhash(STRING *str, QCKHASH val);
-S_FUNC QCKHASH fnv_fullhash(FULL *v, LEN len, QCKHASH val);
-S_FUNC QCKHASH fnv_zhash(ZVALUE z, QCKHASH val);
-S_FUNC QCKHASH hash_hash(HASH *hash, QCKHASH val);
-S_FUNC QCKHASH blk_hash(BLOCK *blk, QCKHASH val);
+static QCKHASH assochash(ASSOC *ap, QCKHASH val);
+static QCKHASH listhash(LIST *lp, QCKHASH val);
+static QCKHASH mathash(MATRIX *m, QCKHASH val);
+static QCKHASH objhash(OBJECT *op, QCKHASH val);
+static QCKHASH randhash(RAND *r, QCKHASH val);
+static QCKHASH randomhash(RANDOM *state, QCKHASH val);
+static QCKHASH config_hash(CONFIG *cfg, QCKHASH val);
+static QCKHASH fnv_strhash(char *ch, QCKHASH val);
+static QCKHASH fnv_STRhash(STRING *str, QCKHASH val);
+static QCKHASH fnv_fullhash(FULL *v, LEN len, QCKHASH val);
+static QCKHASH fnv_zhash(ZVALUE z, QCKHASH val);
+static QCKHASH hash_hash(HASH *hash, QCKHASH val);
+static QCKHASH blk_hash(BLOCK *blk, QCKHASH val);
 
 /*
  * quasi_fnv - quasi Fowler/Noll/Vo-0 32 bit hash
@@ -226,7 +236,7 @@ hashvalue(VALUE *vp, QCKHASH val)
 /*
  * Return a trivial hash value for an association.
  */
-S_FUNC QCKHASH
+static QCKHASH
 assochash(ASSOC *ap, QCKHASH val)
 {
     /*
@@ -241,7 +251,7 @@ assochash(ASSOC *ap, QCKHASH val)
 /*
  * Return a trivial hash value for a list.
  */
-S_FUNC QCKHASH
+static QCKHASH
 listhash(LIST *lp, QCKHASH val)
 {
     /*
@@ -265,7 +275,7 @@ listhash(LIST *lp, QCKHASH val)
 /*
  * Return a trivial hash value for a matrix.
  */
-S_FUNC QCKHASH
+static QCKHASH
 mathash(MATRIX *m, QCKHASH val)
 {
     long skip;
@@ -314,7 +324,7 @@ mathash(MATRIX *m, QCKHASH val)
 /*
  * Return a trivial hash value for an object.
  */
-S_FUNC QCKHASH
+static QCKHASH
 objhash(OBJECT *op, QCKHASH val)
 {
     int i;
@@ -337,7 +347,7 @@ objhash(OBJECT *op, QCKHASH val)
  * returns:
  *      trivial hash integer
  */
-S_FUNC QCKHASH
+static QCKHASH
 randhash(RAND *r, QCKHASH val)
 {
     /*
@@ -368,7 +378,7 @@ randhash(RAND *r, QCKHASH val)
  * returns:
  *      trivial hash integer
  */
-S_FUNC QCKHASH
+static QCKHASH
 randomhash(RANDOM *state, QCKHASH val)
 {
     /*
@@ -395,10 +405,10 @@ randomhash(RANDOM *state, QCKHASH val)
 /*
  * config_hash - return a trivial hash for a configuration state
  */
-S_FUNC QCKHASH
+static QCKHASH
 config_hash(CONFIG *cfg, QCKHASH val)
 {
-    USB32 value; /* value to hash from hash elements */
+    uint32_t value; /* value to hash from hash elements */
 
     /*
      * build up a scalar value
@@ -406,53 +416,53 @@ config_hash(CONFIG *cfg, QCKHASH val)
      * We will rotate a value left 5 bits and xor in each scalar element
      */
     value = cfg->outmode;
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->outmode);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->outmode2);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->outdigits);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->outmode);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->outmode2);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->outdigits);
     /* epsilon is handled out of order */
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->epsilonprec);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->traceflags);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->maxprint);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->mul2);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->sq2);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->pow2);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->redc2);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->tilde_ok);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->tilde_space);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->tab_ok);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->quomod);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->quo);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->mod);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->sqrt);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->appr);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->cfappr);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->cfsim);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->outround);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->round);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->triground);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->leadzero);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->fullzero);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->maxscancount);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->epsilonprec);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->traceflags);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->maxprint);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->mul2);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->sq2);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->pow2);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->redc2);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->tilde_ok);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->tilde_space);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->tab_ok);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->quomod);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->quo);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->mod);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->sqrt);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->appr);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->cfappr);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->cfsim);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->outround);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->round);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->triground);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->leadzero);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->fullzero);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->maxscancount);
     /* prompt1 is handled out of order */
     /* prompt2 is handled out of order */
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->blkmaxprint);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->blkverbose);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->blkbase);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->blkfmt);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->calc_debug);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->resource_debug);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->user_debug);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->verbose_quit);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->ctrl_d);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->blkmaxprint);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->blkverbose);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->blkbase);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->blkfmt);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->calc_debug);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->resource_debug);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->user_debug);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->verbose_quit);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->ctrl_d);
     /* program is handled out of order */
     /* basename is handled out of order */
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->windows);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->cygwin);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->compile_custom);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->windows);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->cygwin);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->compile_custom);
     if (cfg->allow_custom != NULL && *(cfg->allow_custom)) {
-        value = (((value >> 5) | (value << 27)) ^ (USB32) true);
+        value = (((value >> 5) | (value << 27)) ^ (uint32_t)true);
     } else {
-        value = (((value >> 5) | (value << 27)) ^ (USB32) false);
+        value = (((value >> 5) | (value << 27)) ^ (uint32_t)false);
     }
     /* version is handled out of order */
 
@@ -480,9 +490,9 @@ config_hash(CONFIG *cfg, QCKHASH val)
     if (cfg->version) {
         val = fnv_strhash(cfg->version, val);
     }
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->baseb);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->redecl_warn);
-    value = (((value >> 5) | (value << 27)) ^ (USB32)cfg->dupvar_warn);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->baseb);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->redecl_warn);
+    value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->dupvar_warn);
 
     /*
      * hash the epsilon if possible
@@ -503,7 +513,7 @@ config_hash(CONFIG *cfg, QCKHASH val)
  * returns:
  *      a 32 bit QCKHASH value
  */
-S_FUNC QCKHASH
+static QCKHASH
 fnv_strhash(char *ch, QCKHASH val)
 {
     /*
@@ -525,7 +535,7 @@ fnv_strhash(char *ch, QCKHASH val)
  * returns:
  *      a 32 bit QCKHASH value
  */
-S_FUNC QCKHASH
+static QCKHASH
 fnv_STRhash(STRING *str, QCKHASH val)
 {
     char *ch;
@@ -554,7 +564,7 @@ fnv_STRhash(STRING *str, QCKHASH val)
  * returns:
  *      a 32 bit QCKHASH value
  */
-S_FUNC QCKHASH
+static QCKHASH
 fnv_fullhash(FULL *v, LEN len, QCKHASH val)
 {
     /*
@@ -576,7 +586,7 @@ fnv_fullhash(FULL *v, LEN len, QCKHASH val)
  * returns:
  *      a 32 bit QCKHASH value
  */
-S_FUNC QCKHASH
+static QCKHASH
 fnv_zhash(ZVALUE z, QCKHASH val)
 {
     LEN n;
@@ -623,13 +633,13 @@ fnv_zhash(ZVALUE z, QCKHASH val)
  * returns:
  *      a 32 bit QCKHASH value
  */
-S_FUNC QCKHASH
+static QCKHASH
 hash_hash(HASH *hash, QCKHASH val)
 {
     int i;
 
     /*
-     * hash each USB8 in the BLOCK
+     * hash each uint8_t in the BLOCK
      */
     for (i = 0; i < hash->unionsize; ++i) {
         quasi_fnv(hash->h_union.data[i], val);
@@ -647,7 +657,7 @@ hash_hash(HASH *hash, QCKHASH val)
  * returns:
  *      a 32 bit QCKHASH value
  */
-S_FUNC QCKHASH
+static QCKHASH
 blk_hash(BLOCK *blk, QCKHASH val)
 {
     int i;
@@ -657,7 +667,7 @@ blk_hash(BLOCK *blk, QCKHASH val)
     }
 
     /*
-     * hash each USB8 in the BLOCK
+     * hash each uint8_t in the BLOCK
      */
     if (blk->datalen > 0) {
         for (i = 0; i < blk->datalen; ++i) {

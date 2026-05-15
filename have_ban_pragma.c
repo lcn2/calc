@@ -1,7 +1,7 @@
 /*
  * have_ban_pragma.c - Determine if we have #pragma GCC poison func_name
  *
- * Copyright (C) 2021  Landon Curt Noll
+ * Copyright (C) 2021,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -41,7 +41,14 @@
  *       This is NOT simply a GCC feature.
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
+
+/*
+ * calc local src includes
+ */
 
 /* undef UNBAN to be undefined to force use of banned.h */
 #undef UNBAN
@@ -49,7 +56,7 @@
 /* prevent banned.h from including have_ban_pragma.h */
 #define PRE_HAVE_BAN_PRAGMA_H
 
-#include "banned.h" /* include after system header <> includes */
+#include "banned.h" /* include after all other includes */
 
 int
 main(void)
@@ -58,11 +65,11 @@ main(void)
 
     printf("#undef HAVE_PRAGMA_GCC_POSION /* no */\n");
 
-#else /* HAVE_NO_PRAGMA_GCC_POSION */
+#else
 
     printf("#define HAVE_PRAGMA_GCC_POSION /* yes */\n");
 
-#endif /* HAVE_NO_PRAGMA_GCC_POSION */
+#endif
 
     /* exit(0); */
     return 0;

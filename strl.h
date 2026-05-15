@@ -1,7 +1,7 @@
 /*
  * strl - size-bounded string copying and concatenation
  *
- * Copyright (C) 2021  Landon Curt Noll
+ * Copyright (C) 2021,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -26,31 +26,23 @@
 #if !defined(INCLUDE_STRL_H)
 #  define INCLUDE_STRL_H
 
-#  if defined(CALC_SRC) /* if we are building from the calc source tree */
-#    include "have_string.h"
-#  else
-#    include <calc/have_string.h>
-#  endif
-#  ifdef HAVE_STRING_H
-#    include <string.h>
-#  endif
-
+/*
+ * calc local src includes
+ */
 #  if defined(CALC_SRC) /* if we are building from the calc source tree */
 #    include "have_strlcpy.h"
 #    include "have_strlcat.h"
-#    include "decl.h"
 #  else
 #    include <calc/have_strlcpy.h>
 #    include <calc/have_strlcat.h>
-#    include <calc/decl.h>
 #  endif
 
 #  if !defined(HAVE_STRLCPY)
-E_FUNC size_t strlcpy(char *dst, const char *src, size_t dstsize);
-#  endif /* !HAVE_STRLCPY */
+extern size_t strlcpy(char *dst, const char *src, size_t dstsize);
+#  endif
 
 #  if !defined(HAVE_STRLCAT)
-E_FUNC size_t strlcat(char *dst, const char *src, size_t dstsize);
-#  endif /* !HAVE_STRLCAT */
+extern size_t strlcat(char *dst, const char *src, size_t dstsize);
+#  endif
 
-#endif /* !INCLUDE_STRL_H */
+#endif

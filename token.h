@@ -1,7 +1,7 @@
 /*
  * token - token defines
  *
- * Copyright (C) 1999-2007,2014,2021,2023  David I. Bell
+ * Copyright (C) 1999-2007,2014,2021,2023,2026  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -25,12 +25,6 @@
 
 #if !defined(INCLUDE_TOKEN_H)
 #  define INCLUDE_TOKEN_H
-
-#  if defined(CALC_SRC) /* if we are building from the calc source tree */
-#    include "zmath.h"
-#  else
-#    include <calc/zmath.h>
-#  endif
 
 /*
  * Token types
@@ -158,16 +152,16 @@
 #  define TM_NEWLINES 0x1 /* treat any newline as a token */
 #  define TM_ALLSYMS 0x2  /* treat almost everything as a symbol */
 
-EXTERN long errorcount; /* number of errors found */
+extern long errorcount; /* number of errors found */
 
-E_FUNC long tokenstring(void);
-E_FUNC long tokennumber(void);
-E_FUNC char *tokensymbol(void);
-E_FUNC void inittokens(void);
-E_FUNC int tokenmode(int flag);
-E_FUNC int gettoken(void);
-E_FUNC void rescantoken(void);
-E_FUNC void scanerror(int, char *, ...) __attribute__((format(printf, 2, 3)));
-E_FUNC void warning(char *, ...) __attribute__((format(printf, 1, 2)));
+extern long tokenstring(void);
+extern long tokennumber(void);
+extern char *tokensymbol(void);
+extern void inittokens(void);
+extern int tokenmode(int flag);
+extern int gettoken(void);
+extern void rescantoken(void);
+extern void scanerror(int, char *, ...) __attribute__((format(printf, 2, 3)));
+extern void warning(char *, ...) __attribute__((format(printf, 1, 2)));
 
-#endif /* !INCLUDE_TOKEN_H */
+#endif

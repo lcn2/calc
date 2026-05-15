@@ -1,7 +1,7 @@
 /*
  * config - configuration routines
  *
- * Copyright (C) 1999-2007,2021-2023  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2007,2021-2023,2026  David I. Bell and Landon Curt Noll
  *
  * Primary author:  David I. Bell
  *
@@ -25,43 +25,30 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <sys/time.h>
+#include <sys/times.h>
+#include <stdint.h>
+#include <stdbool.h>
 
-#include "have_times.h"
-#if defined(HAVE_TIME_H)
-#  include <time.h>
-#endif
-
-#if defined(HAVE_TIMES_H)
-#  include <times.h>
-#endif
-
-#if defined(HAVE_SYS_TIME_H)
-#  include <sys/time.h>
-#endif
-
-#if defined(HAVE_SYS_TIMES_H)
-#  include <sys/times.h>
-#endif
-
+/*
+ * conditional <system> head includes
+ */
+#include "value.h"
 #include "calc.h"
-#include "alloc.h"
 #include "token.h"
-#include "zrand.h"
-#include "block.h"
-#include "nametype.h"
-#include "config.h"
-#include "str.h"
 #include "custom.h"
 #include "strl.h"
-
-#include "have_strdup.h"
-#if !defined(HAVE_STRDUP)
-#  define strdup(x) calc_strdup((CONST char *)(x))
-#endif /* HAVE_STRDUP */
-
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 /*
  * deal with systems that lack a defined CLK_TCK
@@ -270,7 +257,7 @@ CONFIG *conf = NULL; /* loaded in at startup - current configuration */
 /*
  * Possible output modes.
  */
-STATIC NAMETYPE modes[] = {{"fraction", MODE_FRAC},   {"frac", MODE_FRAC},
+static NAMETYPE modes[] = {{"fraction", MODE_FRAC},   {"frac", MODE_FRAC},
                            {"integer", MODE_INT},     {"int", MODE_INT},
                            {"real", MODE_REAL},       {"float", MODE_REAL},
                            {"default", MODE_INITIAL}, /* MODE_REAL */
@@ -285,7 +272,7 @@ STATIC NAMETYPE modes[] = {{"fraction", MODE_FRAC},   {"frac", MODE_FRAC},
 /*
  * Possible block base output modes
  */
-STATIC NAMETYPE blk_base[] = {{"hexadecimal", BLK_BASE_HEX}, {"hex", BLK_BASE_HEX},       {"default", BLK_BASE_HEX},
+static NAMETYPE blk_base[] = {{"hexadecimal", BLK_BASE_HEX}, {"hex", BLK_BASE_HEX},       {"default", BLK_BASE_HEX},
                               {"octal", BLK_BASE_OCT},       {"oct", BLK_BASE_OCT},       {"character", BLK_BASE_CHAR},
                               {"char", BLK_BASE_CHAR},       {"binary", BLK_BASE_BINARY}, {"bin", BLK_BASE_BINARY},
                               {"raw", BLK_BASE_RAW},         {"none", BLK_BASE_RAW},      {NULL, 0}};
@@ -293,7 +280,7 @@ STATIC NAMETYPE blk_base[] = {{"hexadecimal", BLK_BASE_HEX}, {"hex", BLK_BASE_HE
 /*
  * Possible block output formats
  */
-STATIC NAMETYPE blk_fmt[] = {{"lines", BLK_FMT_LINE},
+static NAMETYPE blk_fmt[] = {{"lines", BLK_FMT_LINE},
                              {"line", BLK_FMT_LINE},
                              {"strings", BLK_FMT_STRING},
                              {"string", BLK_FMT_STRING},
@@ -310,7 +297,7 @@ STATIC NAMETYPE blk_fmt[] = {{"lines", BLK_FMT_LINE},
 /*
  * Possible ctrl_d styles
  */
-STATIC NAMETYPE ctrl_d[] = {{"virgin_eof", CTRL_D_VIRGIN_EOF},
+static NAMETYPE ctrl_d[] = {{"virgin_eof", CTRL_D_VIRGIN_EOF},
                             {"virgineof", CTRL_D_VIRGIN_EOF},
                             {"virgin", CTRL_D_VIRGIN_EOF},
                             {"default", CTRL_D_VIRGIN_EOF},
@@ -327,16 +314,16 @@ STATIC NAMETYPE ctrl_d[] = {{"virgin_eof", CTRL_D_VIRGIN_EOF},
  */
 #define true_STRING "true"
 #define false_STRING "false"
-STATIC NAMETYPE truth[] = {{true_STRING, true}, {"t", true},  {"on", true},          {"yes", true}, {"y", true},
+static NAMETYPE truth[] = {{true_STRING, true}, {"t", true},  {"on", true},          {"yes", true}, {"y", true},
                            {"set", true},       {"1", true},  {false_STRING, false}, {"f", false},  {"off", false},
                            {"no", false},       {"n", false}, {"unset", false},      {"0", false},  {NULL, 0}};
 
 /*
  * declare static functions
  */
-S_FUNC long lookup_long(NAMETYPE *set, char *name);
-S_FUNC char *lookup_name(NAMETYPE *set, long val);
-S_FUNC int getlen(VALUE *vp, LEN *lp);
+static long lookup_long(NAMETYPE *set, char *name);
+static char *lookup_name(NAMETYPE *set, long val);
+static int getlen(VALUE *vp, LEN *lp);
 
 /*
  * Given a string value which represents a configuration name, return
@@ -369,7 +356,7 @@ configtype(char *name)
  * returns:
  *      numeric value of the name or -1 if not found
  */
-S_FUNC long
+static long
 lookup_long(NAMETYPE *set, char *name)
 {
     NAMETYPE *cp; /* current config pointer */
@@ -392,7 +379,7 @@ lookup_long(NAMETYPE *set, char *name)
  * returns:
  *      name of the value found of NULL
  */
-S_FUNC char *
+static char *
 lookup_name(NAMETYPE *set, long val)
 {
     NAMETYPE *cp; /* current config pointer */
@@ -412,7 +399,7 @@ lookup_name(NAMETYPE *set, long val)
  * Return: 1 ==> not an integer, 2 ==> int > 2^31, 0 ==> OK, -1 ==> error
  */
 
-S_FUNC int
+static int
 getlen(VALUE *vp, LEN *lp)
 {
     if (vp->v_type != V_NUM || !qisint(vp->v_num)) {
@@ -777,7 +764,7 @@ setconfig(int type, VALUE *vp)
             math_error("Non-string for prompt");
             not_reached();
         }
-        p = (char *)malloc(vp->v_str->s_len + 1);
+        p = (char *)calloc(vp->v_str->s_len + 1, 1);
         if (p == NULL) {
             math_error("Cannot duplicate new prompt");
             not_reached();
@@ -792,7 +779,7 @@ setconfig(int type, VALUE *vp)
             math_error("Non-string for more prompt");
             not_reached();
         }
-        p = (char *)malloc(vp->v_str->s_len + 1);
+        p = (char *)calloc(vp->v_str->s_len + 1, 1);
         if (p == NULL) {
             math_error("Cannot duplicate new more prompt");
             not_reached();
@@ -1036,7 +1023,7 @@ config_copy(CONFIG *src)
     /*
      * malloc the storage
      */
-    dest = (CONFIG *)malloc(sizeof(CONFIG));
+    dest = (CONFIG *)calloc(1, sizeof(CONFIG));
     if (dest == NULL) {
         math_error("malloc of CONFIG failed");
         not_reached();

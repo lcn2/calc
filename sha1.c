@@ -36,17 +36,24 @@
  * For more information, please refer to <http://unlicense.org/>
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
-#include "alloc.h"
-#include "longbits.h"
-#include "align32.h"
-#include "endian_calc.h"
-#include "value.h"
-#include "hash.h"
-#include "sha1.h"
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+#include <stdbool.h>
 
+/*
+ * calc local src includes
+ */
+#include "value.h"
+#include "endian_calc.h"
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 /*
  * The SHA1 f()-functions.  The f1 and f3 functions can be optimized
@@ -108,22 +115,22 @@
 #define subRound(a, b, c, d, e, f, k, data) (e += LEFT_ROT(a, 5) + f(b, c, d) + k + data, b = LEFT_ROT(b, 30))
 
 /* forward declarations */
-S_FUNC void sha1Init(HASH *);
-S_FUNC void sha1Transform(USB32 *, USB32 *);
-S_FUNC void sha1Update(HASH *, USB8 *, USB32);
-S_FUNC void sha1Final(HASH *);
-S_FUNC void sha1_chkpt(HASH *);
-S_FUNC void sha1_note(int, HASH *);
-S_FUNC void sha1_type(int, HASH *);
+static void sha1Init(HASH *);
+static void sha1Transform(uint32_t *, uint32_t *);
+static void sha1Update(HASH *, uint8_t *, uint32_t);
+static void sha1Final(HASH *);
+static void sha1_chkpt(HASH *);
+static void sha1_note(int, HASH *);
+static void sha1_type(int, HASH *);
 void sha1_init_state(HASH *);
-S_FUNC ZVALUE sha1_final_state(HASH *);
-S_FUNC int sha1_cmp(HASH *, HASH *);
-S_FUNC void sha1_print(HASH *);
+static ZVALUE sha1_final_state(HASH *);
+static int sha1_cmp(HASH *, HASH *);
+static void sha1_print(HASH *);
 
 /*
  * sha1Init - initialize the SHA1 state
  */
-S_FUNC void
+static void
 sha1Init(HASH *state)
 {
     SHA1_INFO *dig = &state->h_union.h_sha1; /* digest state */
@@ -148,11 +155,11 @@ sha1Init(HASH *state)
  * It may be necessary to split it into sections, e.g., based on the four
  * sub-rounds.  One may also want to roll each sub-round into a loop.
  */
-S_FUNC void
-sha1Transform(USB32 *digest, USB32 *W)
+static void
+sha1Transform(uint32_t *digest, uint32_t *W)
 {
-    USB32 A, B, C, D, E; /* Local vars */
-    USB32 t;             /* temp storage for exor() */
+    uint32_t A, B, C, D, E; /* Local vars */
+    uint32_t t;             /* temp storage for exor() */
 
     /* Set up first buffer and local data buffer */
     A = digest[0];
@@ -258,12 +265,12 @@ sha1Transform(USB32 *digest, USB32 *W)
  * sha1Update - update SHA1 with arbitrary length data
  */
 void
-sha1Update(HASH *state, USB8 *buffer, USB32 count)
+sha1Update(HASH *state, uint8_t *buffer, uint32_t count)
 {
     SHA1_INFO *dig = &state->h_union.h_sha1; /* digest state */
-    USB32 datalen = dig->datalen;
-    USB32 cpylen;
-#if CALC_BYTE_ORDER == LITTLE_ENDIAN
+    uint32_t datalen = dig->datalen;
+    uint32_t cpylen;
+#if CALC_BYTE_ORDER == CALC_LITTLE_ENDIAN
     unsigned int i;
 #endif
 
@@ -289,7 +296,7 @@ sha1Update(HASH *state, USB8 *buffer, USB32 count)
      * Process data in SHA1_CHUNKSIZE chunks
      */
     for (;;) {
-#if CALC_BYTE_ORDER == LITTLE_ENDIAN
+#if CALC_BYTE_ORDER == CALC_LITTLE_ENDIAN
         if (state->bytes) {
             for (i = 0; i < SHA1_CHUNKWORDS; ++i) {
                 SWAP_B8_IN_B32(dig->data + i, dig->data + i);
@@ -338,10 +345,10 @@ sha1Final(HASH *state)
 {
     SHA1_INFO *dig = &state->h_union.h_sha1; /* digest state */
     long count = (long)(dig->datalen);
-    USB32 lowBitcount;
-    USB32 highBitcount;
-    USB8 *data = (USB8 *)dig->data;
-#if CALC_BYTE_ORDER == LITTLE_ENDIAN
+    uint32_t lowBitcount;
+    uint32_t highBitcount;
+    uint8_t *data = (uint8_t *)dig->data;
+#if CALC_BYTE_ORDER == CALC_LITTLE_ENDIAN
     unsigned int i;
 #endif
 
@@ -359,7 +366,7 @@ sha1Final(HASH *state)
 
     memset(data + count, 0, SHA1_CHUNKSIZE - count);
 
-#if CALC_BYTE_ORDER == LITTLE_ENDIAN
+#if CALC_BYTE_ORDER == CALC_LITTLE_ENDIAN
     if (state->bytes) {
         data[count] = 0x80;
         for (i = 0; i < SHA1_CHUNKWORDS; ++i) {
@@ -406,11 +413,11 @@ sha1Final(HASH *state)
  * This function will ensure that the hash chunk buffer is empty.
  * Any partially hashed data will be padded out with 0's and hashed.
  */
-S_FUNC void
+static void
 sha1_chkpt(HASH *state)
 {
     SHA1_INFO *dig = &state->h_union.h_sha1; /* digest state */
-#if CALC_BYTE_ORDER == LITTLE_ENDIAN
+#if CALC_BYTE_ORDER == CALC_LITTLE_ENDIAN
     unsigned int i;
 #endif
 
@@ -420,8 +427,8 @@ sha1_chkpt(HASH *state)
     if (dig->datalen > 0) {
 
         /* pad to the end of the chunk */
-        memset((USB8 *)dig->data + dig->datalen, 0, SHA1_CHUNKSIZE - dig->datalen);
-#if CALC_BYTE_ORDER == LITTLE_ENDIAN
+        memset((uint8_t *)dig->data + dig->datalen, 0, SHA1_CHUNKSIZE - dig->datalen);
+#if CALC_BYTE_ORDER == CALC_LITTLE_ENDIAN
         if (state->bytes) {
             for (i = 0; i < SHA1_CHUNKWORDS; ++i) {
                 SWAP_B8_IN_B32(dig->data + i, dig->data + i);
@@ -449,7 +456,7 @@ sha1_chkpt(HASH *state)
  * Types include negative values, complex values, division, zero numeric
  * and array of HALFs.
  */
-S_FUNC void
+static void
 sha1_note(int special, HASH *state)
 {
     SHA1_INFO *dig = &state->h_union.h_sha1; /* digest state */
@@ -479,7 +486,7 @@ sha1_note(int special, HASH *state)
  * or not.  We also do nothing with V_STR so that a hash of a string
  * will produce the same value as the standard hash function.
  */
-S_FUNC void
+static void
 sha1_type(int type, HASH *state)
 {
     SHA1_INFO *dig = &state->h_union.h_sha1; /* digest state */
@@ -544,7 +551,7 @@ sha1_init_state(HASH *state)
  * returns:
  *      a ZVALUE representing the state
  */
-S_FUNC ZVALUE
+static ZVALUE
 sha1_final_state(HASH *state)
 {
     SHA1_INFO *dig = &state->h_union.h_sha1; /* digest state */
@@ -555,7 +562,7 @@ sha1_final_state(HASH *state)
      * malloc and initialize if state is NULL
      */
     if (state == NULL) {
-        state = (HASH *)malloc(sizeof(HASH));
+        state = (HASH *)calloc(1, sizeof(HASH));
         if (state == NULL) {
             math_error("cannot malloc HASH");
             not_reached();
@@ -578,15 +585,32 @@ sha1_final_state(HASH *state)
     /*
      * load ZVALUE
      */
-#if BASEB == 16 && CALC_BYTE_ORDER == LITTLE_ENDIAN
+#if BASEB == 16
+#  if CALC_BYTE_ORDER == CALC_LITTLE_ENDIAN
+
     for (i = 0; i < ret.len; i += 2) {
         ret.v[ret.len - i - 1] = ((HALF *)dig->digest)[i + 1];
         ret.v[ret.len - i - 2] = ((HALF *)dig->digest)[i];
     }
-#else
+
+#  else
+
+    for (i = 0; i < ret.len; i += 2) {
+        ret.v[ret.len - i - 1] = ((HALF *)dig->digest)[i];
+        ret.v[ret.len - i - 2] = ((HALF *)dig->digest)[i + 1];
+    }
+
+#  endif
+#elif BASEB == 32
+
     for (i = 0; i < ret.len; ++i) {
         ret.v[ret.len - i - 1] = ((HALF *)dig->digest)[i];
     }
+
+#else
+
+#  error "BASEB is not 16, nor 32, do not know (yet) load a HASH into a ZVALUE"
+
 #endif
     ztrim(&ret);
 
@@ -607,7 +631,7 @@ sha1_final_state(HASH *state)
  *      true => hash states are different
  *      false => hash states are the same
  */
-S_FUNC int
+static int
 sha1_cmp(HASH *a, HASH *b)
 {
     /*
@@ -644,7 +668,7 @@ sha1_cmp(HASH *a, HASH *b)
         /* buffer lengths differ */
         return true;
     }
-    if (memcmp((USB8 *)a->h_union.h_sha1.data, (USB8 *)b->h_union.h_sha1.data, a->h_union.h_sha1.datalen) != 0) {
+    if (memcmp((uint8_t *)a->h_union.h_sha1.data, (uint8_t *)b->h_union.h_sha1.data, a->h_union.h_sha1.datalen) != 0) {
         /* buffer contents differ */
         return true;
     }
@@ -652,7 +676,7 @@ sha1_cmp(HASH *a, HASH *b)
     /*
      * compare digest
      */
-    return (memcmp((USB8 *)(a->h_union.h_sha1.digest), (USB8 *)(b->h_union.h_sha1.digest), SHA1_DIGESTSIZE) != 0);
+    return (memcmp((uint8_t *)(a->h_union.h_sha1.digest), (uint8_t *)(b->h_union.h_sha1.digest), SHA1_DIGESTSIZE) != 0);
 }
 
 /*
@@ -661,7 +685,7 @@ sha1_cmp(HASH *a, HASH *b)
  * given:
  *      state   the hash state to print
  */
-S_FUNC void
+static void
 sha1_print(HASH *state)
 {
     /*

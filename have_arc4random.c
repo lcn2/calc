@@ -1,7 +1,7 @@
 /*
  * have_arc4random - Determine if we have the arc4random_buf() RNG
  *
- * Copyright (C) 2021  Landon Curt Noll
+ * Copyright (C) 2021,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -38,11 +38,15 @@
  *              undefined ==> do not have arc4random_buf() call
  */
 
-#include "have_stdlib.h"
-#if defined(HAVE_STDLIB_H)
-#  include <stdlib.h>
-#endif
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
+#include <stdlib.h>
+
+/*
+ * calc local src includes
+ */
 
 #include "banned.h" /* include after system header <> includes */
 
@@ -55,7 +59,7 @@ main(void)
 
     printf("#undef HAVE_ARC4RANDOM /* no */\n");
 
-#else /* HAVE_NO_ARC4RANDOM */
+#else
 
     /* buffer for arc4random_buf() to fill */
     static char buf[BUFLEN];
@@ -63,7 +67,7 @@ main(void)
     arc4random_buf(buf, BUFLEN);
     printf("#define HAVE_ARC4RANDOM /* yes */\n");
 
-#endif /* HAVE_NO_ARC4RANDOM */
+#endif
 
     /* exit(0); */
     return 0;

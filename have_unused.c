@@ -1,7 +1,7 @@
 /*
  * have_unused - Determine if we want or can support the unused attribute
  *
- * Copyright (C) 2004,2021  Landon Curt Noll
+ * Copyright (C) 2004,2021,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -42,9 +42,16 @@
  *              (nothing) ==> unused not used
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
 
-#include "banned.h" /* include after system header <> includes */
+/*
+ * calc local src includes
+ */
+
+#include "banned.h" /* include after all other includes */
 
 #if !defined(HAVE_NO_UNUSED)
 
@@ -61,7 +68,7 @@ unused_str(char *UNUSED(str))
     return "UNUSED_ ## x __attribute__((unused))";
 }
 
-#endif /* !HAVE_NO_UNUSED */
+#endif
 
 int
 main(void)
@@ -75,12 +82,12 @@ main(void)
     printf("# define UNUSED(x) x\n");
     printf("#endif\n");
 
-#else /* HAVE_NO_UNUSED */
+#else
 
     printf("#undef UNUSED\n");
     printf("#define UNUSED(x) %s\n", unused_str(NULL));
 
-#endif /* HAVE_NO_UNUSED */
+#endif
 
     /* exit(0); */
     return 0;

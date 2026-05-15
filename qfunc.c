@@ -1,7 +1,7 @@
 /*
  * qfunc - extended precision rational arithmetic non-primitive functions
  *
- * Copyright (C) 1999-2007,2021-2023  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023,2026  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -25,18 +25,31 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdbool.h>
+
+/*
+ * calc local src includes
+ */
+#include "zmath.h"
 #include "qmath.h"
 #include "config.h"
 #include "prime.h"
-
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
 
-STATIC NUMBER **B_table;
-STATIC long B_num;
-STATIC long B_allocnum;
-STATIC NUMBER **E_table;
-STATIC long E_num;
+#include "banned.h" /* include after all other includes */
+
+static NUMBER **B_table;
+static long B_num;
+static long B_allocnum;
+static NUMBER **E_table;
+static long E_num;
 
 #define QALLOCNUM 64
 
@@ -1077,7 +1090,7 @@ qbern(ZVALUE z)
             return NULL;
         }
         if (B_allocnum == 0) {
-            p = (NUMBER **)malloc(sz);
+            p = (NUMBER **)calloc(sz, 1);
         } else {
             p = (NUMBER **)realloc(B_table, sz);
         }
@@ -1167,7 +1180,7 @@ qeuler(ZVALUE z)
     if (E_num) {
         p = (NUMBER **)realloc(E_table, sz);
     } else {
-        p = (NUMBER **)malloc(sz);
+        p = (NUMBER **)calloc(sz, 1);
     }
     if (p == NULL) {
         return NULL;

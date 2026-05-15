@@ -1,7 +1,7 @@
 /*
  * jump - trivial prime jump table
  *
- * Copyright (C) 1999,2021  Landon Curt Noll
+ * Copyright (C) 1999,2021,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -23,6 +23,13 @@
  * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
+
+/*
+ * calc local src includes
+ */
+#include "jump.h"
+
+#include "banned.h" /* include after all other includes */
 
 /*
  * If x is divisible by a trivial prime (2,3,5,7,11), then:
@@ -47,10 +54,6 @@
  * average reduces the values we need to test by a factor of at least 2.4.
  */
 
-#include "jump.h"
-
-#include "banned.h" /* include after system header <> includes */
-
 /*
  * jmpindx - how to find the next value not divisible by a trivial prime
  *
@@ -64,7 +67,7 @@
  * we move off the end of jmp[]) to move to higher and higher values
  * that are not divisible by trivial primes.
  */
-CONST short jmpindx[JMPMOD] = {
+const short jmpindx[JMPMOD] = {
     0,    10, 8,    6,    4,  2,    -1,   2,  -2,   -3,   2,  -4,   4,    2,  -5,   -6,   4, 2,    -7,   2, -8,   -9,   2, -10,
     4,    2,  -11,  4,    2,  -12,  -13,  4,  2,    -14,  2,  -15,  -16,  4,  2,    -17,  2, -18,  4,    2, -19,  6,    4, 2,
     -20,  2,  -21,  -22,  2,  -23,  -24,  2,  -25,  12,   10, 8,    6,    4,  2,    -26,  2, -27,  4,    2, -28,  -29,  8, 6,
@@ -118,7 +121,7 @@ CONST short jmpindx[JMPMOD] = {
 /*
  * jmp - intervals between successive integers not divisible by trivial primes
  */
-CONST unsigned char jmp[JMPSIZE] = {
+const unsigned char jmp[JMPSIZE] = {
     12, 4, 2, 4,  6, 2, 6,  4,  2,  4,  6, 6, 2, 6, 4,  2,  6,  4,  6, 8, 4,  2, 4, 2,  4,  14, 4,  6,  2, 10, 2, 6,  6,  4,  2,
     4,  6, 2, 10, 2, 4, 2,  12, 10, 2,  4, 2, 4, 6, 2,  6,  4,  6,  6, 6, 2,  6, 4, 2,  6,  4,  6,  8,  4, 2,  4, 6,  8,  6,  10,
     2,  4, 6, 2,  6, 6, 4,  2,  4,  6,  2, 6, 4, 2, 6,  10, 2,  10, 2, 4, 2,  4, 6, 8,  4,  2,  4,  12, 2, 6,  4, 2,  6,  4,  6,
@@ -133,4 +136,4 @@ CONST unsigned char jmp[JMPSIZE] = {
     8,  6, 4, 2,  4, 2, 10, 2,  10, 6,  2, 4, 6, 2, 6,  4,  2,  4,  6, 6, 2,  6, 4, 2,  10, 6,  8,  6,  4, 2,  4, 8,  6,  4,  6,
     2,  4, 6, 2,  6, 6, 6,  4,  6,  2,  6, 4, 2, 4, 2,  10, 12, 2,  4, 2, 10, 2, 6, 4,  2,  4,  6,  6,  2, 10, 2, 6,  4,  14, 4,
     2,  4, 2, 4,  8, 6, 4,  6,  2,  4,  6, 2, 6, 6, 4,  2,  4,  6,  2, 6, 4,  2, 4, 12, 2};
-CONST unsigned char *CONST lastjmp = (jmp + JMPSIZE - 1);
+const unsigned char *const lastjmp = (jmp + JMPSIZE - 1);

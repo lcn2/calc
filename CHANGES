@@ -1,8 +1,493 @@
+The following are the changes from calc version 2.16.1.3 to 2.17.0.0:
+
+    Sync calc version 3.0.0.4 changes with calc version 2.16.1.3 to
+    form a new 2.17.0.0, except that the calc version will be 2.17.0.0 of course.  :-)
+
+    **IMPORTANT LEGACY NOTE**: Some very old systems might have trouble with the set
+                               of changes.  For example, systems that don't a c17 C
+                               compiler, or that lack some standard include files.
+                               Such old systems should use the `legacy-calc` branch
+                               (i.e., the latest 2.16.1.x version on that branch).
+
+    Added `make asan` rule to make it easier to compile with ASAN (Address Sanitizer).
+        NOTE: Use `make clobber` first before using the new rule to remove any previous compilation.
+
+    Added `make gcc` rule to force a compile with `gcc(1)`, (or `gcc-15`
+        for macOS), full warnings, no optimizer, no ASAN.
+        NOTE: Use `make clobber` first before using the new rule to remove any previous compilation.
+
+    Added `make clang` rule to force a compile with `c1ang(1)`, full warnings, no optimizer, no ASAN.
+        NOTE: Use `make clobber` first before using the new rule to remove any previous compilation.
+
+    Added `calc-static-asan` rule to to compile cASAN (Address Sanitizer).
+        NOTE: Use `make clobber` first before using the new rule to remove any previous compilation.
+
+    Added `make asan-run` to compile and run calc in the local directory, and run with ASAN.
+        NOTE: Use `make clobber` first before using the new rule to remove any previous compilation.
+
+    Added `make check_lcc` to test if the local C compiler (`${LCC}`) can compile a trivial C program.
+
+    Added `make check_lcc_include` to check if the local C compiler `${LCC}` has access to <stdio.h>.
+
+    Added `make check_cc` to test if the C compiler (`${CC}`) can compile a trivial C program.
+
+    Added: `make check_cc_include` to check if the C compiler `${CC}` has access to the <stdio.h>
+    system include file.  NOTE: `make check_cc_include` was `make check_include`.
+
+    Added make variable `${CHECK_TARGETS}` to contain the `check_lcc`, `check_lcc_include`, `check_cc`,
+    and `check_cc_include` targets.
+
+    Added `make sanity_check`, which is based on the make variable `${CHECK_TARGETS}`, to perform
+    the sanity checks on both the local C compiler (`${LCC}`), and the C compiler (`${CC}`).
+
+    Added to both `${STATIC_FIRST_TARGETS}`, and `${DYNAMIC_FIRST_TARGETS}`
+    to perform the local C compiler (`${LCC}`), and the C compiler (`${CC}`) checks.
+
+    Performed a `make clang-format` source format to update the code base as per `.clang-format`.
+
+    From: calc version 3.0.0.3 to 3.0.0.4 changes
+    ---------------------------------------------
+
+    Fixed three memcpy calls in `matsort()` in `matfunc.c`.
+    Thanks go to the GitHub user @orbisai0security for this fix.
+
+    Fixed and improved `chk_tree`.
+    Updated `chk_tree` VERSION to "1.1 2026-02-04".
+
+    Added `chk_tree -m` for use with commands such as `make full_debug`, and `make debug`.
+
+    Fixed places where the code still used `BIG_ENDIAN` when it needs `CALC_BIG_ENDIAN`.
+    Fixed places where the code still used `LITTLE_ENDIAN` when it needs `CALC_LITTLE_ENDIAN`.
+
+    Fixed a `calloc(3)` mistake where the args were reversed.
+
+    Import documentation changes from the calcv2 branch in regards to
+    the "XDG base dir. spec. adoption", update to the `trailblank` tool
+    to ignore in `calc.man`, `help/environment`, and `README.md`.
+
+    Added `${EXPAND}` to the list of utilities in `Makefile.config`.
+    Echo `${EXPAND}` in the `make env` rule of `Makefile`.
+
+    Use `${EXPAND}` to replace ASCII tabs with ASCII spaces in the
+    `make len_bits.h` rule, and the `make errsym.h` rule of `Makefile`.
+
+    Add support for the XDG Base Directory specification:
+
+        https://specifications.freedesktop.org/basedir/latest/
+
+    Thanks to GitHub user @ccjmne for helping add this support.
+
+    From: calc version 3.0.0.2 to 3.0.0.3 changes
+    ---------------------------------------------
+
+    Add Makefile.target to build for NetBSD per GitHub PR #184.
+
+    Cygwin disable a gcc warning as per GitHub PR #186.
+
+    Improve error messages and checks for `getscanfield()`.
+    Improve error messages and checks for `fscanfile()`.
+    Prevent NULL from being passed to `makestring(str)`.
+
+    Added `long`, `unsigned long`, `long long`, and `unsigned long long` to `chk_c.c`.
+    C compiles must support `long long`, and `unsigned long long` types.
+    Added `<limits.h>` to  `chk_c.c`.
+    Changed `CHK_C_VERSION` to "2.1 2026-01-22".
+
+    Renamed `longbits.c` to `len_bits.c`.
+    Renamed `longbits.h` to `len_bits.h`.
+    Renamed `make longbits.h` to `make len_bits.h`.
+
+    Added `unsigned long`, `long long`, and `unsigned long long` to `show sizes` output.
+
+    Removed `terminal.h` rule: system include `<termios.h>` must exist
+    Removed `CALC_CHARBIT` define: system include `<limits.h>` must define `CHAR_BIT`
+    Removed `HAVE_B64` define: system must have a `int64_t` and `uint64_t` type
+
+    Removed code faked 64-bit values: system must have a `int64_t` and `uint64_t` type
+
+    Removed `CALC_CHARBIT` make symbol: system include `<limits.h>` must define `CHAR_BIT`
+    Removed `LONG_BITS` make symbol: `LONG_BITS` define, if undefined, is now defined in `zmath.h`
+    Removed `HAVE_FPOS_POS` make symbol: `LONG_BITS` define, if undefined, is now defined in `zmath.h`
+    Removed `FPOS_POS_BITS` make symbol: calc v3 will treat `fpos_t` as opaque
+    Removed `FPOS_BITS` make symbol: calc v3 will treat `fpos_t` as opaque
+    Removed `FPOS_T_BITS` make symbol: calc v3 will treat `fpos_t` as opaque
+    Removed `FPOS_T_LEN` make symbol: calc v3 will treat `fpos_t` as opaque
+    Removed `HAVE_POSSCL` make symbol: calc v3 will treat `fpos_t` as opaque
+    Removed `HAVE_OFFSCL` make symbol: system must have a `off_t` integer type
+    Removed `OFF_T_BITS` make symbol: the value `OFF_T_BITS` is determined by `longbits.c`,
+        and is found in `longbits.h` that in turn is generated by `longbits.c`
+    Removed `DEV_BITS` make symbol: system must have a `dev_t` type
+    Removed `INODE_BITS` make symbol: system must have a `node_t` type
+
+    Removed `charbit.h` rule and `charbit.c`:  system include `<limits.h>` must define `CHAR_BIT`
+    Removed `longbits.h` rule and `charbit.c`:  system include `<stdint.h>` must exist
+    Removed `have_posscl.h` rule and `have_posscl.c`: calc v3 will treat `fpos_t` as opaque
+    Removed `have_fpos_pos.h` rule and `have_fpos_pos.c`: calc v3 will treat `fpos_t` as opaque
+    Removed `fposval.h` rule and `fposval.c`: system must have a `fpos_t` type
+    Removed `fposval.h.def`: system must have a `fpos_t` type
+    Removed `have_offscl.h` rule and `have_offscl.c`: system must have a `off_t` type
+
+    Removed code that was not treating `fpos_t` as opaque: `fpos_t` values are only used
+        in conjunction with the `fgetpos()` and `fsetpos()` libc functions.
+    Fully addressed issue #185.
+
+    Renamed `DEV_BITS` to `DEV_T_BITS`
+    Renamed `DEV_LEN` to `DEV_T_LEN`
+    Renamed `INODE_BITS` to `INO_T_BITS`
+    Renamed `INODE_LEN` to `INO_T_LEN`
+
+    The `LONG_BITS` define, if undefined, is now defined in `zmath.h`
+
+    The `len_bits.c` program (was `longbits.c`) now generates `len_bits.h`
+    The `OFF_T_LEN` define, if undefined, is now defined in `len_bits.h`
+    The `OFF_T_BITS` define, if undefined, is now defined in `len_bits.h`
+    The `OFF_T_MAX` define, if undefined, is now defined in `len_bits.h`
+    The `OFF_T_MIN` define, if undefined, is now defined in `len_bits.h`
+        NOTE: we set OFF_T_MIN to one more than the minimum off_t to make it easier to negate.
+    The `SWAP_HALF_IN_OFF_T` define is now defined in `len_bits.h`
+    The `DEV_T_BITS` define, if undefined, is now defined in `len_bits.h`
+    The `DEV_T_LEN` define, if undefined, is now defined in `len_bits.h`
+    The `SWAP_HALF_IN_DEV_T` define is now defined in `len_bits.h`
+    The `INO_T_BITS` define, if undefined, is now defined in `len_bits.h`
+    The `INO_T_LEN` define, if undefined, is now defined in `len_bits.h`
+    The `SWAP_HALF_IN_INO_T` define is now defined in `len_bits.h`
+
+    The `PTR_LEN` define has been renamed to `INTPTR_LEN`
+    The `INTPTR_LEN` defined, if undefined, is now defined in `zmath.h`
+
+    Removed use of the `SB8` type.
+    Renamed `USB8` type to just `uint8_t`
+    Removed use of the `SB16` type
+    Renamed `USB16` type to just `uint16_t`
+    Renamed `SB32` type to just `int32_t`
+    Renamed `USB32` type to just `uint32_t`
+    Renamed `SB64` type to just `int64_t`
+    Renamed `USB64` type to just `uint64_t`
+
+    Removed `SWAP_B16_IN_PRINT(dest, src)` macro: it was unused.
+    Removed `SWAP_B8_IN_PRINT(dest, src)` macro: it was unused.
+
+    Fix how `zprintx()` and `zprinto()` in `zio.c` print C integer
+        variables in hex or octal by using PRI macros from `<inttypes.h>`.
+    Add `PRI_DEC`, `PRI_OCT`, `PRI_HEX` to `zmath.h` to perform the above.
+    Add `PRI_DEC_LEN`, `PRI_OCT_LEN`, `PRI_HEX_LEN` to `zmath.h` to perform the above.
+
+    Added `GDB` make variable to `Makefile.config`.
+    Added `LLDB` make variable to `Makefile.config`.
+    Added `make lldb` and `make gdb` to make it easier to debug under either.
+
+    Fixed missing `qlink()` calls in `f_search()` and `f_rsearch()` in `func.c`.
+
+    Rewrote `fsearch()` in `file.c` as per proper use of `off_t` with libc
+    `fseeko()`, `ftello()`, `fgetpos()`, and `fsetpos()` as noted above,
+    and to be backward compatible with regression tests.
+
+    Expanded examples in `help/search` while rewriting `fsearch()`.
+
+    Rewrote `frsearch()` in `file.c` as per proper use of `off_t` with libc
+    `fseeko()`, `ftello()`, `fgetpos()`, and `fsetpos()` as noted above,
+    and to be backward compatible with regression tests.
+
+    Expanded examples in `help/rsearch` while rewriting `frsearch()`.
+
+    Due to inconsistencies with the symbol of `BYTE_ORDER`,
+    inconsistencies with how Big Endian and Little Endian related symbols,
+    inconsistencies with system include files that define byte order,
+    the `make endian_calc.h` will always compile `endian.h`
+    to build the `endian_calc.h` file.
+
+    Define `CALC_LITTLE_ENDIAN`, `CALC_BIG_ENDIAN`, and `CALC_PDP_ENDIAN` in `endian_calc.h`.
+    NOTE: calc does NOT support pdp Endian.
+
+    Modified `errtbl.c` to avoid getopt related extern warnings.
+    Fixed GitHub PR #190.
+
+    From: calc version 3.0.0.1 to 3.0.0.2 changes
+    ---------------------------------------------
+
+    Removed `terminal.h` rule: system include `<termios.h>` must exist
+    Removed `have_gettime.h` and `have_gettime.c`: if CLOCK_REALTIME in defined in system include `<time.h>`,
+        system must support `clock_gettime()`
+    Removed `have_ustat.h` and `have_ustat.c`: use of `ustat()` is no longer supported
+    Removed `have_statfs.h` and `have_statfs.c`: unless `_WIN32` or `_WIN64` is defined,
+        system include `<sys/statvfs.h>` must exist
+    Removed `have_sys_vfs.h` rule: unless `_WIN32` or `_WIN64` is defined,
+        system include `<sys/statvfs.h>` must exist
+    Removed `have_sys_param.h` rule: unless `_WIN32` or `_WIN64` is defined,
+        system include `<sys/param.h>` must exist
+    Removed `have_sys_mount.h` rule: unless `_WIN32` or `_WIN64` is defined,
+        system include `<sys/mount.h>` must exist
+
+    Removed code that supported TERMIO and `struct termio`
+    Removed code that supported SGTTY and `struct sgttyb`
+    Removed code that supported `ustat()`, using `statvfs()` instead
+    Removed code that supported `statfs()`, using `statvfs()` instead
+
+    System must support `statvfs()`: unless `_WIN32` or `_WIN64` is defined,
+        system include `<sys/statvfs.h>` must exist
+
+    Removed `USE_TERMIOS` define: system include `<termios.h>` must exist
+    Removed `USE_TERMIO` define: system include `<termios.h>` must exist
+    Removed `USE_SGTTY` define: system include `<termios.h>` must exist
+    Removed `USE_NOTHING` define: system include `<termios.h>` must exist
+    Removed `HAVE_GETTIME` define: if CLOCK_REALTIME in defined in system include `<time.h>`,
+        system must support `clock_gettime()`
+    Removed `HAVE_STATFS` define: unless `_WIN32` or `_WIN64` is defined,
+        system must support `statvfs()`
+
+    Removed `TERMCONTROL` make symbol: system include `<termios.h.h>` must exist
+    Removed `HAVE_NO_GETTIME` make symbol: if CLOCK_REALTIME in defined in system include `<time.h>`,
+        system must support `clock_gettime()`
+    Removed `HAVE_USTAT` make symbol: use of `ustat()` is no longer supported
+    Removed `HAVE_STATFS` make symbol: use of `statfs()` is no longer supported
+    Removed `HAVE_SYS_VFS_H` make symbol: system include `<sys/statvfs.h>` must exist
+
+    When `IGNORE_BYTE_ORDER` is defined and `endian.c` is compiled, any system
+    include definition of `BYTE_ORDER` will be ignored by `endian.c`.
+
+    Improved comments about `CALC_BYTE_ORDER` make variable in `Makefile.config`.
+    Fixed when `Makefile.config` forces use of Little Endian or Big Endian.
+    Improved `endian.c` debugging.
+
+    From: calc version 3.0.0.0 to 3.0.0.1 changes
+    ---------------------------------------------
+
+    Change C-Preprocessor directives related to `MAJOR_VER` to
+    test `if MAJOR_VER >= 3` first.
+
+    When `MAJOR_VER >= 3` (i.e., calc version 3), this update does not
+    change the high level functionality of calc except that the maximum
+    size of values is now 1/8 of the maximum address space allowed by
+    the CPU architecture.
+
+    When `MAJOR_VER >= 3` (i.e., calc version 3), the `LEN` type (length
+    of internal integer values in units of HALF) changed from a signed
+    32-bit value to a `uintptr_t`.
+
+    When `MAJOR_VER >= 3` (i.e., calc version 3), the `SIGN` type (sign
+    of a multi-precision integer) changed from a signed 32-bit value to a
+    `bool`.
+
+    When `MAJOR_VER >= 3` (i.e., calc version 3), the `ZVALUE`
+    multi-precision integer data structure, while it has the same
+    structure elements, has a different memory layout than it was under
+    calc version 2.
+
+    The `v_type` element of a `VALUE` changed from a `short` to a `int16_t`.
+    Added `unused` element to  `VALUE` as an `uint16_t` to be reserved for future use.
+    The `v_subtype` element of a `VALUE` changed from a `unsigned short` to a `uint32`t`.
+
+    The `error_value(e)` function now takes an `int16_t` argument.
+
+    When `MAJOR_VER >= 3` (i.e., calc version 3), the `VALUE`
+    multi-precision integer data structure, while it retains the calc
+    version 2 structure elements, is larger and has a new `unused`
+    element in calc version 3.
+
+    Define `BASEB_LOG2` to be the base 2 log of the base.
+    The base `BASEB` is now defined in terms of `BASEB_LOG2`.
+
+    Define `MAXDATA` to be the largest data object in bytes we will use,
+    which must be 1 less than a power of 2.  The value `MAXDATA_LOG2`
+    is the log base 2 of MAXDATA+1.
+
+    When `MAJOR_VER >= 3` (i.e., calc version 3), we start with MAXDATA
+    as 1 less than 1/16 of the maximum address space.  We limit to 1/16
+    because for a maximum complex value we will need 4 huge integers, plus
+    other data, code and stack space.  We often perform an operation such
+    as 'a = b + c', so need 3 such complex values.  So '3*4/16 == 3/4' of
+    the address space, with spare space for code, op stack and other data.
+
+    The maximum length of a internal integer values in units of HALF
+    is `MAXLEN`, which must be 1 less than a power of 2.  The value
+    `MAXLEN_LOG2` is the base 2 of MAXLEN+1.
+
+    Expanded `MAX_TEN` to 49. The largest power of 10 we will compute
+    for our decimal conversion internal constants, is set now 10^(2^49).
+
+    When `MAJOR_VER >= 3` (i.e., calc version 3), most systems will
+    run out of memory before they hit limits relating to `MAXDATA`,
+    `MAXLEN`, and `MAX_TEN`.
+
+    Compile `chk_c` from `chk_c.c` first when building the make target `h_src`.
+
+    Made `chk_c.c` more robust, but will compile with `-Wno-format` to assist 32-bit architectures.
+
+    Require the C compiler to be c17 or later.
+
+    Removed `have_stdlib.h` rule: system include `<stdlib.h>` must exist
+    Removed `have_inttypes.h` rule: system include `<inttypes.h>` must exist
+    Removed `have_limits.h` rule: system include `<limits.h>` must exist
+    Removed `bool.h` file: system include `<stdbool.h>` must exist
+    Removed `have_stdbool.h` rule: system include `<stdtool.h>` must exist
+    Removed `have_stdint.h` rule: system include `<stdint.h>` must exist
+    Removed `have_string.h` rule: system include `<string.h>` must exist
+    Removed `have_strdup.h and `have_strdup.c` rule: system include `<string.h>` must exist
+    Removed `have_memmv.h` rule: system include `<string.h>` must exist
+    Removed `have_unistd.h` rule: system include `<unistd.h>` must exist
+    Removed `have_times.h` rule: system include `<time.h>` must exist
+    Removed `have_times.h` rule: system include `<sys/time.h>` must exist
+    Removed `have_times.h` rule: system include `<sys/times.h>` must exist
+    Removed `args.h` rule: system include `<stdarg.h>` must exist
+    Removed `have_stdvs.c` rule: system include `<stdarg.h>` must exist
+    Removed `have_varvs.c` rule: system include `<stdarg.h>` must exist
+    Removed `have_newstr.h` and `have_newstr.c` rule: system must support `memcpy()`
+    Removed `have_newstr.h` and `have_newstr.c` rule: system must support `memset()`
+    Removed `have_newstr.h` and `have_newstr.c` rule: system must support `memmove()`
+    Removed `have_uid_t.h` and `have_uid_t.c`: system include `<sys/types.h>` must exist
+    Removed `have_fgetsetpos.h` and `have_fgetsetpos.c`: system must support `fgetpos()`
+    Removed `have_fgetsetpos.h` and `have_fgetsetpos.c`: system must support `fsetpos()`
+    Removed `have_const.h` and `have_const.c`: system must support `const`
+    Removed `align32.h` and `align32.c`: system must support 32 bit value access from any address
+        NOTE: This was only an issue for the function implementing the SHA1 hash.
+    Removed `alloc.h` and `have_const.c`: system include `<string.h>` must exist
+
+    Removed `HAVE_STDLIB_H` make symbol: system include `<stdlib.h>` must exist
+    Removed `HAVE_UNISTD_H` make symbol: system include `<unistd.h>` must exist
+    Removed `HAVE_VSNPRINTF` make symbol: system must support `vsnprintf()`
+    Removed `HAVE_SNPRINTF` make symbol: system must support `snprintf()`
+    Removed `HAVE_NEWSTR` make symbol: system must support `memcpy()`
+    Removed `HAVE_NEWSTR` make symbol: system must support `memset()`
+    Removed `HAVE_NEWSTR` make symbol: system must support `memmove()`
+    Removed `HAVE_STRING_H` make symbol: system include `<string.h>` must exist
+    Removed `HAVE_TIME_H` make symbol: system include `<time.h>` must exist
+    Removed `HAVE_TIMES_H` make symbol: system include `<sys/times.h>` must exist
+    Removed `HAVE_SYS_TIME_H` make symbol: system include `<sys/time.h>` must exist
+    Removed `HAVE_SYS_TIMES_H` make symbol: system include `<sys/times.h>` must exist
+    Removed `HAVE_STDBOOL_H` make symbol: system include `<stdtool.h>` must exist
+    Removed `HAVE_STDINT_H` make symbol: system include `<stdint.h>` must exist
+    Removed `HAVE_LIMITS_H` make symbol: system include `<limits.h>` must exist
+    Removed `HAVE_UID_T` make symbol: system include `<sys/types.h>` must exist
+    Removed `HAVE_FGETSETPOS` make symbol: system must support `fgetpos()`
+    Removed `HAVE_FGETSETPOS` make symbol: system must support `fsetpos()`
+    Removed `HAVE_CONST` make symbol: system must support `const`.
+
+    Removed code that depended on `VARARGS`
+    Removed code that depended on `have_getprid.h` and `have_getprid.c`
+    Removed code that depended on `HAVE_GETPRID`
+    Removed code that depended in `getprid()`
+    Removed code that depended on `HAVE_UID_T`
+    Removed code that depended on `HAVE_STRDUP`
+    Removed code that depended on `MUST_ALIGN32`
+
+    Changed use of `FALSE` to `false`.
+    Changed use of `TRUE` to `true`.
+    Changed use of `BOOL` to `bool`.
+    Changed use of `FILEPOS` to `fpos_t`.
+    Changed use of `FILEPOS_BITS` to `FPOS_T_BITS`.
+    Changed use of `FILEPOS_LEN` to `FPOS_T_LEN`.
+    Changed use of `SWAP_HALF_IN_FILEPOS` to `SWAP_HALF_IN_FPOS_T`.
+    Changed use of `HAVE_FILEPOS_SCALAR` to `HAVE_FPOS_T_SCALAR`.
+    Changed use of `CONST` to `const`.
+    Changed use of `STATIC` to `static`.
+    Changed use of `S_FUNC` to `static`.
+    Changed use of `EXTERN` to `extern`.
+    Changed use of `E_FUNC` to `extern`.
+
+    When `MAJOR_VER >= 3` (i.e., calc version 3), changed length `LEN`
+    from a signed 32-bit integer (SB32) to an `intptr_t`.
+
+    Changed use of `f_seek_set(stream, loc)` to `fsetpos(stream, loc)`.
+    Changed use of `f_tell(stream, loc)` to `fgetpos(stream, loc)`.
+
+    Removed use of `decl.h`, and with it experimental, untested and unsupported
+    Thread Local Storage, and of DLL support.  Both can be added later on to
+    calc version 3 when there is someone with the ability to test and support them.
+
+    Updated `banned.h` to ban use of `mktemp()` (use `mkstemp()` instead).
+
+    To avoid warnings about breaking strict-aliasing rules, the
+    `byteswap.c` file is compiled with `-O1`.  If you use multiple -O
+    options, the last such option is the one that is effective.
+
+    In `Makefile.local`, the Address Sanitizer comment blocks suggest
+    `CCWARN+= -Werror` to look for errors, and to compile with static only
+    to assist in debugging.  For Linux systems, the comment blocks also
+    suggest `DEBUG:= -O0 -ggdb3` to assist in debugging with `gdb(1)`.
+
+    No longer compiling with `-UUNBAN` on the command line as `UNBAN`
+    is not defined by default.  Changed CCBAN make variable to be
+    empty by default in `Makefile.config`.
+
+    Increased `MAXFILES` (maximum number of opened files) from 20 to 256.
+
+    Added `-Wno-format -O0` to the `ICFLAGS` make variable in `Makefile.target` to
+    avoid issues related to printf formats while building intermediate programs
+    (not calc, not calc linked programs).
+
+    The `CFLAGS` make variable in `Makefile.target` o longer uses the
+    `ICFLAGS` make variable.
+
+    Added `-O0` to the `ILDFLAGS` make variable in `Makefile.target` to
+    avoid any optimization problems while building intermediate programs
+    (not calc, not calc linked programs).
+
+    The `LDFLAGS` make variable in `Makefile.target` o longer uses the
+    `ILDFLAGS` make variable.
+
+    Fixed warnings related to printf formats of `sizeof(..)` and `size_t` values.
+    Now using `%zu` to print such size related values.
+
+    Expanded `show sizes` calc command to print, if available, these values:
+
+        MODE_LEN        CALC_CHARBIT    FPOS_POS_BITS   FPOS_POS_LEN
+        FPOS_T_BITS     FPOS_T_LEN      OFF_T_BITS      OFF_T_LEN
+        DEV_BITS        DEV_LEN         INODE_BITS      INODE_LEN
+        BASEB_LOG2      BASEB           HALF_BITS       HALF_LEN
+        FULL_BITS       FULL_LEN        PTR_BITS        PTR_LEN
+        INTPTR_WIDTH    ADDR_REDUCT     MAXDATA_LOG2    MAXDATA
+        MAXLEN_LOG2     MAXLEN          TEN_MAX
+
+    The `libcalc_call_me_last()` is automatically called when the libc
+    `exit(3)` function is called.
+
+    Clarified about calls to `libcalc_call_me_first()` and `libcalc_call_me_last()`
+    in the `LIBRARY` file.  In particular that calling `libcalc_call_me_first()`
+    more the once has no effect unless `libcalc_call_me_last()` is subsequently
+    called.  And calling `libcalc_call_me_last()` more than once has no effect
+    unless `libcalc_call_me_first()` is subsequently called.
+
+    Replaced all calls to the `malloc(3)` libc function with equivalent
+    calls to the `calloc(3)` libc function.  This will zeroize the
+    storage that is initially allocated.
+
+    The `make clean` rule now removes obsolete files that were removed
+    as part of the above mentioned changes.
+
+    Updated the custom function `custom("sysinfo")` to sort via symbols.
+    Added new symbols as per the above modifications.  For example:
+
+        ; custom("sysinfo", "MAXDATA")
+        1152921504606846975
+
+    Improve use of `#include`.  Internal calc header files is limited to a few
+    special cases:
+
+        banned.h        have_ban_pragma.h
+
+        int.h           status.chk_c.h charbit.h
+
+        strl.h          have_strlcpy.h have_strlcat.h
+
+        value.h         zmath.h qmath.h cmath.h config.h sha1.h
+                        hash.h block.h nametype.h str.h zrand.h zrandom.h
+
+        zmath.h         version.h int.h endian_calc.h longbits.h byteswap.h
+                        harbit.h
+
+    Internal calc header files do not include system include files.
+    Instead C source include system include files and all other calc
+    header files as needed.
+
+    Removed comments after most `#else` and `#endif` to be more consistent,
+    as some of those comments of variable consistency and usefulness.
+
+
 The following are the changes from calc version 2.16.1.2 to 2.16.1.3:
 
     Include `<errno.h>`, not '<sys/errno.h>`.
 
-    Fixed three memcpy calls in `matsort()` in `matfunc.c`.
+    Fixed three `memcpy(3)` calls in `matsort()` in `matfunc.c`.
     Thanks go to the GitHub user @orbisai0security for this fix.
 
 
@@ -7242,7 +7727,7 @@ The following are the changes from calc version 2.10.3t5.1 to 2.10.3t5.10:
         #if !defined(__CALC_H__)
         #define __CALC_H__
         ..
-        #endif /* !__CALC_H__ */
+        #endif
 
     Added memsize(x) builtin to print the best approximation of the
     size of 'x' including overhead.  The sizeof(x) builtin attempts
@@ -9646,7 +10131,7 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 
     A small bug in the library file regress.cal was fixed.
 
-## Copyright (C) 2001-2017,2021-2023  Landon Curt Noll
+## Copyright (C) 2001-2017,2021-2026  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

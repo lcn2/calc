@@ -29,8 +29,8 @@ LIMITS
     none
 
 LINK LIBRARY
-    BOOL qdivides(NUMBER *x, *y)
-    BOOL zdivides(ZVALUE x, y)
+    bool qdivides(NUMBER *x, *y)
+    bool zdivides(ZVALUE x, y)
 
 SEE ALSO
     isassoc, isatty, isblk, isconfig, isdefined, iserror, iseven, isfile,
@@ -38,7 +38,7 @@ SEE ALSO
     isobjtype, isodd, isprime, isrand, israndom, isreal, isrel,
     issimple, issq, isstr, istype
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2026  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

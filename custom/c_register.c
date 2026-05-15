@@ -1,7 +1,7 @@
 /*
  * c_register - set or print a custom register value
  *
- * Copyright (C) 2007,2021-2023  Landon Curt Noll
+ * Copyright (C) 2007,2021-2023,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -30,30 +30,35 @@
  */
 #if defined(CUSTOM)
 int c_register_allowed = 1; /* CUSTOM defined */
-#else                       /* CUSTOM */
+#else
 int c_register_allowed = 0; /* CUSTOM undefined */
-#endif                      /* CUSTOM */
+#endif
 
 #if defined(CUSTOM)
 
+/*
+ * important <system> header includes
+ */
 #  include <stdio.h>
+#  include <stdint.h>
+#  include <stdbool.h>
 
-#  include "../have_const.h"
+/*
+ * calc local src includes
+ */
 #  include "../value.h"
-#  include "../custom.h"
-
-#  include "../config.h"
 #  include "../calc.h"
-
 #  include "../have_unused.h"
-
+#  include "../custom.h"
+#  include "../attribute.h"
 #  include "../errtbl.h"
-#  include "../banned.h" /* include after system header <> includes */
+
+#  include "../banned.h" /* include after all other includes */
 
 /*
  * registers
  */
-STATIC VALUE custom_reg[CUSTOM_REG_MAX + 1];
+static VALUE custom_reg[CUSTOM_REG_MAX + 1];
 
 /*
  * init_custreg - initialize custom registers
@@ -132,4 +137,4 @@ c_register(char *UNUSED(name), int count, VALUE **vals)
     return result;
 }
 
-#endif /* CUSTOM */
+#endif

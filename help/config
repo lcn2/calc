@@ -52,24 +52,24 @@ DESCRIPTION
             "prompt"            default interactive prompt
             "more"              default interactive multi-line input prompt
             "blkmaxprint"       number of block octets to print, 0 means all
-            "blkverbose"        TRUE => print all lines, FALSE=>skip duplicates
+            "blkverbose"        true => print all lines, false => skip duplicates
             "blkbase"           block output base
             "blkfmt"            block output format
             "calc_debug"        controls internal calc debug information
             "resource_debug"    controls resource file debug information
             "user_debug"        for user defined debug information
-            "verbose_quit"      TRUE => print message on empty quit or abort
+            "verbose_quit"      true => print message on empty quit or abort
             "ctrl_d"            The interactive meaning of ^D (Control D)
             "program"           Read-only calc program or shell script path
             "basename"          Read-only basename of the program value
             "windows"           Read-only indicator of MS windows
-            "cygwin"            TRUE=>calc compiled with cygwin, Read-only
-            "compile_custom"    TRUE=>calc was compiled with custom functions
-            "allow_custom"      TRUE=>custom functions are enabled
+            "cygwin"            true => calc compiled with cygwin, Read-only
+            "compile_custom"    true => calc was compiled with custom functions
+            "allow_custom"      true => custom functions are enabled
             "version"           Read-only calc version
             "baseb"             bits in calculation base, a read-only value
-            "redecl_warn"       TRUE => warn when redeclaring
-            "dupvar_warn"       TRUE => warn when variable names collide
+            "redecl_warn"       true => warn when redeclaring
+            "dupvar_warn"       true => warn when variable names collide
             "hz"                Read-only operating system tick rate or 0
 
     The "all" config value allows one to save/restore the configuration
@@ -572,11 +572,11 @@ DESCRIPTION
     config("blkverbose", boolean)
 
     The "blkverbose" determines if all lines, including duplicates
-    should be printed.  If TRUE, then all lines are printed.  If false,
+    should be printed.  If true, then all lines are printed.  If false,
     duplicate lines are skipped and only a "*" is printed in a style
     similar to od.  This config value has not meaning if "blkfmt" is "str".
 
-    The default value for "blkverbose" is FALSE: duplicate lines are
+    The default value for "blkverbose" is false: duplicate lines are
     not printed.
 
     =-=
@@ -845,7 +845,7 @@ DESCRIPTION
 
     config("windows")           <== NOTE: This is a read-only config value
 
-    Returns TRUE if you are running on a MS windows system, false if you
+    Returns true if you are running on a MS windows system, false if you
     are running on an operating system that does not hate you.
 
     This config parameter is read-only and cannot be set.
@@ -854,7 +854,7 @@ DESCRIPTION
 
     config("cygwin")            <== NOTE: This is a read-only config value
 
-    Returns TRUE if you calc was compiled with cygwin, false otherwise.
+    Returns true if you calc was compiled with cygwin, false otherwise.
 
     This config parameter is read-only and cannot be set.
 
@@ -862,10 +862,10 @@ DESCRIPTION
 
     config("compile_custom")    <== NOTE: This is a read-only config value
 
-    Returns TRUE if you calc was compiled with -DCUSTOM.  By default,
+    Returns true if you calc was compiled with -DCUSTOM.  By default,
     the calc Makefile uses ALLOW_CUSTOM= -DCUSTOM so by default
-    config("compile_custom") is TRUE.  If, however, calc is compiled
-    with ALLOW_CUSTOM="-UCUSTOM", then config("compile_custom") will be FALSE.
+    config("compile_custom") is true.  If, however, calc is compiled
+    with ALLOW_CUSTOM="-UCUSTOM", then config("compile_custom") will be false.
 
     The config("compile_custom") value is only affected by compile
     flags.   The calc -D runtime command line option does not change
@@ -879,13 +879,13 @@ DESCRIPTION
 
     config("allow_custom")      <== NOTE: This is a read-only config value
 
-    Returns TRUE if you custom functions are enabled.  To allow the use
+    Returns true if you custom functions are enabled.  To allow the use
     of custom functions, calc must be compiled with -DCUSTOM (which it
     is by default) AND calc run be run with the -D runtime command line
     option (which it is not by default).
 
-    If config("allow_custom") is TRUE, then custom functions are allowed.
-    If config("allow_custom") is FALSE, then custom functions are not
+    If config("allow_custom") is true, then custom functions are allowed.
+    If config("allow_custom") is false, then custom functions are not
     allowed.
 
     See also config("compile_custom").
@@ -1075,7 +1075,7 @@ LINK LIBRARY
 SEE ALSO
      custom, custom_cal, display, epsilon, fprintf, printf, strprintf, usage
 
-## Copyright (C) 1999-2007,2018,2021,2023  Landon Curt Noll
+## Copyright (C) 1999-2007,2018,2021,2023,2026  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

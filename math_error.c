@@ -1,7 +1,7 @@
 /*
  * math_error - a simple libcalc math error routine
  *
- * Copyright (C) 1999,2021  Landon Curt Noll
+ * Copyright (C) 1999,2021,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -23,6 +23,25 @@
  * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
+
+/*
+ * important <system> header includes
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <setjmp.h>
+#include <stdarg.h>
+#include <stdint.h>
+#include <stdbool.h>
+
+/*
+ * calc local src includes
+ */
+#include "value.h"
+#include "calc.h"
+#include "lib_calc.h"
+
+#include "banned.h" /* include after all other includes */
 
 /*
  * Your program MUST provide a function called math_error.  This is called
@@ -56,14 +75,6 @@
  *      }
  *      calc_use_matherr_jmpbuf = 1;
  */
-
-#include <stdio.h>
-#include <setjmp.h>
-#include "args.h"
-#include "calc.h"
-#include "lib_calc.h"
-
-#include "banned.h" /* include after system header <> includes */
 
 /*
  * math_error - print a math error and exit

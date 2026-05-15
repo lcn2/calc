@@ -1,7 +1,7 @@
 /*
  * block - fixed, dynamic, fifo and circular memory blocks
  *
- * Copyright (C) 1999-2007,2021-2023  Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023,2026  Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  Landon Curt Noll
  *
@@ -26,31 +26,33 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
-#include "have_string.h"
-#ifdef HAVE_STRING_H
-#  include <string.h>
-#endif
-#include "alloc.h"
-#include "value.h"
-#include "zmath.h"
-#include "config.h"
-#include "block.h"
-#include "nametype.h"
-#include "str.h"
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+#include <stdbool.h>
 
+/*
+ * calc local src includes
+ */
+#include "value.h"
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 #define NBLOCKCHUNK 16
 
-STATIC long nblockcount = 0;
-STATIC long maxnblockcount = 0;
-STATIC STRINGHEAD nblocknames;
-STATIC NBLOCK **nblocks;
+static long nblockcount = 0;
+static long maxnblockcount = 0;
+static STRINGHEAD nblocknames;
+static NBLOCK **nblocks;
 
 /* forward declarations */
-S_FUNC void blkchk(BLOCK *);
+static void blkchk(BLOCK *);
 
 /*
  * blkalloc - allocate a block
@@ -81,7 +83,7 @@ blkalloc(int len, int chunk)
     /*
      * allocate BLOCK
      */
-    nblk = (BLOCK *)malloc(sizeof(BLOCK));
+    nblk = (BLOCK *)calloc(1, sizeof(BLOCK));
     if (nblk == NULL) {
         math_error("cannot allocate block");
         not_reached();
@@ -92,7 +94,7 @@ blkalloc(int len, int chunk)
      */
     nblk->blkchunk = chunk;
     nblk->maxsize = ((len + chunk) / chunk) * chunk;
-    nblk->data = (USB8 *)malloc(nblk->maxsize);
+    nblk->data = (uint8_t *)calloc(nblk->maxsize, 1);
     if (nblk->data == NULL) {
         math_error("cannot allocate block data storage");
         not_reached();
@@ -154,7 +156,7 @@ blk_free(BLOCK *blk)
  *      if all is OK, otherwise math_error() is called and this
  *      function does not return
  */
-S_FUNC void
+static void
 blkchk(BLOCK *blk)
 {
 
@@ -219,8 +221,8 @@ blkchk(BLOCK *blk)
 BLOCK *
 blkrealloc(BLOCK *blk, int newlen, int newchunk)
 {
-    USB8 *nblk; /* realloced storage */
-    int newmax; /* new maximum stoage size */
+    uint8_t *nblk; /* realloced storage */
+    int newmax;    /* new maximum stoage size */
 
     /*
      * firewall
@@ -250,7 +252,7 @@ blkrealloc(BLOCK *blk, int newlen, int newchunk)
     if (newmax != blk->maxsize) {
 
         /* reallocate new storage */
-        nblk = (USB8 *)realloc(blk->data, newmax);
+        nblk = (uint8_t *)realloc(blk->data, newmax);
         if (nblk == NULL) {
             math_error("cannot reallocate block storage");
             not_reached();
@@ -357,12 +359,12 @@ blktrunc(BLOCK *blk)
     blk->blkchunk = 1;
     blk->maxsize = 1;
     blk->datalen = 0;
-    blk->data = (USB8 *)malloc(1);
+    blk->data = (uint8_t *)calloc(1, 1);
     if (blk->data == NULL) {
         math_error("cannot allocate truncated block storage");
         not_reached();
     }
-    blk->data[0] = (USB8)0;
+    blk->data[0] = (uint8_t)0;
     if (conf->calc_debug & CALCDBG_BLOCK) {
         blkchk(blk);
     }
@@ -386,7 +388,7 @@ blk_copy(BLOCK *blk)
     /*
      * malloc new block
      */
-    nblk = (BLOCK *)malloc(sizeof(BLOCK));
+    nblk = (BLOCK *)calloc(1, sizeof(BLOCK));
     if (nblk == NULL) {
         math_error("blk_copy: cannot malloc BLOCK");
         not_reached();
@@ -400,7 +402,7 @@ blk_copy(BLOCK *blk)
     /*
      * duplicate block data
      */
-    nblk->data = (USB8 *)malloc(blk->maxsize);
+    nblk->data = (uint8_t *)calloc(1, blk->maxsize);
     if (nblk->data == NULL) {
         math_error("blk_copy: cannot duplicate block data");
         not_reached();
@@ -469,7 +471,7 @@ blk_print(BLOCK *blk)
 {
     long i;
     bool havetail;
-    USB8 *ptr;
+    uint8_t *ptr;
 
     /* XXX - should use the config parameters for better print control */
 
@@ -523,7 +525,7 @@ reallocnblock(int id, int len, int chunk)
     BLOCK *blk;
     int newsize;
     int oldsize;
-    USB8 *newdata;
+    uint8_t *newdata;
 
     /* Fire wall */
     if (id < 0 || id >= nblockcount) {
@@ -544,7 +546,7 @@ reallocnblock(int id, int len, int chunk)
     oldsize = blk->maxsize;
     newdata = blk->data;
     if (newdata == NULL) {
-        newdata = malloc(newsize);
+        newdata = calloc(1, newsize);
         if (newdata == NULL) {
             math_error("Allocation failed");
             not_reached();
@@ -578,7 +580,7 @@ createnblock(char *name, int len, int chunk)
     if (nblockcount >= maxnblockcount) {
         if (maxnblockcount <= 0) {
             maxnblockcount = NBLOCKCHUNK;
-            nblocks = (NBLOCK **)malloc(NBLOCKCHUNK * sizeof(NBLOCK *));
+            nblocks = (NBLOCK **)calloc(NBLOCKCHUNK, sizeof(NBLOCK *));
             if (nblocks == NULL) {
                 maxnblockcount = 0;
                 math_error("unable to malloc new named blocks");
@@ -607,7 +609,7 @@ createnblock(char *name, int len, int chunk)
         not_reached();
     }
 
-    res = (NBLOCK *)malloc(sizeof(NBLOCK));
+    res = (NBLOCK *)calloc(1, sizeof(NBLOCK));
     if (res == NULL) {
         math_error("Named block allocation failed");
         not_reached();

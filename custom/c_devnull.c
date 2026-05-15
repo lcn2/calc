@@ -1,7 +1,7 @@
 /*
  * c_devnull - a custom function that does nothing
  *
- * Copyright (C) 1999-2004,2021,2023  Landon Curt Noll
+ * Copyright (C) 1999-2004,2021,2023,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -30,24 +30,27 @@
  */
 #if defined(CUSTOM)
 int c_devnull_allowed = 1; /* CUSTOM defined */
-#else                      /* CUSTOM */
+#else
 int c_devnull_allowed = 0; /* CUSTOM undefined */
-#endif                     /* CUSTOM */
+#endif
 
 #if defined(CUSTOM)
 
-#  include "../have_unistd.h"
-#  if defined(HAVE_UNISTD_H)
-#    include <unistd.h>
-#  endif
+/*
+ * important <system> header includes
+ */
+#  include <unistd.h>
+#  include <stdint.h>
+#  include <stdbool.h>
 
-#  include "../have_const.h"
+/*
+ * calc local src includes
+ */
 #  include "../value.h"
 #  include "../custom.h"
-
 #  include "../have_unused.h"
 
-#  include "../banned.h" /* include after system header <> includes */
+#  include "../banned.h" /* include after all other includes */
 
 /*
  * c_devnull - a custom function that does nothing
@@ -68,4 +71,4 @@ c_devnull(char *UNUSED(name), int UNUSED(count), VALUE **UNUSED(vals))
     return result;
 }
 
-#endif /* CUSTOM */
+#endif

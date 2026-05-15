@@ -1,7 +1,7 @@
 /*
  * have_strlcpy - determine if we have strlcpy()
  *
- * Copyright (C) 2021  Landon Curt Noll
+ * Copyright (C) 2021,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -38,13 +38,17 @@
  *              undefined ==> do not or cannot call strlcpy()
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
-#include "have_string.h"
-#ifdef HAVE_STRING_H
-#  include <string.h>
-#endif
+#include <string.h>
 
-#include "banned.h" /* include after system header <> includes */
+/*
+ * calc local src includes
+ */
+
+#include "banned.h" /* include after all other includes */
 
 #define BUF_SIZ (sizeof("abcde") - 1)
 
@@ -57,14 +61,15 @@ main(void)
 
     printf("#undef HAVE_STRLCPY /* no */\n");
 
-#else /* HAVE_NO_STRLCPY */
+#else
+
     char dst[BUF_SIZ + 1];
 
     (void)strlcpy(dst, src, sizeof(dst));
 
     printf("#define HAVE_STRLCPY /* yes */\n");
 
-#endif /* HAVE_NO_STRLCPY */
+#endif
 
     /* exit(0); */
     return 0;

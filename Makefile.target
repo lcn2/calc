@@ -2,7 +2,7 @@
 #
 # Makefile.target - platform target section
 #
-# Copyright (C) 2023  Landon Curt Noll
+# Copyright (C) 2023,2026  Landon Curt Noll
 #
 # Suggestion: Read the HOWTO.INSTALL file.
 #
@@ -256,6 +256,48 @@ MAKE= gmake
 endif	# ($(target),FreeBSD)
 
 
+#################
+# NetBSD target #
+#################
+
+ifeq ($(target),NetBSD)
+
+# default build type for this target
+#
+BLD_TYPE= calc-dynamic-only
+
+# target specific library parameters
+#
+CC_SHARE= -fPIC
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
+LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
+    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}" -L/usr/pkg/lib
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}" -L/usr/pkg/lib
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
+
+CC_STATIC=
+LD_STATIC=
+LIBCALC_STATIC=
+LIBCUSTCALC_STATIC=
+
+# common values set for this target
+#
+#CCWARN= -Wall
+CCWARN= -Wall -Wextra -pedantic -Wno-char-subscripts
+WNO_IMPLICT= -Wno-implicit
+WNO_ERROR_LONG_LONG= -Wno-error=long-long
+WNO_LONG_LONG= -Wno-long-long
+CCWERR=
+CCOPT= ${DEBUG}
+CCMISC=
+LCC= gcc
+CC= ${PURIFY} ${LCC} ${CCWERR}
+
+MAKE= gmake
+
+endif	# ($(target),NetBSD)
+
+
 ##################
 # OpenBSD target #
 ##################
@@ -328,7 +370,7 @@ LD_STATIC=
 # common values set for this target
 #
 #CCWARN= -Wall
-CCWARN= -Wall -Wextra -pedantic
+CCWARN= -Wall -Wextra -pedantic -Wno-char-subscripts
 WNO_IMPLICT= -Wno-implicit
 WNO_ERROR_LONG_LONG= -Wno-error=long-long
 WNO_LONG_LONG= -Wno-long-long
@@ -408,24 +450,32 @@ COMMON_LDFLAGS+= ${COMMON_ADD}
 # Required flags to compile C files for calc
 #
 # ICFLAGS are given to ${CC} for intermediate programs used to help compile calc
+#	  NOTE: We add -Wno-format to avoid any issues related to printf formats.
+#	  NOTE: We add -O0 in order to avoid any optimization problems.
+#	  NOTE: In the case of multiple -O options, the last such option is the one that is effective.
+#
 # CFLAGS are given to ${CC} for calc programs other than intermediate programs
 #
 # NOTE: This does not work for: make-XYZ-only and BLD_TYPE != make-XYZ-only
 #
 ifeq ($(BLD_TYPE),calc-static-only)
-ICFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_STATIC}
+ICFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_STATIC} -Wno-format -O0
+CFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_STATIC} ${CCOPT}
 else	# ($(BLD_TYPE),calc-static-only)
-ICFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_SHARE}
+ICFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_SHARE} -Wno-format -O0
+CFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_SHARE} ${CCOPT}
 endif	# ($(BLD_TYPE),calc-static-only)
-CFLAGS= ${ICFLAGS} ${CCOPT}
 
 # Required flags to link files for calc
 #
 # ILDFLAGS for ${CC} in linking intermediate programs used to help compile calc
+#	   NOTE: We add -O0 in order to avoid any optimization problems.
+#	   NOTE: In the case of multiple -O options, the last such option is the one that is effective.
+#
 # LDFLAGS for ${CC} in linking calc programs other than intermediate programs
 #
-ILDFLAGS= ${COMMON_LDFLAGS}
-LDFLAGS= ${LD_DEBUG} ${ILDFLAGS}
+ILDFLAGS= ${COMMON_LDFLAGS} -O0
+LDFLAGS= ${LD_DEBUG} ${COMMON_LDFLAGS}
 
 #######################################################################
 #-=-=-=-=-=- end of target section - only make rules below -=-=-=-=-=-#

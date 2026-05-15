@@ -1,7 +1,7 @@
 /*
  * commath - extended precision complex arithmetic primitive routines
  *
- * Copyright (C) 1999-2007,2021-2023  David I. Bell
+ * Copyright (C) 1999-2007,2021-2023,2026  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -23,16 +23,30 @@
  * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-#include "cmath.h"
+/*
+ * important <system> header includes
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdbool.h>
 
+/*
+ * calc local src includes
+ */
+#include "zmath.h"
+#include "qmath.h"
+#include "cmath.h"
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 COMPLEX _czero_ = {&_qzero_, &_qzero_, 1};
 COMPLEX _cone_ = {&_qone_, &_qzero_, 1};
 COMPLEX _conei_ = {&_qzero_, &_qone_, 1};
 
-STATIC COMPLEX _cnegone_ = {&_qnegone_, &_qzero_, 1};
+static COMPLEX _cnegone_ = {&_qnegone_, &_qzero_, 1};
 
 /*
  * cmappr - complex multiple approximation
@@ -765,7 +779,7 @@ comalloc(void)
 {
     COMPLEX *r;
 
-    r = (COMPLEX *)malloc(sizeof(COMPLEX));
+    r = (COMPLEX *)calloc(1, sizeof(COMPLEX));
     if (r == NULL) {
         math_error("Cannot allocate complex number");
         not_reached();

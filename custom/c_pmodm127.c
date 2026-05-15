@@ -1,7 +1,7 @@
 /*
  * c_pmodm127 - calculate q mod 2^(2^127-1)
  *
- * Copyright (C) 2004-2007,2021-2023  Landon Curt Noll
+ * Copyright (C) 2004-2007,2021-2023,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -29,41 +29,52 @@
  */
 #if defined(CUSTOM)
 int c_pmodm127_allowed = 1; /* CUSTOM defined */
-#else                       /* CUSTOM */
+#else
 int c_pmodm127_allowed = 0; /* CUSTOM undefined */
-#endif                      /* CUSTOM */
+#endif
 
 #if defined(CUSTOM)
 
+/*
+ * important <system> header includes
+ */
 #  include <stdio.h>
+#  include <stdlib.h>
+#  include <stdint.h>
+#  include <stdbool.h>
 
-#  include "../have_const.h"
+/*
+ * calc local src includes
+ */
 #  include "../value.h"
 #  include "../custom.h"
-#  include "../zmath.h"
-
+#  include "../attribute.h"
 #  include "../have_unused.h"
-
 #  include "../errtbl.h"
-#  include "../banned.h" /* include after system header <> includes */
+
+#  include "../banned.h" /* include after all other includes */
 
 /* 2^255 */
-STATIC HALF h255[] = {
+static HALF h255[] = {
 #  if BASEB == 32
+
     (HALF)0x00000000, (HALF)0x00000000, (HALF)0x00000000, (HALF)0x00000000, (HALF)0x00000000,
     (HALF)0x00000000, (HALF)0x00000000, (HALF)0x80000000
-#  else  /* BASEB == 32 */
+
+#  else
+
     (HALF)0x0000, (HALF)0x0000, (HALF)0x0000, (HALF)0x0000, (HALF)0x0000, (HALF)0x0000, (HALF)0x0000, (HALF)0x0000, (HALF)0x0000,
     (HALF)0x0000, (HALF)0x0000, (HALF)0x0000, (HALF)0x0000, (HALF)0x0000, (HALF)0x0000, (HALF)0x8000
-#  endif /* BASEB == 32 */
+
+#  endif
 };
 ZVALUE p255 = {h255, 8, 0};
 
 /* static declarations */
-S_FUNC void zmod5_or_zmod(ZVALUE *zp);
-STATIC bool havelastmod = false;
-STATIC ZVALUE lastmod[1];
-STATIC ZVALUE lastmodinv[1];
+static void zmod5_or_zmod(ZVALUE *zp);
+static bool havelastmod = false;
+static ZVALUE lastmod[1];
+static ZVALUE lastmodinv[1];
 
 /*
  * c_pmodm127 - calculate q mod 2^(2^127-1)
@@ -188,7 +199,7 @@ c_pmodm127(char *UNUSED(name), int UNUSED(count), VALUE **vals)
  * the result of the zmod5_or_zmod conditions do not apply to the argument
  * and saved mod.
  */
-S_FUNC void
+static void
 zmod5_or_zmod(ZVALUE *zp)
 {
     LEN len, modlen, j;
@@ -279,4 +290,4 @@ zmod5_or_zmod(ZVALUE *zp)
     }
 }
 
-#endif /* CUSTOM */
+#endif

@@ -1,7 +1,7 @@
 /*
  * seed - produce pseudo-random seeds
  *
- * Copyright (C) 1999-2007,2021  Landon Curt Noll
+ * Copyright (C) 1999-2007,2021,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -33,23 +33,16 @@
  *              http://www.LavaRnd.org/
  */
 
+/*
+ * important <system> header includes
+ */
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 #include <errno.h>
-
-#include "have_stdlib.h"
-#if defined(HAVE_STDLIB_H)
-#  include <stdlib.h>
-#endif
-
-#include "have_unistd.h"
-#if defined(HAVE_UNISTD_H)
-#  include <unistd.h>
-#endif
-
-#if defined(_WIN32) || defined(_WIN64)
-#  include <process.h>
-#  define pid_t int
-#endif
+#include <stdint.h>
+#include <stdbool.h>
 
 /*
  * PORTING NOTE:
@@ -64,97 +57,66 @@
  */
 #include <sys/types.h>
 #include <sys/stat.h>
-#include "have_times.h"
+#include <time.h>
+#include <sys/time.h>
+#include <sys/times.h>
 
-#if defined(HAVE_TIME_H)
-#  include <time.h>
-#endif /* HAVE_TIME_H */
-
-#if defined(HAVE_SYS_TIME_H)
-#  include <sys/time.h>
-#endif /* HAVE_SYS_TIME_H */
-
-#if defined(HAVE_SYS_TIMES_H)
-#  include <sys/times.h>
-#endif /* HAVE_SYS_TIMES_H */
-
-#if !defined(_WIN32) && !defined(_WIN64)
-#  include <sys/resource.h>
-#endif
-
-#if defined(HAVE_STDLIB_H)
-#  include <stdlib.h>
+#include <stdlib.h>
 /* NOTE: RANDOM_CNT should remain 32 to circular shift 31-bit returns */
-#  define RANDOM_CNT (32)      /* random() call repeat and circular shift */
-#  define INITSTATE_SIZE (256) /* initstate pool size */
-#endif                         /* HAVE_STDLIB_H */
+#define RANDOM_CNT (32)      /* random() call repeat and circular shift */
+#define INITSTATE_SIZE (256) /* initstate pool size */
 
 #include <setjmp.h>
-#include "alloc.h"
-#include "qmath.h"
-#include "longbits.h"
-#include "have_ustat.h"
-#include "have_getsid.h"
-#include "have_getpgid.h"
-#include "have_gettime.h"
-#include "have_getprid.h"
+
+/*
+ * conditional <system> head includes
+ */
+#if defined(_WIN32) || defined(_WIN64)
+#  include <process.h>
+#  define pid_t int
+#endif
+
+#if !defined(_WIN32) && !defined(_WIN64)
+#  include <sys/statvfs.h>
+#  include <sys/resource.h>
+#  include <sys/param.h>
+#  include <sys/mount.h>
+#endif
+
 #include "have_urandom.h"
-#include "have_rusage.h"
-#include "have_uid_t.h"
-#include "have_environ.h"
-#include "have_arc4random.h"
-
-#if defined(HAVE_USTAT)
-#  include <ustat.h>
-#endif /* HAVE_USTAT */
-
 #if defined(HAVE_URANDOM)
 #  include <fcntl.h>
 #  define DEV_URANDOM "/dev/urandom"
 #  define DEV_URANDOM_POOL (16)
-#endif /* HAVE_URANDOM */
+#endif
 
-#include "have_sys_vfs.h"
-#if defined(HAVE_SYS_VFS_H)
-#  include <sys/vfs.h>
-#endif /* HAVE_SYS_VFS_H */
+/*
+ * calc local src includes
+ */
+#include "zmath.h"
+#include "qmath.h"
+#include "have_getpgid.h"
+#include "have_rusage.h"
+#include "have_environ.h"
+#include "have_arc4random.h"
+#include "errtbl.h"
 
-#include "have_sys_param.h"
-#if defined(HAVE_SYS_PARAM_H)
-#  include <sys/param.h>
-#endif /* HAVE_SYS_PARAM_H */
-
-#include "have_sys_mount.h"
-#if defined(HAVE_SYS_MOUNT_H)
-#  include <sys/mount.h>
-#endif /* HAVE_SYS_MOUNT_H */
-
-#include "have_statfs.h"
-
-#include "banned.h" /* include after system header <> includes */
+#include "banned.h" /* include after all other includes */
 
 /*
  * 64 bit hash value
  */
-#if defined(HAVE_B64)
-typedef USB64 hash64;
+typedef uint64_t hash64;
 static hash64 prev_hash64 = 0; /* previous pseudo_seed() return or 0 */
-#else
-struct s_hash64 {
-    USB32 w32[2];
-};
-typedef struct s_hash64 hash64;
-static hash64 prev_hash64 = {0, 0}; /* previous pseudo_seed() return or 0 */
-#endif
 
 #if defined(HAVE_ENVIRON)
 extern char **environ; /* user environment */
-#endif                 /* HAVE_ENVIRON */
+#endif
 
 #if defined(HAVE_ARC4RANDOM)
 #  define ARC4_BUFLEN (16)
 static char arc4_buf[ARC4_BUFLEN];
-#endif /* HAVE_ARC4RANDOM */
+#endif
 
 /*
  * call counter - number of times pseudo_seed() as been called
@@ -195,38 +157,16 @@ static FULL call_count = 0;
  * to be a cryptographic hash function, just a fast and reasonably
  * good hash function.
  */
-#if defined(HAVE_B64)
-#  define PRIVATE_64_BASIS ((hash64)(0xcbf29ce484222325ULL))
-#else
-#  define PRIVATE_64_BASIS_0 ((USB32)0x2325)
-#  define PRIVATE_64_BASIS_1 ((USB32)0x8422)
-#  define PRIVATE_64_BASIS_2 ((USB32)0x9ce4)
-#  define PRIVATE_64_BASIS_3 ((USB32)0xcbf2)
-#endif
+#define PRIVATE_64_BASIS ((hash64)(0xcbf29ce484222325ULL))
 
 /*
  * initial_private_hash64 - initial basis of Fowler/Noll/Vo-1 64 bit hash
  */
-S_FUNC hash64
+static hash64
 initial_private_hash64(void)
 {
     hash64 hval; /* current hash value */
-#if defined(HAVE_B64)
     hval = PRIVATE_64_BASIS;
-#else  /* HAVE_B64 */
-    USB32 val[4]; /* hash value in base 2^16 */
-
-    /* hash each octet of the buffer */
-    val[0] = PRIVATE_64_BASIS_0;
-    val[1] = PRIVATE_64_BASIS_1;
-    val[2] = PRIVATE_64_BASIS_2;
-    val[3] = PRIVATE_64_BASIS_3;
-
-    /* convert to hash64 */
-    /* hval.w32[1] = 0xffff&(val[3]<<16)+val[2]; */
-    hval.w32[1] = (val[3] << 16) + val[2];
-    hval.w32[0] = (val[1] << 16) + val[0];
-#endif /* HAVE_B64 */
 
     /* return our initial hash value */
     return hval;
@@ -272,16 +212,10 @@ initial_private_hash64(void)
  * returns:
  *      64 bit hash as a static hash64 structure
  */
-S_FUNC hash64
+static hash64
 private_hash64_buf(hash64 hval, char *buf, unsigned len)
 {
-#if !defined(HAVE_B64)
-    USB32 val[4];              /* hash value in base 2^16 */
-    USB32 tmp[4];              /* tmp 64 bit value */
-#endif                         /* HAVE_B64 */
     char *buf_end = buf + len; /* beyond end of hash area */
-
-#if defined(HAVE_B64)
 
     /* hash each octet of the buffer */
     for (; buf < buf_end; ++buf) {
@@ -292,55 +226,6 @@ private_hash64_buf(hash64 hval, char *buf, unsigned len)
         /* xor the bottom with the current octet */
         hval ^= (hash64)(*buf);
     }
-
-#else /* HAVE_B64 */
-
-    /* load val array from hval argument */
-    val[0] = hval.w32[0] & 0xffff;
-    val[1] = (hval.w32[0] >> 16) & 0xffff;
-    val[2] = hval.w32[1] & 0xffff;
-    val[3] = (hval.w32[1] >> 16) & 0xffff;
-
-    for (; buf < buf_end; ++buf) {
-
-        /*
-         * multiply by 1099511628211 mod 2^64 using 32 bit longs
-         *
-         * Using 1099511628211, we have the following digits base 2^16:
-         *
-         *  0x0     0x100   0x0     0x1b3
-         */
-        /* multiply by the lowest order digit base 2^16 */
-        tmp[0] = val[0] * 0x1b3;
-        tmp[1] = val[1] * 0x1b3;
-        tmp[1] = val[2] * 0x1b3;
-        tmp[3] = val[3] * 0x1b3;
-        /* multiply by the other non-zero digit */
-        tmp[2] += val[0] << 8; /* tmp[2] += val[0] * 0x100 */
-        tmp[3] += val[1] << 8; /* tmp[1] += val[1] * 0x100 */
-        /* propagate carries */
-        tmp[1] += (tmp[0] >> 16);
-        val[0] = tmp[0] & 0xffff;
-        tmp[2] += (tmp[1] >> 16);
-        val[1] = tmp[1] & 0xffff;
-        val[3] = tmp[3] + (tmp[2] >> 16);
-        val[2] = tmp[2] & 0xffff;
-        /*
-         * Doing a val[3] &= 0xffff; is not really needed since it simply
-         * removes multiples of 2^64.  We can discard these excess bits
-         * outside of the loop when we convert to hash64.
-         */
-
-        /* xor the bottom with the current octet */
-        val[0] ^= (USB32)(*buf);
-    }
-
-    /* convert to hash64 */
-    /* hval.w32[1] = 0xffff&(val[3]<<16)+val[2]; */
-    hval.w32[1] = (val[3] << 16) + val[2];
-    hval.w32[0] = (val[1] << 16) + val[0];
-
-#endif /* HAVE_B64 */
 
     /* return our hash value */
     return hval;
@@ -372,86 +257,54 @@ pseudo_seed(void)
      * sdata - data used for quasi-random seed
      */
     struct {
-#if defined(HAVE_GETTIME)
-#  if defined(CLOCK_REALTIME)
+#if defined(CLOCK_REALTIME)
         struct timespec realtime; /* POSIX realtime clock */
-#  endif
-#endif
-#if defined(HAVE_GETPRID)
-        prid_t getprid; /* project ID */
 #endif
 #if defined(HAVE_URANDOM)
         int urandom_fd;                      /* open descriptor for /dev/urandom */
         int urandom_ret;                     /* read() of /dev/random */
         char urandom_pool[DEV_URANDOM_POOL]; /* /dev/urandom data pool */
 #endif
-#if defined(HAVE_SYS_TIME_H)
         struct timeval tp; /* time of day */
-#endif
-        pid_t getpid; /* process ID */
+        pid_t getpid;      /* process ID */
 #if !defined(_WIN32) && !defined(_WIN64)
         pid_t getppid; /* parent process ID */
 #endif
-#if defined(HAVE_UID_T)
-        uid_t getuid;  /* real user ID */
-        uid_t geteuid; /* effective user ID */
-        gid_t getgid;  /* real group ID */
-        gid_t getegid; /* effective group ID */
-#endif
-        struct stat stat_dot;     /* stat of "." */
-        struct stat stat_dotdot;  /* stat of ".." */
-        struct stat stat_tmp;     /* stat of "/tmp" */
-        struct stat stat_root;    /* stat of "/" */
-        struct stat stat_tty;     /* stat of "/dev/tty" */
-        struct stat stat_console; /* stat of "/dev/console" */
-        struct stat fstat_stdin;  /* stat of stdin */
-        struct stat fstat_stdout; /* stat of stdout */
-        struct stat fstat_stderr; /* stat of stderr */
-        struct stat stat_zero;    /* stat of "/dev/zero" */
-        struct stat stat_null;    /* stat of "/dev/null" */
-        struct stat stat_sh;      /* stat of "/bin/sh" */
-        struct stat stat_ls;      /* stat of "/bin/ls" */
-        /* stat of "/var/log/system.log" */
-        struct stat stat_system;
-        /* stat of "/var/log/messages" */
-        struct stat stat_messages;
-#if defined(HAVE_USTAT)
-        struct ustat ustat_dot;     /* usage stat of "." */
-        struct ustat ustat_dotdot;  /* usage stat of ".." */
-        struct ustat ustat_tmp;     /* usage stat of "/tmp" */
-        struct ustat ustat_root;    /* usage stat of "/" */
-        struct ustat ustat_tty;     /* usage stat of "/dev/tty" */
-        struct ustat ustat_console; /* usage stat of "/dev/console" */
-        struct ustat ustat_stdin;   /* usage stat of stdin */
-        struct ustat ustat_stdout;  /* usage stat of stdout */
-        struct ustat ustat_stderr;  /* usage stat of stderr */
-        struct ustat ustat_zero;    /* usage stat of "/dev/zero" */
-        struct ustat ustat_null;    /* usage stat of "/dev/null" */
-        struct ustat ustat_sh;      /* usage stat of "/bin/sh" */
-        struct ustat ustat_ls;      /* usage stat of "/bin/ls" */
-        /* usage stat of "/var/log/system.log" */
-        struct ustat ustat_system;
-        /* usage stat of "/var/log/messages" */
-        struct ustat ustat_messages;
-#endif
-#if defined(HAVE_STATFS)
-        struct statfs statfs_dot;     /* filesystem stat of "." */
-        struct statfs statfs_dotdot;  /* filesystem stat of ".." */
-        struct statfs statfs_tmp;     /* filesystem stat of "/tmp" */
-        struct statfs statfs_root;    /* filesystem stat of "/" */
-        struct statfs statfs_tty;     /* filesystem stat of "/dev/tty" */
-        struct statfs statfs_console; /* filesystem stat of "/dev/console" */
-        struct statfs statfs_stdin;   /* filesystem stat of stdin */
-        struct statfs statfs_stdout;  /* filesystem stat of stdout */
-        struct statfs statfs_stderr;  /* filesystem stat of stderr */
-        struct statfs statfs_zero;    /* filesystem stat of "/dev/zero" */
-        struct statfs statfs_null;    /* filesystem stat of "/dev/null" */
-        struct statfs statfs_sh;      /* filesystem stat of "/bin/sh" */
-        struct statfs statfs_ls;      /* filesystem stat of "/bin/ls" */
-        /* filesystem stat of "/var/log/system.log" */
-        struct statfs statfs_system;
-        /* filesystem stat of "/var/log/messages" */
-        struct statfs statfs_messages;
+        uid_t getuid;              /* real user ID */
+        uid_t geteuid;             /* effective user ID */
+        gid_t getgid;              /* real group ID */
+        gid_t getegid;             /* effective group ID */
+        struct stat stat_dot;      /* stat of "." */
+        struct stat stat_dotdot;   /* stat of ".." */
+        struct stat stat_tmp;      /* stat of "/tmp" */
+        struct stat stat_root;     /* stat of "/" */
+        struct stat stat_tty;      /* stat of "/dev/tty" */
+        struct stat stat_console;  /* stat of "/dev/console" */
+        struct stat fstat_stdin;   /* stat of stdin */
+        struct stat fstat_stdout;  /* stat of stdout */
+        struct stat fstat_stderr;  /* stat of stderr */
+        struct stat stat_zero;     /* stat of "/dev/zero" */
+        struct stat stat_null;     /* stat of "/dev/null" */
+        struct stat stat_sh;       /* stat of "/bin/sh" */
+        struct stat stat_ls;       /* stat of "/bin/ls" */
+        struct stat stat_system;   /* stat of "/var/log/system.log" */
+        struct stat stat_messages; /* stat of "/var/log/messages" */
+#if !defined(_WIN32) && !defined(_WIN64)
+        struct statvfs statfs_dot;      /* filesystem stat of "." */
+        struct statvfs statfs_dotdot;   /* filesystem stat of ".." */
+        struct statvfs statfs_tmp;      /* filesystem stat of "/tmp" */
+        struct statvfs statfs_root;     /* filesystem stat of "/" */
+        struct statvfs statfs_tty;      /* filesystem stat of "/dev/tty" */
+        struct statvfs statfs_console;  /* filesystem stat of "/dev/console" */
+        struct statvfs statfs_stdin;    /* filesystem stat of stdin */
+        struct statvfs statfs_stdout;   /* filesystem stat of stdout */
+        struct statvfs statfs_stderr;   /* filesystem stat of stderr */
+        struct statvfs statfs_zero;     /* filesystem stat of "/dev/zero" */
+        struct statvfs statfs_null;     /* filesystem stat of "/dev/null" */
+        struct statvfs statfs_sh;       /* filesystem stat of "/bin/sh" */
+        struct statvfs statfs_ls;       /* filesystem stat of "/bin/ls" */
+        struct statvfs statfs_system;   /* filesystem stat of "/var/log/system.log" */
+        struct statvfs statfs_messages; /* filesystem stat of "/var/log/messages" */
 #endif
 #if defined(HAVE_GETSID)
         pid_t getsid; /* session ID */
@@ -463,44 +316,36 @@ pseudo_seed(void)
         struct rusage rusage;       /* resource utilization */
         struct rusage rusage_child; /* resource utilization of children */
 #endif
-#if defined(HAVE_SYS_TIME_H)
-        struct timeval tp2;             /* time of day again */
-        struct tms times;               /* process times */
-        struct timeval times_dot[2];    /* access & mod files of "." */
-        struct timeval times_dotdot[2]; /* access & mod files of ".." */
-        struct timeval times_tmp[2];    /* access & mod files of "/tmp" */
-        struct timeval times_root[2];   /* access & mod files of "/" */
-        struct timeval times_tty[2];    /* access & mod files of "/dev/tty" */
-        /* access & mod files of "/dev/console" */
-        struct timeval times_console[2];
-        struct timeval times_stdin[2]; /* access & mod files of "/dev/stdin" */
-        /* access & mod files of "/dev/stdout" */
-        struct timeval times_stdout[2];
-        /* access & mod files of "/dev/stderr" */
-        struct timeval times_stderr[2];
-        struct timeval times_zero[2]; /* access & mod files of "/dev/zero" */
-        struct timeval times_null[2]; /* access & mod files of "/dev/null" */
-        struct timeval times_sh[2];   /* access & mod files of "/bin/sh" */
-        struct timeval times_ls[2];   /* access & mod files of "/bin/ls" */
-        /* access & mod files of "/var/log/system.log" */
-        struct timeval times_system[2];
-        /* access & mod files of "/var/log/messages" */
-        struct timeval times_messages[2];
-#endif
-        time_t time;             /* local time */
-        size_t size;             /* size of this data structure */
-        hash64 prev_hash64_copy; /* copy if the previous hash value */
-        FULL call_count_copy;    /* call count of this funcation */
-        jmp_buf env;             /* setjmp() context */
+        struct timeval tp2;               /* time of day again */
+        struct tms times;                 /* process times */
+        struct timeval times_dot[2];      /* access & mod files of "." */
+        struct timeval times_dotdot[2];   /* access & mod files of ".." */
+        struct timeval times_tmp[2];      /* access & mod files of "/tmp" */
+        struct timeval times_root[2];     /* access & mod files of "/" */
+        struct timeval times_tty[2];      /* access & mod files of "/dev/tty" */
+        struct timeval times_console[2];  /* access & mod files of "/dev/console" */
+        struct timeval times_stdin[2];    /* access & mod files of "/dev/stdin" */
+        struct timeval times_stdout[2];   /* access & mod files of "/dev/stdout" */
+        struct timeval times_stderr[2];   /* access & mod files of "/dev/stderr" */
+        struct timeval times_zero[2];     /* access & mod files of "/dev/zero" */
+        struct timeval times_null[2];     /* access & mod files of "/dev/null" */
+        struct timeval times_sh[2];       /* access & mod files of "/bin/sh" */
+        struct timeval times_ls[2];       /* access & mod files of "/bin/ls" */
+        struct timeval times_system[2];   /* access & mod files of "/var/log/system.log" */
+        struct timeval times_messages[2]; /* access & mod files of "/var/log/messages" */
+        time_t time;                      /* local time */
+        size_t size;                      /* size of this data structure */
+        hash64 prev_hash64_copy;          /* copy if the previous hash value */
+        FULL call_count_copy;             /* call count of this funcation */
+        jmp_buf env;                      /* setjmp() context */
 #if defined(HAVE_ENVIRON)
         char **environ_copy; /* copy of extern char **environ */
-#endif                       /* HAVE_ENVIRON */
-        char *sdata_p;       /* address of this structure */
+#endif
+        char *sdata_p; /* address of this structure */
     } sdata;
 
     /**/
 
-#if defined(HAVE_STDLIB_H)
     unsigned long tmp;                  /* temp holder of 31-bit random() */
     unsigned past_hash;                 /* prev hash or xor-folded prev hash */
     long random_before[RANDOM_CNT];     /* random() pre initstate() */
@@ -509,7 +354,6 @@ pseudo_seed(void)
     long random_after[RANDOM_CNT];      /* random() post initstate() */
     char *setstate_ret;                 /* return from setstate() call */
     int j;
-#endif /* HAVE_STDLIB_H */
 #if defined(HAVE_ENVIRON)
     int i;
     size_t envlen; /* length of an environment variable */
@@ -531,15 +375,13 @@ pseudo_seed(void)
      *    need to hash any results that might be store in the sdata structure.
      */
     memset(&sdata, 0, sizeof(sdata)); /* zeroize sdata */
-#if defined(HAVE_GETTIME)
-#  if defined(CLOCK_REALTIME)
+#if defined(CLOCK_REALTIME)
+
     (void)clock_gettime(CLOCK_REALTIME, &sdata.realtime);
-#  endif
-#endif
-#if defined(HAVE_GETPRID)
-    sdata.getprid = getprid();
+
 #endif
 #if defined(HAVE_URANDOM)
+
     sdata.urandom_fd = open(DEV_URANDOM, O_NONBLOCK | O_RDONLY);
     if (sdata.urandom_fd >= 0) {
         sdata.urandom_ret = read(sdata.urandom_fd, &sdata.urandom_pool, DEV_URANDOM_POOL);
@@ -548,20 +390,17 @@ pseudo_seed(void)
         memset(&sdata.urandom_pool, EOF, DEV_URANDOM_POOL);
         sdata.urandom_ret = EOF;
     }
-#endif /* HAVE_URANDOM */
-#if defined(HAVE_SYS_TIME_H)
-    (void)gettimeofday(&sdata.tp, NULL);
+
 #endif
+    (void)gettimeofday(&sdata.tp, NULL);
     sdata.getpid = getpid();
 #if !defined(_WIN32) && !defined(_WIN64)
     sdata.getppid = getppid();
 #endif
-#if defined(HAVE_UID_T)
     sdata.getuid = getuid();
     sdata.geteuid = geteuid();
     sdata.getgid = getgid();
     sdata.getegid = getegid();
-#endif
     (void)stat(".", &sdata.stat_dot);
     (void)stat("..", &sdata.stat_dotdot);
     (void)stat("/tmp", &sdata.stat_tmp);
@@ -577,39 +416,22 @@ pseudo_seed(void)
     (void)stat("/bin/ls", &sdata.stat_ls);
     (void)stat("/var/log/system.log", &sdata.stat_system);
     (void)stat("/var/log/messages", &sdata.stat_messages);
-#if defined(HAVE_USTAT)
-    (void)ustat(sdata.stat_dotdot.st_dev, &sdata.ustat_dotdot);
-    (void)ustat(sdata.stat_dot.st_dev, &sdata.ustat_dot);
-    (void)ustat(sdata.stat_tmp.st_dev, &sdata.ustat_tmp);
-    (void)ustat(sdata.stat_root.st_dev, &sdata.ustat_root);
-    (void)ustat(sdata.stat_tty.st_dev, &sdata.ustat_tty);
-    (void)ustat(sdata.stat_console.st_dev, &sdata.ustat_console);
-    (void)ustat(sdata.fstat_stdin.st_dev, &sdata.ustat_stdin);
-    (void)ustat(sdata.fstat_stdout.st_dev, &sdata.ustat_stdout);
-    (void)ustat(sdata.fstat_stderr.st_dev, &sdata.ustat_stderr);
-    (void)ustat(sdata.stat_zero.st_dev, &sdata.ustat_zero);
-    (void)ustat(sdata.stat_null.st_dev, &sdata.ustat_null);
-    (void)ustat(sdata.stat_sh.st_dev, &sdata.ustat_sh);
-    (void)ustat(sdata.stat_ls.st_dev, &sdata.ustat_ls);
-    (void)ustat(sdata.stat_system.st_dev, &sdata.ustat_system);
-    (void)ustat(sdata.stat_messages.st_dev, &sdata.ustat_messages);
-#endif
-#if defined(HAVE_STATFS)
-    (void)statfs("..", &sdata.statfs_dot);
-    (void)statfs(".", &sdata.statfs_dotdot);
-    (void)statfs("/tmp", &sdata.statfs_tmp);
-    (void)statfs("/", &sdata.statfs_root);
-    (void)statfs("/dev/tty", &sdata.statfs_tty);
-    (void)statfs("/dev/console", &sdata.statfs_console);
-    (void)statfs(".dev/stdin", &sdata.statfs_stdin);
-    (void)statfs("/dev/stdout", &sdata.statfs_stdout);
-    (void)statfs("/dev/stderr", &sdata.statfs_stderr);
-    (void)statfs("/dev/zero", &sdata.statfs_zero);
-    (void)statfs("/dev/null", &sdata.statfs_null);
-    (void)statfs("/bin/sh", &sdata.statfs_sh);
-    (void)statfs("/dev/ls", &sdata.statfs_ls);
-    (void)statfs("/var/log/system.log", &sdata.statfs_system);
-    (void)statfs("/var/log/messages", &sdata.statfs_messages);
+#if !defined(_WIN32) && !defined(_WIN64)
+    (void)statvfs("..", &sdata.statfs_dot);
+    (void)statvfs(".", &sdata.statfs_dotdot);
+    (void)statvfs("/tmp", &sdata.statfs_tmp);
+    (void)statvfs("/", &sdata.statfs_root);
+    (void)statvfs("/dev/tty", &sdata.statfs_tty);
+    (void)statvfs("/dev/console", &sdata.statfs_console);
+    (void)statvfs(".dev/stdin", &sdata.statfs_stdin);
+    (void)statvfs("/dev/stdout", &sdata.statfs_stdout);
+    (void)statvfs("/dev/stderr", &sdata.statfs_stderr);
+    (void)statvfs("/dev/zero", &sdata.statfs_zero);
+    (void)statvfs("/dev/null", &sdata.statfs_null);
+    (void)statvfs("/bin/sh", &sdata.statfs_sh);
+    (void)statvfs("/dev/ls", &sdata.statfs_ls);
+    (void)statvfs("/var/log/system.log", &sdata.statfs_system);
+    (void)statvfs("/var/log/messages", &sdata.statfs_messages);
 #endif
 #if defined(HAVE_GETSID)
     sdata.getsid = getsid((pid_t)0);
@@ -621,7 +443,6 @@ pseudo_seed(void)
     (void)getrusage(RUSAGE_SELF, &sdata.rusage);
     (void)getrusage(RUSAGE_CHILDREN, &sdata.rusage_child);
 #endif
-#if defined(HAVE_SYS_TIME_H)
     (void)gettimeofday(&sdata.tp2, NULL);
     (void)times(&sdata.times);
     (void)utimes(".", sdata.times_dot);
@@ -639,14 +460,13 @@ pseudo_seed(void)
     (void)utimes("/bin/ls", sdata.times_ls);
     (void)utimes("/var/log/system.log", sdata.times_system);
     (void)utimes("/var/log/messages", sdata.times_messages);
-#endif
     sdata.time = time(NULL);
     sdata.size = sizeof(sdata);
     sdata.prev_hash64_copy = prev_hash64; /* load previous hash */
     sdata.call_count_copy = ++call_count; /* update call count */
 #if defined(HAVE_ENVIRON)
     sdata.environ_copy = environ;
-#endif /* HAVE_ENVIRON */
+#endif
     sdata.sdata_p = (char *)&sdata;
 
     /*
@@ -655,6 +475,7 @@ pseudo_seed(void)
     hash_val = private_hash64_buf(hash_val, (char *)&sdata, sizeof(sdata));
 
 #if defined(HAVE_ENVIRON)
+
     /*
      * mix in each envinment variable
      */
@@ -668,9 +489,9 @@ pseudo_seed(void)
             hash_val = private_hash64_buf(hash_val, environ[i], envlen);
         }
     }
-#endif /* HAVE_ENVIRON */
 
-#if defined(HAVE_STDLIB_H)
+#endif
+
     /*
      * mix in data from 31-bit random() and friends
      *
@@ -688,11 +509,7 @@ pseudo_seed(void)
      */
 
     /* form the xor-fold of the previous hash */
-#  if defined(HAVE_B64)
     past_hash = (unsigned)(((prev_hash64 >> 32) & 0xffffffff) ^ (prev_hash64 & 0xffffffff));
-#  else  /* HAVE_B64 */
-    pash_hash = (unsigned)(prev_hash64.w32[0] ^ prev_hash64.w32[1]);
-#  endif /* HAVE_B64 */
 
     /* classic 31-bit random seeded with time of day, count, prev hash */
     srandom((unsigned)(sdata.time) ^ (unsigned)call_count ^ past_hash);
@@ -704,12 +521,8 @@ pseudo_seed(void)
     }
 
     /* init with large random state with 32-bit xor fold FNV hash of sdata */
-#  if defined(HAVE_B64)
     initstate_ret =
         initstate((unsigned)(((hash_val >> 32) & 0xffffffff) ^ (hash_val & 0xffffffff)), initstate_tbl, INITSTATE_SIZE);
-#  else  /* HAVE_B64 */
-    initstate_ret = initstate((unsigned)(hash_val.w32[0] ^ hash_val.w32[1]), initstate_tbl, INITSTATE_SIZE);
-#  endif /* HAVE_B64 */
 
     /* use 31-bit random some more with the new random state */
     random_after[0] = random(); /* 31-bit value */
@@ -730,15 +543,16 @@ pseudo_seed(void)
     hash_val = private_hash64_buf(hash_val, (char *)initstate_tbl, sizeof(initstate_tbl));
     hash_val = private_hash64_buf(hash_val, (char *)random_after, sizeof(random_after));
     hash_val = private_hash64_buf(hash_val, (char *)setstate_ret, sizeof(setstate_ret));
-#endif /* HAVE_STDLIB_H */
 
 #if defined(HAVE_ARC4RANDOM)
+
     /*
      * hash from a cryptographic pseudo-random number generator
      */
     arc4random_buf(arc4_buf, ARC4_BUFLEN);
     hash_val = private_hash64_buf(hash_val, (char *)arc4_buf, ARC4_BUFLEN);
-#endif /* HAVE_ARC4RANDOM */
+
+#endif
 
     /*
      * load the hash data into the ZVALUE

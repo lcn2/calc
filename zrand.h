@@ -1,7 +1,7 @@
 /*
  * zrand - subtractive 100 shuffle generator
  *
- * Copyright (C) 1999-2007,2014  Landon Curt Noll
+ * Copyright (C) 1999-2007,2014,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -30,14 +30,6 @@
 
 #if !defined(INCLUDE_ZRAND_H)
 #  define INCLUDE_ZRAND_H
-
-#  if defined(CALC_SRC) /* if we are building from the calc source tree */
-#    include "value.h"
-#    include "have_const.h"
-#  else
-#    include <calc/value.h>
-#    include <calc/have_const.h>
-#  endif
 
 /*
  * s100 generator defines
@@ -211,19 +203,6 @@ struct rand {
     FULL slot[SCNT];    /* subtractive 100 table */
     FULL shuf[SHUFLEN]; /* shuffle table entries */
 };
+typedef struct rand RAND;
 
-/*
- * s100 generator function declarations
- */
-E_FUNC RAND *zsrand(CONST ZVALUE *seed, CONST MATRIX *pmat100);
-E_FUNC RAND *zsetrand(CONST RAND *state);
-E_FUNC void zrandskip(long count);
-E_FUNC void zrand(long count, ZVALUE *res);
-E_FUNC void zrandrange(CONST ZVALUE low, CONST ZVALUE beyond, ZVALUE *res);
-E_FUNC long irand(long s);
-E_FUNC RAND *randcopy(CONST RAND *rand);
-E_FUNC void randfree(RAND *rand);
-E_FUNC bool randcmp(CONST RAND *s1, CONST RAND *s2);
-E_FUNC void randprint(CONST RAND *state, int flags);
-
-#endif /* !INCLUDE_ZRAND_H */
+#endif

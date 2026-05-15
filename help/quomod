@@ -93,12 +93,12 @@ LIMITS
     rnd < 2^31
 
 LINK LIBRARY
-    BOOL qquomod(NUMBER *q1, NUMBER *q2, NUMBER **quo, NUMBER **mod)
+    bool qquomod(NUMBER *q1, NUMBER *q2, NUMBER **quo, NUMBER **mod)
 
 SEE ALSO
     //,  %, quo, mod, floor. ceil, int. frac
 
-## Copyright (C) 1999-2006,2021  Landon Curt Noll
+## Copyright (C) 1999-2006,2021,2026  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

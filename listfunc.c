@@ -1,7 +1,7 @@
 /*
  * listfunc - list handling routines
  *
- * Copyright (C) 1999-2007,2021-2023  David I. Bell
+ * Copyright (C) 1999-2007,2021-2023,2026  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -32,17 +32,28 @@
  * accesses are fast.
  */
 
+/*
+ * important <system> header includes
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdbool.h>
+
+/*
+ * calc local src includes
+ */
 #include "value.h"
-#include "zrand.h"
-
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
 
-E_FUNC long irand(long s);
+#include "banned.h" /* include after all other includes */
 
-S_FUNC LISTELEM *elemalloc(void);
-S_FUNC void elemfree(LISTELEM *ep);
-S_FUNC void removelistelement(LIST *lp, LISTELEM *ep);
+extern long irand(long s);
+
+static LISTELEM *elemalloc(void);
+static void elemfree(LISTELEM *ep);
+static void removelistelement(LIST *lp, LISTELEM *ep);
 
 /*
  * Insert an element before the first element of a list.
@@ -217,7 +228,7 @@ removelistmiddle(LIST *lp, long index, VALUE *vp)
  *      lp              list header
  *      ep              list element to remove
  */
-S_FUNC void
+static void
 removelistelement(LIST *lp, LISTELEM *ep)
 {
     if ((ep == lp->l_cache) || ((ep != lp->l_first) && (ep != lp->l_last))) {
@@ -811,12 +822,12 @@ listrandperm(LIST *lp)
 /*
  * Allocate an element for a list.
  */
-S_FUNC LISTELEM *
+static LISTELEM *
 elemalloc(void)
 {
     LISTELEM *ep;
 
-    ep = (LISTELEM *)malloc(sizeof(LISTELEM));
+    ep = (LISTELEM *)calloc(1, sizeof(LISTELEM));
     if (ep == NULL) {
         math_error("Cannot allocate list element");
         not_reached();
@@ -831,7 +842,7 @@ elemalloc(void)
 /*
  * Free a list element, along with any contained value.
  */
-S_FUNC void
+static void
 elemfree(LISTELEM *ep)
 {
     if (ep->e_value.v_type != V_NULL) {
@@ -848,7 +859,7 @@ listalloc(void)
 {
     register LIST *lp;
 
-    lp = (LIST *)malloc(sizeof(LIST));
+    lp = (LIST *)calloc(1, sizeof(LIST));
     if (lp == NULL) {
         math_error("Cannot allocate list header");
         not_reached();

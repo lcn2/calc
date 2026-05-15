@@ -1,7 +1,7 @@
 /*
  * zmod - modulo arithmetic routines
  *
- * Copyright (C) 1999-2007,2021-2023  David I. Bell, Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023,2026  David I. Bell, Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -35,25 +35,38 @@
  * are faster then the division, then the REDC algorithm is better.
  */
 
-#include "alloc.h"
-#include "config.h"
-#include "zmath.h"
+/*
+ * important <system> header includes
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+#include <stdbool.h>
 
+/*
+ * calc local src includes
+ */
+#include "zmath.h"
+#include "qmath.h"
+#include "config.h"
+#include "attribute.h"
 #include "errtbl.h"
-#include "banned.h" /* include after system header <> includes */
+
+#include "banned.h" /* include after all other includes */
 
 #define POWBITS 4              /* bits for power chunks (must divide BASEB) */
 #define POWNUMS (1 << POWBITS) /* number of powers needed in table */
 
-S_FUNC void zmod5(ZVALUE *zp);
-S_FUNC void zmod6(ZVALUE z1, ZVALUE *res);
-S_FUNC void zredcmodinv(ZVALUE z1, ZVALUE *res);
+static void zmod5(ZVALUE *zp);
+static void zmod6(ZVALUE z1, ZVALUE *res);
+static void zredcmodinv(ZVALUE z1, ZVALUE *res);
 
-STATIC REDC *powermodredc = NULL; /* REDC info for raising to power */
+static REDC *powermodredc = NULL; /* REDC info for raising to power */
 
 bool havelastmod = false;
-STATIC ZVALUE lastmod[1];
-STATIC ZVALUE lastmodinv[1];
+static ZVALUE lastmod[1];
+static ZVALUE lastmodinv[1];
 
 /*
  * Square a number and then mod the result with a second number.
@@ -356,7 +369,7 @@ zcmpmod(ZVALUE z1, ZVALUE z2, ZVALUE z3)
  * exceed twice that of the modulus stored at lastmod, to evaluate and store
  * at that address the value of the integer modulo the modulus.
  */
-S_FUNC void
+static void
 zmod5(ZVALUE *zp)
 {
     LEN len, modlen, j;
@@ -448,7 +461,7 @@ zmod5(ZVALUE *zp)
     }
 }
 
-S_FUNC void
+static void
 zmod6(ZVALUE z1, ZVALUE *res)
 {
     LEN len, modlen, len0;
@@ -857,7 +870,7 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 /*
  * Given a positive odd N-word integer z, evaluate minv(-z, BASEB^N)
  */
-S_FUNC void
+static void
 zredcmodinv(ZVALUE z, ZVALUE *res)
 {
     ZVALUE tmp;
@@ -937,7 +950,7 @@ zredcalloc(ZVALUE z1)
         not_reached();
     }
 
-    rp = (REDC *)malloc(sizeof(REDC));
+    rp = (REDC *)calloc(1, sizeof(REDC));
     if (rp == NULL) {
         math_error("Cannot allocate REDC structure");
         not_reached();
