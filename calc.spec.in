@@ -34,7 +34,7 @@
 Summary: Arbitrary precision calculator.
 Name: calc
 Version: <<<PROJECT_VERSION>>>
-Release: 14
+Release: 15
 License: LGPL
 Group: Applications/Engineering
 Source: https://github.com/lcn2/calc/releases/download/v<<<PROJECT_VERSION>>>/%{name}-%{version}.tar.bz2
@@ -149,7 +149,7 @@ rm -rf %{_buildrootdir}
 echo '-=- calc.spec beginning make clean -=-'
 
 %files
-%defattr(-, root, root)
+%defattr(-, root, root, -)
 %doc BUGS CHANGES COPYING COPYING-LGPL
 %attr(755, root, root) %{_bindir}/calc
 %attr(755, root, root) %{_bindir}/cscript/*
@@ -169,7 +169,7 @@ echo '-=- calc.spec beginning make clean -=-'
 %attr(644, root, root) %{_libdir}/libcustcalc.so.%{version}
 
 %files devel
-%defattr(-, root, root)
+%defattr(-, root, root, -)
 %doc BUGS COPYING COPYING-LGPL LIBRARY
 %attr(755, root, root) %{_bindir}/calc-static
 %attr(644, root, root) %{_includedir}/calc/*
@@ -177,6 +177,10 @@ echo '-=- calc.spec beginning make clean -=-'
 %attr(644, root, root) %{_libdir}/libcustcalc.a
 
 %changelog
+* Fri May 15 2026 Landon Curt Noll http://www.isthe.com/chongo
+- Release: 15
+- Add missing 4th parameter to defattr
+
 * Mon Aug 14 2023 Landon Curt Noll http://www.isthe.com/chongo
 - Release: 14
 - Use Source and URL based on calc GitHub repo URLs.
