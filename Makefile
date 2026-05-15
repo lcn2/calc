@@ -749,7 +749,7 @@ conf.h: ${MK_SET}
 	${Q} echo '#if !defined(DEFAULTCALCPATH_SYS)' >> $@
 ifdef RPM_TOP
 	${Q} echo '#define DEFAULTCALCPATH_SYS "${CALC_SHAREDIR}:${CUSTOMCALDIR}"' >> $@
-ifdef RPM_TOP
+else	# RPM_TOP
 	${Q} echo '#define DEFAULTCALCPATH_SYS "${T}${CALC_SHAREDIR}:${T}${CUSTOMCALDIR}"' >> $@
 endif	# RPM_TOP
 	${Q} echo '#endif /* DEFAULTCALCPATH_SYS */' >> $@
