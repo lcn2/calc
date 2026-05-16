@@ -609,7 +609,7 @@ sha1_final_state(HASH *state)
 
 #else
 
-#   error "BASEB is not 16, nor 32, do not know (yet) load a HASH into a ZVALUE"
+#  error "BASEB is not 16, nor 32, do not know (yet) load a HASH into a ZVALUE"
 
 #endif
     ztrim(&ret);

@@ -20,7 +20,7 @@
  * and be able to print for signed and unsigned values.
  *
  * If you are unable to compile this program, or if this program when
- * compiles does not exit 0, then your C compiler and/or C include
+ * compiled, does not exit 0, then your C compiler and/or C include
  * fails to meet calc requirements.
  *
  * Compilers that are at least c17 MUST be able to compile this program
@@ -92,33 +92,33 @@ static char const *usage = "usage: %s [-h] [-c] [-V]\n"
 int
 main(int argc, char *argv[])
 {
-    char *program = "((NULL))";       /* our name */
-    int opt;                          /* the -option found or -1 */
-    bool c_flag = false;              /* if -h was found */
-    int i = -1;                       /* signed int test value */
-    unsigned int ui = 1;              /* unsigned int test value */
-    long l = -2L;                     /* signed long test value */
-    unsigned long ul = 2UL;           /* unsigned long test value */
-    long long ll = -4LL;              /* signed long long test value */
-    unsigned long long ull = 4ULL;    /* unsigned long long test value */
-    int8_t i8 = INT8_C(-8);           /* signed 8-bit test value */
-    uint8_t ui8 = UINT8_C(8);         /* unsigned 8-bit test value */
-    int16_t i16 = INT16_C(-16);       /* signed 16-bit test value */
-    uint16_t ui16 = UINT16_C(16);     /* unsigned 16-bit test value */
-    int32_t i32 = INT32_C(-32);       /* signed 32-bit test value */
-    uint32_t ui32 = UINT32_C(32);     /* unsigned 32-bit test value */
-    int64_t i64 = INT64_C(-64);       /* signed 64-bit test value */
-    uint64_t ui64 = UINT64_C(64);     /* unsigned 64-bit test value */
-    long lv = -128L;                  /* signed long value */
-    unsigned long ulv = 128UL;        /* unsigned signed long value */
-    long long llv = -256LL;           /* signed long value */
-    unsigned long long ullv = 256ULL; /* unsigned signed long value */
-    intptr_t iptr = -512;             /* integer type capable of holding a pointer */
-    intptr_t uiptr = 512;             /* unsigned integer type capable of holding a pointer */
-    intmax_t imax = INTMAX_C(-1024);  /* maximum sized signed int test value */
-    uintmax_t uimax = UINTMAX_C(1024);/* maximum sized unsigned int test value */
-    uintmax_t isum = 0;               /* sum of all test values as signed value */
-    uintmax_t uisum = 0;              /* sum of all test values as unsigned value */
+    char *program = "((NULL))";        /* our name */
+    int opt;                           /* the -option found or -1 */
+    bool c_flag = false;               /* if -h was found */
+    int i = -1;                        /* signed int test value */
+    unsigned int ui = 1;               /* unsigned int test value */
+    long l = -2L;                      /* signed long test value */
+    unsigned long ul = 2UL;            /* unsigned long test value */
+    long long ll = -4LL;               /* signed long long test value */
+    unsigned long long ull = 4ULL;     /* unsigned long long test value */
+    int8_t i8 = INT8_C(-8);            /* signed 8-bit test value */
+    uint8_t ui8 = UINT8_C(8);          /* unsigned 8-bit test value */
+    int16_t i16 = INT16_C(-16);        /* signed 16-bit test value */
+    uint16_t ui16 = UINT16_C(16);      /* unsigned 16-bit test value */
+    int32_t i32 = INT32_C(-32);        /* signed 32-bit test value */
+    uint32_t ui32 = UINT32_C(32);      /* unsigned 32-bit test value */
+    int64_t i64 = INT64_C(-64);        /* signed 64-bit test value */
+    uint64_t ui64 = UINT64_C(64);      /* unsigned 64-bit test value */
+    long lv = -128L;                   /* signed long value */
+    unsigned long ulv = 128UL;         /* unsigned signed long value */
+    long long llv = -256LL;            /* signed long value */
+    unsigned long long ullv = 256ULL;  /* unsigned signed long value */
+    intptr_t iptr = -512;              /* integer type capable of holding a pointer */
+    intptr_t uiptr = 512;              /* unsigned integer type capable of holding a pointer */
+    intmax_t imax = INTMAX_C(-1024);   /* maximum sized signed int test value */
+    uintmax_t uimax = UINTMAX_C(1024); /* maximum sized unsigned int test value */
+    uintmax_t isum = 0;                /* sum of all test values as signed value */
+    uintmax_t uisum = 0;               /* sum of all test values as unsigned value */
 
     /*
      * parse args
@@ -189,8 +189,8 @@ main(int argc, char *argv[])
     /*
      * calculate sum of all test values as signed value
      */
-    isum = i + ui + l + ul + ll + ull + i8 + ui8 + i16 + ui16 + i32 + ui32 + i64 + ui64 +
-           lv + ulv + llv + ullv + iptr + uiptr + imax + uimax;
+    isum = i + ui + l + ul + ll + ull + i8 + ui8 + i16 + ui16 + i32 + ui32 + i64 + ui64 + lv + ulv + llv + ullv + iptr + uiptr +
+           imax + uimax;
     if (c_flag == true) {
         printf("\nzero valued isum: %jd\n", isum);
     }
@@ -202,8 +202,8 @@ main(int argc, char *argv[])
     /*
      * calculate sum of all test values as unsigned value
      */
-    uisum = i + ui + l + ul + ll + ull + i8 + ui8 + i16 + ui16 + i32 + ui32 + i64 + ui64 +
-           lv + ulv + llv + ullv + iptr + uiptr + imax + uimax;
+    uisum = i + ui + l + ul + ll + ull + i8 + ui8 + i16 + ui16 + i32 + ui32 + i64 + ui64 + lv + ulv + llv + ullv + iptr + uiptr +
+            imax + uimax;
     if (c_flag == true) {
         printf("zero valued uisum: %ju\n", uisum);
     }

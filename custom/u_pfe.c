@@ -118,26 +118,26 @@ static bool valv_ref_type_check(int UNUSED(count), VALUE **vals, int idx, const 
 static void valv_ref_type_require(const char *custname, int count, VALUE **vals, int idx, const char *name, short wanted);
 static long valv_get_num_long(const char *custname, int count, VALUE **vals, int idx, const char *name);
 static VALUE *valv_optional_get_num(int count, VALUE **vals, int *idx, const char *name, VALUE *dflt);
-#  if 0  /* function defined but not used */
+#  if 0 /* function defined but not used */
 static VALUE * valv_optional_ref_num(int count, VALUE **vals, int *idx, const char *name, VALUE *dflt);
 #  endif
 static VALUE *valv_ref_num(const char *custname, int count, VALUE **vals, int idx, const char *name);
-#  if 0  /* function defined but not used */
+#  if 0 /* function defined but not used */
 static VALUE * valv_get_num(const char *custname, int count, VALUE **vals, int idx, const char *name);
 #  endif
 static char *valv_get_str(const char *custname, int count, VALUE **vals, int idx, const char *name);
 static VALUE *valv_get_strp(const char *custname, int count, VALUE **vals, int idx, const char *name);
-#  if 0  /* function defined but not used */
+#  if 0 /* function defined but not used */
 static VALUE * valv_optional_ref_list(int count, VALUE **vals, int *idx, const char *name, VALUE *dflt);
 #  endif
 static VALUE *valv_optional_get_list(int count, VALUE **vals, int *idx, const char *name, VALUE *dflt);
 static VALUE *valv_get_list(const char *custname, int count, VALUE **vals, int idx, const char *name);
 static VALUE *valv_ref_list(const char *custname, int count, VALUE **vals, int idx, const char *name);
-#  if 0  /* function defined but not used */
+#  if 0 /* function defined but not used */
 static VALUE * valv_optional_get_assoc(int count, VALUE **vals, int *idx, const char *name, VALUE *dflt);
 #  endif
 static VALUE *valv_optional_ref_assoc(int count, VALUE **vals, int *idx, const char *name, VALUE *dflt);
-#  if 0  /* function defined but not used */
+#  if 0 /* function defined but not used */
 static VALUE * valv_get_assoc(const char *custname, int count, VALUE **vals, int idx, const char *name);
 #  endif
 static VALUE *valv_ref_assoc(const char *custname, int count, VALUE **vals, int idx, const char *name);
@@ -514,7 +514,7 @@ valv_optional_get_num(int count, VALUE **vals, int *idx, const char *name, VALUE
     return num;
 }
 
-#  if 0  /* function defined but not used */
+#  if 0 /* function defined but not used */
 
 static VALUE *
 valv_optional_ref_num(int count, VALUE **vals, int *idx, const char *name,
@@ -557,7 +557,7 @@ valv_ref_num(const char *custname, int count, VALUE **vals, int idx, const char 
     return vals[idx]->v_addr;
 }
 
-#  if 0  /* function defined but not used */
+#  if 0 /* function defined but not used */
 
 static VALUE *
 valv_get_num(const char *custname, int count, VALUE **vals, int idx,
@@ -586,7 +586,7 @@ valv_get_strp(const char *custname, int count, VALUE **vals, int idx, const char
     return vals[idx];
 }
 
-#  if 0  /* function defined but not used */
+#  if 0 /* function defined but not used */
 
 static VALUE *
 valv_optional_ref_list(int count, VALUE **vals, int *idx, const char *name,
@@ -659,7 +659,7 @@ valv_ref_list(const char *custname, int count, VALUE **vals, int idx, const char
     return vals[idx]->v_addr;
 }
 
-#  if 0  /* function defined but not used */
+#  if 0 /* function defined but not used */
 
 static VALUE *
 valv_optional_get_assoc(int count, VALUE **vals, int *idx, const char *name,
@@ -714,7 +714,7 @@ valv_optional_ref_assoc(int count, VALUE **vals, int *idx, const char *name, VAL
     return assoc;
 }
 
-#  if 0  /* function defined but not used */
+#  if 0 /* function defined but not used */
 
 static VALUE *
 valv_get_assoc(const char *custname, int count, VALUE **vals, int idx,

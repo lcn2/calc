@@ -413,10 +413,10 @@ zprintx(ZVALUE z, long width)
         return;
     }
     hp = z.v + len;
-//  PRINTF1("0x%lx", (PRINT)*hp--);
+    //  PRINTF1("0x%lx", (PRINT)*hp--);
     PRINTF1("0x%" PRI_HEX, (PRINT)*hp--);
     while (--len >= 0) {
-//      PRINTF1("%08" PRI_HEX, (PRINT)*hp--);
+        //      PRINTF1("%08" PRI_HEX, (PRINT)*hp--);
         PRINTF1("%0" PRI_HEX_LEN PRI_HEX, (PRINT)*hp--);
     }
 }
@@ -489,7 +489,7 @@ zprinto(ZVALUE z, long width)
 #elif BASEB == 16
     FULL num1 = '0';     /* numbers to type */
     FULL num2 = (FULL)0; /* numbers to type */
-#error "BASEB is not 32 nor 16, do not yet know what variables needed by the zprinto function"
+#  error "BASEB is not 32 nor 16, do not yet know what variables needed by the zprinto function"
 #endif
     int rem; /* remainder number of halfwords */
     char *str;
@@ -521,18 +521,17 @@ zprinto(ZVALUE z, long width)
         num3 = (((hp[-1] & 0xffff) << 8) + (hp[-2] >> 24));
         num4 = (hp[-2] & 0xffffff);
         if (num1) {
-//          PRINTF4("0%lo%08lo%08lo%08lo", (PRINT)num1, (PRINT)num2, (PRINT)num3, (PRINT)num4);
-            PRINTF4("0%" PRI_OCT "%0" PRI_OCT_LEN PRI_OCT "%0" PRI_OCT_LEN PRI_OCT "%0" PRI_OCT_LEN PRI_OCT,
-                    (PRINT)num1, (PRINT)num2, (PRINT)num3, (PRINT)num4);
-        } else {
-//          PRINTF3("0%lo%08lo%08lo", (PRINT)num2, (PRINT)num3, (PRINT)num4);
-            PRINTF3("0%" PRI_OCT "%0" PRI_OCT_LEN PRI_OCT "%0" PRI_OCT_LEN PRI_OCT,
+            //          PRINTF4("0%lo%08lo%08lo%08lo", (PRINT)num1, (PRINT)num2, (PRINT)num3, (PRINT)num4);
+            PRINTF4("0%" PRI_OCT "%0" PRI_OCT_LEN PRI_OCT "%0" PRI_OCT_LEN PRI_OCT "%0" PRI_OCT_LEN PRI_OCT, (PRINT)num1,
                     (PRINT)num2, (PRINT)num3, (PRINT)num4);
+        } else {
+            //          PRINTF3("0%lo%08lo%08lo", (PRINT)num2, (PRINT)num3, (PRINT)num4);
+            PRINTF3("0%" PRI_OCT "%0" PRI_OCT_LEN PRI_OCT "%0" PRI_OCT_LEN PRI_OCT, (PRINT)num2, (PRINT)num3, (PRINT)num4);
         }
         rem = 3;
         break;
     case 1:
-//      PRINTF1("0%lo", (PRINT)hp[0]);
+        //      PRINTF1("0%lo", (PRINT)hp[0]);
         PRINTF1("0%" PRI_OCT, (PRINT)hp[0]);
         break;
     case 2:
@@ -540,10 +539,10 @@ zprinto(ZVALUE z, long width)
         num2 = (((hp[0] & 0xffff) << 8) + (hp[-1] >> 24));
         num3 = (hp[-1] & 0xffffff);
         if (num1) {
-//          PRINTF3("0%lo%08lo%08lo", (PRINT)num1, (PRINT)num2, (PRINT)num3);
+            //          PRINTF3("0%lo%08lo%08lo", (PRINT)num1, (PRINT)num2, (PRINT)num3);
             PRINTF3("0%" PRI_OCT "%0" PRI_OCT_LEN PRI_OCT "%0" PRI_OCT_LEN PRI_OCT, (PRINT)num1, (PRINT)num2, (PRINT)num3);
         } else {
-//          PRINTF2("0%lo%08lo", (PRINT)num2, (PRINT)num3);
+            //          PRINTF2("0%lo%08lo", (PRINT)num2, (PRINT)num3);
             PRINTF2("0%" PRI_OCT "%0" PRI_OCT_LEN PRI_OCT, (PRINT)num2, (PRINT)num3);
         }
         break;
@@ -552,12 +551,12 @@ zprinto(ZVALUE z, long width)
     if (len > 0) {
         hp -= rem;
         while (len > 0) { /* finish in groups of 3 words */
-//          PRINTF4("%08lo%08lo%08lo%08lo",
-//                  (PRINT)((hp[0]) >> 8), (PRINT)(((hp[0] & 0xff) << 16) + (hp[-1] >> 16)),
-//                  (PRINT)(((hp[-1] & 0xffff) << 8) + (hp[-2] >> 24)), (PRINT)(hp[-2] & 0xffffff));
-            PRINTF4("0%" PRI_OCT "%0" PRI_OCT_LEN PRI_OCT "%0" PRI_OCT_LEN PRI_OCT "%0" PRI_OCT_LEN PRI_OCT,
-                    (PRINT)((hp[0]) >> 8), (PRINT)(((hp[0] & 0xff) << 16) + (hp[-1] >> 16)),
-                    (PRINT)(((hp[-1] & 0xffff) << 8) + (hp[-2] >> 24)), (PRINT)(hp[-2] & 0xffffff));
+                          //          PRINTF4("%08lo%08lo%08lo%08lo",
+                          //                  (PRINT)((hp[0]) >> 8), (PRINT)(((hp[0] & 0xff) << 16) + (hp[-1] >> 16)),
+                          //                  (PRINT)(((hp[-1] & 0xffff) << 8) + (hp[-2] >> 24)), (PRINT)(hp[-2] & 0xffffff));
+            PRINTF4("0%" PRI_OCT "%0" PRI_OCT_LEN PRI_OCT "%0" PRI_OCT_LEN PRI_OCT "%0" PRI_OCT_LEN PRI_OCT, (PRINT)((hp[0]) >> 8),
+                    (PRINT)(((hp[0] & 0xff) << 16) + (hp[-1] >> 16)), (PRINT)(((hp[-1] & 0xffff) << 8) + (hp[-2] >> 24)),
+                    (PRINT)(hp[-2] & 0xffffff));
             hp -= 3;
             len -= 3;
         }
@@ -581,21 +580,20 @@ zprinto(ZVALUE z, long width)
         break;
     }
     if (num1) {
-//      PRINTF2("0%lo%08lo", num1, num2);
+        //      PRINTF2("0%lo%08lo", num1, num2);
         PRINTF2("0%" PRI_OCT "%0" PRI_OCT_LEN PRI_OCT, num1, num2);
     } else {
-//      PRINTF1("0%lo", num2);
-        PRINTF1("0%" PRI_OCT,, num2);
+        //      PRINTF1("0%lo", num2);
+        PRINTF1("0%" PRI_OCT, , num2);
     }
     len -= rem;
     if (len > 0) {
         hp -= rem;
         while (len > 0) { /* finish in groups of 3 halfwords */
-//          PRINTF2("%08lo%08lo",
-//                  ((((FULL)hp[0]) << 8) + (((FULL)hp[-1]) >> 8)),
-//                  ((((FULL)(hp[-1] & 0xff)) << 16) + ((FULL)hp[-2])));
-            PRINTF2("%0" PRI_OCT_LEN PRI_OCT "%0" PRI_OCT_LEN PRI_OCT,
-                    ((((PRINT)hp[0]) << 8) + (((PRINT)hp[-1]) >> 8)),
+                          //          PRINTF2("%08lo%08lo",
+                          //                  ((((FULL)hp[0]) << 8) + (((FULL)hp[-1]) >> 8)),
+                          //                  ((((FULL)(hp[-1] & 0xff)) << 16) + ((FULL)hp[-2])));
+            PRINTF2("%0" PRI_OCT_LEN PRI_OCT "%0" PRI_OCT_LEN PRI_OCT, ((((PRINT)hp[0]) << 8) + (((PRINT)hp[-1]) >> 8)),
                     ((((PRINT)(hp[-1] & 0xff)) << 16) + ((PRINT)hp[-2])));
             hp -= 3;
             len -= 3;
@@ -604,7 +602,7 @@ zprinto(ZVALUE z, long width)
 
 #else
 
-#error "BASEB is not 32 nor 16, do not yet know how print in the zprinto function"
+#  error "BASEB is not 32 nor 16, do not yet know how print in the zprinto function"
 
 #endif
 }

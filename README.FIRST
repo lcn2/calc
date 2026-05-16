@@ -111,6 +111,15 @@ for information about how to ask a question.
 
 -=-
 
+If you obtained the calc source from the [calc repo](https://github.com/lcn2/calc),
+please see the "README.md" file, and in particular the section near the bottom
+titled "On calc repo branches", as this will give you useful information
+in git repo branches.
+
+-=-
+
+To better understand calc version numbers, and git tags, please read "README.RELEASE".
+
 ## Copyright (C) 1999,2014,2017,2021,2026  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under

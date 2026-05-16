@@ -81,7 +81,7 @@
 #    define E_CUSTOM_ERROR E_NO_CUSTOM
 #  endif
 
-#  include "banned.h"            /* include after system header <> includes */
+#  include "banned.h" /* include after system header <> includes */
 
 /*
  * forward declarations
@@ -6709,7 +6709,7 @@ f_isalpha(VALUE *vp)
     return result;
 }
 
-#  if 0  /* XXX - add isascii builtin funcion - XXX */
+#  if 0 /* XXX - add isascii builtin funcion - XXX */
 
 static VALUE
 f_isascii(VALUE *vp)

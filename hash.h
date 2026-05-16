@@ -47,21 +47,21 @@
  */
 typedef struct hashstate HASH;
 struct hashstate {
-    int hashtype;                          /* XYZ_HASH_TYPE debug value */
-    bool bytes;                            /* true => reading bytes rather than words */
+    int hashtype;                                /* XYZ_HASH_TYPE debug value */
+    bool bytes;                                  /* true => reading bytes rather than words */
     void (*update)(HASH *, uint8_t *, uint32_t); /* update arbitrary length */
-    void (*chkpt)(HASH *);                 /* checkpoint a state */
-    void (*note)(int, HASH *);             /* note a special value */
-    void (*type)(int, HASH *);             /* note a VALUE type */
-    ZVALUE (*final)(HASH *);               /* complete hash state */
-    int (*cmp)(HASH *, HASH *);            /* compare to states, true => a!=b */
-    void (*print)(HASH *);                 /* print the value of a hash */
-    int base;                              /* XYZ_BASE special hash value */
-    int chunksize;                         /* XYZ_CHUNKSIZE input chunk size */
-    int unionsize;                         /* h_union element size */
-    union {                                /* hash dependent states */
-        uint8_t data[1];                      /* used by hash_value to hash below */
-        SHA1_INFO h_sha1;                  /* new SHA-1 internal state */
+    void (*chkpt)(HASH *);                       /* checkpoint a state */
+    void (*note)(int, HASH *);                   /* note a special value */
+    void (*type)(int, HASH *);                   /* note a VALUE type */
+    ZVALUE (*final)(HASH *);                     /* complete hash state */
+    int (*cmp)(HASH *, HASH *);                  /* compare to states, true => a!=b */
+    void (*print)(HASH *);                       /* print the value of a hash */
+    int base;                                    /* XYZ_BASE special hash value */
+    int chunksize;                               /* XYZ_CHUNKSIZE input chunk size */
+    int unionsize;                               /* h_union element size */
+    union {                                      /* hash dependent states */
+        uint8_t data[1];                         /* used by hash_value to hash below */
+        SHA1_INFO h_sha1;                        /* new SHA-1 internal state */
     } h_union;
 };
 

@@ -162,7 +162,7 @@
 #  define OP_JUMPNN 130L     /* jump if top value is non-null */
 #  define OP_ABORT 131L      /* abort operation */
 
-#  define MAX_OPCODE 131L    /* MUST BE LAST - highest legal opcode */
+#  define MAX_OPCODE 131L /* MUST BE LAST - highest legal opcode */
 
 /*
  * external declarations

@@ -460,9 +460,9 @@ config_hash(CONFIG *cfg, QCKHASH val)
     value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->cygwin);
     value = (((value >> 5) | (value << 27)) ^ (uint32_t)cfg->compile_custom);
     if (cfg->allow_custom != NULL && *(cfg->allow_custom)) {
-        value = (((value >> 5) | (value << 27)) ^ (uint32_t) true);
+        value = (((value >> 5) | (value << 27)) ^ (uint32_t)true);
     } else {
-        value = (((value >> 5) | (value << 27)) ^ (uint32_t) false);
+        value = (((value >> 5) | (value << 27)) ^ (uint32_t)false);
     }
     /* version is handled out of order */
 

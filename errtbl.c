@@ -2149,8 +2149,8 @@ print_errsym(void)
 int
 main(int argc, char *argv[])
 {
-    int e_flag = 0;      /* 1 ==> -e flag was used */
-    int d_flag = 0;      /* 1 ==> -s flag was used */
+    int e_flag = 0; /* 1 ==> -e flag was used */
+    int d_flag = 0; /* 1 ==> -s flag was used */
     int i;
 
     /*

@@ -134,10 +134,10 @@
  *                  "hd_style"} position, spaces between octets, chars on end
  */
 struct block {
-    LEN blkchunk; /* allocation chunk size */
-    LEN maxsize;  /* octets actually malloced for this block */
-    LEN datalen;  /* octets of data held this block */
-    uint8_t *data;   /* pointer to the 1st octet of the allocated data */
+    LEN blkchunk;  /* allocation chunk size */
+    LEN maxsize;   /* octets actually malloced for this block */
+    LEN datalen;   /* octets of data held this block */
+    uint8_t *data; /* pointer to the 1st octet of the allocated data */
 };
 typedef struct block BLOCK;
 

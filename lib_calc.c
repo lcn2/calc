@@ -36,7 +36,7 @@
 #include <sys/types.h>
 #include <stdint.h>
 #include <stdbool.h>
-#  include <termios.h>
+#include <termios.h>
 typedef struct termios ttystruct;
 
 /*
@@ -45,7 +45,6 @@ typedef struct termios ttystruct;
 #if !defined(_WIN32) && !defined(_WIN64)
 #  include <pwd.h>
 #endif
-
 
 /*
  * calc local src includes
@@ -481,8 +480,7 @@ initenv(void)
     c = (no_env ? NULL : getenv(CALCPATH));
     if (c != NULL && *c != '\0') {
         calcpath = strdup(c);
-    } else if ((xdg_data = xdg_base("XDG_DATA_HOME", X_OK)) != NULL &&
-               (xdg_config = xdg_base("XDG_CONFIG_HOME", X_OK)) != NULL) {
+    } else if ((xdg_data = xdg_base("XDG_DATA_HOME", X_OK)) != NULL && (xdg_config = xdg_base("XDG_CONFIG_HOME", X_OK)) != NULL) {
         len = strlen(xdg_data) + strlen(xdg_config) + sizeof(".:./cal:/calc:/calc:") + strlen(DEFAULTCALCPATH_SYS);
         calcpath = malloc(len);
         if (calcpath == NULL) {
@@ -1081,7 +1079,6 @@ static char *
 xdg_base(char *UNUSED(env), int UNUSED(mode))
 {
     return NULL;
-
 }
 
 #else

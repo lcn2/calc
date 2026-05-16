@@ -1,7 +1,7 @@
 /*
  * attribute - control use of attributes in a backward compatible way
  *
- * Copyright (C) 2022  Landon Curt Noll
+ * Copyright (C) 2022,2026  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -34,7 +34,8 @@
  * For example, MSVC, TenDRAm and Little C Compiler doesn't support __attribute__.
  * Early gcc does not support __attribute__.
  *
- * Not all compiles have __has_builtin */
+ * Not all compilers have __has_builtin
+ */
 #  if !defined(__attribute__) && (defined(__cplusplus) || !defined(__GNUC__) || __GNUC__ == 2 && __GNUC_MINOR__ < 8)
 #    define __attribute__(A)
 #  endif

@@ -1,10 +1,88 @@
-The following are the changes from calc version 3.0.0.4 to date:
+The following are the changes from calc version 3.0.1.0 to date:
+
+    **NOTE**: At the start of calc version 3.0.1.0, the code identical to calc version 2.17.0.0,
+              except for the version number of course.  :-)  Nevertheless, because the
+              `MAJOR_VER` changed from from 2 to 3, code in `int.h`, `value.h`, and `zmath.h`
+              will compile differently due to C pre-processor directives related to the
+              `MAJOR_VER` defined symbol.  In particular, the memory layout of fundamental
+              data types such as `VALUE` (`struct value`), `LEN`, `SIGN`, and `ZVALUE`
+              have a different memory layout.
+
+    **TL;DR**: The calc version 3.0.1.0 == calc version 2.17.0.0, except for the version number.
+               The change of version number causes a change in memory layout of data structures.
+
+    Change `MAJOR_VER` from 2 to 3, the first change to the major version number since 1989!
+
+
+The following are the changes from calc version 2.17.0.0 to 3.0.1.0:
+
+    **NOTE**: This is the restart of the calcv3 branch for calc version 3 development:
+
+        https://github.com/lcn2/calc/issues/103
+
+    As calc version 3.0.0.4, with the version set to new 2.17.0.0, was folded into the
+    master bench, this calc 3.0.1.0 version may be considered the re-start of calc v3.
+
+    With respect to calc version 3.0.0.4 vs calc version 3.0.1.0 contains several Makefile
+    fixes and improvements, an rpm spec change, and `make clang-format` source format to update.
+    In the next change section "changes from calc version 2.16.1.3 to 2.17.0.0" until the
+    "From: calc version 3.0.0.3 to 3.0.0.4 changes" line, you will find the details of
+    the calc version 3.0.0.4 vs calc version 3.0.1.0 change.
+
+
+The following are the changes from calc version 2.16.1.3 to 2.17.0.0:
 
     Sync calc version 3.0.0.4 changes with calc version 2.16.1.3 to
-    form a new 2.17.0.0.
+    form a new 2.17.0.0, except that the calc version will be 2.17.0.0 of course.  :-)
 
+    **IMPORTANT LEGACY NOTE**: Some very old systems might have trouble with the set
+                               of changes.  For example, systems that don't a c17 C
+                               compiler, or that lack some standard include files.
+                               Such old systems should use the `legacy-calc` branch
+                               (i.e., the latest 2.16.1.x version on that branch).
 
-The following are the changes from calc version 3.0.0.3 to 3.0.0.4:
+    Added `make asan` rule to make it easier to compile with ASAN (Address Sanitizer).
+        NOTE: Use `make clobber` first before using the new rule to remove any previous compilation.
+
+    Added `make gcc` rule to force a compile with `gcc(1)`, (or `gcc-15`
+        for macOS), full warnings, no optimizer, no ASAN.
+        NOTE: Use `make clobber` first before using the new rule to remove any previous compilation.
+
+    Added `make clang` rule to force a compile with `c1ang(1)`, full warnings, no optimizer, no ASAN.
+        NOTE: Use `make clobber` first before using the new rule to remove any previous compilation.
+
+    Added `calc-static-asan` rule to to compile cASAN (Address Sanitizer).
+        NOTE: Use `make clobber` first before using the new rule to remove any previous compilation.
+
+    Added `make asan-run` to compile and run calc in the local directory, and run with ASAN.
+        NOTE: Use `make clobber` first before using the new rule to remove any previous compilation.
+
+    Added `make check_lcc` to test if the local C compiler (`${LCC}`) can compile a trivial C program.
+
+    Added `make check_lcc_include` to check if the local C compiler `${LCC}` has access to <stdio.h>.
+
+    Added `make check_cc` to test if the C compiler (`${CC}`) can compile a trivial C program.
+
+    Added: `make check_cc_include` to check if the C compiler `${CC}` has access to the <stdio.h>
+    system include file.  NOTE: `make check_cc_include` was `make check_include`.
+
+    Added make variable `${CHECK_TARGETS}` to contain the `check_lcc`, `check_lcc_include`, `check_cc`,
+    and `check_cc_include` targets.
+
+    Added `make sanity_check`, which is based on the make variable `${CHECK_TARGETS}`, to perform
+    the sanity checks on both the local C compiler (`${LCC}`), and the C compiler (`${CC}`).
+
+    Added to both `${STATIC_FIRST_TARGETS}`, and `${DYNAMIC_FIRST_TARGETS}`
+    to perform the local C compiler (`${LCC}`), and the C compiler (`${CC}`) checks.
+
+    Performed a `make clang-format` source format to update the code base as per `.clang-format`.
+
+    Fixed rpm spec file.
+
+    Fixed how `conf.h` is formed when building an rpm.
+
+    From: calc version 3.0.0.3 to 3.0.0.4 changes
+    ---------------------------------------------
 
     Fixed three memcpy calls in `matsort()` in `matfunc.c`.
     Thanks go to the GitHub user @orbisai0security for this fix.
@@ -35,8 +113,8 @@ The following are the changes from calc version 3.0.0.3 to 3.0.0.4:
 
     Thanks to GitHub user @ccjmne for helping add this support.
 
-
-The following are the changes from calc version 3.0.0.2 to 3.0.0.3:
+    From: calc version 3.0.0.2 to 3.0.0.3 changes
+    ---------------------------------------------
 
     Add Makefile.target to build for NetBSD per GitHub PR #184.
 
@@ -155,13 +233,13 @@ The following are the changes from calc version 3.0.0.2 to 3.0.0.3:
     to build the `endian_calc.h` file.
 
     Define `CALC_LITTLE_ENDIAN`, `CALC_BIG_ENDIAN`, and `CALC_PDP_ENDIAN` in `endian_calc.h`.
-    NOTE: calc does NOT (yet?) support pdp Endian.
+    NOTE: calc does NOT support pdp Endian.
 
     Modified `errtbl.c` to avoid getopt related extern warnings.
     Fixed GitHub PR #190.
 
-
-The following are the changes from calc version 3.0.0.1 to 3.0.0.2:
+    From: calc version 3.0.0.1 to 3.0.0.2 changes
+    ---------------------------------------------
 
     Removed `terminal.h` rule: system include `<termios.h>` must exist
     Removed `have_gettime.h` and `have_gettime.c`: if CLOCK_REALTIME in defined in system include `<time.h>`,
@@ -200,38 +278,36 @@ The following are the changes from calc version 3.0.0.1 to 3.0.0.2:
     Removed `HAVE_STATFS` make symbol: use of `statfs()` is no longer supported
     Removed `HAVE_SYS_VFS_H` make symbol: system include `<sys/statvfs.h>` must exist
 
-    When `IGNORE_BYTE_ORDER` is defined and `endian.c` is compiled, any
-        system include definition of `BYTE_ORDER` will be ignored by `endian.c`.
+    When `IGNORE_BYTE_ORDER` is defined and `endian.c` is compiled, any system
+    include definition of `BYTE_ORDER` will be ignored by `endian.c`.
+
     Improved comments about `CALC_BYTE_ORDER` make variable in `Makefile.config`.
     Fixed when `Makefile.config` forces use of Little Endian or Big Endian.
     Improved `endian.c` debugging.
 
-
-The following are the changes from calc version 3.0.0.0 to 3.0.0.1:
-
-    Change `MAJOR_VER` from 2 to 3, the first change to the major version
-    number since 1989!
-
-    Start of the calcv3 branch for calc version 3 development. See:
-
-        https://github.com/lcn2/calc/issues/103
+    From: calc version 3.0.0.0 to 3.0.0.1 changes
+    ---------------------------------------------
 
     Change C-Preprocessor directives related to `MAJOR_VER` to
     test `if MAJOR_VER >= 3` first.
 
-    This update does not change the high level functionality of calc
-    except that the maximum size of values is now 1/8 of the maximum
-    address space allowed by the CPU architecture.
+    When `MAJOR_VER >= 3` (i.e., calc version 3), this update does not
+    change the high level functionality of calc except that the maximum
+    size of values is now 1/8 of the maximum address space allowed by
+    the CPU architecture.
 
-    The `LEN` type (length of internal integer values in units of HALF)
-    changed from a signed 32-bit value to a `uintptr_t`.
+    When `MAJOR_VER >= 3` (i.e., calc version 3), the `LEN` type (length
+    of internal integer values in units of HALF) changed from a signed
+    32-bit value to a `uintptr_t`.
 
-    The `SIGN` type (sign of a multi-precision integer) changed from a
-    signed 32-bit value to a `bool`.
+    When `MAJOR_VER >= 3` (i.e., calc version 3), the `SIGN` type (sign
+    of a multi-precision integer) changed from a signed 32-bit value to a
+    `bool`.
 
-    The `ZVALUE` multi-precision integer data structure, while it has
-    the same structure elements, has a different memory layout than it
-    was under calc version 2.
+    When `MAJOR_VER >= 3` (i.e., calc version 3), the `ZVALUE`
+    multi-precision integer data structure, while it has the same
+    structure elements, has a different memory layout than it was under
+    calc version 2.
 
     The `v_type` element of a `VALUE` changed from a `short` to a `int16_t`.
     Added `unused` element to  `VALUE` as an `uint16_t` to be reserved for future use.
@@ -239,9 +315,10 @@ The following are the changes from calc version 3.0.0.0 to 3.0.0.1:
 
     The `error_value(e)` function now takes an `int16_t` argument.
 
-    The `VALUE` multi-precision integer data structure, while it retains
-    the calc version 2 structure elements, is larger and has a new
-    `unused` element in calc version 3.
+    When `MAJOR_VER >= 3` (i.e., calc version 3), the `VALUE`
+    multi-precision integer data structure, while it retains the calc
+    version 2 structure elements, is larger and has a new `unused`
+    element in calc version 3.
 
     Define `BASEB_LOG2` to be the base 2 log of the base.
     The base `BASEB` is now defined in terms of `BASEB_LOG2`.
@@ -250,12 +327,12 @@ The following are the changes from calc version 3.0.0.0 to 3.0.0.1:
     which must be 1 less than a power of 2.  The value `MAXDATA_LOG2`
     is the log base 2 of MAXDATA+1.
 
-    We start with MAXDATA as 1 less than 1/16 of the maximum address space.
-    We limit to 1/16 because for a maximum complex value we
-    will need 4 huge integers, plus other data, code and stack space.
-    We often perform an operation such as 'a = b + c', so need 3 such
-    complex values.  So '3*4/16 == 3/4' of the address space, with spare
-    space for code, op stack and other data.
+    When `MAJOR_VER >= 3` (i.e., calc version 3), we start with MAXDATA
+    as 1 less than 1/16 of the maximum address space.  We limit to 1/16
+    because for a maximum complex value we will need 4 huge integers, plus
+    other data, code and stack space.  We often perform an operation such
+    as 'a = b + c', so need 3 such complex values.  So '3*4/16 == 3/4' of
+    the address space, with spare space for code, op stack and other data.
 
     The maximum length of a internal integer values in units of HALF
     is `MAXLEN`, which must be 1 less than a power of 2.  The value
@@ -264,10 +341,11 @@ The following are the changes from calc version 3.0.0.0 to 3.0.0.1:
     Expanded `MAX_TEN` to 49. The largest power of 10 we will compute
     for our decimal conversion internal constants, is set now 10^(2^49).
 
-    Most systems will run out of memory before they hit limits relating
-    to `MAXDATA`, `MAXLEN`, and `MAX_TEN`.
+    When `MAJOR_VER >= 3` (i.e., calc version 3), most systems will
+    run out of memory before they hit limits relating to `MAXDATA`,
+    `MAXLEN`, and `MAX_TEN`.
 
-    Compile `chk_c` from `chk_c.c` first when building h_src
+    Compile `chk_c` from `chk_c.c` first when building the make target `h_src`.
 
     Made `chk_c.c` more robust, but will compile with `-Wno-format` to assist 32-bit architectures.
 
@@ -342,7 +420,8 @@ The following are the changes from calc version 3.0.0.0 to 3.0.0.1:
     Changed use of `EXTERN` to `extern`.
     Changed use of `E_FUNC` to `extern`.
 
-    Changed length `LEN` from a signed 32-bit integer (SB32) to an `intptr_t`.
+    When `MAJOR_VER >= 3` (i.e., calc version 3), changed length `LEN`
+    from a signed 32-bit integer (SB32) to an `intptr_t`.
 
     Changed use of `f_seek_set(stream, loc)` to `fsetpos(stream, loc)`.
     Changed use of `f_tell(stream, loc)` to `fgetpos(stream, loc)`.
@@ -438,6 +517,14 @@ The following are the changes from calc version 3.0.0.0 to 3.0.0.1:
 
     Removed comments after most `#else` and `#endif` to be more consistent,
     as some of those comments of variable consistency and usefulness.
+
+
+The following are the changes from calc version 2.16.1.2 to 2.16.1.3:
+
+    Include `<errno.h>`, not '<sys/errno.h>`.
+
+    Fixed three `memcpy(3)` calls in `matsort()` in `matfunc.c`.
+    Thanks go to the GitHub user @orbisai0security for this fix.
 
 
 The following are the changes from calc version 2.16.1.1 to 2.16.1.2:

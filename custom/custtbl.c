@@ -37,7 +37,7 @@
 #include "../value.h"
 #include "../custom.h"
 
-#  include "../banned.h" /* include after all other includes */
+#include "../banned.h" /* include after all other includes */
 
 /*
  * custom_compiled - determine if custom functions are compiled into libcustcalc

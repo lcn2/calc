@@ -70,7 +70,7 @@ c_pzasusb8(char *UNUSED(name), int UNUSED(count), VALUE **vals)
     VALUE result;  /* what we will return */
     ZVALUE z;      /* numerator of the value */
     long half_cnt; /* number of HALFs in the numerator */
-    uint8_t *h;       /* octet pointer */
+    uint8_t *h;    /* octet pointer */
     long half_len; /* length of a half in octets */
     long i;
     long j;

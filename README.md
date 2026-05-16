@@ -4,6 +4,7 @@
 
 ```
 misc linux: sudo yum install calc
+on Arch:    sudo pacman -S calc
 on Debian:  sudo apt install calc
 on RHEL:    sudo dnf install calc
 on Ubuntu:  sudo apt install calc
@@ -296,6 +297,44 @@ usable absolute directories.  If `CALCHISTFILE` is unset,
 calc preserves an existing `~/.calc_history`; otherwise it uses
 `${XDG_STATE_HOME}/calc/history` when `XDG_STATE_HOME` names a
 usable absolute writable directory.
+
+# On calc repo branches
+
+The [calc repo](https://github.com/lcn2/calc) has 3 important branches:
+
+- [master branch](https://github.com/lcn2/calc/tree/master)
+
+This branch is where latest **stable releases** of calc are made.
+
+When if doubt, use the [master branch](https://github.com/lcn2/calc/tree/master).
+
+- [calcv3 branch](https://github.com/lcn2/calc/tree/calcv3)
+
+The "**calc v3**" branch is where the [new calc v3 direction](https://github.com/lcn2/calc/issues/103)
+work is being performed.
+
+Among the goals of "**calc v3**" is to support 64-bit and larger CPUs, plus
+very large values: up to 2^(2^51-1) (assuming you have the RAM/swap space),
+which requires calc to support numbers up to 256 TBytes in size.
+
+When calc version 2.17.0.0 was formed (see the [master
+branch](https://github.com/lcn2/calc/tree/master)), this branch "forked"
+off of that code base to create calc version 3.0.1.0.
+
+While you are welcome to try this "**experimental**" "**calc v3**" branch.
+
+- [legacy-calc branch](https://github.com/lcn2/calc/tree/legacy-calc)
+
+Some very old systems might have trouble with the set of changes between
+calc version 2.16.1.3 to calc version 2.17.0.0. For example, systems
+that don't a c17 C compiler, or that lack some standard include files,
+don't have 64-bit `int64_t` and `uint64_t` types, boolean type, etc.: such systems
+may need to use the [legacy-calc branch](https://github.com/lcn2/calc/tree/legacy-calc).
+
+Very old systems should use the
+[legacy-calc branch](https://github.com/lcn2/calc/tree/legacy-calc)
+which will be "frozen" at calc version 2.16.1.x (such as version 2.16.1.3).
+
 
 # Reporting Security Issues
 

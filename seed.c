@@ -157,7 +157,7 @@ static FULL call_count = 0;
  * to be a cryptographic hash function, just a fast and reasonably
  * good hash function.
  */
-#  define PRIVATE_64_BASIS ((hash64)(0xcbf29ce484222325ULL))
+#define PRIVATE_64_BASIS ((hash64)(0xcbf29ce484222325ULL))
 
 /*
  * initial_private_hash64 - initial basis of Fowler/Noll/Vo-1 64 bit hash
@@ -270,40 +270,40 @@ pseudo_seed(void)
 #if !defined(_WIN32) && !defined(_WIN64)
         pid_t getppid; /* parent process ID */
 #endif
-        uid_t getuid;             /* real user ID */
-        uid_t geteuid;            /* effective user ID */
-        gid_t getgid;             /* real group ID */
-        gid_t getegid;            /* effective group ID */
-        struct stat stat_dot;     /* stat of "." */
-        struct stat stat_dotdot;  /* stat of ".." */
-        struct stat stat_tmp;     /* stat of "/tmp" */
-        struct stat stat_root;    /* stat of "/" */
-        struct stat stat_tty;     /* stat of "/dev/tty" */
-        struct stat stat_console; /* stat of "/dev/console" */
-        struct stat fstat_stdin;  /* stat of stdin */
-        struct stat fstat_stdout; /* stat of stdout */
-        struct stat fstat_stderr; /* stat of stderr */
-        struct stat stat_zero;    /* stat of "/dev/zero" */
-        struct stat stat_null;    /* stat of "/dev/null" */
-        struct stat stat_sh;      /* stat of "/bin/sh" */
-        struct stat stat_ls;      /* stat of "/bin/ls" */
-        struct stat stat_system;        /* stat of "/var/log/system.log" */
-        struct stat stat_messages;      /* stat of "/var/log/messages" */
+        uid_t getuid;              /* real user ID */
+        uid_t geteuid;             /* effective user ID */
+        gid_t getgid;              /* real group ID */
+        gid_t getegid;             /* effective group ID */
+        struct stat stat_dot;      /* stat of "." */
+        struct stat stat_dotdot;   /* stat of ".." */
+        struct stat stat_tmp;      /* stat of "/tmp" */
+        struct stat stat_root;     /* stat of "/" */
+        struct stat stat_tty;      /* stat of "/dev/tty" */
+        struct stat stat_console;  /* stat of "/dev/console" */
+        struct stat fstat_stdin;   /* stat of stdin */
+        struct stat fstat_stdout;  /* stat of stdout */
+        struct stat fstat_stderr;  /* stat of stderr */
+        struct stat stat_zero;     /* stat of "/dev/zero" */
+        struct stat stat_null;     /* stat of "/dev/null" */
+        struct stat stat_sh;       /* stat of "/bin/sh" */
+        struct stat stat_ls;       /* stat of "/bin/ls" */
+        struct stat stat_system;   /* stat of "/var/log/system.log" */
+        struct stat stat_messages; /* stat of "/var/log/messages" */
 #if !defined(_WIN32) && !defined(_WIN64)
-        struct statvfs statfs_dot;     /* filesystem stat of "." */
-        struct statvfs statfs_dotdot;  /* filesystem stat of ".." */
-        struct statvfs statfs_tmp;     /* filesystem stat of "/tmp" */
-        struct statvfs statfs_root;    /* filesystem stat of "/" */
-        struct statvfs statfs_tty;     /* filesystem stat of "/dev/tty" */
-        struct statvfs statfs_console; /* filesystem stat of "/dev/console" */
-        struct statvfs statfs_stdin;   /* filesystem stat of stdin */
-        struct statvfs statfs_stdout;  /* filesystem stat of stdout */
-        struct statvfs statfs_stderr;  /* filesystem stat of stderr */
-        struct statvfs statfs_zero;    /* filesystem stat of "/dev/zero" */
-        struct statvfs statfs_null;    /* filesystem stat of "/dev/null" */
-        struct statvfs statfs_sh;      /* filesystem stat of "/bin/sh" */
-        struct statvfs statfs_ls;      /* filesystem stat of "/bin/ls" */
-        struct statvfs statfs_system;  /* filesystem stat of "/var/log/system.log" */
+        struct statvfs statfs_dot;      /* filesystem stat of "." */
+        struct statvfs statfs_dotdot;   /* filesystem stat of ".." */
+        struct statvfs statfs_tmp;      /* filesystem stat of "/tmp" */
+        struct statvfs statfs_root;     /* filesystem stat of "/" */
+        struct statvfs statfs_tty;      /* filesystem stat of "/dev/tty" */
+        struct statvfs statfs_console;  /* filesystem stat of "/dev/console" */
+        struct statvfs statfs_stdin;    /* filesystem stat of stdin */
+        struct statvfs statfs_stdout;   /* filesystem stat of stdout */
+        struct statvfs statfs_stderr;   /* filesystem stat of stderr */
+        struct statvfs statfs_zero;     /* filesystem stat of "/dev/zero" */
+        struct statvfs statfs_null;     /* filesystem stat of "/dev/null" */
+        struct statvfs statfs_sh;       /* filesystem stat of "/bin/sh" */
+        struct statvfs statfs_ls;       /* filesystem stat of "/bin/ls" */
+        struct statvfs statfs_system;   /* filesystem stat of "/var/log/system.log" */
         struct statvfs statfs_messages; /* filesystem stat of "/var/log/messages" */
 #endif
 #if defined(HAVE_GETSID)
@@ -316,32 +316,32 @@ pseudo_seed(void)
         struct rusage rusage;       /* resource utilization */
         struct rusage rusage_child; /* resource utilization of children */
 #endif
-        struct timeval tp2;             /* time of day again */
-        struct tms times;               /* process times */
-        struct timeval times_dot[2];    /* access & mod files of "." */
-        struct timeval times_dotdot[2]; /* access & mod files of ".." */
-        struct timeval times_tmp[2];    /* access & mod files of "/tmp" */
-        struct timeval times_root[2];   /* access & mod files of "/" */
-        struct timeval times_tty[2];    /* access & mod files of "/dev/tty" */
-        struct timeval times_console[2]; /* access & mod files of "/dev/console" */
-        struct timeval times_stdin[2];   /* access & mod files of "/dev/stdin" */
-        struct timeval times_stdout[2];  /* access & mod files of "/dev/stdout" */
-        struct timeval times_stderr[2];  /* access & mod files of "/dev/stderr" */
-        struct timeval times_zero[2]; /* access & mod files of "/dev/zero" */
-        struct timeval times_null[2]; /* access & mod files of "/dev/null" */
-        struct timeval times_sh[2];   /* access & mod files of "/bin/sh" */
-        struct timeval times_ls[2];   /* access & mod files of "/bin/ls" */
+        struct timeval tp2;               /* time of day again */
+        struct tms times;                 /* process times */
+        struct timeval times_dot[2];      /* access & mod files of "." */
+        struct timeval times_dotdot[2];   /* access & mod files of ".." */
+        struct timeval times_tmp[2];      /* access & mod files of "/tmp" */
+        struct timeval times_root[2];     /* access & mod files of "/" */
+        struct timeval times_tty[2];      /* access & mod files of "/dev/tty" */
+        struct timeval times_console[2];  /* access & mod files of "/dev/console" */
+        struct timeval times_stdin[2];    /* access & mod files of "/dev/stdin" */
+        struct timeval times_stdout[2];   /* access & mod files of "/dev/stdout" */
+        struct timeval times_stderr[2];   /* access & mod files of "/dev/stderr" */
+        struct timeval times_zero[2];     /* access & mod files of "/dev/zero" */
+        struct timeval times_null[2];     /* access & mod files of "/dev/null" */
+        struct timeval times_sh[2];       /* access & mod files of "/bin/sh" */
+        struct timeval times_ls[2];       /* access & mod files of "/bin/ls" */
         struct timeval times_system[2];   /* access & mod files of "/var/log/system.log" */
         struct timeval times_messages[2]; /* access & mod files of "/var/log/messages" */
-        time_t time;             /* local time */
-        size_t size;             /* size of this data structure */
-        hash64 prev_hash64_copy; /* copy if the previous hash value */
-        FULL call_count_copy;    /* call count of this funcation */
-        jmp_buf env;             /* setjmp() context */
+        time_t time;                      /* local time */
+        size_t size;                      /* size of this data structure */
+        hash64 prev_hash64_copy;          /* copy if the previous hash value */
+        FULL call_count_copy;             /* call count of this funcation */
+        jmp_buf env;                      /* setjmp() context */
 #if defined(HAVE_ENVIRON)
         char **environ_copy; /* copy of extern char **environ */
 #endif
-        char *sdata_p;       /* address of this structure */
+        char *sdata_p; /* address of this structure */
     } sdata;
 
     /**/

@@ -74,7 +74,7 @@ typedef struct {
  */
 #  define SHA1COUNT(sha1info, count)                            \
       {                                                         \
-          uint32_t tmp_countLo;                                    \
+          uint32_t tmp_countLo;                                 \
           tmp_countLo = (sha1info)->countLo;                    \
           if (((sha1info)->countLo += (count)) < tmp_countLo) { \
               (sha1info)->countHi++;                            \

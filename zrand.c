@@ -46,7 +46,7 @@
 /*
  * U(x) - form x as a unsigned long constant
  */
-#define U(x) x ## UL
+#define U(x) x##UL
 
 /*
  * AN OVERVIEW OF THE FUNCTIONS:

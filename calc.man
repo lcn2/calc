@@ -1459,17 +1459,6 @@ Copyright (C) year  Klaus Alexander Seistrup and Landon Curt Noll
 .fi
 .in -0.5i
 .sp
-This man page is:
-.sp
-.in +0.5i
-.nf
-Copyright (C) 1999-2023  Landon Curt Noll
-.fi
-.in -0.5i
-.sp
-and is covered under version 2.1 GNU Lesser General
-Public License.
-.sp
 A few files in calc are covered under "The Unlicense".
 For more information on this license, see:
 .sp

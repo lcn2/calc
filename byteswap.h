@@ -55,7 +55,7 @@
  * This macro will either switch to the opposite byte sex (Big Endian vs.
  * Little Endian) a 32 bit value.
  */
-#  define SWAP_B8_IN_B32(dest, src)                                                                            \
+#  define SWAP_B8_IN_B32(dest, src)                                                                                     \
       (SWAP_B16_IN_B32(dest, src), (*((uint32_t *)(dest)) = ((((*((uint32_t *)(dest))) & (uint32_t)0xff00ff00) >> 8) |  \
                                                              (((*((uint32_t *)(dest))) & (uint32_t)0x00ff00ff) << 8))))
 
@@ -73,9 +73,9 @@
  *      dest    - pointer to where the swapped src will be put
  *      src     - pointer to a 64 bit value to swap
  */
-#  define SWAP_B16_IN_B64(dest, src)                                                                                    \
-        (SWAP_B32_IN_B64(dest, src), (*((uint64_t *)(dest)) = ((((*((uint64_t *)(dest))) & (uint64_t)0xffff0000ffff0000) >> 16) |  \
-                                                               (((*((uint64_t *)(dest))) & (uint64_t)0x0000ffff0000ffff) << 16))))
+#  define SWAP_B16_IN_B64(dest, src)                                                                                             \
+      (SWAP_B32_IN_B64(dest, src), (*((uint64_t *)(dest)) = ((((*((uint64_t *)(dest))) & (uint64_t)0xffff0000ffff0000) >> 16) |  \
+                                                             (((*((uint64_t *)(dest))) & (uint64_t)0x0000ffff0000ffff) << 16))))
 
 /*
  * SWAP_B8_IN_B64 - swap 16 & 32 bits in 64 bits
@@ -86,9 +86,9 @@
  * This macro will either switch to the opposite byte sex (Big Endian vs.
  * Little Endian) a 64 bit value.
  */
-#  define SWAP_B8_IN_B64(dest, src)                                                                                    \
-        (SWAP_B16_IN_B64(dest, src), (*((uint64_t *)(dest)) = ((((*((uint64_t *)(dest))) & (uint64_t)0xff00ff00ff00ff00) >> 8) |  \
-                                                               (((*((uint64_t *)(dest))) & (uint64_t)0x00ff00ff00ff00ff) << 8))))
+#  define SWAP_B8_IN_B64(dest, src)                                                                                             \
+      (SWAP_B16_IN_B64(dest, src), (*((uint64_t *)(dest)) = ((((*((uint64_t *)(dest))) & (uint64_t)0xff00ff00ff00ff00) >> 8) |  \
+                                                             (((*((uint64_t *)(dest))) & (uint64_t)0x00ff00ff00ff00ff) << 8))))
 
 #  if LONG_BITS == 64
 
@@ -104,7 +104,7 @@
 
 #  else
 
-#     error "LONG_BITS is not 64 nor 32, do not yet know how to form swap macros"
+#    error "LONG_BITS is not 64 nor 32, do not yet know how to form swap macros"
 
 #  endif
 

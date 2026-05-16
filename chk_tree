@@ -4,7 +4,7 @@
 #
 # This tools is used by "make prep", "make full_debug", and "make debug".
 #
-# Copyright (C) 2023 Landon Curt Noll
+# Copyright (C) 2023,2026 Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of version 2.1 of the GNU Lesser General Public License
@@ -193,7 +193,8 @@ declare -a FINDDIR
 mapfile -t FINDDIR < <(find . -type d \
         ! -path './NOTES/*' ! -name NOTES \
         ! -path './.git/*' ! -name .git \
-        ! -path './.github/*' ! -name .github | \
+        ! -path './.github/*' ! -name .github \
+        ! -name picky ! -path './picky/*' | \
         sed -e 's/^\.\///' | sort -u)
 if [[ ${#FINDDIR[@]} -le 0 ]]; then
     echo "$0: ERROR: find dir is empty" 1>&2
@@ -278,12 +279,12 @@ if [[ -d .git ]]; then
 
         # report that DISTLIST and GITLS differ
         #
-        echo "$0: ERROR: distlist and git ls differ for critical files" 1>&2
+        echo "$0: ERROR: distlist and git ls-tree -r --name-only HEAD differ for critical files" 1>&2
         declare -a ONLY_GITLS
         mapfile -t ONLY_GITLS < <(printf '%s\n' "${DISTLIST[@]}" "${DISTLIST[@]}" "${GITLS[@]}" |
                                   tr ' ' '\n' | sort | uniq -u)
         if [[ ${#ONLY_GITLS[@]} -ne 0 ]]; then
-            echo "$0: ERROR: found only in git ls: ${ONLY_GITLS[*]}" 1>&2
+            echo "$0: ERROR: found only in git ls-tree -r --name-only HEAD: ${ONLY_GITLS[*]}" 1>&2
         fi
         declare -a ONLY_DISTLIST
         mapfile -t ONLY_DISTLIST < <(printf '%s\n' "${GITLS[@]}" "${GITLS[@]}" "${DISTLIST[@]}" |
@@ -421,6 +422,7 @@ mapfile -t FINDFILE < <(find . -type f \
         ! -name 'CODE_OF_CONDUCT.md' ! -name 'CONTRIBUTING.md' ! -name '.gitignore' ! -name 'SECURITY.md'  \
         ! -name '*.swp' ! -name '?' ! -iname '*.out*' \
         ! -iname '*foo*' ! -iname '*bar*' ! -iname '*baz*' \
+        ! -name 'picky' ! -path './picky/*' \
         ! -iname '*curds*' ! -iname '*whey*' ! -iname '*rmmee' -print |
         sed -e 's/^\.\///' | sort -u)
 if [[ ${#FINDFILE[@]} -le 0 ]]; then

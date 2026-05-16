@@ -77,10 +77,8 @@
 #if !defined(CALC_BYTE_ORDER)
 
 static uint8_t byte[16] = {
-    (uint8_t)0x12, (uint8_t)0x36, (uint8_t)0x48, (uint8_t)0x59,
-    (uint8_t)0x01, (uint8_t)0x23, (uint8_t)0x45, (uint8_t)0x67,
-    (uint8_t)0x9a, (uint8_t)0xbe, (uint8_t)0xc0, (uint8_t)0xd1,
-    (uint8_t)0x89, (uint8_t)0xab, (uint8_t)0xcd, (uint8_t)0xef,
+    (uint8_t)0x12, (uint8_t)0x36, (uint8_t)0x48, (uint8_t)0x59, (uint8_t)0x01, (uint8_t)0x23, (uint8_t)0x45, (uint8_t)0x67,
+    (uint8_t)0x9a, (uint8_t)0xbe, (uint8_t)0xc0, (uint8_t)0xd1, (uint8_t)0x89, (uint8_t)0xab, (uint8_t)0xcd, (uint8_t)0xef,
 };
 
 #  undef CALC_LITTLE_MAGIC_0
@@ -118,13 +116,13 @@ main(void)
     /*
      * print calc endian defines
      */
-     printf("#undef CALC_LITTLE_ENDIAN\n");
-     printf("#define CALC_LITTLE_ENDIAN 1234\n");
-     printf("#undef CALC_BIG_ENDIAN\n");
-     printf("#define CALC_BIG_ENDIAN 4321\n");
-     printf("#undef CALC_PDP_ENDIAN\n");
-     printf("#define CALC_PDP_ENDIAN 3412 /* calc does NOT (yet?) support pdp Endian */\n");
-     putchar('\n');
+    printf("#undef CALC_LITTLE_ENDIAN\n");
+    printf("#define CALC_LITTLE_ENDIAN 1234\n");
+    printf("#undef CALC_BIG_ENDIAN\n");
+    printf("#define CALC_BIG_ENDIAN 4321\n");
+    printf("#undef CALC_PDP_ENDIAN\n");
+    printf("#define CALC_PDP_ENDIAN 3412 /* calc does NOT (yet?) support pdp Endian */\n");
+    putchar('\n');
 
 #if defined(CALC_BYTE_ORDER)
 
@@ -150,7 +148,7 @@ main(void)
 
 #else
 
-    uint32_t *uint32 = (uint32_t *)byte;        /* pointers into the byte order array */
+    uint32_t *uint32 = (uint32_t *)byte; /* pointers into the byte order array */
 
 #  if defined(CALC_ENDIAN_DEBUG)
 
@@ -158,24 +156,21 @@ main(void)
     uint64_t *uint64 = (uint64_t *)byte;
 
     printf("/* Debug: uint8_t: 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x "
-                              "0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x */\n",
-           byte[0], byte[1], byte[2],  byte[3],  byte[4],  byte[5],  byte[6],  byte[7],
-           byte[8], byte[9], byte[10], byte[11], byte[12], byte[13], byte[14], byte[15]);
+           "0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x */\n",
+           byte[0], byte[1], byte[2], byte[3], byte[4], byte[5], byte[6], byte[7], byte[8], byte[9], byte[10], byte[11], byte[12],
+           byte[13], byte[14], byte[15]);
 
     printf("/* Debug: uint16_t: 0x%04x 0x%04x 0x%04x 0x%04x "
-                               "0x%04x 0x%04x 0x%04x 0x%04x */\n",
-           uint16[0], uint16[1], uint16[2], uint16[3],
-           uint16[4], uint16[5], uint16[6], uint16[7]);
+           "0x%04x 0x%04x 0x%04x 0x%04x */\n",
+           uint16[0], uint16[1], uint16[2], uint16[3], uint16[4], uint16[5], uint16[6], uint16[7]);
 
     printf("/* Debug: uint32_t: 0x%08x 0x%08x "
-                               "0x%08x 0x%08x */\n",
-           uint32[0], uint32[1],
-           uint32[2], uint32[3]);
+           "0x%08x 0x%08x */\n",
+           uint32[0], uint32[1], uint32[2], uint32[3]);
 
     printf("/* Debug: uint64_t: 0x%016zx "
-                               "0x%016zx */\n",
-           uint64[0],
-           uint64[1]);
+           "0x%016zx */\n",
+           uint64[0], uint64[1]);
 
 #  endif
 
@@ -239,7 +234,6 @@ main(void)
 
         printf("#error \"cannot determine byte order, set ${CALC_BYTE_ORDER} in the Makefile.config\"\n");
         exit(1);
-
     }
 #endif
     exit(0);

@@ -82,29 +82,29 @@ typedef struct value VALUE;
  *       an error is returned as a VALUE.
  */
 struct value {
-    int16_t v_type;           /* type of value - IMPORTANT: v_type < 0 is an error code */
+    int16_t v_type; /* type of value - IMPORTANT: v_type < 0 is an error code */
 #  if MAJOR_VER >= 3
-    uint16_t unused;          /* reserved for future use, calloc-ed to 0 */
+    uint16_t unused; /* reserved for future use, calloc-ed to 0 */
 #  endif
-    uint32_t v_subtype;       /* other data related to some types */
-    union {                   /* types of values (see V_XYZ below) */
-        long vv_int;          /* 1: small integer value */
-        NUMBER *vv_num;       /* 2, 21: real number */
-        COMPLEX *vv_com;      /* 3: complex number */
-        VALUE *vv_addr;       /* 4, 18: address of variable value */
-        STRING *vv_str;       /* 5, 20: string value */
-        MATRIX *vv_mat;       /* 6: address of matrix */
-        LIST *vv_list;        /* 7: address of list */
-        ASSOC *vv_assoc;      /* 8: address of association */
-        OBJECT *vv_obj;       /* 9: address of object */
-        FILEID vv_file;       /* 10: id of opened file */
-        RAND *vv_rand;        /* 11: subtractive 100 random state */
-        RANDOM *vv_random;    /* 12: Blum random state */
-        CONFIG *vv_config;    /* 13: configuration state */
-        HASH *vv_hash;        /* 14: hash state */
-        BLOCK *vv_block;      /* 15: memory block */
-        OCTET *vv_octet;      /* 16, 19: octet addr (unsigned char) */
-        NBLOCK *vv_nblock;    /* 17: named memory block */
+    uint32_t v_subtype;    /* other data related to some types */
+    union {                /* types of values (see V_XYZ below) */
+        long vv_int;       /* 1: small integer value */
+        NUMBER *vv_num;    /* 2, 21: real number */
+        COMPLEX *vv_com;   /* 3: complex number */
+        VALUE *vv_addr;    /* 4, 18: address of variable value */
+        STRING *vv_str;    /* 5, 20: string value */
+        MATRIX *vv_mat;    /* 6: address of matrix */
+        LIST *vv_list;     /* 7: address of list */
+        ASSOC *vv_assoc;   /* 8: address of association */
+        OBJECT *vv_obj;    /* 9: address of object */
+        FILEID vv_file;    /* 10: id of opened file */
+        RAND *vv_rand;     /* 11: subtractive 100 random state */
+        RANDOM *vv_random; /* 12: Blum random state */
+        CONFIG *vv_config; /* 13: configuration state */
+        HASH *vv_hash;     /* 14: hash state */
+        BLOCK *vv_block;   /* 15: memory block */
+        OCTET *vv_octet;   /* 16, 19: octet addr (unsigned char) */
+        NBLOCK *vv_nblock; /* 17: named memory block */
     } v_union;
 };
 

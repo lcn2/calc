@@ -86,9 +86,9 @@ static int idnum = 3;                     /* Number of allocated file ids */
 /*
  * off_t range limits - used by in_range_off_t()
  */
-static bool range_set = false;          /* true ==> zoff_t_min and zoff_t_max setup */
-static ZVALUE zoff_t_min;               /* range_set ==> zoff_t_min is OFF_T_MIN */
-static ZVALUE zoff_t_max;               /* range_set ==> zoff_t_nax is OFF_T_MAX */
+static bool range_set = false; /* true ==> zoff_t_min and zoff_t_max setup */
+static ZVALUE zoff_t_min;      /* range_set ==> zoff_t_min is OFF_T_MIN */
+static ZVALUE zoff_t_max;      /* range_set ==> zoff_t_nax is OFF_T_MAX */
 
 /* forward static declarations */
 static void free_range_off_t(void);
@@ -801,7 +801,7 @@ readid(FILEID id, int flags, STRING **retstr)
     fp = fiop->fp;
 
     if (fiop->action == 'w') {
-        fpos_t fpos;    /* current location */
+        fpos_t fpos; /* current location */
 
         /*
          * flush and attempt to restore the current location
@@ -893,7 +893,7 @@ getcharid(FILEID id)
         return -2;
     }
     if (fiop->action == 'w') {
-        fpos_t fpos;    /* current location */
+        fpos_t fpos; /* current location */
 
         /*
          * flush and attempt to restore the current location
@@ -1011,7 +1011,7 @@ idprintf(FILEID id, char *fmt, int count, VALUE **vals)
         return 1;
     }
     if (fiop->action == 'r') {
-        fpos_t fpos;    /* current location */
+        fpos_t fpos; /* current location */
 
         /*
          * reset to current location w/o a flush
@@ -1252,7 +1252,7 @@ idfputc(FILEID id, int ch)
         return 1;
     }
     if (fiop->action == 'r') {
-        fpos_t fpos;    /* current location */
+        fpos_t fpos; /* current location */
 
         /*
          * reset to current location w/o a flush
@@ -1320,7 +1320,7 @@ idfputs(FILEID id, STRING *str)
     }
 
     if (fiop->action == 'r') {
-        fpos_t fpos;    /* current location */
+        fpos_t fpos; /* current location */
 
         /*
          * reset to current location w/o a flush
@@ -1363,7 +1363,7 @@ idfputstr(FILEID id, char *str)
     }
 
     if (fiop->action == 'r') {
-        fpos_t fpos;    /* current location */
+        fpos_t fpos; /* current location */
 
         /*
          * flush and attempt to restore the current location
@@ -1573,14 +1573,14 @@ ftellid(FILEID id, ZVALUE *res)
 int
 fseekid(FILEID id, ZVALUE offset, int whence)
 {
-    FILEIO *fiop;    /* FILEIO of file */
-    off_t off;       /* file offset as a off_t */
-    int ret = 0;     /* return code */
+    FILEIO *fiop; /* FILEIO of file */
+    off_t off;    /* file offset as a off_t */
+    int ret = 0;  /* return code */
 
     /*
      * verify that offset is in the range [OFF_T_MIN, OFF_T_MAX]
      */
-    if (! in_range_off_t(offset)) {
+    if (!in_range_off_t(offset)) {
         /* offset cannot be converted into an off_t */
         return -3;
     }
@@ -1661,7 +1661,7 @@ in_range_off_t(ZVALUE zpos)
     /*
      * initialize [zoff_t_min, zoff_t_max] ZVALUE range set if needed
      */
-    if (! range_set) {
+    if (!range_set) {
         /* setup [zoff_t_min, zoff_t_max] ZVALUE range set */
         zoff_t_min = off_t2z(OFF_T_MIN);
         zoff_t_max = off_t2z(OFF_T_MAX);
@@ -1701,7 +1701,7 @@ set_open_pos(FILE *fp, ZVALUE zpos)
     /*
      * verify that zpos is in the range [OFF_T_MIN, OFF_T_MAX]
      */
-    if (! in_range_off_t(zpos)) {
+    if (!in_range_off_t(zpos)) {
         /* cannot set file position, return -1 */
         return -1;
     }
@@ -1977,7 +1977,7 @@ get_open_siz(FILE *fp, ZVALUE *res)
     /*
      * update file size and return success
      */
-    *res= off_t2z(buf.st_size);
+    *res = off_t2z(buf.st_size);
     return 0;
 }
 
@@ -2351,8 +2351,8 @@ fscanfile(FILE *fp, char *fmt, int count, VALUE **vals)
     int scannum;   /* Number of characters in scanlist */
     char *scanptr; /* Start of scanlist */
     char *str = NULL;
-    bool comp = false;      /* True scanset is complementary */
-    bool skip = false;      /* True if string to be skipped rather than read */
+    bool comp = false; /* True scanset is complementary */
+    bool skip = false; /* True if string to be skipped rather than read */
     int width;
     VALUE *var;             /* lvalue to be assigned to */
     unsigned short subtype; /* for var->v_subtype */
@@ -2514,7 +2514,7 @@ fscanfid(FILEID id, char *fmt, int count, VALUE **vals)
 {
     FILEIO *fiop;
     FILE *fp;
-    fpos_t fpos;    /* current location */
+    fpos_t fpos; /* current location */
 
     fiop = findid(id, false);
     if (fiop == NULL) {
@@ -2826,24 +2826,24 @@ isattyid(FILEID id)
 int
 fsearch(FILEID id, char *str, ZVALUE start, ZVALUE end, ZVALUE *res)
 {
-    FILEIO *fiop;     /* FILEIO of file id */
-    off_t fstart;     /* start as a file offset in the form of an off_t */
-    off_t fend;       /* end as a file offset in the form of an off_t */
-    fpos_t cur;       /* current file position in the form of an fpos_t */
-    off_t str_len;         /* length of string in of an off_t */
-    off_t found_pos;       /* file position where the string was found */
-    off_t file_zone_len;   /* file search zone length taking length of string into account */
-    off_t zone_remain;     /* remaining file search zone length */
+    FILEIO *fiop;        /* FILEIO of file id */
+    off_t fstart;        /* start as a file offset in the form of an off_t */
+    off_t fend;          /* end as a file offset in the form of an off_t */
+    fpos_t cur;          /* current file position in the form of an fpos_t */
+    off_t str_len;       /* length of string in of an off_t */
+    off_t found_pos;     /* file position where the string was found */
+    off_t file_zone_len; /* file search zone length taking length of string into account */
+    off_t zone_remain;   /* remaining file search zone length */
 
-    char c;           /* str comparison character */
-    int r;            /* character read from file */
-    char *s;          /* str comparison pointer */
-    int ret = 0;      /* return code */
+    char c;      /* str comparison character */
+    int r;       /* character read from file */
+    char *s;     /* str comparison pointer */
+    int ret = 0; /* return code */
 
     /*
      * verify that start is in the range [OFF_T_MIN, OFF_T_MAX]
      */
-    if (! in_range_off_t(start)) {
+    if (!in_range_off_t(start)) {
         /* start cannot be converted into an off_t */
         return -6;
     }
@@ -2852,7 +2852,7 @@ fsearch(FILEID id, char *str, ZVALUE start, ZVALUE end, ZVALUE *res)
     /*
      * verify that end is in the range [OFF_T_MIN, OFF_T_MAX]
      */
-    if (! in_range_off_t(end)) {
+    if (!in_range_off_t(end)) {
         /* end cannot be converted into an off_t */
         return -7;
     }
@@ -2889,7 +2889,7 @@ fsearch(FILEID id, char *str, ZVALUE start, ZVALUE end, ZVALUE *res)
     /*
      * search setup
      */
-    c = *str;       /* note the first str search match character */
+    c = *str; /* note the first str search match character */
     if (c == '\0') {
 
         /*
@@ -2897,7 +2897,7 @@ fsearch(FILEID id, char *str, ZVALUE start, ZVALUE end, ZVALUE *res)
          */
         return 2;
     }
-    ++str;  /* advance to next position in the string */
+    ++str; /* advance to next position in the string */
     str_len = strlen(str);
     file_zone_len = fend - fstart;
     zone_remain = file_zone_len;
@@ -2978,7 +2978,7 @@ fsearch(FILEID id, char *str, ZVALUE start, ZVALUE end, ZVALUE *res)
              *
              * Move beyond the end of file search zone
              */
-            ret = fseeko(fiop->fp, fend+1, SEEK_SET);
+            ret = fseeko(fiop->fp, fend + 1, SEEK_SET);
             if (ret < 0) {
                 return EOF;
             }
@@ -3042,20 +3042,20 @@ fsearch(FILEID id, char *str, ZVALUE start, ZVALUE end, ZVALUE *res)
 int
 frsearch(FILEID id, char *str, ZVALUE first, ZVALUE last, ZVALUE *res)
 {
-    FILEIO *fiop;     /* FILEIO of file id */
-    off_t ffirst;     /* first as a file offset in the form of a off_t */
-    off_t flast;      /* last as a file offset in the form of a off_t */
-    off_t cur;        /* current file position */
+    FILEIO *fiop; /* FILEIO of file id */
+    off_t ffirst; /* first as a file offset in the form of a off_t */
+    off_t flast;  /* last as a file offset in the form of a off_t */
+    off_t cur;    /* current file position */
 
-    char c;           /* str comparison character */
-    int r;            /* character read from file */
-    char *s;          /* str comparison pointer */
-    int ret = 0;      /* return code */
+    char c;      /* str comparison character */
+    int r;       /* character read from file */
+    char *s;     /* str comparison pointer */
+    int ret = 0; /* return code */
 
     /*
      * verify that first is in the range [OFF_T_MIN, OFF_T_MAX]
      */
-    if (! in_range_off_t(first)) {
+    if (!in_range_off_t(first)) {
         /* first cannot be converted into an off_t */
         return -6;
     }
@@ -3064,7 +3064,7 @@ frsearch(FILEID id, char *str, ZVALUE first, ZVALUE last, ZVALUE *res)
     /*
      * verify that last is in the range [OFF_T_MIN, OFF_T_MAX]
      */
-    if (! in_range_off_t(last)) {
+    if (!in_range_off_t(last)) {
         /* last cannot be converted into an off_t */
         return -7;
     }
@@ -3086,7 +3086,7 @@ frsearch(FILEID id, char *str, ZVALUE first, ZVALUE last, ZVALUE *res)
     /*
      * search setup
      */
-    c = *str;       /* note the first str search match character */
+    c = *str; /* note the first str search match character */
     if (c == '\0') {
 
         /*
@@ -3107,7 +3107,7 @@ frsearch(FILEID id, char *str, ZVALUE first, ZVALUE last, ZVALUE *res)
          */
         return 0;
     }
-    ++str;  /* advance to next position in the string */
+    ++str; /* advance to next position in the string */
 
     /*
      * search file backward for string

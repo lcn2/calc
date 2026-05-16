@@ -47,7 +47,7 @@
 /*
  * U(x) - form x as a unsigned long constant
  */
-#define U(x) x ## UL
+#define U(x) x##UL
 
 /*
  * When performing a probabilistic primality test, check to see

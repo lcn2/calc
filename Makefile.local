@@ -38,7 +38,6 @@
 # You can append to an existing Makefile variable using '+=' symbols.
 # For example:
 #
-#	CCOPT+= -Ofast
 #	COMMON_CFLAGS+= -std=gnu2x
 ####
 
@@ -60,16 +59,26 @@
 # CALC_INCDIR:= ${PREFIX}/include/calc
 ####
 
+##############################################
+#                                            #
+# SUGGESTION:                                #
+#                                            #
+# Instead of un-commenting stuff below, try: #
+#                                            #
+#       make clobber clang                   #
+#       make clobber gcc                     #
+#       make clobber asan                    #
+#                                            #
+##############################################
+
 ####
 # macOS Address Sanitizer (ASAN)
 #
 # This comment block was tested under:
 #
-# 	macOS 26.2 with Apple clang version 17.0.0 (clang-1700.6.3.2)
+#       macOS 26.2 with Apple clang version 17.0.0 (clang-1700.6.3.2)
 #
-# 	See: https://releases.llvm.org/17.0.1/tools/clang/docs/AddressSanitizer.html
-#
-# See the FSANITIZE comment block in Makefile.config for common FSANITIZE values and more info.
+#       See: https://releases.llvm.org/17.0.1/tools/clang/docs/AddressSanitizer.html
 #
 # To use the Address Sanitizer, uncomment this set set of lines and recompile (make clobber all):
 #
@@ -79,18 +88,38 @@
 #
 # We recommend, for ease of debugging, building a static calc ("BLD_TYPE= calc-static-only").
 #
+# BLD_TYPE= calc-static-only
+#
+# For macOS, use Homebrew to install via "brew install gcc", and use gcc-15 (NOT gcc):
+#
+# CC:= gcc-15
+# DEBUG:= -O0 -g2
+#
+# For Apple clang and Homebrew gcc version 15:
+#
+# CCWARN+= -Wall
+# CCWARN+= -pedantic
+# CCWARN+= -Werror
+#
+# For Apple clang only:
+#
 # FSANITIZE+= -fsanitize=nullability-arg
 # FSANITIZE+= -fsanitize=nullability-assign
 # FSANITIZE+= -fsanitize=nullability-return
-# CCWARN+= -Werror
+#
 # CFLAGS+= ${FSANITIZE} -fstack-protector-all
 # LDFLAGS+= ${FSANITIZE}
-# DEBUG:= -O0 -ggdb3
-# BLD_TYPE= calc-static-only
+# DEBUG:= -ggdb3
 ####
 
 ####
-# RHEL (Linux) Address Sanitizer (ASAN) for i686
+# RHEL9 (Linux) Address Sanitizer (ASAN) for i686
+#
+# ####################################################################
+# NOTICE: The i686 will NOT be supported by RHEL starting with RHEL10.
+#         Therefore, unless you are on a RHEL9-like distribution, this
+#         section will NOT work!
+# ####################################################################
 #
 # This comment block was tested under:
 #
@@ -98,8 +127,8 @@
 #
 # with these RPMs installed:
 #
-# 	libasan-11.5.0-11.el9.x86_64
-# 	libubsan-11.5.0-11.el9.x86_64
+#	libasan-11.5.0-11.el9.x86_64
+#	libubsan-11.5.0-11.el9.x86_64
 #
 # See the FSANITIZE comment block in Makefile.config for common FSANITIZE values and more info.
 #
@@ -115,13 +144,18 @@
 #   dnf install readline-devel ncurses-libs ncurses-devel libasan libubsan
 #   dnf install readline-devel.i686 ncurses-libs.i686 ncurses-devel.i686 libubsan.i686
 #
+# We recommend, for ease of debugging, building a static calc ("BLD_TYPE= calc-static-only").
+#
+# BLD_TYPE= calc-static-only
+#
+# RHEL9 for i686 only:
+#
 # ARCH_CFLAGS= -march=i686 -m32
 # CCWARN+= -Werror
 # LDFLAGS+= -L/usr/lib
 # CFLAGS+= ${FSANITIZE} -fstack-protector-all
 # LDFLAGS+= ${FSANITIZE}
 # DEBUG:= -O0 -ggdb3
-# BLD_TYPE= calc-static-only
 ####
 
 ####
@@ -129,29 +163,33 @@
 #
 # This comment block was tested under:
 #
-#	RHEL9.7 with clang version 20.1.8 (Red Hat, Inc. 20.1.8-3.el9)
+#       RHEL9.7 with clang version 20.1.8 (Red Hat, Inc. 20.1.8-3.el9)
 #
 # with these RPMs installed:
 #
-# 	libasan-11.5.0-11.el9.x86_64
-# 	libubsan-11.5.0-11.el9.x86_64
-#
-# See the FSANITIZE comment block in Makefile.config for common FSANITIZE values and more info.
+#       libasan-11.5.0-11.el9.x86_64
+#       libubsan-11.5.0-11.el9.x86_64
 #
 # To use the Address Sanitizer, uncomment this set set of lines and recompile (make clobber all):
 #
 # For more info see: https://github.com/google/sanitizers/wiki/AddressSanitizer
 # And also: https://github.com/google/sanitizers/wiki/AddressSanitizerFlags
 #
-# We recommend, for ease of debugging, building a static calc ("BLD_TYPE= calc-static-only").
-#
 # Be sure you have the following dnf packages installed:
 #
 #   dnf install readline-devel ncurses-libs ncurses-devel libasan libubsan
 #
+# We recommend, for ease of debugging, building a static calc ("BLD_TYPE= calc-static-only").
+#
+# BLD_TYPE= calc-static-only
+#
+# For RHEL only:
+#
+# CCWARN+= -Wall
+# CCWARN+= -pedantic
 # CCWARN+= -Werror
+# DEBUG:= -O0 -ggdb3
+#
 # CFLAGS+= ${FSANITIZE} -fstack-protector-all
 # LDFLAGS+= ${FSANITIZE}
-# DEBUG:= -O0 -ggdb3
-# BLD_TYPE= calc-static-only
 ####

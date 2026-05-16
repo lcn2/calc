@@ -22,6 +22,7 @@ core*
 # We sort the list below via: sort -d -u
 #
 arc4random_tmp
+asan.log.*
 .cache/clangd
 cal/.all
 calc
@@ -31,6 +32,8 @@ calc.spec
 calc-static
 calc.usage
 cal/test082.cal
+cc_test
+cc_test.o
 chatbit
 chk_c
 compile_commands.json
@@ -121,11 +124,13 @@ help/type
 help/usage
 .hsrc
 junk4200
+lcc_test
+lcc_test.o
+len_bits
+len_bits.h
 libcalc.*
 libcustcalc.*
 ll_tmp
-len_bits
-len_bits.h
 Makefile.our
 newstr_tmp
 NOTES

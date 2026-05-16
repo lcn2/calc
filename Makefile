@@ -307,13 +307,17 @@ SAMPLE_STATIC_TARGETS= sample_rand-static${EXT} sample_many-static${EXT}
 CSCRIPT_TARGETS= cscript/mersenne cscript/piforever cscript/plus \
 		 cscript/square cscript/fproduct cscript/powerterm
 
+# C compiler check targets
+#
+CHECK_TARGETS= check_lcc check_lcc_include check_cc check_cc_include
+
 # dynamic first targets
 #
-DYNAMIC_FIRST_TARGETS= ${LICENSE} .dynamic
+DYNAMIC_FIRST_TARGETS= ${CHECK_TARGETS} ${LICENSE} .dynamic
 
 # static first targets
 #
-STATIC_FIRST_TARGETS= ${LICENSE} .static
+STATIC_FIRST_TARGETS= ${CHECK_TARGETS} ${LICENSE} .static
 
 # late targets - things needed after the main build phase is complete
 #
@@ -350,7 +354,8 @@ TARGETS= ${EARLY_TARGETS} ${BLD_TYPE} ${LATE_TARGETS} ${CALC_TOOLS}
 
 # rules that are not also names of files
 #
-PHONY= all check_include sample hsrc depend h_list calc_version version distlist \
+PHONY= all check_lcc check_lcc_include check_cc check_cc_include \
+        sample hsrc depend h_list calc_version version distlist \
 	buildlist distdir calcliblist calcliblistfmt verifydist check chk calcinfo \
 	env mkdebug full_debug debug testfuncsort prep run rpm inst_files \
 	olduninstall clean clobber install uninstall unbak splint strip
@@ -365,7 +370,7 @@ include ${LOCAL_MKF}
 # all - First and default Makefile target #
 ###########################################
 
-all: check_include ${BLD_TYPE} CHANGES
+all: ${CHECK_TARGETS} ${BLD_TYPE} CHANGES
 
 
 ###############################
@@ -374,9 +379,44 @@ all: check_include ${BLD_TYPE} CHANGES
 
 .PHONY: ${PHONY}
 
-check_include:
-	${Q} if ! echo '#include <stdio.h>' | ${CC} -E - >/dev/null 2>&1; then \
-	    echo "ERROR: Missing critical <stdio.h> include file." 1>&2; \
+# check_lcc - check if the local C compiler ${LCC} can compile trivial C code
+#
+check_lcc:
+	${Q} ${RM} -f lcc_test${EXT}
+	${Q} if ! echo 'int main(void) { return 0; }' | ${LCC} -x c -o lcc_test${EXT} - ${S}; then \
+	    echo "ERROR: Local C compiler: ${LCC} failed to compile this simple C program:" 1>&2; \
+	    echo 1>&2; \
+	    echo "    echo 'int main(void) { return 0; }' | ${LCC} -x c -o lcc_test${EXT} - ${S}" 1>&2; \
+	    echo 1>&2; \
+	    echo "Be sure that you have properly installed ${LCC}, and the related tools, include files," 1>&2; \
+	    echo "libs, and libraries (likely -lreadline -lhistory -lncurses)." 1>&2; \
+	    exit 1; \
+	fi
+	${Q} if [[ ! -x lcc_test${EXT} ]]; then \
+	    echo "ERROR: Local C compiler: ${LCC} failed to create the executable: lcc_test${EXT} this simple C program:" 1>&2; \
+	    echo 1>&2; \
+	    echo "    echo 'int main(void) { return 0; }' | ${LCC} -x c -o lcc_test${EXT} - ${S}" 1>&2; \
+	    echo 1>&2; \
+	    echo "Be sure that you have properly installed ${LCC}, and the related tools, include files," 1>&2; \
+	    echo "libs, and libraries (likely -lreadline -lhistory -lncurses)." 1>&2; \
+	    exit 2; \
+	fi
+	${Q} if ! ./lcc_test${EXT}; then \
+	    echo "ERROR: Local C compiler: ${LCC} produced: lcc_test${EXT} that failed to execute from C program:" 1>&2; \
+	    echo 1>&2; \
+	    echo "    echo 'int main(void) { return 0; }' | ${LCC} -x c -o lcc_test${EXT} - ${S}" 1>&2; \
+	    echo 1>&2; \
+	    echo "Be sure that you have properly installed ${LCC}, and the related tools, include files," 1>&2; \
+	    echo "libs, and libraries (likely -lreadline -lhistory -lncurses)." 1>&2; \
+	    exit 3; \
+	fi
+	${Q} ${RM} -f lcc_test${EXT}
+
+# check_lcc_include - check if the local C compiler ${LCC} has access to the <stdio.h> system include file
+#
+check_lcc_include:
+	${Q} if ! echo '#include <stdio.h>' | ${LCC} -E - >/dev/null 2>&1; then \
+	    echo "ERROR: Local C compiler: ${LCC} is missing critical <stdio.h> include file." 1>&2; \
 	    echo "Without critical include files, we cannot compile." 1>&2; \
 	    echo "Perhaps your system isn't setup to compile C source?" 1>&2; \
 	    echo 1>&2; \
@@ -387,9 +427,84 @@ check_include:
 	    echo 1>&2; \
 	    echo "    xcode-select --install" 1>&2; \
 	    echo 1>&2; \
-	    exit 1; \
+	    echo "If under macOS, and you want to use the true gcc (not clang gcc)," 1>&2; \
+	    echo "then install gcc via homebrew:" 1>&2; \
+	    echo 1>&2; \
+	    echo "    brew install gcc" 1>&2; \
+	    echo 1>&2; \
+	    echo "Then under macOS compile with gcc-15 (not gcc) or use:" 1>&2; \
+	    echo 1>&2; \
+	    echo "    /opt/homebrew/bin/gcc-15" 1>&2; \
+	    echo 1>&2; \
+	    exit 4; \
 	fi
 
+# check_lcc - check if the C compiler ${CC} can compile trivial C code
+#
+check_cc:
+	${Q} ${RM} -f cc_test${EXT}
+	${Q} if ! echo 'int main(void) { return 0; }' | ${CC} -x c -o cc_test${EXT} - ${S}; then \
+	    echo "ERROR: The C compiler: ${CC} failed to compile this simple C program:" 1>&2; \
+	    echo 1>&2; \
+	    echo "    echo 'int main(void) { return 0; }' | ${CC} -x c -o cc_test${EXT} - ${S}" 1>&2; \
+	    echo 1>&2; \
+	    echo "Be sure that you have properly installed ${CC}, and the related tools, include files," 1>&2; \
+	    echo "libs, and libraries (likely -lreadline -lhistory -lncurses)." 1>&2; \
+	    exit 5; \
+	fi
+	${Q} if [[ ! -x cc_test${EXT} ]]; then \
+	    echo "ERROR: The C compiler: ${CC} failed to create the executable: cc_test${EXT} this simple C program:" 1>&2; \
+	    echo 1>&2; \
+	    echo "    echo 'int main(void) { return 0; }' | ${CC} -x c -o cc_test${EXT} - ${S}" 1>&2; \
+	    echo 1>&2; \
+	    echo "Be sure that you have properly installed ${CC}, and the related tools, include files," 1>&2; \
+	    echo "libs, and libraries (likely -lreadline -lhistory -lncurses)." 1>&2; \
+	    exit 6; \
+	fi
+	${Q} if ! ./cc_test${EXT}; then \
+	    echo "ERROR: The C compiler: ${CC} produced: cc_test${EXT} that failed to execute from C program:" 1>&2; \
+	    echo 1>&2; \
+	    echo "    echo 'int main(void) { return 0; }' | ${CC} -x c -o cc_test${EXT} - ${S}" 1>&2; \
+	    echo 1>&2; \
+	    echo "Be sure that you have properly installed ${CC}, and the related tools, include files," 1>&2; \
+	    echo "libs, and libraries (likely -lreadline -lhistory -lncurses)." 1>&2; \
+	    exit 7; \
+	fi
+	${Q} ${RM} -f cc_test${EXT}
+
+# check_cc_include - check if the C compiler ${CC} has access to the <stdio.h> system include file
+#
+check_cc_include:
+	${Q} if ! echo '#include <stdio.h>' | ${CC} -E - >/dev/null 2>&1; then \
+	    echo "ERROR: The C compiler: ${CC} is missing critical <stdio.h> include file." 1>&2; \
+	    echo "Without critical include files, we cannot compile." 1>&2; \
+	    echo "Perhaps your system isn't setup to compile C source?" 1>&2; \
+	    echo 1>&2; \
+	    echo "For example, Apple macOS / Darwin requires that XCode" 1>&2; \
+	    echo "must be installed." 1>&2; \
+	    echo 1>&2; \
+	    echo "Also macOS users might later to run this command:" 1>&2; \
+	    echo 1>&2; \
+	    echo "    xcode-select --install" 1>&2; \
+	    echo 1>&2; \
+	    echo "If under macOS, and you want to use the true gcc (not clang gcc)," 1>&2; \
+	    echo "then install gcc via homebrew:" 1>&2; \
+	    echo 1>&2; \
+	    echo "    brew install gcc" 1>&2; \
+	    echo 1>&2; \
+	    echo "Then under macOS compile with gcc-15 (not gcc) or use:" 1>&2; \
+	    echo 1>&2; \
+	    echo "    /opt/homebrew/bin/gcc-15" 1>&2; \
+	    echo 1>&2; \
+	    exit 8; \
+	fi
+
+# sanity_check - perform sanity checks on the local C compiler ${LCC}, and the C compiler ${CC}
+#
+sanity_check: ${CHECK_TARGETS}
+
+# compile calc with dynamic libraries
+#
 calc-dynamic-only: ${DYNAMIC_FIRST_TARGETS} ${EARLY_TARGETS} \
 		   ${CALC_DYNAMIC_LIBS} ${SYM_DYNAMIC_LIBS} calc${EXT} \
 		   ${SAMPLE_TARGETS} ${LATE_TARGETS}
@@ -433,6 +548,19 @@ calc-dynamic-only: ${DYNAMIC_FIRST_TARGETS} ${EARLY_TARGETS} \
 	    fi; \
 	done
 	 -${Q} ${TOUCH} $@
+
+# compile calc with static libraries
+#
+calc-static-asan: ${STATIC_FIRST_TARGETS} ${EARLY_TARGETS} \
+		  ${CALC_STATIC_LIBS} calc-static${EXT}
+	${Q} for i in calc${EXT}; do \
+	    if ${CMP} -s "$$i-static" "$$i"; then \
+		${TRUE}; \
+	    else \
+		${RM} -f "$$i"; \
+		${LN} "$$i-static" "$$i"; \
+	    fi; \
+	done
 
 calc-static-only: ${STATIC_FIRST_TARGETS} ${EARLY_TARGETS} \
 		  ${CALC_STATIC_LIBS} calc-static${EXT} \
@@ -619,7 +747,11 @@ conf.h: ${MK_SET}
 	${Q} echo '' >> $@
 	${Q} echo '/* the default system search path */' >> $@
 	${Q} echo '#if !defined(DEFAULTCALCPATH_SYS)' >> $@
+ifdef RPM_TOP
+	${Q} echo '#define DEFAULTCALCPATH_SYS "${CALC_SHAREDIR}:${CUSTOMCALDIR}"' >> $@
+else	# RPM_TOP
 	${Q} echo '#define DEFAULTCALCPATH_SYS "${T}${CALC_SHAREDIR}:${T}${CUSTOMCALDIR}"' >> $@
+endif	# RPM_TOP
 	${Q} echo '#endif /* DEFAULTCALCPATH_SYS */' >> $@
 	${Q} echo '' >> $@
 	${Q} echo '/* the default :-separated startup file list */' >> $@
@@ -629,7 +761,11 @@ conf.h: ${MK_SET}
 	${Q} echo '' >> $@
 	${Q} echo '/* the default system startup file */' >> $@
 	${Q} echo '#if !defined(DEFAULTCALCRC_SYS)' >> $@
+ifdef RPM_TOP
+	${Q} echo '#define DEFAULTCALCRC_SYS "${CALC_SHAREDIR}/startup"' >> $@
+else	# RPM_TOP
 	${Q} echo '#define DEFAULTCALCRC_SYS "${T}${CALC_SHAREDIR}/startup"' >> $@
+endif	# RPM_TOP
 	${Q} echo '#endif /* DEFAULTCALCRC_SYS */' >> $@
 	${Q} echo '' >> $@
 	${Q} echo '/* the location of the help directory */' >> $@
@@ -671,7 +807,7 @@ endif	# RPM_TOP
 # If you get syntax errors when you compile `endian.c`, then
 # try this to see what might be happening, and fix accordingly:
 #
-# 	rm -f endian_calc.h && make endian_calc.h CALC_BYTE_ORDER=-DCALC_ENDIAN_DEBUG Q= S=
+#	rm -f endian_calc.h && make endian_calc.h CALC_BYTE_ORDER=-DCALC_ENDIAN_DEBUG Q= S=
 #
 # Or try:
 #
@@ -1195,7 +1331,7 @@ chk_c${EXT}: have_ban_pragma.h chk_c.c
 	-${Q} ${LCC} ${ILDFLAGS} chk_c.o -o $@ ${S} \
 		|| echo "WARNING!! failed to link the $@ executable." 1>&2
 	-${Q}if [ ! -x $@ ]; then \
-	    echo "WARNING!! Your C compiler and/or C include does not meet calc requirements." 1>&2; \
+	    echo "WARNING!! Your C local compiler ${LCC}, and/or C include fiels do NOT meet calc requirements." 1>&2; \
 	    echo "#undef CHK_C /* failed to form chk_c executable */" >> status.chk_c.h; \
 	else \
 	    echo "formed $@ executable"; \
@@ -2022,16 +2158,17 @@ prep:
 run:
 	${CALC_ENV} ./calc${EXT} -q
 
+
 # IMPORTANT DEBUGGING SUGGESTION:
 #
-# 	Debugging is likely to be more productive if you compile calc as a static binary, and
-# 	compile without any optimization.  I.e., set:
+#	Debugging is likely to be more productive if you compile calc as a static binary, and
+#	compile without any optimization.  I.e., set:
 #
-# 	    BLD_TYPE= calc-static-only
-# 	    DEBUG:= -O0 -ggdb3
+#	    BLD_TYPE= calc-static-only
+#	    DEBUG:= -O0 -ggdb3
 #
-# 	 When switching to building static only, do a "make clobber" first to remove any
-# 	 dynamic calc related compile files.
+#	 When switching to building static only, do a "make clobber" first to remove any
+#	 dynamic calc related compile files.
 #
 # Consider un-commenting the appropriate "Address Sanitizer (ASAN)" section in Makefile.local.
 #
@@ -2040,14 +2177,14 @@ lldb:
 
 # IMPORTANT DEBUGGING SUGGESTION:
 #
-# 	Debugging is likely to be more productive if you compile calc as a static binary, and
-# 	compile without any optimization.  I.e., set:
+#	Debugging is likely to be more productive if you compile calc as a static binary, and
+#	compile without any optimization.  I.e., set:
 #
-# 	    BLD_TYPE= calc-static-only
-# 	    DEBUG:= -O0 -ggdb3
+#	    BLD_TYPE= calc-static-only
+#	    DEBUG:= -O0 -ggdb3
 #
-# 	 When switching to building static only, do a "make clobber" first to remove any
-# 	 dynamic calc related compile files.
+#	 When switching to building static only, do a "make clobber" first to remove any
+#	 dynamic calc related compile files.
 #
 # Consider un-commenting the appropriate "Address Sanitizer (ASAN)" section in Makefile.local.
 #
@@ -2275,6 +2412,7 @@ clobber: clean
 	${RM} -f ${CALC_STATIC_LIBS}
 	${RM} -f a.out
 	${RM} -f all
+	${RM} -f cc_test.o cc_test${EXT} lcc_test.o lcc_test${EXT}
 	${V} echo '=-=-=-=-= Invoking $@ rule for help =-=-=-=-='
 	-${RM} -f help/all; \
 	    cd help; ${MAKE} -f Makefile $@
@@ -2877,9 +3015,98 @@ calc-unsymlink:
 
 # reformat primary (non-built) source using clang-format
 #
-clang-format: ${C_SRC} ${H_SRC}
+clang-format: .clang-format ${C_SRC} ${H_SRC}
 	${CLANG_FORMAT} -i --style=file:.clang-format ${C_SRC} ${H_SRC}
 	${MAKE} -C custom clang-format
+
+###
+#
+# compiler related targets that are not automatically built
+#
+###
+
+# compile all with gcc (or gcc-15 for macOS), full warnings, no optimizer, no ASAN
+#
+# For macOS, use Homebrew to install via "brew install gcc", and use gcc-15 (NOT gcc).
+#
+# NOTE: Consider doing a "make clobber" first, especially when switching from
+#       a previous "make all", "make clang", etc.
+#
+gcc:
+ifeq ($(target),Darwin)
+	${MAKE} -f ${MAKE_FILE} all CC='gcc-15' CCWARN='-Wall -pedantic -Werror' DEBUG='-O0 -g2' \
+				    BLD_TYPE='calc-static-only'
+else
+	${MAKE} -f ${MAKE_FILE} all CC='gcc' CCWARN='-Wall -pedantic -Werror' DEBUG='-O0 -ggdb3' \
+				    BLD_TYPE='calc-static-only'
+endif
+
+# compile all with clang, full warnings, no optimizer, no ASAN
+#
+# NOTE: Consider doing a "make clobber" first, especially when switching from
+#       a previous "make all", "make gcc", etc.
+#
+clang:
+	${MAKE} -f ${MAKE_FILE} all CC='clang' CCWARN='-Wall -pedantic -Werror' DEBUG='-O0 -ggdb3' \
+				    BLD_TYPE='calc-static-only'
+
+# compile all with Address Sanitizer (ASAN) enabled
+#
+# If macOS (Darwin), set Address Sanitizer (ASAN) values for compiling and linking.
+# See the "macOS Address Sanitizer (ASAN)" section above for details.
+#
+# If Linux, set Address Sanitizer (ASAN) values for compiling and linking.
+# See the "RHEL (Linux) Address Sanitizer (ASAN)" section above for details.
+#
+# On all non-macOS non-Linux environments, make a best guess on (ASAN) values for compiling and linking.
+#
+# NOTE: Consider doing a "make clobber" first, especially when switching from
+#       a previous "make all", "make clang", etc.
+#
+# Suggestion:
+#
+#	make clobber
+#	rm -f asan.log.* ; make asan-run ; ls -l asan.log.*
+#
+# Or:
+#
+#	make clobber asan
+#	export CALCPATH=./cal ; export CALCHELP=./help ; export CALCCUSTOMHELP=./custom
+#	rm -f asan.log.* ; ASAN_OPTIONS='log_path=asan.log' ./calc ; ls -l asan.log.*
+#
+# NOTE: Not all systems or versions of Address Sanitizer (ASAN) support setting the
+#       log_path: in such cases ASAN_OPTIONS='log_path=asan.log' will be ignored, and
+#       no asan.log.* files will be created.
+#
+asan:
+ifeq ($(target),Darwin)
+	${MAKE} -f ${MAKE_FILE} calc-static-asan CC='clang' CCWARN='-Wall -pedantic -Werror' \
+				    DEBUG='-O0 -ggdb3 ${FSANITIZE} ${MACOS_FSANITIZE}' \
+				    LDFLAGS='-O0 -ggdb3 ${FSANITIZE} ${MACOS_FSANITIZE}' \
+				    BLD_TYPE='calc-static-only'
+else
+ifeq ($(target),Linux)
+	${MAKE} -f ${MAKE_FILE} calc-static-asan CC='gcc' CCWARN='-Wall -pedantic -Werror' \
+				    DEBUG='-O0 -ggdb3 ${FSANITIZE} ${LINUX_FSANITIZE}' \
+				    LDFLAGS='-O0 -ggdb3 ${FSANITIZE} ${LINUX_FSANITIZE}' \
+				    BLD_TYPE='calc-static-only'
+else
+	${MAKE} -f ${MAKE_FILE} calc-static-asan CC='gcc' CCWARN='-Wall -pedantic -Werror' \
+				    DEBUG='-O0 -ggdb3 ${FSANITIZE} ${OTHER_FSANITIZE}' \
+				    LDFLAGS='-O0 -ggdb3 ${FSANITIZE} ${OTHER_FSANITIZE}' \
+				    BLD_TYPE='calc-static-only'
+endif
+endif
+
+# compile and run with Address Sanitizer (ASAN) enabled
+#
+# NOTE: Consider doing a "make clobber" first.
+#
+asan-run: asan
+	-export CALCPATH=./cal ; \
+	    export CALCHELP=./help ; \
+	    export CALCCUSTOMHELP=./custom ; \
+	    ASAN_OPTIONS='log_path=asan.log' ./calc${EXT} || ${TRUE}
 
 ###
 #

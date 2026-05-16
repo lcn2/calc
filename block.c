@@ -222,7 +222,7 @@ BLOCK *
 blkrealloc(BLOCK *blk, int newlen, int newchunk)
 {
     uint8_t *nblk; /* realloced storage */
-    int newmax; /* new maximum stoage size */
+    int newmax;    /* new maximum stoage size */
 
     /*
      * firewall

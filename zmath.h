@@ -58,9 +58,9 @@
 /*
  * length of a pointer
  */
-#if !defined(INTPTR_LEN)
-#  define INTPTR_LEN (INTPTR_WIDTH / CHAR_BIT)
-#endif
+#  if !defined(INTPTR_LEN)
+#    define INTPTR_LEN (INTPTR_WIDTH / CHAR_BIT)
+#  endif
 
 /*
  * NOTE: FULL must be twice the storage size of a HALF
@@ -71,12 +71,12 @@
 
 /* XXX - add code to allow for base 2^64, if available/possible, and perhaps base 2^128, if available/possible XXX */
 
-#    define BASEB_LOG2 (5)          /* use base 2^32 */
-#    define BASEB (1 << BASEB_LOG2) /* use base 2^32 */
-typedef uint32_t HALF;  /* unit of number storage */
-typedef int32_t SHALF;  /* signed HALF */
-typedef uint64_t FULL;  /* double unit of number storage */
-typedef int64_t SFULL;  /* signed FULL */
+#  define BASEB_LOG2 (5)          /* use base 2^32 */
+#  define BASEB (1 << BASEB_LOG2) /* use base 2^32 */
+typedef uint32_t HALF;            /* unit of number storage */
+typedef int32_t SHALF;            /* signed HALF */
+typedef uint64_t FULL;            /* double unit of number storage */
+typedef int64_t SFULL;            /* signed FULL */
 
 #  define SWAP_HALF_IN_B64(dest, src) SWAP_B32_IN_B64(dest, src)
 #  define SWAP_HALF_IN_B32(dest, src) (*((HALF *)(dest)) = *((HALF *)(src)))
@@ -136,77 +136,77 @@ typedef int64_t SFULL;  /* signed FULL */
  */
 #  if LONG_BITS == 64
 
-    /*
-     * 64-bit processors - how to print C integer variables
-     *
-     * FULL and PRINT are uint64_t
-     *
-     * When using printf formats:
-     *
-     *   Variables cast as (PRINT) are effectively long unsigned int
-     *
-     *   %lx  is OK
-     *   %llx causes warnings
-     *     format '%llx' expects argument of type 'long long unsigned int', but ... has type 'long unsigned int'
-     */
+/*
+ * 64-bit processors - how to print C integer variables
+ *
+ * FULL and PRINT are uint64_t
+ *
+ * When using printf formats:
+ *
+ *   Variables cast as (PRINT) are effectively long unsigned int
+ *
+ *   %lx  is OK
+ *   %llx causes warnings
+ *     format '%llx' expects argument of type 'long long unsigned int', but ... has type 'long unsigned int'
+ */
 #    if BASEB == 32
-      typedef FULL PRINT; /* cast for zio.c printing in zprintx() and zprinto() */
-#   elif BASEB == 16
-      typedef FULL PRINT; /* cast for zio.c printing in zprintx() and zprinto() */
-#   else
-#     error "BASEB is not 32 nor 16, do not yet know how to typedef a PRINT value"
-#   endif
-#   define PRI_DEC PRId64
-#   define PRI_OCT PRIo64
-#   define PRI_HEX PRIx64
+typedef FULL PRINT; /* cast for zio.c printing in zprintx() and zprinto() */
+#    elif BASEB == 16
+typedef FULL PRINT; /* cast for zio.c printing in zprintx() and zprinto() */
+#    else
+#      error "BASEB is not 32 nor 16, do not yet know how to typedef a PRINT value"
+#    endif
+#    define PRI_DEC PRId64
+#    define PRI_OCT PRIo64
+#    define PRI_HEX PRIx64
 
 #  elif LONG_BITS == 32
 
-    /*
-     * 32-bit processors - how to print C integer variables
-     *
-     * FULL and PRINT are uint32_t
-     *
-     * When using printf formats:
-     *
-     *   Variables cast as (PRINT) are effectively unsigned int
-     *
-     *   %lx causes warnings
-     *     format '%lx' expects argument of type 'long unsigned int', but ... has type 'unsigned int'
-     *   %llx  is OK
-     */
+/*
+ * 32-bit processors - how to print C integer variables
+ *
+ * FULL and PRINT are uint32_t
+ *
+ * When using printf formats:
+ *
+ *   Variables cast as (PRINT) are effectively unsigned int
+ *
+ *   %lx causes warnings
+ *     format '%lx' expects argument of type 'long unsigned int', but ... has type 'unsigned int'
+ *   %llx  is OK
+ */
 #    if BASEB == 32
-      /* Yes, the larger base needs a smaller type! */
-      typedef HALF PRINT; /* cast for zio.c printing in zprintx() and zprinto() */
-#   elif BASEB == 16
-      typedef FULL PRINT; /* cast for zio.c printing in zprintx() and zprinto() */
-#   else
-#     error "BASEB is not 32 nor 16, do not yet know how to typedef a PRINT value"
-#   endif
-#   define PRI_DEC PRId32
-#   define PRI_OCT PRIo32
-#   define PRI_HEX PRIx32
+/* Yes, the larger base needs a smaller type! */
+typedef HALF PRINT; /* cast for zio.c printing in zprintx() and zprinto() */
+#    elif BASEB == 16
+typedef FULL PRINT; /* cast for zio.c printing in zprintx() and zprinto() */
+#    else
+#      error "BASEB is not 32 nor 16, do not yet know how to typedef a PRINT value"
+#    endif
+#    define PRI_DEC PRId32
+#    define PRI_OCT PRIo32
+#    define PRI_HEX PRIx32
 
 #  else
 
-#   error "LONG_BITS is not 64 nor 32, do not yet know how to typedef PRINT"
+#    error "LONG_BITS is not 64 nor 32, do not yet know how to typedef PRINT"
 
 #  endif
 #  if BASEB == 32
 
-#    define PRI_DEC_LEN "10"    /* base 2^32 requires values fully print with a width of 10 decimal digits */
-#    define PRI_HEX_LEN "8"     /* base 2^32 requires values fully print with a width of 8 hex digits */
-#    define PRI_OCT_LEN "11"    /* base 2^32 requires values fully print with a width of 11 octal digits */
+#    define PRI_DEC_LEN "10" /* base 2^32 requires values fully print with a width of 10 decimal digits */
+#    define PRI_HEX_LEN "8"  /* base 2^32 requires values fully print with a width of 8 hex digits */
+#    define PRI_OCT_LEN "11" /* base 2^32 requires values fully print with a width of 11 octal digits */
 
 #  elif BASEB == 16
 
-#    define PRI_DEC_LEN "5"     /* base 2^16 requires values fully print with a width of 5 decimal digits */
-#    define PRI_HEX_LEN "4"     /* base 2^16 requires values fully print with a width of 4 hex digits */
-#    define PRI_OCT_LEN "6"     /* base 2^16 requires values fully print with a width of 6 octal digits */
+#    define PRI_DEC_LEN "5" /* base 2^16 requires values fully print with a width of 5 decimal digits */
+#    define PRI_HEX_LEN "4" /* base 2^16 requires values fully print with a width of 4 hex digits */
+#    define PRI_OCT_LEN "6" /* base 2^16 requires values fully print with a width of 6 octal digits */
 
 #  else
 
-#   error "BASEB is not 32 nor 16, do not yet know how to printf size a PRINT value"
+#    error "BASEB is not 32 nor 16, do not yet know how to printf size a PRINT value"
 
 #  endif
 
@@ -214,7 +214,7 @@ typedef int64_t SFULL;  /* signed FULL */
  * other miscellaneous typedefs
  */
 typedef uint32_t QCKHASH; /* 32 bit hash value */
-typedef int32_t FLAG; /* small value (e.g., comparison) */
+typedef int32_t FLAG;     /* small value (e.g., comparison) */
 
 /*
  * length of internal integer values in units of HALF
@@ -292,13 +292,13 @@ typedef int32_t LEN; /* calc v2 compatible unit of length storage */
  * NOTE: MAXDATA must be 1 less than a power of 2.
  * NOTE: MAXDATA_LOG2 is the log base 2 of MAXDATA+1.
  */
-#  define ADDR_REDUCT 4                                      /* power of 2 address space reduction 1/(2^4) == 1/16 */
+#  define ADDR_REDUCT 4 /* power of 2 address space reduction 1/(2^4) == 1/16 */
 #  if MAJOR_VER >= 3
 #    define MAXDATA_LOG2 ((int)(INTPTR_WIDTH - ADDR_REDUCT)) /* 1/16 of address space */
 #    define MAXDATA (((LEN)1 << MAXDATA_LOG2) - 1)
 #  else
-#    define MAXDATA_LOG2 (32 - ADDR_REDUCT)     /* 1/16 of 32-bit address space as defined by calc v2 */
-#    define MAXDATA ((1 << MAXDATA_LOG2) - 1)   /* calc v2 compatible supported address space */
+#    define MAXDATA_LOG2 (32 - ADDR_REDUCT)   /* 1/16 of 32-bit address space as defined by calc v2 */
+#    define MAXDATA ((1 << MAXDATA_LOG2) - 1) /* calc v2 compatible supported address space */
 #  endif
 
 /*
@@ -356,9 +356,9 @@ typedef int32_t LEN; /* calc v2 compatible unit of length storage */
  * The largest power of 10 we will compute for our decimal conversion internal constants is: 10^(2^TEN_MAX)
  */
 #  if MAJOR_VER >= 3
-#    define TEN_MAX 49  /* calc v3+: 10^2^49 requires about 1.66 * 2^47 bytes */
+#    define TEN_MAX 49 /* calc v3+: 10^2^49 requires about 1.66 * 2^47 bytes */
 #  else
-#    define TEN_MAX 31  /* calc v2: 10^2^31 requires about 1.66 * 2^29 bytes */
+#    define TEN_MAX 31 /* calc v2: 10^2^31 requires about 1.66 * 2^29 bytes */
 #  endif
 
 #  define MAXREDC 256 /* number of entries in REDC cache */

@@ -99,12 +99,12 @@ static struct infoname sys_info[] = {
     {"DEFAULTCALCPATH", "default :-separated search path", DEFAULTCALCPATH, (FULL)0},
     {"DEFAULTCALCRC", "default :-separated startup file list", DEFAULTCALCRC, (FULL)0},
     {"DEFAULTSHELL", "default shell to use", DEFAULTSHELL, (FULL)0},
-#if defined(DEV_T_BITS)
+#  if defined(DEV_T_BITS)
     {"DEV_T_BITS", "length in bits of the st_dev stat element, or device number", NULL, (FULL)DEV_T_BITS},
-#endif
-#if defined(DEV_T_LEN)
+#  endif
+#  if defined(DEV_T_LEN)
     {"DEV_T_LEN", "length in bytes of the st_dev stat element, or device number", NULL, (FULL)DEV_T_LEN},
-#endif
+#  endif
     {"DISPLAY_DEFAULT", "default digits for float display", NULL, (FULL)DISPLAY_DEFAULT},
     {"EPSILON_DEFAULT", "allowed error for float calculations", EPSILON_DEFAULT, (FULL)0},
     {"EPSILONPREC_DEFAULT", "2^-EPSILON_DEFAULT <= EPSILON_DEFAULT", NULL, (FULL)EPSILONPREC_DEFAULT},
@@ -118,18 +118,18 @@ static struct infoname sys_info[] = {
     {"HIST_SIZE", "Default history size", NULL, (FULL)HIST_SIZE},
     {"INIT_J", "initial 1st walking subtractive 100 shuffle table index", NULL, (FULL)INIT_J},
     {"INIT_K", "initial 2nd walking subtractive 100 shuffle table index", NULL, (FULL)INIT_K},
-#if defined(INO_T_BITS)
+#  if defined(INO_T_BITS)
     {"INO_T_BITS", "length in bits of the type st_ino, or inode number bit length", NULL, (FULL)INO_T_BITS},
-#endif
-#if defined(INO_T_LEN)
+#  endif
+#  if defined(INO_T_LEN)
     {"INO_T_LEN", "length in bits of the type st_ino, or inode number byte length", NULL, (FULL)INO_T_LEN},
-#endif
-#if defined(INTPTR_LEN)
+#  endif
+#  if defined(INTPTR_LEN)
     {"INTPTR_LEN", "length in bytes of a memory pointer", NULL, (FULL)INTPTR_LEN},
-#endif
-#if defined(INTPTR_WIDTH)
+#  endif
+#  if defined(INTPTR_WIDTH)
     {"INTPTR_WIDTH", "bits in a intptr_t", NULL, (FULL)INTPTR_WIDTH},
-#endif
+#  endif
     {"LONG_BITS", "bit length of a long", NULL, (FULL)LONG_BITS},
     {"MAP_POPCNT", "number of odd primes in pr_map", NULL, (FULL)MAP_POPCNT},
     {"MAX_CALCRC", "maximum allowed length of $CALCRC", NULL, (FULL)MAX_CALCRC},
@@ -160,17 +160,17 @@ static struct infoname sys_info[] = {
     {"MUL_ALG2", "default size for alternative multiply", NULL, (FULL)MUL_ALG2},
     {"NXT_MAP_PRIME", "smallest odd prime not in pr_map", NULL, (FULL)NXT_MAP_PRIME},
     {"NXT_PFACT_VAL", "next prime for higher pfact values", NULL, (FULL)NXT_PFACT_VAL},
-#if defined(OFF_T_BITS)
+#  if defined(OFF_T_BITS)
     {"OFF_T_BITS", "length in bits of a file offset, or off_t", NULL, (FULL)OFF_T_BITS},
-#endif
-#if defined(OFF_T_LEN)
+#  endif
+#  if defined(OFF_T_LEN)
     {"OFF_T_LEN", "length in bytes of a file offset, or off_t", NULL, (FULL)OFF_T_LEN},
-#endif
+#  endif
     {"PIX_32B", "max pix() value", NULL, (FULL)PIX_32B},
     {"POW_ALG2", "default size for using REDC for powers", NULL, (FULL)POW_ALG2},
-#if defined(PTR_BITS)
+#  if defined(PTR_BITS)
     {"PTR_BITS", "length in bits of a memory pointer", NULL, (FULL)PTR_BITS},
-#endif
+#  endif
     {"REDC_ALG2", "default size using alternative REDC alg", NULL, (FULL)REDC_ALG2},
     {"REGNUM_MAX", "highest custom register number", NULL, (FULL)CUSTOM_REG_MAX},
     {"S100", "slots in an subtractive 100 table", NULL, (FULL)S100},

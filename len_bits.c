@@ -95,7 +95,7 @@ main(void)
     putchar('\n');
 #endif
 
-#  if CALC_BYTE_ORDER == BIG_ENDIAN
+#if CALC_BYTE_ORDER == BIG_ENDIAN
     if (off_t_bits == 64) {
         printf("#define SWAP_HALF_IN_OFF_T(dest, src)\t\t%s\n", "SWAP_HALF_IN_B64(dest, src)\n");
     } else if (off_t_bits == 32) {
@@ -105,9 +105,9 @@ main(void)
                "do not (yet) know how to form SWAP_HALF_IN_OFF_T macro for that size\"\n",
                off_t_bits);
     }
-#  else
+#else
     printf("#define SWAP_HALF_IN_OFF_T(dest, src)\t\t%s\n", "(*(dest) = *(src))");
-#  endif
+#endif
     putchar('\n');
 
     /*
@@ -119,7 +119,7 @@ main(void)
     printf("#define DEV_T_BITS %zu\t\t/%s/\n", dev_t_bits, "* bit length of an dev_t *");
     putchar('\n');
 
-#  if CALC_BYTE_ORDER == BIG_ENDIAN
+#if CALC_BYTE_ORDER == BIG_ENDIAN
     if (dev_t_bits == 64) {
         printf("#define SWAP_HALF_IN_DEV_T(dest, src)\t\t%s\n", "SWAP_HALF_IN_B64(dest, src)\n");
     } else if (dev_t_bits == 32) {
@@ -131,9 +131,9 @@ main(void)
                "do not (yet) know how to form SWAP_HALF_IN_DEV_T macro for that size\"\n",
                off_t_bits);
     }
-#  else
+#else
     printf("#define SWAP_HALF_IN_DEV_T(dest, src)\t\t%s\n", "(*(dest) = *(src))");
-#  endif
+#endif
     putchar('\n');
 
     /*
@@ -145,7 +145,7 @@ main(void)
     printf("#define INO_T_BITS %zu\t\t/%s/\n", ino_t_bits, "* bit length of an ino_t *");
     putchar('\n');
 
-#  if CALC_BYTE_ORDER == BIG_ENDIAN
+#if CALC_BYTE_ORDER == BIG_ENDIAN
     if (ino_t_bits == 64) {
         printf("#define SWAP_HALF_IN_INO_T(dest, src)\t\t%s\n", "SWAP_HALF_IN_B64(dest, src)\n");
     } else if (ino_t_bits == 32) {
@@ -157,9 +157,9 @@ main(void)
                "do not (yet) know how to form SWAP_HALF_IN_INO_T macro for that size\"\n",
                off_t_bits);
     }
-#  else
+#else
     printf("#define SWAP_HALF_IN_INO_T(dest, src)\t\t%s\n", "(*(dest) = *(src))");
-#  endif
+#endif
 
     /*
      * All Done!!! -- Jessica Noll, Age 2
