@@ -338,3 +338,4 @@ which will be "frozen" at calc version 2.16.1.x (such as version 2.16.1.3).
 # Reporting Security Issues
 
 To report a security issue, please visit "[Reporting Security Issues](https://github.com/lcn2/calc/security/policy)".
+
