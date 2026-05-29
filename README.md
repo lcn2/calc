@@ -306,7 +306,7 @@ The [calc repo](https://github.com/lcn2/calc) has 3 important branches:
 
 This branch is where the latest **stable releases** of calc are made.
 
-When in doubt, use the [master branch](https://github.com/lcn2/calc/tree/master).
+When in doubt, **use the [master branch](https://github.com/lcn2/calc/tree/master)**.
 
 - [calcv3 branch](https://github.com/lcn2/calc/tree/calcv3)
 
@@ -314,8 +314,7 @@ The "**calc v3**" branch is where the [new calc v3 direction](https://github.com
 work is being performed.
 
 Among the various goals of "**calc v3**" is to support 64-bit and larger CPUs,
-to support very large values: up to 2^(2^51-1) (assuming you have the RAM/swap space,
-which requires calc to support numbers up to 256 TBytes in size), etc.
+to support very large values up to 256 TBytes in size (up to 2^(2^51-1), assuming you have the RAM/swap space), etc.
 See the [new calc v3 discussion](https://github.com/lcn2/calc/issues/103) for more details.
 
 When calc version 2.17.0.0 was formed (see the
@@ -330,10 +329,9 @@ Some very old systems might have trouble with the set of changes that were made 
 calc version 2.16.1.3, and calc version 2.17.0.0.  For example, some very old systems that
 don't support a c17 C compiler, or that lack some of the standard include files,
 or that don't support the 64-bit `int64_t` and `uint64_t` types, or that don't support the boolean type,
-32-bit (or smaller) CPUs, etc., more not be able to compile the master branch code.
-Such systems may need to use the [legacy-calc branch](https://github.com/lcn2/calc/tree/legacy-calc) instead.
+that use 32-bit (or smaller) CPUs, etc., might not be able to compile the master branch code.
 
-Very old systems that are unable to compile the master branch should use the
+Very old systems that are unable to compile/use# the master branch should use the
 [legacy-calc branch](https://github.com/lcn2/calc/tree/legacy-calc)
 which will be "frozen" at calc version 2.16.1.x (such as version 2.16.1.3).
 
