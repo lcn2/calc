@@ -9,10 +9,10 @@
 # and is also somewhat similar to the "classic kernel" style.
 #
 # As of 2025, we restrict ourselves to clang-format options no
-# later than version 20.  In particular, the minimum supported
+# later than version 21.  In particular, the minimum supported
 # clang-format option set are those options supported by:
 #
-#     clang-format version 20.1.8
+#     clang-format version 21.1.8
 #
 # The original LLVM style may be determined by:
 #
