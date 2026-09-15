@@ -8,11 +8,11 @@
 # The Landon Noll C style is somewhat similar to the LLVM style,
 # and is also somewhat similar to the "classic kernel" style.
 #
-# As of 2025, we restrict ourselves to clang-format options no
-# later than version 21.  In particular, the minimum supported
+# As of 2026 Sep 14, we restrict ourselves to clang-format options no
+# later than version 23.  In particular, the minimum supported
 # clang-format option set are those options supported by:
 #
-#     clang-format version 21.1.8
+#     clang-format version 23.1.1
 #
 # The original LLVM style may be determined by:
 #
