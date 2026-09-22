@@ -432,9 +432,9 @@ check_lcc_include:
 	    echo 1>&2; \
 	    echo "    brew install gcc" 1>&2; \
 	    echo 1>&2; \
-	    echo "Then under macOS compile with gcc-15 (not gcc) or use:" 1>&2; \
+	    echo "Then under macOS compile with gcc-16 (not gcc) or use:" 1>&2; \
 	    echo 1>&2; \
-	    echo "    /opt/homebrew/bin/gcc-15" 1>&2; \
+	    echo "    /opt/homebrew/bin/gcc-16" 1>&2; \
 	    echo 1>&2; \
 	    exit 4; \
 	fi
@@ -492,9 +492,9 @@ check_cc_include:
 	    echo 1>&2; \
 	    echo "    brew install gcc" 1>&2; \
 	    echo 1>&2; \
-	    echo "Then under macOS compile with gcc-15 (not gcc) or use:" 1>&2; \
+	    echo "Then under macOS compile with gcc-16 (not gcc) or use:" 1>&2; \
 	    echo 1>&2; \
-	    echo "    /opt/homebrew/bin/gcc-15" 1>&2; \
+	    echo "    /opt/homebrew/bin/gcc-16" 1>&2; \
 	    echo 1>&2; \
 	    exit 8; \
 	fi
@@ -3025,16 +3025,16 @@ clang-format: .clang-format ${C_SRC} ${H_SRC}
 #
 ###
 
-# compile all with gcc (or gcc-15 for macOS), full warnings, no optimizer, no ASAN
+# compile all with gcc (or gcc-16 for macOS), full warnings, no optimizer, no ASAN
 #
-# For macOS, use Homebrew to install via "brew install gcc", and use gcc-15 (NOT gcc).
+# For macOS, use Homebrew to install via "brew install gcc", and use gcc-16 (NOT gcc).
 #
 # NOTE: Consider doing a "make clobber" first, especially when switching from
 #       a previous "make all", "make clang", etc.
 #
 gcc:
 ifeq ($(target),Darwin)
-	${MAKE} -f ${MAKE_FILE} all CC='gcc-15' CCWARN='-Wall -pedantic -Werror' DEBUG='-O0 -g2' \
+	${MAKE} -f ${MAKE_FILE} all CC='gcc-16' CCWARN='-Wall -pedantic -Werror' DEBUG='-O0 -g2' \
 				    BLD_TYPE='calc-static-only'
 else
 	${MAKE} -f ${MAKE_FILE} all CC='gcc' CCWARN='-Wall -pedantic -Werror' DEBUG='-O0 -ggdb3' \

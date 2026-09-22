@@ -54,7 +54,6 @@
 #include "value.h"
 #include "calc.h"
 #include "file.h"
-#include "strl.h"
 #include "attribute.h"
 #include "errtbl.h"
 

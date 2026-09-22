@@ -1030,14 +1030,13 @@ list_fd_get(LIST *in, fd_set *fds)
 {
     VALUE *out;
     LISTELEM *el;
-    int s = 0;
     int i;
     VALUE o;
 
     out = alloc_list(listalloc());
     el = in->l_first;
 
-    for (; el != NULL; el = el->e_next, s++) {
+    for (; el != NULL; el = el->e_next) {
         i = qtoi(el->e_value.v_num);
         if (FD_ISSET(i, fds)) {
             copyvalue(&el->e_value, &o);
