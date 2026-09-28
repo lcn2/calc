@@ -2,7 +2,7 @@
 #
 # help - makefile for calc help files
 #
-# Copyright (C) 1999-2006,2017,2021-2023  Landon Curt Noll
+# Copyright (C) 1999-2006,2017,2021-2023,2026  Landon Curt Noll
 #
 # Suggestion: Read the ../HOWTO.INSTALL file.
 #
@@ -95,6 +95,9 @@ include ${TARGET_MKF}
 # E= 2>/dev/null	silence command stderr during hsrc file formation
 # E=			full command stderr during hsrc file formation
 #
+# N= 2>/dev/null	silence command stderr during non-hsrc related actions
+# N=			full command stderr non-hsrc related actions
+#
 # V=@:	do not echo debug statements (quiet mode)
 # V=@	do echo debug statements (debug / verbose mode)
 #
@@ -106,6 +109,9 @@ S= >/dev/null 2>&1
 #
 E= 2>/dev/null
 #E=
+#
+N= >/dev/null 2>&1
+#N=
 #
 #H=@:
 H=@
@@ -531,8 +537,8 @@ full: ${FULL_HELP_FILES} ${MAKE_FILE}
 # Singular files are the same files as their plural form.
 #
 ${SINGULAR_FILES}: ${PLURAL_FILES}
-	${Q} for i in ${SINGULAR_FILES} /dev/null; do \
-	    if [ X"$$i" != X"/dev/null" ]; then \
+	${Q} for i in ${SINGULAR_FILES} __IGNORE__; do \
+	    if [ X"$$i" != X"__IGNORE__" ]; then \
 		echo "${RM} -f $${i}"; \
 		${RM} -f $${i}; \
 		echo "${CP} $${i}s $${i}"; \
@@ -598,15 +604,15 @@ builtin: builtin.top builtin.end ../func.c funclist.sed
 ##
 
 distlist: ${DISTLIST}
-	${Q} for i in ${DISTLIST} /dev/null; do \
-	    if [ X"$$i" != X"/dev/null" ]; then \
+	${Q} for i in ${DISTLIST} __IGNORE__; do \
+	    if [ X"$$i" != X"__IGNORE__" ]; then \
 		echo help/$$i; \
 	    fi; \
 	done | fgrep -v '.bak' | LANG=C ${SORT}
 
 buildlist:
-	${Q} for i in ${BUILD_ALL} /dev/null; do \
-	    if [ X"$$i" != X"/dev/null" ]; then \
+	${Q} for i in ${BUILD_ALL} __IGNORE__; do \
+	    if [ X"$$i" != X"__IGNORE__" ]; then \
 		echo help/$$i; \
 	    fi; \
 	done | fgrep -v '.bak' | LANG=C ${SORT}
@@ -615,8 +621,8 @@ distdir:
 	${Q} echo help
 
 calcliblist:
-	${Q} for i in ${CALCLIBLIST} /dev/null; do \
-	    if [ X"$$i" != X"/dev/null" ]; then \
+	${Q} for i in ${CALCLIBLIST} __IGNORE__; do \
+	    if [ X"$$i" != X"__IGNORE__" ]; then \
 		echo help/$$i; \
 	    fi; \
 	done
@@ -640,10 +646,8 @@ detail_help_list:
 		 ! -name variable ! -name wishlist ! -name questions \
 		 -print | \
 	   while read i; do \
-		if [ X"$$i" != X"/dev/null" ]; then \
-		    echo $$i; \
-		fi; \
-	done; \
+	       echo $$i; \
+	   done; \
 	echo '--first_line--') | \
 	    ${SED} -e 's:^\./::' | LANG=C ${SORT} | ${FMT} -70 | \
 	    ${SED} -e '1s/--first_line--/DETAIL_HELP=/' -e '2,$$s/^/	/' \
@@ -657,8 +661,8 @@ detail_help_list:
 
 echo_inst_files:
 	${Q} for i in ${STD_HELP_FILES} full ${BLT_HELP_FILES} \
-		  builtin ${DETAIL_HELP} ${SINGULAR_FILES} /dev/null; do \
-	    if [ X"$$i" != X"/dev/null" ]; then \
+		  builtin ${DETAIL_HELP} ${SINGULAR_FILES} __IGNORE__; do \
+	    if [ X"$$i" != X"__IGNORE__" ]; then \
 		echo __file__ ${HELPDIR}/$$i; \
 	    fi; \
 	done
@@ -712,8 +716,8 @@ install: all
 	    ${TRUE}; \
 	fi
 	-${Q} for i in ${STD_HELP_FILES} ${BLT_HELP_FILES} builtin \
-		  full ${DETAIL_HELP} ${SINGULAR_FILES} /dev/null; do \
-	    if [ "$$i" = "/dev/null" ]; then \
+		  full ${DETAIL_HELP} ${SINGULAR_FILES} __IGNORE__; do \
+	    if [ "$$i" = "__IGNORE__" ]; then \
 		continue; \
 	    fi; \
 	    if ${CMP} -s $$i ${T}${HELPDIR}/$$i; then \
@@ -766,8 +770,8 @@ uninstall:
 	    fi; \
 	fi
 	-${Q} for i in ${SINGULAR_FILES} ${DETAIL_HELP} full builtin \
-	    ${BLT_HELP_FILES} ${STD_HELP_FILES} /dev/null; do \
-	    if [ "$$i" = "/dev/null" ]; then \
+	    ${BLT_HELP_FILES} ${STD_HELP_FILES} __IGNORE__; do \
+	    if [ "$$i" = "__IGNORE__" ]; then \
 		continue; \
 	    fi; \
 	    if [ -f "${T}${HELPDIR}/$$i" ]; then \
@@ -781,7 +785,7 @@ uninstall:
 	done
 	-${Q} for i in ${HELPDIR} ${CALC_SHAREDIR}; do \
 	    if [ -d "${T}$$i" ]; then \
-		${RMDIR} "${T}$$i" 2>/dev/null; \
+		${RMDIR} "${T}$$i" ${N}; \
 		echo "cleaned up ${T}$$i"; \
 	    fi; \
 	done

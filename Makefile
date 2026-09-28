@@ -94,6 +94,9 @@ include ${TARGET_MKF}
 # E= 2>/dev/null	silence command stderr during hsrc file formation
 # E=			full command stderr during hsrc file formation
 #
+# N= 2>/dev/null	silence command stderr during non-hsrc related actions
+# N=			full command stderr non-hsrc related actions
+#
 # V=@:	do not echo debug statements (quiet mode)
 # V=@	echo debug statements (debug / verbose mode)
 #
@@ -113,6 +116,9 @@ S= >/dev/null 2>&1
 #
 E= 2>/dev/null
 #E=
+#
+N= >/dev/null 2>&1
+#N=
 #
 #H=@:
 H=@
@@ -415,7 +421,7 @@ check_lcc:
 # check_lcc_include - check if the local C compiler ${LCC} has access to the <stdio.h> system include file
 #
 check_lcc_include:
-	${Q} if ! echo '#include <stdio.h>' | ${LCC} -E - >/dev/null 2>&1; then \
+	${Q} if ! echo '#include <stdio.h>' | ${LCC} -E - ${N}; then \
 	    echo "ERROR: Local C compiler: ${LCC} is missing critical <stdio.h> include file." 1>&2; \
 	    echo "Without critical include files, we cannot compile." 1>&2; \
 	    echo "Perhaps your system isn't setup to compile C source?" 1>&2; \
@@ -475,7 +481,7 @@ check_cc:
 # check_cc_include - check if the C compiler ${CC} has access to the <stdio.h> system include file
 #
 check_cc_include:
-	${Q} if ! echo '#include <stdio.h>' | ${CC} -E - >/dev/null 2>&1; then \
+	${Q} if ! echo '#include <stdio.h>' | ${CC} -E - ${N}; then \
 	    echo "ERROR: The C compiler: ${CC} is missing critical <stdio.h> include file." 1>&2; \
 	    echo "Without critical include files, we cannot compile." 1>&2; \
 	    echo "Perhaps your system isn't setup to compile C source?" 1>&2; \
@@ -1064,7 +1070,7 @@ have_urandom.h: ${MK_SET}
 	    echo '#define HAVE_URANDOM	/* yes */' >> $@; \
 	elif [ X"${HAVE_URANDOM}" = X"NO" ]; then \
 	    echo '#undef HAVE_URANDOM  /* no */' >> $@; \
-	elif [ -r /dev/urandom ] 2>/dev/null; then \
+	elif [ -r /dev/urandom ] ${E}; then \
 	    echo '#define HAVE_URANDOM  /* yes */' >> $@; \
 	else \
 	    echo '#undef HAVE_URANDOM	 /* no */' >> $@; \
@@ -1505,8 +1511,8 @@ depend: hsrc custom/Makefile
 	    ${GREP} -E -v '\.\./getopt/getopt\.h' > "skel/$$i"; \
 	done
 	${Q} ${MKDIR} -p skel/custom
-	-${Q} for i in ${H_SRC} ${BUILD_H_SRC} custom.h /dev/null; do \
-	    if [ X"$$i" != X"/dev/null" ]; then \
+	-${Q} for i in ${H_SRC} ${BUILD_H_SRC} custom.h __IGNORE__; do \
+	    if [ X"$$i" != X"__IGNORE__" ]; then \
 		tag="`echo $$i | ${SED} 's/[\.+,:]/_/g'`"; \
 		echo "#if !defined($$tag)" > "skel/$$i"; \
 		echo "#define $$tag" >> "skel/$$i"; \
@@ -1522,9 +1528,9 @@ depend: hsrc custom/Makefile
 	${Q} cd skel; ${MAKEDEPEND} \
 	    -w 1 -f makedep.out -- \
 	    ${CFLAGS} -- \
-	    ${C_SRC} ${BUILD_C_SRC} 2>/dev/null
-	-${Q} for i in ${C_SRC} ${BUILD_C_SRC} /dev/null; do \
-	    if [ X"$$i" != X"/dev/null" ]; then \
+	    ${C_SRC} ${BUILD_C_SRC} ${E}
+	-${Q} for i in ${C_SRC} ${BUILD_C_SRC} __IGNORE__; do \
+	    if [ X"$$i" != X"__IGNORE__" ]; then \
 	      echo "$$i" | ${SED} 's/^\(.*\)\.c/\1.o: \1.c/'; \
 	    fi; \
 	done >> skel/makedep.out
@@ -1551,8 +1557,8 @@ depend: hsrc custom/Makefile
 # generate the list of h files for lower level depend use
 #
 h_list:
-	-${Q} for i in ${H_SRC} ${BUILD_H_SRC} /dev/null; do \
-	    if [ X"$$i" != X"/dev/null" ]; then \
+	-${Q} for i in ${H_SRC} ${BUILD_H_SRC} __IGNORE__; do \
+	    if [ X"$$i" != X"__IGNORE__" ]; then \
 		echo $$i; \
 	    fi; \
 	done
@@ -1595,8 +1601,8 @@ ver_calc${EXT}: version.c strl.c have_strlcpy.h have_strlcat.h endian_calc.h len
 ###
 
 distlist: ${DISTLIST} custom/Makefile
-	${Q} (for i in ${DISTLIST} /dev/null; do \
-	    if [ X"$$i" != X"/dev/null" ]; then \
+	${Q} (for i in ${DISTLIST} __IGNORE__; do \
+	    if [ X"$$i" != X"__IGNORE__" ]; then \
 		echo $$i; \
 	    fi; \
 	done; \
@@ -1607,8 +1613,8 @@ distlist: ${DISTLIST} custom/Makefile
 	) | LANG=C ${SORT} -u
 
 buildlist:
-	${Q} (for i in ${BUILD_ALL} /dev/null; do \
-	    if [ X"$$i" != X"/dev/null" ]; then \
+	${Q} (for i in ${BUILD_ALL} __IGNORE__; do \
+	    if [ X"$$i" != X"__IGNORE__" ]; then \
 		echo $$i; \
 	    fi; \
 	done; \
@@ -1627,8 +1633,8 @@ distdir: custom/Makefile
 	) | LANG=C ${SORT} -u
 
 calcliblist: custom/Makefile
-	${Q} (for i in ${CALCLIBLIST} /dev/null; do \
-	    if [ X"$$i" != X"/dev/null" ]; then \
+	${Q} (for i in ${CALCLIBLIST} __IGNORE__; do \
+	    if [ X"$$i" != X"__IGNORE__" ]; then \
 		echo $$i; \
 	    fi; \
 	done; \
@@ -1649,8 +1655,8 @@ custom/Makefile.simple:
 	${Q} echo Support for $@ was dropped after the the release of calc v2.14.3.0.
 
 verifydist:
-	@${MAKE} -f Makefile Q= V=@ distdir >/dev/null 2>&1
-	@${MAKE} -f Makefile Q= V=@ distlist >/dev/null 2>&1
+	@${MAKE} -f Makefile Q= V=@ distdir ${N}
+	@${MAKE} -f Makefile Q= V=@ distlist ${N}
 
 ###
 #
@@ -2148,7 +2154,7 @@ prep:
 	${Q}echo
 	${Q}echo '=-=-=-=-=-= end of ${MAKE} chk =-=-=-=-=-='
 	${Q}echo
-	@${Q}if ! ./chk_tree >/dev/null 2>&1; then \
+	@${Q}if ! ./chk_tree ${N}; then \
 	    echo almost satisfactory except for chk_tree; \
 	else \
 	    echo All is OK; \
@@ -2272,8 +2278,8 @@ inst_files: ${MK_SET} help/Makefile cal/Makefile \
 	    ${MAKE} -f Makefile echo_inst_files | \
 	    ${GREP} -E '__file__..' | ${SED} -e s'/.*__file__ //' >> ../inst_files
 	${Q} echo ${LIBDIR}/libcalc.a >> inst_files
-	${Q} for i in ${LIB_H_SRC} ${BUILD_H_SRC} /dev/null; do \
-	    if [ X"$$i" != X"/dev/null" ]; then \
+	${Q} for i in ${LIB_H_SRC} ${BUILD_H_SRC} __IGNORE__; do \
+	    if [ X"$$i" != X"__IGNORE__" ]; then \
 		echo ${CALC_INCDIR}/$$i; \
 	    fi; \
 	done >> inst_files
@@ -2703,8 +2709,8 @@ install: ${LIB_H_SRC} ${BUILD_H_SRC} calc.1 all custom/Makefile
 		fi; \
 	    fi; \
 	fi
-	-${Q} for i in ${LIB_H_SRC} /dev/null; do \
-	    if [ "$$i" = "/dev/null" ]; then \
+	-${Q} for i in ${LIB_H_SRC} __IGNORE__; do \
+	    if [ "$$i" = "__IGNORE__" ]; then \
 		continue; \
 	    fi; \
 	    ${RM} -f tmp; \
@@ -2800,8 +2806,8 @@ uninstall: custom/Makefile
 		fi; \
 	    fi; \
 	fi
-	-${Q} for i in ${BUILD_H_SRC} ${LIB_H_SRC} /dev/null; do \
-	    if [ "$$i" = "/dev/null" ]; then \
+	-${Q} for i in ${BUILD_H_SRC} ${LIB_H_SRC} __IGNORE__; do \
+	    if [ "$$i" = "__IGNORE__" ]; then \
 		continue; \
 	    fi; \
 	    if [ -f "${T}${CALC_INCDIR}/$$i" ]; then \
@@ -2894,13 +2900,13 @@ uninstall: custom/Makefile
 		    ${CUSTOMINCDIR} ${CUSTOMHELPDIR} ${CUSTOMCALDIR} \
 		    ${CALC_INCDIR} ${LIBDIR} ${INCDIR} ${BINDIR}; do \
 	    if [ -d "${T}$$i" ]; then \
-		${RMDIR} "${T}$$i" 2>/dev/null; \
+		${RMDIR} "${T}$$i" ${N}; \
 		echo "cleaned up ${T}$$i"; \
 	    fi; \
 	done
 	-${Q} if [ ! -z "${T}" ]; then \
 	    if [ -d "${T}" ]; then \
-		${RMDIR} "${T}" 2>/dev/null; \
+		${RMDIR} "${T}" ${N}; \
 		echo "cleaned up ${T}"; \
 	    fi; \
 	 fi
@@ -3467,8 +3473,6 @@ file.o: file.c
 file.o: file.h
 file.o: hash.h
 file.o: have_ban_pragma.h
-file.o: have_strlcat.h
-file.o: have_strlcpy.h
 file.o: int.h
 file.o: len_bits.h
 file.o: nametype.h
@@ -3476,7 +3480,6 @@ file.o: qmath.h
 file.o: sha1.h
 file.o: status.chk_c.h
 file.o: str.h
-file.o: strl.h
 file.o: value.h
 file.o: version.h
 file.o: zmath.h
