@@ -143,6 +143,9 @@ CUSTOM_OBJ= c_argv.o c_devnull.o c_help.o c_sysinfo.o c_pzasusb8.o \
 # E= 2>/dev/null	silence command stderr during hsrc file formation
 # E=			full command stderr during hsrc file formation
 #
+# N= 2>/dev/null	silence command stderr during non-hsrc related actions
+# N=			full command stderr non-hsrc related actions
+#
 # V=@:	do not echo debug statements (quiet mode)
 # V=@	do echo debug statements (debug / verbose mode)
 #
@@ -154,6 +157,9 @@ S= >/dev/null 2>&1
 #
 E= 2>/dev/null
 #E=
+#
+N= >/dev/null 2>&1
+#N=
 #
 #H=@:
 H=@
@@ -304,15 +310,15 @@ libcustcalc.a: ${CUSTCALC_OBJ} ${MAKE_FILE}
 ##
 
 distlist: ${DISTLIST}
-	${Q} for i in ${DISTLIST} /dev/null; do \
-	    if [ X"$$i" != X"/dev/null" ]; then \
+	${Q} for i in ${DISTLIST} __IGNORE__; do \
+	    if [ X"$$i" != X"__IGNORE__" ]; then \
 		echo custom/$$i; \
 	    fi; \
 	done
 
 buildlist:
-	${Q} for i in ${BUILD_ALL} /dev/null; do \
-	    if [ X"$$i" != X"/dev/null" ]; then \
+	${Q} for i in ${BUILD_ALL} __IGNORE__; do \
+	    if [ X"$$i" != X"__IGNORE__" ]; then \
 		echo custom/$$i; \
 	    fi; \
 	done | fgrep -v '.bak' | LANG=C ${SORT}
@@ -321,8 +327,8 @@ distdir:
 	${Q} echo custom
 
 calcliblist: ${CALCLIBLIST}
-	${Q} for i in ${CALCLIBLIST} /dev/null; do \
-	    if [ X"$$i" != X"/dev/null" ]; then \
+	${Q} for i in ${CALCLIBLIST} __IGNORE__; do \
+	    if [ X"$$i" != X"__IGNORE__" ]; then \
 		echo custom/$$i; \
 	    fi; \
 	done
@@ -359,14 +365,14 @@ depend:
 	${Q} ${RM} -rf skel
 	${Q} ${MKDIR} -p skel
 	${Q} ${MKDIR} -p skel/custom
-	-${Q} for i in ${C_SRC} /dev/null; do \
-	    if [ X"$$i" != X"/dev/null" ]; then \
+	-${Q} for i in ${C_SRC} __IGNORE__; do \
+	    if [ X"$$i" != X"__IGNORE__" ]; then \
 		${SED} -n '/^#[	 ]*include[	 ]*"/p' \
 		    "$$i" > "skel/custom/$$i"; \
 	    fi; \
 	done
-	-${Q} for i in ${H_SRC} /dev/null; do \
-	    if [ "$$i" = "/dev/null" ]; then continue; fi; \
+	-${Q} for i in ${H_SRC} __IGNORE__; do \
+	    if [ "$$i" = "__IGNORE__" ]; then continue; fi; \
 	    tag="`echo $$i | ${SED} 's/[\.+,:]/_/g'`"; \
 	    echo "#if !defined($$tag)" > "skel/custom/$$i"; \
 	    echo "#define $$tag" >> "skel/custom/$$i"; \
@@ -374,8 +380,8 @@ depend:
 		>> "skel/custom/$$i"; \
 	    echo '#endif /* '"$$tag"' */' >> "skel/custom/$$i"; \
 	done
-	${Q} (cd ..; ${MAKE} -f ${MAKE_FILE} hsrc)
-	(cd ..; ${MAKE} -f ${MAKE_FILE} h_list 2>/dev/null) | \
+	${Q} (cd ..; ${MAKE} -f ${MAKE_FILE} hsrc ${N})
+	${Q} (cd ..; ${MAKE} -f ${MAKE_FILE} h_list 2>/dev/null) | \
 	    while read i; do \
 		if [ ! -f "../$$i" ]; then continue; fi; \
 		tag="`echo $$i | ${SED} 's/[\.+,:]/_/g'`"; \
@@ -392,12 +398,12 @@ depend:
 	-${Q} cd skel/custom; ${MAKEDEPEND} \
 	    -I../../.. -w 1 -f makedep.out -- \
 	    ${CFLAGS} -- \
-	    ${C_SRC} 2>/dev/null
+	    ${C_SRC} ${N}
 	${Q} ${CP} -f skel/custom/makedep.out skel/custom/makedep.in
 	${Q} ${SED} -e 's|: ../../|: |' -E < skel/custom/makedep.in | \
 	    ${GREP} -E -v /usr/include > skel/custom/makedep.out
-	-${Q} for i in ${C_SRC} /dev/null; do \
-	    if [ X"$$i" != X"/dev/null" ]; then \
+	-${Q} for i in ${C_SRC} __IGNORE__; do \
+	    if [ X"$$i" != X"__IGNORE__" ]; then \
 		echo "$$i" | ${SED} 's/^\(.*\)\.c/\1.o: \1.c/'; \
 	    fi; \
 	done >> skel/custom/makedep.out
@@ -429,23 +435,23 @@ depend:
 ##
 
 echo_inst_files:
-	${Q} for i in ${INSTALL_H_SRC} /dev/null; do \
-	    if [ X"$$i" != X"/dev/null" ]; then \
+	${Q} for i in ${INSTALL_H_SRC} __IGNORE__; do \
+	    if [ X"$$i" != X"__IGNORE__" ]; then \
 		echo __file__ ${CUSTOMINCDIR}/$$i; \
 	    fi; \
 	done
-	${Q} for i in ${CUSTOM_HELP} /dev/null; do \
-	    if [ X"$$i" != X"/dev/null" ]; then \
+	${Q} for i in ${CUSTOM_HELP} __IGNORE__; do \
+	    if [ X"$$i" != X"__IGNORE__" ]; then \
 		echo __file__ ${CUSTOMHELPDIR}/$$i; \
 	    fi; \
 	done
-	${Q} for i in ${CUSTOM_CALC_FILES} /dev/null; do \
-	    if [ X"$$i" != X"/dev/null" ]; then \
+	${Q} for i in ${CUSTOM_CALC_FILES} __IGNORE__; do \
+	    if [ X"$$i" != X"__IGNORE__" ]; then \
 		echo __file__ ${CUSTOMCALDIR}/$$i; \
 	    fi; \
 	done
-	${Q} for i in ${CALC_DYNAMIC_LIBCUSTCALC} /dev/null; do \
-	    if [ X"$$i" != X"/dev/null" ]; then \
+	${Q} for i in ${CALC_DYNAMIC_LIBCUSTCALC} __IGNORE__; do \
+	    if [ X"$$i" != X"__IGNORE__" ]; then \
 		echo __file__ ${CUSTOMCALDIR}/$$i; \
 	    fi; \
 	done
@@ -574,8 +580,8 @@ install: all
 	else \
 	    ${TRUE}; \
 	fi
-	-${Q} for i in ${INSTALL_H_SRC} /dev/null; do \
-	    if [ "$$i" = "/dev/null" ]; then \
+	-${Q} for i in ${INSTALL_H_SRC} __IGNORE__; do \
+	    if [ "$$i" = "__IGNORE__" ]; then \
 		continue; \
 	    fi; \
 	    if ${CMP} -s "$$i" ${T}${CUSTOMINCDIR}/$$i; then \
@@ -588,8 +594,8 @@ install: all
 		echo "installed ${T}${CUSTOMINCDIR}/$$i"; \
 	    fi; \
 	done
-	-${Q} for i in ${CUSTOM_CALC_FILES} /dev/null; do \
-	    if [ "$$i" = "/dev/null" ]; then \
+	-${Q} for i in ${CUSTOM_CALC_FILES} __IGNORE__; do \
+	    if [ "$$i" = "__IGNORE__" ]; then \
 		continue; \
 	    fi; \
 	    if ${CMP} -s $$i ${T}${CUSTOMCALDIR}/$$i; then \
@@ -602,8 +608,8 @@ install: all
 		echo "installed ${T}${CUSTOMCALDIR}/$$i"; \
 	    fi; \
 	done
-	-${Q} for i in ${CUSTOM_HELP} /dev/null; do \
-	    if [ "$$i" = "/dev/null" ]; then \
+	-${Q} for i in ${CUSTOM_HELP} __IGNORE__; do \
+	    if [ "$$i" = "__IGNORE__" ]; then \
 		continue; \
 	    fi; \
 	    if ${CMP} -s $$i ${T}${CUSTOMHELPDIR}/$$i; then \
@@ -654,8 +660,8 @@ uninstall:
 		echo "un-installed ${T}${CUSTOMCALDIR}/libcustcalc.a"; \
 	    fi; \
 	fi
-	-${Q} for i in ${CUSTOM_HELP} /dev/null; do \
-	    if [ "$$i" = "/dev/null" ]; then \
+	-${Q} for i in ${CUSTOM_HELP} __IGNORE__; do \
+	    if [ "$$i" = "__IGNORE__" ]; then \
 		continue; \
 	    fi; \
 	    if [ -f "${T}${CUSTOMHELPDIR}/$$i" ]; then \
@@ -667,8 +673,8 @@ uninstall:
 		fi; \
 	    fi; \
 	done
-	-${Q} for i in ${CUSTOM_CALC_FILES} /dev/null; do \
-	    if [ "$$i" = "/dev/null" ]; then \
+	-${Q} for i in ${CUSTOM_CALC_FILES} __IGNORE__; do \
+	    if [ "$$i" = "__IGNORE__" ]; then \
 		continue; \
 	    fi; \
 	    if [ -f "${T}${CUSTOMCALDIR}/$$i" ]; then \
@@ -680,8 +686,8 @@ uninstall:
 		fi; \
 	    fi; \
 	done
-	-${Q} for i in ${INSTALL_H_SRC} /dev/null; do \
-	    if [ "$$i" = "/dev/null" ]; then \
+	-${Q} for i in ${INSTALL_H_SRC} __IGNORE__; do \
+	    if [ "$$i" = "__IGNORE__" ]; then \
 		continue; \
 	    fi; \
 	    if [ -f "${T}${CUSTOMINCDIR}/$$i" ]; then \
@@ -696,7 +702,7 @@ uninstall:
 	-${Q} for i in ${CUSTOMINCDIR} ${CUSTOMHELPDIR} ${CUSTOMCALDIR} \
 		    ${HELPDIR} ${CALC_INCDIR} ${CALC_SHAREDIR} ${INCDIR}; do \
 	    if [ -d "${T}$$i" ]; then \
-		${RMDIR} "${T}$$i" 2>/dev/null; \
+		${RMDIR} "${T}$$i" ${N}; \
 		echo "cleaned up ${T}$$i"; \
 	    fi; \
 	done
