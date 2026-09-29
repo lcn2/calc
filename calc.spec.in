@@ -1,7 +1,7 @@
 #
 # calc.spec.in - template specfile for calc
 #
-# Copyright (C) 2003-2014,2021,2023  Petteri Kettunen and Landon Curt Noll
+# Copyright (C) 2003-2014,2021,2023,2026  Petteri Kettunen and Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -34,7 +34,7 @@
 Summary: Arbitrary precision calculator.
 Name: calc
 Version: <<<PROJECT_VERSION>>>
-Release: 15
+Release: 16
 License: LGPL
 Group: Applications/Engineering
 Source: https://github.com/lcn2/calc/releases/download/v<<<PROJECT_VERSION>>>/%{name}-%{version}.tar.bz2
@@ -142,7 +142,6 @@ echo '-=- calc.spec ending make install -=-'
 
 %clean
 echo '-=- calc.spec beginning make clean -=-'
-rm -rf %{_tmppath}
 rm -rf %{_builddir}
 rm -rf %{_specdir}
 rm -rf %{_buildrootdir}
@@ -177,6 +176,12 @@ echo '-=- calc.spec beginning make clean -=-'
 %attr(644, root, root) %{_libdir}/libcustcalc.a
 
 %changelog
+* Mon Sep 28 2026 Landon Curt Noll http://www.isthe.com/chongo
+- Release: 16
+- Fix the %clean section so that %{_tmppath} isn't wiped out
+  mid-execution because rpmbuild relies it to write its script
+  return codes, among other things.
+
 * Fri May 15 2026 Landon Curt Noll http://www.isthe.com/chongo
 - Release: 15
 - Add missing 4th parameter to defattr
