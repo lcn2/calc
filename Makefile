@@ -2154,6 +2154,7 @@ prep:
 	${Q}echo
 	${Q}echo '=-=-=-=-=-= end of ${MAKE} chk =-=-=-=-=-='
 	${Q}echo
+	${Q}${RM} -f ver_calc
 	@${Q}if ! ./chk_tree ${N}; then \
 	    echo almost satisfactory except for chk_tree; \
 	else \
