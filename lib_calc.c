@@ -923,21 +923,20 @@ find_tty_state(int fd)
     if (new_fd_orig == NULL) {
         return -1;
     }
+    fd_orig = new_fd_orig;
 
     /* expand fd_setup */
     new_fd_setup = (int *)realloc(fd_setup, sizeof(fd_setup[0]) * new_fd_count);
     if (new_fd_setup == NULL) {
         return -1;
     }
+    fd_setup = new_fd_setup;
 
     /* expand fd_cur */
     new_fd_cur = (ttystruct *)realloc(fd_cur, sizeof(fd_cur[0]) * new_fd_count);
     if (new_fd_cur == NULL) {
         return -1;
     }
-
-    fd_orig = new_fd_orig;
-    fd_setup = new_fd_setup;
     fd_cur = new_fd_cur;
     fd_setup[fd_setup_len] = -1;
 

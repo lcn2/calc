@@ -7824,27 +7824,30 @@ define test_copy_bounds()
                 return;
         }
         print                             '7106: f = fopen("junk7100", "wb");';
+        ecnt += 1;
+        vrfy(iserror(copy(A, f, 0, 4)) == errsym("E_COPY_05"),
+                        '7107: iserror(copy(A, f, 0, 4)) == errsym("E_COPY_05")');
         vrfy(isnull(copy(A, f, 1, 2)),
-                        '7107: isnull(copy(A, f, 1, 2))');
+                        '7108: isnull(copy(A, f, 1, 2))');
         vrfy(isnull(fclose(f)),
-                        '7108: isnull(fclose(f))');
+                        '7109: isnull(fclose(f))');
         f = fopen("junk7100", "rb");
         if (iserror(f)) {
                 prob('Unable to open "junk7100" for reading');
                 rm("junk7100");
                 return;
         }
-        print                             '7109: f = fopen("junk7100", "rb");';
-        vrfy(fsize(f) == 2,              '7110: fsize(f) == 2');
-        vrfy(fgetc(f) == "b",            '7111: fgetc(f) == "b"');
-        vrfy(fgetc(f) == "c",            '7112: fgetc(f) == "c"');
-        vrfy(isnull(fgetc(f)),           '7113: isnull(fgetc(f))');
+        print                             '7110: f = fopen("junk7100", "rb");';
+        vrfy(fsize(f) == 2,              '7111: fsize(f) == 2');
+        vrfy(fgetc(f) == "b",            '7112: fgetc(f) == "b"');
+        vrfy(fgetc(f) == "c",            '7113: fgetc(f) == "c"');
+        vrfy(isnull(fgetc(f)),           '7114: isnull(fgetc(f))');
         vrfy(isnull(fclose(f)),
-                        '7114: isnull(fclose(f))');
+                        '7115: isnull(fclose(f))');
         rm("junk7100");
-        print                            '7115: rm("junk7100")';
+        print                            '7116: rm("junk7100")';
 
-        print '7116: Ending test_copy_bounds';
+        print '7117: Ending test_copy_bounds';
 }
 print '173: parsed test_copy_bounds()';
 
