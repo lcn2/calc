@@ -624,6 +624,9 @@ copyblk2file(BLOCK *sblk, LEN ssi, LEN num, FILEID id, LEN dsi)
     if (num == 0) {
         return 0;
     }
+    if (num > sblk->datalen - ssi) {
+        return E_COPY_05;
+    }
 
     fiop = findid(id, true);
     if (fiop == NULL) {
@@ -631,7 +634,11 @@ copyblk2file(BLOCK *sblk, LEN ssi, LEN num, FILEID id, LEN dsi)
     }
     fp = fiop->fp;
     if (id == 1 || id == 2) {
-        numw = idfputstr(id, (char *)sblk->data + ssi); /* XXX */
+        numw = fwrite(sblk->data + ssi, 1, num, fp);
+        if (numw < num) {
+            return E_COPYF_3;
+        }
+        fflush(fp);
         return 0;
     }
     if (dsi >= 0) {
@@ -749,7 +756,7 @@ copystr2file(STRING *str, LEN ssi, LEN num, FILEID id, LEN dsi)
     if (num <= 0) { /* Nothing to be copied */
         return 0;
     }
-    if (ssi + num > len) {
+    if (num > len - ssi) {
         return E_COPY_05; /* Insufficient memory in str */
     }
     fiop = findid(id, true);
@@ -758,7 +765,11 @@ copystr2file(STRING *str, LEN ssi, LEN num, FILEID id, LEN dsi)
     }
     fp = fiop->fp;
     if (id == 1 || id == 2) {
-        numw = idfputstr(id, str->s_str + ssi); /* XXX */
+        numw = fwrite(str->s_str + ssi, 1, num, fp);
+        if (numw < num) {
+            return E_COPYF_3;
+        }
+        fflush(fp);
         return 0;
     }
     if (dsi >= 0) {
@@ -844,6 +855,9 @@ copystr2blk(STRING *str, LEN ssi, LEN num, BLOCK *dblk, LEN dsi, bool noreloc)
     }
     if (num <= 0) { /* Nothing to be copied */
         return 0;
+    }
+    if (num > len - ssi) {
+        return E_COPY_05;
     }
     if (dsi < 0) {
         dsi = dblk->datalen;

@@ -273,16 +273,15 @@ addliteral(char *str)
         if (literals.l_maxcount) {
             /* alloc + 1 guard paranoia */
             table = (char **)realloc(literals.l_table, (count + 1) * sizeof(char *));
-            table[count] = NULL; /* guard paranoia */
         } else {
             /* alloc + 1 guard paranoia */
             table = (char **)calloc(count + 1, sizeof(char *));
-            table[count] = NULL; /* guard paranoia */
         }
         if (table == NULL) {
             math_error("Cannot allocate string literal table");
             not_reached();
         }
+        table[count] = NULL; /* guard paranoia */
         literals.l_table = table;
         literals.l_maxcount = count;
     }
@@ -1217,16 +1216,15 @@ stralloc(void)
         if (firstStrs == NULL) {
             /* alloc + 1 guard paranoia */
             newfn = (STRING **)calloc(blockcount + 1, sizeof(STRING *));
-            newfn[blockcount] = NULL; /* guard paranoia */
         } else {
             /* alloc + 1 guard paranoia */
             newfn = (STRING **)realloc(firstStrs, (blockcount + 1) * sizeof(STRING *));
-            newfn[blockcount] = NULL; /* guard paranoia */
         }
         if (newfn == NULL) {
             math_error("Cannot allocate new string block");
             not_reached();
         }
+        newfn[blockcount] = NULL; /* guard paranoia */
         firstStrs = newfn;
         firstStrs[blockcount - 1] = freeStr;
     }

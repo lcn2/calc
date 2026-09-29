@@ -11,7 +11,7 @@ TYPES
     return      real
 
 DESCRIPTION
-    Returns the inverse exterior trigonometric cscant of x to a multiple of eps with error less in
+    Returns the inverse exterior trigonometric cosecant of x to a multiple of eps with error less in
     absolute value than .75 * eps.
 
     This function is sometimes called arcexcsc, is equivalent to:

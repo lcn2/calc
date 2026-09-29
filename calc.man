@@ -221,7 +221,7 @@ The getenv() builtin will still return values, however.
 
 .TP
 .BR \-f " filename"
-This flag is normally only with calc shell scripts.
+This flag is normally only used with calc shell scripts.
 .sp 1
 This flag is required when using calc in
 .BR "shell script mode" .
@@ -587,7 +587,7 @@ calc -23 + 47
 The first example above fails because the shell interprets the '*'
 as a file glob.
 The second example fails because '\-23' is viewed as a calc option
-(which it is not) and do calc objects to that it thinks of as an unknown option.
+(which it is not) and calc objects to what it thinks of as an unknown option.
 These cases can usually be made to work as expected by
 enclosing the command between quotes:
 .sp 1

@@ -1,4 +1,213 @@
-The following are the changes from calc version 3.0.1.0 to date:
+The following are the changes from calc version 3.0.1.1 to date:
+
+    Add `${N}` make variable to silence command stderr during non-hsrc-related
+    actions in all Makefiles.  The default is `N= >/dev/null 2>&1`.
+
+    Use `__IGNORE__` instead of `/dev/null` in for loops as a means of
+    ignoring the last action of a loop.  This is often needed when the loop
+    items consist of various make variables that, in theory, could be set
+    to nothing, as this forces at least one loop item, usually the last loop
+    item, which is now `__IGNORE__`.
+
+    Now the only place where `/dev/null` is found by make in all Makefiles
+    is in the top-level variables `${S}`, `${E}`, and now `${N}`, or in a
+    comment.
+
+    The above 3 Makefile actions were performed on `Makefile`, `cal/Makefile`,
+    `cscript/Makefile`, `custom/Makefile`, and `help/Makefile`
+
+    Fixed `make depend` in `custom/Makefile`.
+
+    Updated `.clang-format` stating it was tested under version
+    `clang-format(1)` 23.1.1.
+
+    Performed a major security audit on calc version 2.17.0.0.  Remediate
+    confirmed memory-safety and logic issues found during a full audit
+    of the C sources and aligns the affected documentation/help text
+    with current behavior.  Also hardened copy bounds and allocation
+    growth paths.  Fixed regression errcount checkpoint for make chk.
+
+    The details of the security audit on calc version 2.17.0.0 that
+    have been applied to calc version 3.0.1.0:
+
+    In `blkcpy.c`:
+
+    - **Finding:** `copyblk2file()` accepted oversized `num` values
+      without verifying `num <= datalen - ssi`.
+
+      - **Root cause:** Missing source-bounds validation before writing
+        block data to a file.
+
+      - **Risk / impact before fix:** **High**. Out-of-bounds heap reads
+        could disclose adjacent process memory when copying a block to
+        a file.
+
+      - **Fix:** Added an explicit bounds check that returns `E_COPY_05`
+        for oversized requests.
+
+    - **Finding:** `copyblk2file()` wrote block data to stdout/stderr via
+      `idfputstr()`, which treated arbitrary block data as a NUL-terminated
+      C string and ignored the requested length.
+
+      - **Root cause:** Length-unaware output path for file IDs 1 and 2.
+
+      - **Risk / impact before fix:** **High**. Could over-read block
+        memory until the next NUL byte and leak data.
+
+      - **Fix:** Replaced the stdout/stderr special case with
+        length-bounded `fwrite()` + `fflush()` that honors `num`.
+
+    - **Finding:** `copystr2blk()` did not reject positive `num` values
+      larger than the remaining source string length.
+
+      - **Root cause:** Missing `num <= len - ssi` validation on the
+        string source path.
+
+      - **Risk / impact before fix:** **High**. Allowed out-of-bounds
+        reads past the end of the source string into a destination block.
+
+      - **Fix:** Added a source-bounds check returning `E_COPY_05`
+        when the request exceeds the remaining string length.
+
+    - **Finding:** `copystr2file()` also ignored `num` for stdout/stderr
+      and emitted a terminating NUL through `idfputstr()`.
+
+      - **Root cause:** Same length-unaware stdout/stderr path as
+        block-to-file copies.
+
+      - **Risk / impact before fix:** **Medium** correctness issue with
+        possible unintended extra output.
+
+      - **Fix:** Switched stdout/stderr writes to bounded `fwrite()` + `fflush()`.
+
+    In `lib_calc.c`:
+
+    - **Finding:** `find_tty_state()` reallocated `fd_orig` and then
+      copied `fd_setup` (an `int *`) into it as if it were `ttystruct[]`.
+
+      - **Root cause:** Incorrect `memcpy()` source pointer during
+        tty-state table growth.
+
+      - **Risk / impact before fix:** **Medium**. Out-of-bounds reads
+        and corruption of saved tty state, potentially causing invalid
+        terminal restoration.
+
+      - **Fix:** Removed the invalid copy, reallocated all three tty-state
+        arrays into temporaries, and committed the new pointers only after
+        every reallocation succeeded.
+
+    In `str.c`:
+
+    - **Finding:** The string literal table and string block growth
+      paths wrote guard sentinels before checking whether `realloc()` /
+      `calloc()` returned `NULL`.
+
+      - **Root cause:** Sentinel writes were placed before the
+        allocation-failure checks.
+
+      - **Risk / impact before fix:** **Medium**. Could dereference
+        `NULL` during out-of-memory handling.
+
+      - **Fix:** Moved guard writes to after successful allocation.
+
+    In `input.c`:
+
+    - **Finding:** `findfreeread()` assigned `realloc()` directly back
+      to the live global `readset` pointer.
+
+      - **Root cause:** Live-state `realloc()` assignment without
+        a temporary.
+
+      - **Risk / impact before fix:** **Medium**. On failure, the tracked
+        readset state could be lost before error handling.
+
+      - **Fix:** Reworked growth to use a temporary pointer and only
+        commit on success.
+
+    In `addop.c`:
+
+    - **Finding:** `adduserfunc()` assigned `realloc()` directly to the
+      live `functions` table.
+
+      - **Root cause:** Live-state `realloc()` assignment without
+        a temporary.
+
+      - **Risk / impact before fix:** **Low/Medium**. Could discard the
+        function table pointer on allocation failure.
+
+      - **Fix:** Reworked growth to use a temporary pointer.
+
+    In `block.c`:
+
+    - **Finding:** `createnblock()` updated `maxnblockcount` before
+      successful growth and assigned `realloc()` directly to `nblocks`.
+
+      - **Root cause:** Non-atomic growth of the named-block table.
+
+      - **Risk / impact before fix:** **Medium**. Allocation failure
+        could leave table metadata and pointer state inconsistent.
+
+      - **Fix:** Grew into a temporary pointer and updated `maxnblockcount`
+        only after success.
+
+    In `obj.c`:
+
+    - **Finding:** `defineobject()` updated object-table capacity
+      bookkeeping before successful reallocation.
+
+      - **Root cause:** Capacity state changed before allocation success
+        was known.
+
+      - **Risk / impact before fix:** **Low/Medium**. Could leave object
+        table state inconsistent after recovery from allocation failure.
+
+      - **Fix:** Deferred `maxobjcount` updates until after successful
+        allocation.
+
+    In `custom/u_pfe.c`:
+
+    - **Finding:** `strext()` overwrote `*subject` with the direct result
+      of `realloc()` and then attempted to free the already-overwritten
+      pointer on failure.
+
+      - **Root cause:** Incorrect direct `realloc()` assignment pattern.
+
+      - **Risk / impact before fix:** **Low/Medium**. Lost the original
+        allocation on failure and made the cleanup path ineffective.
+
+      - **Fix:** Switched to a temporary pointer and only stored back to
+        `*subject` on success.
+
+    In Documentation / help text:
+
+    - **`calc.man`**
+
+      - Fixed the `-f` option text (`"normally only used"`) and corrected
+        malformed wording in the negative-number shell-globbing explanation.
+
+    - **`help/aexcsc`**
+
+      - Fixed `cscant` -> `cosecant`.
+
+    - **`README.md`**
+
+      - Fixed grammar in the `help asinh` example description.
+
+    In Tests:
+
+    - **`cal/regress.cal`**
+
+      - Added `test_copy_bounds()` to verify oversized block/string copy
+        requests are rejected and that bounded block-to-file copying writes
+        exactly the requested bytes.
+
+      - Updated the regression `ecnt` checkpoint so the new expected
+        copy-boundary errors are accounted for and `make chk` remains green.
+
+      - Hooked the new test into the existing regression sequence.
+
+
+The following are the changes from calc version 3.0.1.0 to 3.0.1.0:
 
     **NOTE**: At the start of calc version 3.0.1.0, the code identical to calc version 2.17.0.0,
               except for the version number of course.  :-)  Nevertheless, because the
