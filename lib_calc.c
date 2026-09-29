@@ -858,6 +858,7 @@ find_tty_state(int fd)
     int *new_fd_setup;      /* new fd_setup array */
     ttystruct *new_fd_orig; /* new fd_orig array */
     ttystruct *new_fd_cur;  /* new fd_cur array */
+    size_t new_fd_count;    /* new number of tracked tty descriptors */
     int i;
 
     /*
@@ -915,28 +916,30 @@ find_tty_state(int fd)
     /*
      * no empty slots exist, realloc another slot
      */
+    new_fd_count = (size_t)fd_setup_len + 1;
+
     /* expand fd_orig as an original pre-modified copy of fd_setup */
-    new_fd_orig = (ttystruct *)realloc(fd_orig, sizeof(fd_orig[0]) * (fd_setup_len + 1));
+    new_fd_orig = (ttystruct *)realloc(fd_orig, sizeof(fd_orig[0]) * new_fd_count);
     if (new_fd_orig == NULL) {
         return -1;
     }
-    fd_orig = new_fd_orig;
-    memcpy(fd_orig, fd_setup, sizeof(fd_orig[0]) * (fd_setup_len + 1));
 
     /* expand fd_setup */
-    new_fd_setup = (int *)realloc(fd_setup, sizeof(fd_setup[0]) * (fd_setup_len + 1));
+    new_fd_setup = (int *)realloc(fd_setup, sizeof(fd_setup[0]) * new_fd_count);
     if (new_fd_setup == NULL) {
         return -1;
     }
-    fd_setup = new_fd_setup;
-    new_fd_setup[fd_setup_len] = -1;
 
     /* expand fd_cur */
-    new_fd_cur = (ttystruct *)realloc(fd_cur, sizeof(fd_cur[0]) * (fd_setup_len + 1));
+    new_fd_cur = (ttystruct *)realloc(fd_cur, sizeof(fd_cur[0]) * new_fd_count);
     if (new_fd_cur == NULL) {
         return -1;
     }
+
+    fd_orig = new_fd_orig;
+    fd_setup = new_fd_setup;
     fd_cur = new_fd_cur;
+    fd_setup[fd_setup_len] = -1;
 
     /* expand fd setup length */
     ++fd_setup_len;

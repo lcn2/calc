@@ -7795,8 +7795,62 @@ define test_blkprintf()
 print '172: parsed test_blkprintf()';
 
 
+/*
+ * test 173: test_copy_bounds - define test_copy_bounds for test 71dd
+ *
+ * This function verifies copy source bounds checks for blocks and strings.
+ */
+define test_copy_bounds()
+{
+        local A, B, f;
+
+        print '7100: Beginning test_copy_bounds';
+        A = blk() = {97, 98, 99};
+        print                             '7101: A = blk() = {97, 98, 99};';
+        B = blk();
+        print                             '7102: B = blk();';
+        vrfy(strprintf("%s", A) == "abc",
+                        '7103: strprintf("%s", A) == "abc"');
+        ecnt += 1;
+        vrfy(iserror(copy(A, B, 0, 4)) == errsym("E_COPY_05"),
+                        '7104: iserror(copy(A, B, 0, 4)) == errsym("E_COPY_05")');
+        ecnt += 1;
+        vrfy(iserror(copy("abc", B, 1, 4)) == errsym("E_COPY_05"),
+                        '7105: iserror(copy("abc", B, 1, 4)) == errsym("E_COPY_05")');
+
+        f = fopen("junk7100", "wb");
+        if (iserror(f)) {
+                prob('Unable to open "junk7100" for writing');
+                return;
+        }
+        print                             '7106: f = fopen("junk7100", "wb");';
+        vrfy(isnull(copy(A, f, 1, 2)),
+                        '7107: isnull(copy(A, f, 1, 2))');
+        vrfy(isnull(fclose(f)),
+                        '7108: isnull(fclose(f))');
+        f = fopen("junk7100", "rb");
+        if (iserror(f)) {
+                prob('Unable to open "junk7100" for reading');
+                rm("junk7100");
+                return;
+        }
+        print                             '7109: f = fopen("junk7100", "rb");';
+        vrfy(fsize(f) == 2,              '7110: fsize(f) == 2');
+        vrfy(fgetc(f) == "b",            '7111: fgetc(f) == "b"');
+        vrfy(fgetc(f) == "c",            '7112: fgetc(f) == "c"');
+        vrfy(isnull(fgetc(f)),           '7113: isnull(fgetc(f))');
+        vrfy(isnull(fclose(f)),
+                        '7114: isnull(fclose(f))');
+        rm("junk7100");
+        print                            '7115: rm("junk7100")';
+
+        print '7116: Ending test_copy_bounds';
+}
+print '173: parsed test_copy_bounds()';
+
+
 /* **************************************************************** */
-/* NOTE: ==> Room for special start of regression test 173 here <== */
+/* NOTE: ==> Room for special start of regression test 174 here <== */
 /* **************************************************************** */
 
 
@@ -8975,6 +9029,13 @@ return test_blkprintf();
 /* *********************************************** */
 /* NOTE: ==> Room for new tests 7100-7199 here <== */
 /* *********************************************** */
+
+
+/*
+ * test 71dd: test copy source bounds checks
+ */
+print;
+return test_copy_bounds();
 
 
 /*
