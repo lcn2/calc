@@ -142,8 +142,6 @@ echo '-=- calc.spec ending make install -=-'
 
 %clean
 echo '-=- calc.spec beginning make clean -=-'
-rm -rf %{_builddir}
-rm -rf %{_specdir}
 rm -rf %{_buildrootdir}
 echo '-=- calc.spec beginning make clean -=-'
 
