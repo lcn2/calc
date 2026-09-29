@@ -2,7 +2,7 @@
 #
 # rpm.mk - Makefile for building rpm packages for calc
 #
-# Copyright (C) 2003,2014,2021,2023  Petteri Kettunen and Landon Curt Noll
+# Copyright (C) 2003,2014,2021,2023,2026  Petteri Kettunen and Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -189,7 +189,7 @@ srcpkg: make_rhdir
 	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
 .PHONY: rpm
-rpm: srcpkg calc.spec
+rpm: srcpkg make_rhdir calc.spec
 	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
 	${V} echo RPM_TOP="${RPM_TOP}"
 	${V} echo RPM_BUILD_ROOT="${RPM_BUILD_ROOT}"
@@ -201,6 +201,7 @@ rpm: srcpkg calc.spec
 	${RM} -f "$(RPM_TOP)/RPMS/$(TARCH)/$(RPMx86_64)"
 	${RM} -f "$(RPM_TOP)/RPMS/$(TARCH)/$(DRPMx86_64)"
 	${RM} -f "$(RPM_TOP)/SRPMS/$(SRPM)"
+	$(MAKE) -f rpm.mk make_rhdir   # <-- Re-ensure directories/tmp exist right before build
 	${RPMBUILD_TOOL} ${RPMBUILD_OPTION} "$(RPM_TOP)/SPECS/$(SPECFILE)"
 	@if [ ! -f "$(RPM_TOP)/SRPMS/$(SRPM)" ]; then \
 	    echo "SRPMS/$(SRPM) not found" 1>&2; \
