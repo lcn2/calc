@@ -1638,12 +1638,14 @@ static char *
 strext(char **subject, char *with)
 {
     size_t n;
+    char *newsubject;
 
     n = strlen(*subject) + strlen(with);
-    if ((*subject = realloc(*subject, n + 1)) == NULL) {
-        free(*subject);
+    newsubject = realloc(*subject, n + 1);
+    if (newsubject == NULL) {
         return NULL;
     }
+    *subject = newsubject;
     private_strlcat(*subject, with, n + 1);
 
     return *subject;

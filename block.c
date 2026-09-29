@@ -576,24 +576,25 @@ createnblock(char *name, int len, int chunk)
 {
     NBLOCK *res;
     char *newname;
+    NBLOCK **newnblocks;
 
     if (nblockcount >= maxnblockcount) {
         if (maxnblockcount <= 0) {
-            maxnblockcount = NBLOCKCHUNK;
-            nblocks = (NBLOCK **)calloc(NBLOCKCHUNK, sizeof(NBLOCK *));
-            if (nblocks == NULL) {
-                maxnblockcount = 0;
+            newnblocks = (NBLOCK **)calloc(NBLOCKCHUNK, sizeof(NBLOCK *));
+            if (newnblocks == NULL) {
                 math_error("unable to malloc new named blocks");
                 not_reached();
             }
+            nblocks = newnblocks;
+            maxnblockcount = NBLOCKCHUNK;
         } else {
-            maxnblockcount += NBLOCKCHUNK;
-            nblocks = (NBLOCK **)realloc(nblocks, maxnblockcount * sizeof(NBLOCK *));
-            if (nblocks == NULL) {
-                maxnblockcount = 0;
+            newnblocks = (NBLOCK **)realloc(nblocks, (maxnblockcount + NBLOCKCHUNK) * sizeof(NBLOCK *));
+            if (newnblocks == NULL) {
                 math_error("cannot malloc more named blocks");
                 not_reached();
             }
+            nblocks = newnblocks;
+            maxnblockcount += NBLOCKCHUNK;
         }
     }
     if (nblockcount == 0) {

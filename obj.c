@@ -528,16 +528,19 @@ defineobject(char *name, int indices[], int count)
     if (hp->h_count >= maxobjcount) {
         if (maxobjcount == 0) {
             newobjects = (OBJECTACTIONS **)calloc(OBJALLOC, sizeof(OBJECTACTIONS *));
-            maxobjcount = OBJALLOC;
         } else {
-            maxobjcount += OBJALLOC;
-            newobjects = (OBJECTACTIONS **)realloc(objects, maxobjcount * sizeof(OBJECTACTIONS *));
+            newobjects = (OBJECTACTIONS **)realloc(objects, (maxobjcount + OBJALLOC) * sizeof(OBJECTACTIONS *));
         }
         if (newobjects == NULL) {
             math_error("Allocation failure for new object type");
             not_reached();
         }
         objects = newobjects;
+        if (maxobjcount == 0) {
+            maxobjcount = OBJALLOC;
+        } else {
+            maxobjcount += OBJALLOC;
+        }
     }
 
     oap = (OBJECTACTIONS *)calloc(1, objectactionsize(count));
