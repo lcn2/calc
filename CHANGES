@@ -1,4 +1,4 @@
-The following are the changes from calc version 2.17.0.0 to 2.17.0.1:
+The following are the changes from calc version 2.17.0.0 to 2.17.0.2:
 
     Add `${N}` make variable to silence command stderr during non-hsrc-related
     actions in all Makefiles.  The default is `N= >/dev/null 2>&1`.
@@ -28,6 +28,12 @@ The following are the changes from calc version 2.17.0.0 to 2.17.0.1:
     of the C sources and aligned the affected documentation/help text
     with current behavior.  Also hardened copy bounds and allocation
     growth paths.  Fixed regression errcount checkpoint for make chk.
+
+    Follow-up review fixes propagated stdout/stderr flush failures from
+    bounded block and string copies, reported string-buffer allocation
+    failures while collecting custom command output, corrected the custom
+    dependency recipe's stderr redirection, and added captured-output
+    regression coverage for both source types and standard streams.
 
     The details of the security audit on calc version 2.17.0.0:
 
