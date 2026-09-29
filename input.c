@@ -1024,6 +1024,7 @@ static int
 findfreeread(void)
 {
     int i;
+    READSET *newreadset;
 
     /* deal with an empty readset case */
     if (readset == NULL || maxreadset <= 0) {
@@ -1051,10 +1052,11 @@ findfreeread(void)
     }
 
     /* all readset entries are in use, allocate more */
-    readset = (READSET *)realloc(readset, (maxreadset + READSET_ALLOC) * sizeof(READSET));
-    if (readset == NULL) {
+    newreadset = (READSET *)realloc(readset, (maxreadset + READSET_ALLOC) * sizeof(READSET));
+    if (newreadset == NULL) {
         return -1;
     }
+    readset = newreadset;
     for (i = 0; i < READSET_ALLOC; ++i) {
         readset[i + maxreadset].active = 0;
     }

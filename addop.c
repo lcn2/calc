@@ -253,17 +253,19 @@ long
 adduserfunc(char *name)
 {
     long index; /* index of function */
+    FUNC **newfuncs; /* resized function table */
 
     index = findstr(&funcnames, name);
     if (index >= 0) {
         return index;
     }
     if (funccount >= funcavail) {
-        functions = (FUNC **)realloc(functions, sizeof(FUNC *) * (funcavail + FUNCALLOCSIZE));
-        if (functions == NULL) {
+        newfuncs = (FUNC **)realloc(functions, sizeof(FUNC *) * (funcavail + FUNCALLOCSIZE));
+        if (newfuncs == NULL) {
             math_error("Failed to reallocate function table");
             not_reached();
         }
+        functions = newfuncs;
         funcavail += FUNCALLOCSIZE;
     }
     if (addstr(&funcnames, name) == NULL) {
