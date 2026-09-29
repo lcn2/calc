@@ -9244,8 +9244,8 @@ read -once "test8900.special";
 print '8902: about to run test8900(1,,8903)';
 testnum = test8900(1,,8903);
 print "8941: ecnt ==", ecnt;
-print '8942: ecnt = 226;'
-ecnt = 226;
+print '8942: ecnt = 228;'
+ecnt = 228;
 
 
 /*
