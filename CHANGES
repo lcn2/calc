@@ -6,7 +6,55 @@ The following are the changes from calc version 3.0.1.2 to date:
     dependency recipe's stderr redirection, and added captured-output
     regression coverage for both source types and standard streams.
 
-The following are the changes from calc version 3.0.1.1 to 3.0.1.1:
+    This release follow-up addresses audit findings, adds output-bound
+    regression coverage, and bumps calc to 3.0.1.2.
+
+    Address review findings from the security audit follow-up, including
+    silent output truncation, missing regression coverage, inaccurate
+    release notes, and stale Makefile redirection.
+
+    - **Error propagation**
+
+      - Return `E_COPYF_3` when stdout/stderr flushes fail.
+      - Propagate `strext()` allocation failures from custom command
+        output capture.
+
+  ```c
+      if (fflush(fp)) {
+          return E_COPYF_3;
+      }
+  ```
+
+    - **Regression coverage**
+
+      - Capture stdout and stderr for bounded block and string copies.
+      - Verify exact output lengths for file IDs 1 and 2.
+
+    - **Build and documentation**
+
+      - Replace stale `/dev/null` redirection in `custom/Makefile`.
+      - Correct release-note tense and tty-state reallocation description.
+      - Document all follow-up findings and fixes in `CHANGES`.
+
+    - **Version**
+
+      - Bump calc from 3.0.1.1 to  3.0.1.2.
+
+    - **Changes:**
+
+      - Propagates stream flush and output-buffer allocation failures.
+      - Adds stdout/stderr bounded-copy regression tests.
+      - Updates build redirection, release notes, and version metadata.
+      - `version.h`: Bumps the compiled patch version.
+      - `Makefile.config`: Updates the package version.
+      - `custom/u_pfe.c`: Reports output-capture allocation failures.
+      - `custom/Makefile`: Uses configurable stderr redirection.
+      - `CHANGES`: Documents audit follow-up fixes.
+      - `cal/regress.cal`: Tests bounded stdout/stderr copies.
+      - `blkcpy.c`: Propagates standard-stream flush failures.
+
+
+The following are the changes from calc version 3.0.1.1 to 3.0.1.2:
 
     Add `${N}` make variable to silence command stderr during non-hsrc-related
     actions in all Makefiles.  The default is `N= >/dev/null 2>&1`.
