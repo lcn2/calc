@@ -1551,7 +1551,7 @@ COMPLEX *
 c_power(COMPLEX *c1, COMPLEX *c2, NUMBER *epsilon)
 {
     COMPLEX *ctmp1, *ctmp2;
-    long k1, k2, m1, m2, m, n;
+    long m1, m2, m, n;
     NUMBER *a2b2, *qtmp1, *qtmp2, *epsilon1;
     NUMBER *k1_num;
     NUMBER *k2_num;
@@ -1574,7 +1574,8 @@ c_power(COMPLEX *c1, COMPLEX *c2, NUMBER *epsilon)
     }
     n = qilog2(epsilon);
     m1 = m2 = -1000000;
-    k1 = k2 = 0;
+    k1_num = qlink(&_qzero_);
+    k2_num = qlink(&_qzero_);
     if (!qiszero(c2->real)) {
         qtmp1 = qsquare(c1->real);
         qtmp2 = qsquare(c1->imag);
@@ -1590,7 +1591,13 @@ c_power(COMPLEX *c1, COMPLEX *c2, NUMBER *epsilon)
         qfree(qtmp1);
         qtmp1 = qmul(qtmp2, &_qlge_);
         qfree(qtmp2);
-        k1 = qtoi(qtmp1);
+        qfree(k1_num);
+        k1_num = qint(qtmp1);
+        if (qisneg(qtmp1) && qisfrac(qtmp1)) {
+            tmp = qdec(k1_num);
+            qfree(k1_num);
+            k1_num = tmp;
+        }
         qfree(qtmp1);
     }
     if (!qiszero(c2->imag)) {
@@ -1604,7 +1611,13 @@ c_power(COMPLEX *c1, COMPLEX *c2, NUMBER *epsilon)
         qfree(qtmp2);
         qtmp2 = qmul(qtmp1, &_qlge_);
         qfree(qtmp1);
-        k2 = qtoi(qtmp2);
+        qfree(k2_num);
+        k2_num = qint(qtmp2);
+        if (qisneg(qtmp2) && qisfrac(qtmp2)) {
+            tmp = qdec(k2_num);
+            qfree(k2_num);
+            k2_num = tmp;
+        }
         qfree(qtmp2);
     }
     m = (m2 > m1) ? m2 : m1;
@@ -1614,10 +1627,9 @@ c_power(COMPLEX *c1, COMPLEX *c2, NUMBER *epsilon)
      *
      *      k = k1 - k2 + 1
      *
-     * however we must be careful about "Signed integer overflow" during k1 - k2 or due to + 1.
+     * Keep k1 and k2 as arbitrary-precision integers.  Converting each
+     * separately to long can saturate both terms and lose their difference.
      */
-    k1_num = itoq(k1);
-    k2_num = itoq(k2);
     tmp = qsub(k1_num, k2_num);
     qfree(k1_num);
     qfree(k2_num);
@@ -1638,6 +1650,14 @@ c_power(COMPLEX *c1, COMPLEX *c2, NUMBER *epsilon)
         /* value is < epsilon, so return complex 0 */
         qfree(k_num) qfree(n_num) return clink(&_czero_);
     }
+    tmp = itoq(1L << 30);
+    if (qrel(k_num, tmp) > 0) {
+        qfree(tmp);
+        qfree(k_num);
+        qfree(n_num);
+        return NULL;
+    }
+    qfree(tmp);
 
     /*
      * We want to, in effect, compute:

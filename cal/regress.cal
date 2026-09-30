@@ -7906,6 +7906,9 @@ define test_copy_bounds()
                  * instead of calling fclose() and having to special case
                  * the resulting close error.
                  */
+        } else {
+                /* The failed /dev/full probe itself increments errcount(). */
+                ecnt += 1;
         }
         print '7135: Ending test_copy_bounds';
 }
