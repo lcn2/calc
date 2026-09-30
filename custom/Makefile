@@ -381,7 +381,7 @@ depend:
 	    echo '#endif /* '"$$tag"' */' >> "skel/custom/$$i"; \
 	done
 	${Q} (cd ..; ${MAKE} -f ${MAKE_FILE} hsrc ${N})
-	${Q} (cd ..; ${MAKE} -f ${MAKE_FILE} h_list 2>/dev/null) | \
+	${Q} (cd ..; ${MAKE} -f ${MAKE_FILE} h_list ${E}) | \
 	    while read i; do \
 		if [ ! -f "../$$i" ]; then continue; fi; \
 		tag="`echo $$i | ${SED} 's/[\.+,:]/_/g'`"; \

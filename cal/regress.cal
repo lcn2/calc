@@ -7802,7 +7802,7 @@ print '172: parsed test_blkprintf()';
  */
 define test_copy_bounds()
 {
-        local A, B, f;
+        local A, B, f, g, h;
 
         print '7100: Beginning test_copy_bounds';
         A = blk() = {97, 98, 99};
@@ -7847,7 +7847,30 @@ define test_copy_bounds()
         rm("junk7100");
         print                            '7116: rm("junk7100")';
 
-        print '7117: Ending test_copy_bounds';
+        f = fopen("cal/junk7110", "w");
+        if (iserror(f)) {
+                prob('Unable to open "cal/junk7110" for writing');
+                return;
+        }
+        fputs(f, "A = blk() = {97, 98, 99};\n");
+        fputs(f, "copy(A, files(1), 0, 2),;\n");
+        fputs(f, "copy(A, files(2), 1, 2),;\n");
+        fputs(f, "copy(\"abc\", files(1), 0, 2),;\n");
+        fputs(f, "copy(\"abc\", files(2), 1, 2),;\n");
+        fclose(f);
+        vrfy(system("./calc -d -q read junk7110 > junk7111 2> junk7112") == 0,
+                        '7117: system("./calc -d -q read junk7110 > junk7111 2> junk7112") == 0');
+        g = fopen("junk7111", "r");
+        h = fopen("junk7112", "r");
+        vrfy(!iserror(g) && !iserror(h), '7118: !iserror(g) && !iserror(h)');
+        vrfy(fgetfile(g) == "abab", '7119: fgetfile(g) == "abab"');
+        vrfy(fgetfile(h) == "bcbc", '7120: fgetfile(h) == "bcbc"');
+        fclose(g);
+        fclose(h);
+        rm("cal/junk7110");
+        rm("junk7111");
+        rm("junk7112");
+        print '7121: Ending test_copy_bounds';
 }
 print '173: parsed test_copy_bounds()';
 

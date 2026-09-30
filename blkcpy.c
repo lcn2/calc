@@ -638,7 +638,9 @@ copyblk2file(BLOCK *sblk, LEN ssi, LEN num, FILEID id, LEN dsi)
         if (numw < num) {
             return E_COPYF_3;
         }
-        fflush(fp);
+        if (fflush(fp)) {
+            return E_COPYF_3;
+        }
         return 0;
     }
     if (dsi >= 0) {
@@ -769,7 +771,9 @@ copystr2file(STRING *str, LEN ssi, LEN num, FILEID id, LEN dsi)
         if (numw < num) {
             return E_COPYF_3;
         }
-        fflush(fp);
+        if (fflush(fp)) {
+            return E_COPYF_3;
+        }
         return 0;
     }
     if (dsi >= 0) {
