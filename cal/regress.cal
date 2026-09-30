@@ -7872,7 +7872,26 @@ define test_copy_bounds()
         rm("cal/junk7110");
         rm("junk7111");
         rm("junk7112");
-        print '7123: Ending test_copy_bounds';
+        if (system("test -c /dev/full") == 0) {
+                f = fopen("cal/junk7113", "w");
+                if (iserror(f)) {
+                        prob('Unable to open "cal/junk7113" for writing');
+                        return;
+                }
+                fputs(f, "e = iserror(copy(\"abc\", files(1), 0, 2));\n");
+                fputs(f, "if (e == errsym(\"E_COPYF_3\")) fputs(files(2), \"E_COPYF_3\\n\");\n");
+                fclose(f);
+                vrfy(system("./calc -d -q read junk7113 > /dev/full 2> junk7114") == 0,
+                        '7124: system("./calc -d -q read junk7113 > /dev/full 2> junk7114") == 0');
+                h = fopen("junk7114", "r");
+                vrfy(!iserror(h), '7125: !iserror(h)');
+                vrfy(strpos(fgetfile(h), "E_COPYF_3") > 0,
+                        '7126: strpos(fgetfile(h), "E_COPYF_3") > 0');
+                fclose(h);
+                rm("cal/junk7113");
+                rm("junk7114");
+        }
+        print '7127: Ending test_copy_bounds';
 }
 print '173: parsed test_copy_bounds()';
 
