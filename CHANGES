@@ -1,4 +1,4 @@
-The following are the changes from calc version 2.17.0.0 to 2.17.0.1:
+The following are the changes from calc version 2.17.0.0 to 2.17.0.2:
 
     Add `${N}` make variable to silence command stderr during non-hsrc-related
     actions in all Makefiles.  The default is `N= >/dev/null 2>&1`.
@@ -23,11 +23,17 @@ The following are the changes from calc version 2.17.0.0 to 2.17.0.1:
     Fixed a bug in `rpm.mk` that was causing the `/var/tmp/rpmbuild/tmp` directory
     to go missing at the wrong time during the rpm build procedure.
 
-    Performed a major security audit on calc version 2.17.0.0.  Remediate
+    Performed a major security audit on calc version 2.17.0.0.  Remediated
     confirmed memory-safety and logic issues found during a full audit
-    of the C sources and aligns the affected documentation/help text
+    of the C sources and aligned the affected documentation/help text
     with current behavior.  Also hardened copy bounds and allocation
     growth paths.  Fixed regression errcount checkpoint for make chk.
+
+    Follow-up review fixes propagated stdout/stderr flush failures from
+    bounded block and string copies, reported string-buffer allocation
+    failures while collecting custom command output, corrected the custom
+    dependency recipe's stderr redirection, and added captured-output
+    regression coverage for both source types and standard streams.
 
     The details of the security audit on calc version 2.17.0.0:
 
@@ -94,8 +100,9 @@ The following are the changes from calc version 2.17.0.0 to 2.17.0.1:
         terminal restoration.
 
       - **Fix:** Removed the invalid copy, reallocated all three tty-state
-        arrays into temporaries, and committed the new pointers only after
-        every reallocation succeeded.
+        arrays, assigned each pointer after its allocation succeeded, and
+        committed the new logical length only after every reallocation
+        succeeded.
 
     In `str.c`:
 

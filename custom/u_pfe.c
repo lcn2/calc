@@ -1730,7 +1730,9 @@ u_pfe_pread(char *UNUSED(name), int count, VALUE **vals)
             }
             if (r) {
                 ob[r] = '\0';
-                strext(&o, ob);
+                if (strext(&o, ob) == NULL) {
+                    math_error("%s: " __FILE__ ": %d: unable to extend stdout", custname, __LINE__);
+                }
             } else {
                 if (close(out)) {
                     pco = errno;
@@ -1747,7 +1749,9 @@ u_pfe_pread(char *UNUSED(name), int count, VALUE **vals)
             }
             if (r) {
                 eb[r] = '\0';
-                strext(&e, eb);
+                if (strext(&e, eb) == NULL) {
+                    math_error("%s: " __FILE__ ": %d: unable to extend stderr", custname, __LINE__);
+                }
             } else {
                 if (close(err)) {
                     pce = errno;
