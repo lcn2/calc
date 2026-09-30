@@ -1,5 +1,7 @@
 The following are the changes from calc version 3.0.1.2 to date:
 
+The following are the changes from calc version 3.0.1.1 to 3.0.1.2:
+
     Follow-up review fixes propagated stdout/stderr flush failures from
     bounded block and string copies, reported string-buffer allocation
     failures while collecting custom command output, corrected the custom
@@ -52,9 +54,6 @@ The following are the changes from calc version 3.0.1.2 to date:
       - `CHANGES`: Documents audit follow-up fixes.
       - `cal/regress.cal`: Tests bounded stdout/stderr copies.
       - `blkcpy.c`: Propagates standard-stream flush failures.
-
-
-The following are the changes from calc version 3.0.1.1 to 3.0.1.2:
 
     Add `${N}` make variable to silence command stderr during non-hsrc-related
     actions in all Makefiles.  The default is `N= >/dev/null 2>&1`.
