@@ -19,7 +19,9 @@ jobs:
     - name: list changed documentation and C files
       id: changed
       run: |
-        files=$(git diff --name-only --diff-filter=ACMR "origin/${{ github.base_ref }}...HEAD" -- '*.c' '*.h' '*.md' '*.txt' '*.1' 'help/*' | tr '\n' ' ')
+        files=$(git diff --name-only --diff-filter=ACMR \
+          "origin/${{ github.base_ref }}...HEAD" -- \
+          '*.c' '*.h' '*.md' '*.txt' '*.1' 'help/*' | tr '\n' ' ')
         echo "files=$files" >> "$GITHUB_OUTPUT"
     - name: check spelling of changed files
       if: steps.changed.outputs.files != ''
