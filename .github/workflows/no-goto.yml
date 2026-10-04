@@ -1,0 +1,43 @@
+name: No goto
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [ "master" ]
+
+jobs:
+  no-goto:
+    name: no-goto
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        fetch-depth: 0
+    - name: Fail if PR adds goto in C code
+      run: |
+        base="origin/${{ github.base_ref }}"
+        git diff -U0 --no-color "$base...HEAD" -- '*.c' '*.h' | awk '
+          /^\+\+\+ b\// { file = substr($0, 7); next }
+          /^@@/ {
+            s = $3; sub(/^\+/, "", s); split(s, a, ","); line = a[1] - 1; next
+          }
+          /^\+/ {
+            line++
+            t = substr($0, 2)
+            gsub(/"([^"\\]|\\.)*"/, "", t)
+            gsub(/\x27([^\x27\\]|\\.)*\x27/, "", t)
+            gsub(/\/\*.*\*\//, "", t)
+            sub(/\/\/.*/, "", t)
+            if (t ~ /^[ \t]*\*/ ) next
+            if (t ~ /(^|[^A-Za-z0-9_])goto([^A-Za-z0-9_]|$)/) {
+              printf "%s:%d: added goto: %s\n", file, line, substr($0, 2)
+              bad = 1
+            }
+            next
+          }
+          /^ / { line++ }
+          END { exit bad }
+        '

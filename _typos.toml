@@ -1,0 +1,37 @@
+[files]
+extend-exclude = [
+    ".git/",
+    "*.cal",
+    "*.dep",
+    "tags",
+    "CHANGES",
+    "BUGS",
+    "calc.1",
+    "*.ps",
+    "*.pdf",
+    "*.o",
+    "*.a",
+    "*.so",
+    "*.out",
+    "conf.h",
+    "*_gen.c",
+    "*.tab.c",
+    "*.tab.h",
+    "help/full",
+    "help/builtin",
+    "cal/",
+    "picky/",
+    "lib_calc.*",
+]
+
+[default]
+extend-ignore-re = [
+    "(?i)\\bFNV\\b",
+]
+
+[default.extend-words]
+calc = "calc"
+lcn2 = "lcn2"
+Landon = "Landon"
+Noll = "Noll"
+ba = "ba"

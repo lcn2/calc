@@ -1,0 +1,29 @@
+name: Typos
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [ "master" ]
+
+jobs:
+  typos:
+    name: typos
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        fetch-depth: 0
+    - name: list changed documentation and C files
+      id: changed
+      run: |
+        files=$(git diff --name-only --diff-filter=ACMR "origin/${{ github.base_ref }}...HEAD" -- '*.c' '*.h' '*.md' '*.txt' '*.1' 'help/*' | tr '\n' ' ')
+        echo "files=$files" >> "$GITHUB_OUTPUT"
+    - name: check spelling of changed files
+      if: steps.changed.outputs.files != ''
+      uses: crate-ci/typos@v1
+      with:
+        config: _typos.toml
+        files: ${{ steps.changed.outputs.files }}
