@@ -21,7 +21,6 @@ extend-exclude = [
     "help/builtin",
     "cal/",
     "picky/",
-    "lib_calc.*",
 ]
 
 [default]

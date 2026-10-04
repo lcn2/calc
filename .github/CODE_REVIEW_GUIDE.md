@@ -59,8 +59,7 @@ changes any files.
 ## How the pieces fit together
 
 - `.github/copilot-instructions.md` and `.github/instructions/*.instructions.md`
-  (path-specific via `applyTo`) and `.github/copilot/code-review-instructions.md`
-  teach Copilot these standards.
+  (path-specific via `applyTo`) teach Copilot these standards.
 - Workflows in `.github/workflows/` (`no-goto`, `tests`, `typos`, and
   `clang-format`) enforce them on pull requests to `master`. Mark the checks
   `no-goto`, `tests`, `typos`, and `clang-format` (workflows "No goto", "Tests",
