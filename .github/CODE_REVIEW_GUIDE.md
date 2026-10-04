@@ -41,18 +41,27 @@ typos --config _typos.toml <changed files>
 Project-specific terms and excluded generated/vendored files are configured in `_typos.toml`.
 **Enforcement:** the `typos` workflow checks the files changed in the PR.
 
+## 4. C formatting
+
+C code must conform to the options in `.clang-format`. Run `make clang-format`;
+the `clang-format(1)` tool must not need to modify any files.
+**Enforcement:** the `clang-format` workflow runs this target and fails if it
+changes any files.
+
 ## Reviewer checklist
 
 - [ ] No added `goto` in `.c` / `.h` files
 - [ ] `make check` and `make chk` pass; tests cover the change
 - [ ] No typos in docs or code comments
+- [ ] `make clang-format` does not modify any files
 - [ ] Generated/vendored files not edited by hand
 
 ## How the pieces fit together
 
 - `.github/copilot-instructions.md` and `.github/instructions/*.instructions.md`
   (path-specific via `applyTo`) and `.github/copilot/code-review-instructions.md`
-  teach Copilot code review these standards.
-- Workflows in `.github/workflows/` (`no-goto`, `tests`, `typos`) enforce them on
-  pull requests to `master`. Mark the checks `no-goto`, `tests` and `typos`
-  (workflows "No goto", "Tests", "Typos") as required status checks in branch protection.
+  teach Copilot these standards.
+- Workflows in `.github/workflows/` (`no-goto`, `tests`, `typos`, and
+  `clang-format`) enforce them on pull requests to `master`. Mark the checks
+  `no-goto`, `tests`, `typos`, and `clang-format` (workflows "No goto", "Tests",
+  "Typos", and "Clang format") as required status checks in branch protection.

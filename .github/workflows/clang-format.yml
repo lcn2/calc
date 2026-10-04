@@ -1,0 +1,29 @@
+name: Clang format
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [ "master" ]
+
+jobs:
+  clang-format:
+    name: clang-format
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        fetch-depth: 0
+    - name: install clang-format
+      run: |
+        curl --fail --location --silent --show-error \
+          https://apt.llvm.org/llvm.sh --output /tmp/llvm.sh
+        chmod +x /tmp/llvm.sh
+        sudo /tmp/llvm.sh 23
+        sudo apt-get install -y clang-format-23
+    - name: verify C formatting
+      run: |
+        make clang-format CLANG_FORMAT=clang-format-23
+        git diff --exit-code

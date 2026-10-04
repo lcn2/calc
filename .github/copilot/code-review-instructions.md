@@ -10,5 +10,7 @@ Apply these rules when reviewing pull requests.
    (run the regression test and verify output with `check.awk`).
 3. **Typos** in documentation (README, `help/`, man pages, markdown, text
    files) and in C comments must be corrected.
+4. **C formatting** must conform to `.clang-format`; `make clang-format` must
+   not need to modify any files.
 
 See `.github/CODE_REVIEW_GUIDE.md`.
