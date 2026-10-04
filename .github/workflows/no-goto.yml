@@ -1,0 +1,125 @@
+name: No goto
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [ "master" ]
+
+jobs:
+  no-goto:
+    name: no-goto
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        fetch-depth: 0
+    - name: Fail if PR adds goto in C code
+      run: |
+        base="origin/${{ github.base_ref }}"
+        python3 - "$base" <<'PY'
+        import re
+        import subprocess
+        import sys
+
+        base = sys.argv[1]
+        diff = subprocess.run(
+            ["git", "diff", "--no-color", "--no-ext-diff", "--unified=0",
+             "--no-renames", f"{base}...HEAD", "--", "*.c", "*.h"],
+            check=True, capture_output=True, text=True,
+        ).stdout
+
+        added_lines = {}
+        current_file = None
+        current_line = 0
+        in_hunk = False
+        for line in diff.splitlines():
+            if line.startswith("diff --git "):
+                current_file = None
+                in_hunk = False
+            elif line.startswith("+++ b/") and not in_hunk:
+                current_file = line[6:]
+                added_lines.setdefault(current_file, set())
+            elif line.startswith("@@"):
+                match = re.search(r"\+(\d+)(?:,(\d+))?", line)
+                current_line = int(match.group(1)) - 1 if match else 0
+                in_hunk = True
+            elif line.startswith("+"):
+                current_line += 1
+                added_lines[current_file].add(current_line)
+            elif line.startswith(" "):
+                current_line += 1
+
+        bad = False
+        for path, lines in added_lines.items():
+            with open(path, encoding="utf-8") as source:
+                text = source.read()
+
+            state = "code"
+            line_number = 1
+            index = 0
+            while index < len(text):
+                char = text[index]
+                following = text[index:index + 2]
+                if following == "\\\n":
+                    line_number += 1
+                    index += 2
+                    continue
+                if char == "\n":
+                    line_number += 1
+                    index += 1
+                    if state == "line-comment":
+                        state = "code"
+                    continue
+                if state == "block-comment":
+                    if following == "*/":
+                        state = "code"
+                        index += 2
+                    else:
+                        index += 1
+                    continue
+                if state == "line-comment":
+                    index += 1
+                    continue
+                if state in ("string", "character"):
+                    if char == "\\":
+                        index += 2
+                    elif (state == "string" and char == '"') or (
+                        state == "character" and char == "'"
+                    ):
+                        state = "code"
+                        index += 1
+                    else:
+                        index += 1
+                    continue
+                if following == "/*":
+                    state = "block-comment"
+                    index += 2
+                elif following == "//":
+                    state = "line-comment"
+                    index += 2
+                elif char == '"':
+                    state = "string"
+                    index += 1
+                elif char == "'":
+                    state = "character"
+                    index += 1
+                elif text.startswith("goto", index):
+                    before = text[index - 1] if index else ""
+                    after_index = index + 4
+                    after = text[after_index] if after_index < len(text) else ""
+                    if (
+                        line_number in lines
+                        and not (before.isalnum() or before == "_")
+                        and not (after.isalnum() or after == "_")
+                    ):
+                        print(f"{path}:{line_number}: added goto")
+                        bad = True
+                    index += 4
+                else:
+                    index += 1
+
+        sys.exit(1 if bad else 0)
+        PY

@@ -252,7 +252,7 @@ endfunc(void)
 long
 adduserfunc(char *name)
 {
-    long index; /* index of function */
+    long index;      /* index of function */
     FUNC **newfuncs; /* resized function table */
 
     index = findstr(&funcnames, name);

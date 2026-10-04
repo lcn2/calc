@@ -60,43 +60,42 @@
 static struct help_alias {
     char *topic;
     char *filename;
-} halias[] = {
-    /* We sort the list below via: sort -d -u */
-    {"=", "address"},
-    {"->", "arrow"},
-    {"=", "assign"},
-    {"*", "dereference"},
-    {"%", "mod"},
-    {".", "oldvalue"},
-    {"#", "pound"},
-    {"//", "quo"},
-    {"COPYING_LGPL", "COPYING-LGPL"},
-    {"COPYLEFT", "copyright"},
-    {"COPYRIGHT", "copyright"},
-    {"Copyleft", "copyright"},
-    {"Copyright", "copyright"},
-    {"abort", "command"},
-    {"cd", "command"},
-    {"copy", "blkcpy"},
-    {"copying", "COPYING"},
-    {"copying-lgpl", "COPYING-LGPL"},
-    {"define", "command"},
-    {"dm2d", "dms2d"},
-    {"exit", "command"},
-    {"gm2g", "gms2g"},
-    {"hm2d", "hms2d"},
-    {"man", "calc"},
-    {"question", "questions"},
-    {"quit", "command"},
-    {"read", "command"},
-    {"release", "releases"},
-    {"show", "command"},
-    {"stdlib", "resource"},
-    {"usage", "calc"},
-    {"write", "command"},
+} halias[] = {/* We sort the list below via: sort -d -u */
+              {"=", "address"},
+              {"->", "arrow"},
+              {"=", "assign"},
+              {"*", "dereference"},
+              {"%", "mod"},
+              {".", "oldvalue"},
+              {"#", "pound"},
+              {"//", "quo"},
+              {"COPYING_LGPL", "COPYING-LGPL"},
+              {"COPYLEFT", "copyright"},
+              {"COPYRIGHT", "copyright"},
+              {"Copyleft", "copyright"},
+              {"Copyright", "copyright"},
+              {"abort", "command"},
+              {"cd", "command"},
+              {"copy", "blkcpy"},
+              {"copying", "COPYING"},
+              {"copying-lgpl", "COPYING-LGPL"},
+              {"define", "command"},
+              {"dm2d", "dms2d"},
+              {"exit", "command"},
+              {"gm2g", "gms2g"},
+              {"hm2d", "hms2d"},
+              {"man", "calc"},
+              {"question", "questions"},
+              {"quit", "command"},
+              {"read", "command"},
+              {"release", "releases"},
+              {"show", "command"},
+              {"stdlib", "resource"},
+              {"usage", "calc"},
+              {"write", "command"},
 
-    /* MUST BE LAST! */
-    {NULL, NULL}};
+              /* MUST BE LAST! */
+              {NULL, NULL}};
 
 /*
  * external values
