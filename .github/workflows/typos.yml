@@ -27,5 +27,5 @@ jobs:
       if: steps.changed.outputs.files != ''
       uses: crate-ci/typos@v1
       with:
-        config: _typos.toml
+        config: .github/_typos.toml
         files: ${{ steps.changed.outputs.files }}

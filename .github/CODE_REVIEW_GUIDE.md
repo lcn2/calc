@@ -35,10 +35,11 @@ and in C comments must be corrected. Run locally:
 
 ```sh
 cargo install typos-cli    # or: brew install typos-cli
-typos --config _typos.toml <changed files>
+typos --config .github/_typos.toml <changed files>
 ```
 
-Project-specific terms and excluded generated/vendored files are configured in `_typos.toml`.
+Project-specific terms and excluded generated/vendored files are configured in
+`.github/_typos.toml`.
 **Enforcement:** the `typos` workflow checks the files changed in the PR.
 
 ## 4. C formatting
